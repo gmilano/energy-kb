@@ -1,0 +1,13 @@
+{
+  "topics": ["smart-grid", "energy-management", "renewable-energy", "iot-energy", "demand-forecasting"],
+  "agentKeywords": "AI energy grid optimization demand forecasting ESG agent open source",
+  "repoKeywords": "smart grid energy forecasting renewable AI open source",
+  "verticalKeywords": "energy management platform SCADA open source",
+  "minStars": 100,
+  "licenses": ["MIT", "Apache-2.0"],
+  "keywords": {
+    "agents": ["demand forecasting AI", "grid optimizer", "ESG reporting agent", "solar prediction"],
+    "repos": ["OpenEnergyMonitor", "EnergyPlus", "pvlib", "pandapower", "Grafana energy"],
+    "verticals": ["OpenEnergyMonitor", "EnergyPlus", "HOMER", "OpenDSS"]
+  }
+}
