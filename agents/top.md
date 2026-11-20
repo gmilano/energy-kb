@@ -144,6 +144,80 @@ pregunta que de verdad están haciendo los clientes en 2026 — *¿dónde puedo 
 Ese es el cuello de botella descrito en `intel/trends.md`, convertido en una herramienta consultable
 por un agente. Categoría a vigilar en el próximo pase.
 
+## Cohorte LF Energy de septiembre de 2026: GNN de red y gestión de activos (quinto pase)
+
+El 15 de septiembre de 2026 LF Energy anunció cuatro proyectos nuevos. Los cuatro existen y son
+localizables; **ninguno pasa de 34 ★**. Se registran por procedencia e integrabilidad, igual que la
+capa europea de arriba, y así deben presentarse.
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [energnn/energnn](https://github.com/energnn/energnn) | **MPL-2.0** | Librería de **GNN para redes de energía reales** (no sintéticas). 15 issues abiertas; creado 2025-10-16 | 34 | 4 | 2026-11-16 | EMEA |
+| [assetlife-project/assetlife](https://github.com/assetlife-project/assetlife) | **Apache-2.0** | Modelado estocástico de vida de activo para decisiones de gestión de parque. **32 issues abiertas sobre 7 ★** | 7 | 3 | 2026-11-19 | EMEA |
+| [SMART-HEMS-Benchmark/smart-hems-benchmark](https://github.com/SMART-HEMS-Benchmark/smart-hems-benchmark) | **MIT** | Banco de pruebas de gestión energética doméstica; el par de evaluación que le faltaba a `agentic-ai-hems` | 7 | 2 | 2026-07-09 | EMEA |
+| [energnn/pypowsybl-to-energnn](https://github.com/energnn/pypowsybl-to-energnn) | **MPL-2.0** | Conversor de redes `pypowsybl` → grafo EnerGNN | 3 | 2 | 2026-10-15 | EMEA |
+| [energnn/tensio](https://github.com/energnn/tensio) | **MPL-2.0** | Aplicación de EnerGNN a mejora de tensiones en redes reales | 1 | 0 | 2026-10-19 | EMEA |
+| [energnn/pandapower-to-energnn](https://github.com/energnn/pandapower-to-energnn) | **MPL-2.0** | Conversor de redes `pandapower` → grafo EnerGNN | 0 | 0 | 2026-09-08 | EMEA |
+
+**Los conversores valen más que la librería.** `energnn` sola es una librería de GNN con 34 ★: nada
+que sostenga una propuesta. Los dos conversores la convierten en una capa que lee el modelo de red
+que el cliente **ya tiene** en PowSyBl o en pandapower —los dos motores que esta KB ya cataloga— y lo
+entrega como grafo entrenable. El valor no es el modelo: es no rehacer el modelo de red.
+
+**Regla nueva sobre `open_issues_count`.** El cuarto pase estableció comprobar `forks_count` antes de
+comprometer alcance sobre un repo de muchas estrellas. Corolario de este pase: en un repo **recién
+nacido**, muchas issues abiertas son señal **positiva**. `assetlife` tiene 32 issues sobre 7 ★ y dos
+meses y medio de vida: eso es un equipo trabajando, no abandono. La misma cifra en un repo de 2016
+significaría lo contrario.
+
+## Hallazgos de verificación del quinto pase (2026-11-20)
+
+### 1. El verificador de esta KB se equivocó, y hacia el lado peligroso
+
+Al resolver licencias leyendo el archivo crudo, el detector marcó `energnn/energnn` como **AGPL-3.0**;
+la API de GitHub decía **MPL-2.0**. **Ganó la API.** El texto de la MPL-2.0 nombra la AGPL en su
+propia cláusula 1.12 ("Secondary Licenses" = GPL-2.0, LGPL-2.1, AGPL-3.0), así que cualquier
+detección por `grep` de *"GNU Affero"* sobre un archivo MPL produce un falso positivo de AGPL.
+
+**Por qué importa aquí más que en otra KB:** el tercer pase estableció que MPL-2.0 es la licencia por
+defecto del sector eléctrico europeo (`Grid2Op`, `PowSyBl`, `operatorfabric-core`, `ExpertOp4Grid`,
+`power-grid-model-ai`, y ahora toda la familia `energnn`). Un pase futuro que "rescate licencias
+leyendo el crudo" sin esta precaución **reclasificaría media KB a AGPL** e inventaría una obligación
+de liberar el servicio que no existe.
+
+**Regla:** ante conflicto entre la API y un detector de texto sobre una licencia de la familia MPL,
+**gana la API**. El archivo crudo decide sólo cuando la API dice `null` o `NOASSERTION`.
+
+### 2. Las licencias de laboratorio nacional no son BSD, y `NOASSERTION` era correcto
+
+El cuarto pase trataba `NOASSERTION` como un defecto de la API a corregir leyendo el crudo. En los
+repos de laboratorio nacional **`NOASSERTION` es exacto**: no son licencias OSI.
+
+| Repo | La API dice | El archivo dice | Lo que cambia |
+|------|-------------|-----------------|---------------|
+| `NatLabRockies/resstock` | `NOASSERTION` | BSD-3 + **copyleft condicionado al tipo de redistribuidor** + marca ResStock™ | Si el cliente es universidad, laboratorio o ONG, **hay que publicar el código de la redistribución** |
+| `NatLabRockies/REopt_API` | `NOASSERTION` | BSD-3 + cláusula de **designación REopt®** + no-endoso DOE | Una versión modificada no puede llamarse REopt® y debe citar el original |
+| `NatLabRockies/OpenStudio` | `NOASSERTION` | BSD-3 + marca **OpenStudio®** | Igual que `EnergyPlus`: el nombre no puede ir en producto ni promoción |
+| `richard-weinhold/pomato` | `NOASSERTION` | **LGPL-3.0** declarada | Copyleft de biblioteca; además sin push desde 2025-08-12 |
+| `NatLabRockies/electrolyzer` | `NOASSERTION` | **Apache-2.0** limpia | Rescatada: usable sin reservas |
+
+La cláusula de `resstock` es de un tipo que esta KB no tenía catalogado: **se activa por quién es el
+cliente**, no por lo que se hace con el código.
+
+### 3. La cola larga de agentes LLM energéticos sigue sin ser proponible
+
+Consulta `energy agent LLM in:name,description created:>2026-06-01`: 15 resultados, **ninguno pasa de
+7 ★**, la mayoría 0 ★ de autor individual y buena parte sin licencia. Lo creíble en esta categoría
+sigue siendo lo institucional que ya está arriba (`PowerMCP`, `EnergyPlus-MCP`, `idfkit-mcp`,
+`pypsa-mcp`). **No existe un "agente energético" open source de propósito general con tracción.**
+
+### 4. Término de búsqueda inutilizable, añadido a la lista del cuarto pase
+
+**`hydrogen`** no es un término energético en GitHub. `hydrogen in:name stars:>50` devuelve
+`Shopify/hydrogen` (framework de comercio, 2.183 ★), `nteract/hydrogen` (plugin de Jupyter, 4.018 ★)
+y `hydrogen-music/hydrogen` (caja de ritmos, 1.357 ★): **ni un resultado energético en quince**.
+Lo que funciona es `electrolyzer`, `fuel cell`, `PEMFC` y la búsqueda por organización.
+
 ## Notas de licencia que cambian decisiones
 
 - **`LBNL-ETA/EnergyPlus-MCP`**: la API devuelve `NOASSERTION` y **no hay archivo `LICENSE`**; el

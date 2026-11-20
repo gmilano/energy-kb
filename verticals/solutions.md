@@ -165,6 +165,64 @@ un método aceptado. `FlexMeasures` (decide cuándo) + `opendsm` (certifica cuá
 empotrables en un entregable cerrado, convierten el ahorro en una cifra firmable. Es, de todo lo
 encontrado en los cuatro pases, la combinación con el camino más corto a facturación.
 
+## Plataformas de datos de mercado: ampliación del quinto pase (2026-11-20)
+
+La sección de arriba listaba las fuentes institucionales por país. Lo que faltaba son las **dos
+librerías canónicas** que leen un mercado entero con una sola interfaz. No son plataformas verticales
+en el sentido de "sistema a customizar", pero son la **dependencia de arranque** de todas las
+recetas: sin esta capa, un piloto empieza escribiendo *scrapers*.
+
+| Plataforma | Licencia | Cobertura | ★ | Rol en un encargo |
+|------------|----------|-----------|---|-------------------|
+| [fboerman/entsoe-py](https://github.com/fboerman/entsoe-py) | **MIT** | Toda Europa vía API de ENTSO-E: precios, generación, carga, flujos | 745 | Primer día de cualquier proyecto EMEA |
+| [gridstatus/gridstatus](https://github.com/gridstatus/gridstatus) | **BSD-3-Clause** | CAISO, ERCOT, PJM, MISO, SPP, NYISO, ISO-NE | 456 | Primer día de cualquier proyecto North America |
+| [singularity-energy/open-grid-emissions](https://github.com/singularity-energy/open-grid-emissions) | **MIT** | Generación y **emisiones horarias** de EE. UU. | 96 | Capa de carbono verificable (sólo EE. UU.) |
+| [entsoe/application-profiles-library](https://github.com/entsoe/application-profiles-library) | **Apache-2.0** | Artefactos RDFS/SHACL oficiales de CGMES | 29 | Validación de intercambio de modelos de red en EMEA |
+| [jo20ow/Obsyd](https://github.com/jo20ow/Obsyd) | ⚠️ **AGPL-3.0** | 37 zonas de oferta europeas, 15 min | 12 | Útil para análisis interno; **no en SaaS de cliente** |
+
+**Decisión práctica:** en EMEA, `entsoe-py` (MIT) y no `Obsyd` (AGPL). En North America, `gridstatus`
+más `open-grid-emissions`, ambos permisivos, encadenables con `carbon-aware-sdk` (MIT, ya en la KB).
+**En LATAM y APAC no existe equivalente de cobertura regional**: hay que ir país por país (`API_XM`
+en Colombia, `OMIEData` en España) y presupuestar la ingesta.
+
+## Dimensionado de activo como servicio: la plataforma que faltaba antes de cualquier EMS
+
+Antes de instalar un EMS hay que decidir **qué activo instalar**. Esa pregunta tenía su plataforma
+abierta y esta KB no la tenía:
+
+| Plataforma | Licencia | Qué resuelve | ★ |
+|------------|----------|--------------|---|
+| [NatLabRockies/REopt_API](https://github.com/NatLabRockies/REopt_API) | ⚠️ BSD-3 + **marca REopt®** | Mezcla óptima de solar + BESS + genset contra la tarifa real del emplazamiento. Es el motor de reopt.nrel.gov | 128 |
+| [sylvan-energy/gridpath](https://github.com/sylvan-energy/gridpath) | **Apache-2.0** | Planificación **y** operación en un mismo modelo | 138 |
+| [NatLabRockies/HOPP](https://github.com/NatLabRockies/HOPP) | **BSD-3-Clause** | Plantas híbridas: renovable + almacenamiento + H₂ | 41 |
+| [NatLabRockies/GEOPHIRES-X](https://github.com/NatLabRockies/GEOPHIRES-X) | **MIT** | Tecno-economía geotérmica completa | 67 |
+| [NatLabRockies/OpenStudio](https://github.com/NatLabRockies/OpenStudio) | ⚠️ BSD-3 + **marca OpenStudio®** | SDK de modelado energético de edificio sobre EnergyPlus | 660 |
+
+**Secuencia correcta en un encargo de energía distribuida:** `REopt_API` decide el activo →
+`OpenEMS`/`FlexMeasures` lo opera → `opendsm` certifica el ahorro. Las tres piezas existen, son
+abiertas y **no estaban conectadas en esta KB** hasta este pase.
+
+⚠️ **Las dos marcadas no son BSD limpias.** `REopt®` y `OpenStudio®` llevan cláusula de marca: el
+nombre no puede aparecer en el producto ni en material promocional, y una versión modificada debe
+citar el original. Es la misma restricción ya registrada para `EnergyPlus`. **No bloquea el uso;
+bloquea el naming.**
+
+## Datos sintéticos de consumo: la plataforma que desbloquea el entrenamiento en EMEA
+
+| Plataforma | Licencia | Qué resuelve | ★ |
+|------------|----------|--------------|---|
+| [OpenSynth-energy/OpenSynth](https://github.com/OpenSynth-energy/OpenSynth) | **Apache-2.0** | Modelos generadores de perfiles **sintéticos** de consumo de contador (cohorte LF Energy) | 77 |
+| [Enapter/marketplace](https://github.com/Enapter/marketplace) | **MIT** | *Blueprints* para integrar cualquier dispositivo en un EMS | 61 |
+
+**Por qué `OpenSynth` es estratégico y no accesorio.** La inteligencia de mercado de este pase
+registra que la Comisión Europea señala **GDPR, recolección y preprocesado** como barreras para
+entrenar modelos de red. Un cliente europeo que no puede exportar datos de medición no puede entrenar
+`openstef` ni `BuildingsBench` — pero **sí** puede entrenar sobre perfiles sintéticos y luego
+afinar en sitio. `OpenSynth` convierte un bloqueo legal en una fase de proyecto.
+
+**`Enapter/marketplace`** resuelve el problema aburrido y caro de todo EMS: cada inversor, contador y
+cargador habla distinto. Es un catálogo MIT de integraciones de dispositivo, no una plataforma.
+
 ## El riesgo de licencia es el criterio de selección, no una nota al pie
 
 Este vertical está dominado por **copyleft**, a diferencia de la capa de agentes (casi toda MIT):

@@ -9,6 +9,133 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 5 (la capa de acceso a datos de mercado: lo primero que hace falta y lo último que esta KB tenía)
+
+**Titular del pase: esta KB sabía simular siete mercados eléctricos y no sabía leer ninguno.** Cuatro
+pases acumularon 147 repos de modelado, optimización, simulación y control — y la pieza que un
+encargo necesita el **primer día** (bajar el precio, la carga y la generación reales del operador)
+estaba representada sólo por `API_XM` (Colombia), `OMIEData` (España) y `hass-entso-e` (una
+integración de Home Assistant). Las dos librerías canónicas del sector faltaban, y ambas son
+permisivas y muy usadas.
+
+**Lo que faltaba — capa de acceso a datos, verificada contra la API REST de GitHub:**
+
+| Repo | Licencia | ★ | Forks | Issues | Push | Cobertura | Región |
+|------|----------|---|-------|--------|------|-----------|--------|
+| [fboerman/entsoe-py](https://github.com/fboerman/entsoe-py) | **MIT** | **745** | 270 | 11 | 2026-11-17 | Cliente de la API de ENTSO-E: precios, generación, carga, flujos transfronterizos | EMEA |
+| [gridstatus/gridstatus](https://github.com/gridstatus/gridstatus) | **BSD-3-Clause** | **456** | 89 | 41 | 2026-11-18 | Los **siete** ISO/RTO de EE. UU.: CAISO, ERCOT, PJM, MISO, SPP, NYISO, ISO-NE | North America |
+| [PyPSA/linopy](https://github.com/PyPSA/linopy) | **MIT** | 263 | 95 | 46 | 2026-11-19 | Backend de optimización lineal N-D del ecosistema PyPSA | EMEA |
+| [PyPSA/powerplantmatching](https://github.com/PyPSA/powerplantmatching) | **MIT** (SPDX) | 235 | 77 | 30 | 2026-11-19 | Reconcilia múltiples bases de datos de centrales en un registro único | EMEA |
+| [singularity-energy/open-grid-emissions](https://github.com/singularity-energy/open-grid-emissions) | **MIT** | 96 | 7 | **97** | 2026-11-19 | Generación y **emisiones horarias** de la red de EE. UU. | North America |
+| [gridstatus/gridstatusio](https://github.com/gridstatus/gridstatusio) | **BSD-3-Clause** | 58 | 5 | 6 | 2026-11-16 | Cliente de la API alojada de GridStatus.io | North America |
+| [entsoe/application-profiles-library](https://github.com/entsoe/application-profiles-library) | **Apache-2.0** | 29 | 9 | 16 | 2026-10-28 | Artefactos RDFS/SHACL **oficiales** de CGMES. Cuenta `entsoe` institucional | EMEA |
+| [entsoe/ReliCapGrid](https://github.com/entsoe/ReliCapGrid) | NOASSERTION | 21 | 6 | 21 | 2026-11-18 | Modelos de prueba CGMES y perfiles CIM de códigos de red | EMEA |
+| [jo20ow/Obsyd](https://github.com/jo20ow/Obsyd) | **AGPL-3.0** | 12 | 1 | 0 | 2026-11-11 | "gridstatus para Europa": 37 zonas de oferta, precios *day-ahead* a 15 min | EMEA |
+
+**Por qué `entsoe-py` con 745 ★ es el hallazgo incómodo.** Es el repo con más estrellas que esta KB ha
+añadido en cinco pases, es MIT, lleva nueve años vivo (creado 2017-07-12), tiene 270 forks y **11
+issues abiertas** — el perfil de un proyecto maduro y mantenido. Que no estuviera sugiere que los
+pases anteriores buscaron por *función* (`forecasting`, `optimization`, `DERMS`) y nunca por
+*fuente de datos*. El pase 4 ya había diagnosticado que los gaps de esta KB eran gaps de
+vocabulario (T10); esto lo confirma en la categoría más básica de todas.
+
+**`open-grid-emissions` y el encaje con lo que ya había.** 97 issues abiertas sobre 96 ★: proyecto
+trabajado. Produce la serie horaria de emisiones de la red estadounidense, que es exactamente el
+input que `Green-Software-Foundation/carbon-aware-sdk` (ya en la KB) consume y que `scaphandre` y
+`ecologits` miden del lado del cómputo. Con `gridstatus` delante, la cadena
+**dato de red → emisión horaria → decisión de carga** queda completa y permisiva de punta a punta,
+para North America.
+
+### Plataformas de planificación y evaluación técnico-económica — la segunda categoría ausente
+
+La KB tenía modelos de expansión de capacidad académicos (`OSeMOSYS`, `TIMES`, `temoa`, `switch`,
+`calliope`, `GenX.jl` GPL-2.0). Faltaban las plataformas de laboratorio nacional y de industria:
+
+| Repo | Licencia | ★ | Forks | Issues | Push | Qué hace | Región |
+|------|----------|---|-------|--------|------|----------|--------|
+| [NatLabRockies/ROSCO](https://github.com/NatLabRockies/ROSCO) | **Apache-2.0** | 182 | 125 | 17 | 2026-09-29 | Controlador de referencia de aerogenerador. **125 forks sobre 182 ★** | Global |
+| [NatLabRockies/ReEDS-2.0](https://github.com/NatLabRockies/ReEDS-2.0) | **BSD-3-Clause** | 176 | 79 | 7 | 2026-04-22 | Expansión de capacidad del sistema eléctrico de EE. UU. | North America |
+| [grid-parity-exchange/Egret](https://github.com/grid-parity-exchange/Egret) | **BSD-3-Clause** (crudo) | 173 | 72 | 57 | 2026-11-08 | Bloques para construir problemas de optimización de sistemas de potencia | North America |
+| [NatLabRockies/pysam](https://github.com/NatLabRockies/pysam) | **BSD-3-Clause** | 157 | 87 | 17 | 2026-09-27 | Envoltorio Python de SAM (modelo técnico-financiero) | Global |
+| [sylvan-energy/gridpath](https://github.com/sylvan-energy/gridpath) | **Apache-2.0** | 138 | 71 | 58 | 2026-11-19 | Plataforma de planificación **y** operación en un solo modelo | Global |
+| [NatLabRockies/REopt_API](https://github.com/NatLabRockies/REopt_API) | BSD-3 + **marca REopt®** | 128 | 70 | 54 | 2026-11-17 | Dimensionado óptimo de DER en un emplazamiento (motor de reopt.nrel.gov) | North America |
+| [NatLabRockies/BuildingsBench](https://github.com/NatLabRockies/BuildingsBench) | **BSD-3-Clause** | 123 | 24 | 0 | 2026-02-25 | Preentrenamiento y *benchmark* de previsión de carga a corto plazo | North America |
+| [NatLabRockies/ParaEMT_public](https://github.com/NatLabRockies/ParaEMT_public) | **BSD-3-Clause** | 113 | 54 | 5 | 2026-01-15 | Simulación EMT paralelizada | North America |
+| [NatLabRockies/bifacial_radiance](https://github.com/NatLabRockies/bifacial_radiance) | **BSD-3-Clause** | 111 | 56 | 85 | 2026-09-25 | Trazado de rayos para fotovoltaica bifacial | Global |
+| [OpenSynth-energy/OpenSynth](https://github.com/OpenSynth-energy/OpenSynth) | **Apache-2.0** | 77 | 12 | 10 | 2026-10-12 | Modelos de **datos sintéticos** de consumo de contador | EMEA |
+| [NatLabRockies/GEOPHIRES-X](https://github.com/NatLabRockies/GEOPHIRES-X) | **MIT** | 67 | 49 | 83 | 2026-11-19 | Simulador técnico-económico **geotérmico** | Global |
+| [NatLabRockies/HOPP](https://github.com/NatLabRockies/HOPP) | **BSD-3-Clause** | 41 | **66** | 68 | 2026-04-10 | Plantas híbridas (renovable + almacenamiento + H₂). **Más forks que estrellas** | North America |
+
+**`REopt_API` es, comercialmente, el repo más directo del pase.** Responde la pregunta con la que
+empieza casi todo encargo de energía distribuida — *¿cuánta solar, cuánta batería y cuánto genset
+conviene en este sitio, y a qué coste?* — y es el motor real detrás de la herramienta web de NREL,
+con 70 forks y 54 issues abiertas. **No es BSD limpia**: ver la nota de licencia abajo.
+
+**`OpenSynth` resuelve un obstáculo que la inteligencia de mercado de este pase identificó en EMEA.**
+El informe de la Comisión Europea sobre IA en redes inteligentes señala el cumplimiento de GDPR y el
+preprocesado como barreras para **entrenar** modelos. `OpenSynth` (Apache-2.0, cohorte LF Energy /
+Centre for Net Zero) publica modelos generadores de perfiles de consumo sintéticos: datos de
+contador que no son de nadie. Es la respuesta técnica a una objeción regulatoria, y encaja antes de
+`openstef` o `BuildingsBench` en el pipeline.
+
+### Trampa de licencia nueva, y es la peor que esta KB ha encontrado
+
+Las licencias de los laboratorios nacionales **no son BSD estándar**, y la API de GitHub tiene razón
+al decir `NOASSERTION`. Leídas en crudo:
+
+| Repo | La API dice | Lo que dice el archivo | Consecuencia |
+|------|-------------|------------------------|--------------|
+| [NatLabRockies/resstock](https://github.com/NatLabRockies/resstock) (147 ★, 85 forks) | `NOASSERTION` | BSD-3 + **cláusula (3) de copyleft condicionado al tipo de redistribuidor** + marca ResStock™ | **Si el cliente es universidad, laboratorio nacional u ONG, todo el código fuente correspondiente de la redistribución —modificado o no— debe publicarse bajo esta misma licencia** |
+| [NatLabRockies/REopt_API](https://github.com/NatLabRockies/REopt_API) (128 ★) | `NOASSERTION` | BSD-3 + cláusula (3) de **designación REopt®** + (4) no-endoso DOE/gobierno EE. UU. | Una versión modificada **no puede** llamarse REopt® y **debe** citar el original como REopt® |
+| [NatLabRockies/OpenStudio](https://github.com/NatLabRockies/OpenStudio) (660 ★, 241 forks) | `NOASSERTION` | BSD-3 + marca OpenStudio® | Igual que `EnergyPlus`: prohibido el nombre en producto o promoción |
+| [richard-weinhold/pomato](https://github.com/richard-weinhold/pomato) (101 ★) | `NOASSERTION` | **LGPL-3.0**, declarado en `LICENSE.md` | Copyleft de biblioteca; sin push desde 2025-08-12 |
+| [NatLabRockies/electrolyzer](https://github.com/NatLabRockies/electrolyzer) (35 ★) | `NOASSERTION` | **Apache-2.0** limpia | Rescatada: usable sin reservas |
+
+**La cláusula de `resstock` es un riesgo de tipo nuevo para esta KB.** Todas las trampas registradas
+hasta ahora se activaban por *lo que hacías* con el código (SaaS → AGPL, modificar el motor → MPL).
+Esta se activa por **quién es el cliente**. Un encargo de modelado de parque residencial con una
+universidad o una fundación obliga a publicar el entregable. No se detecta leyendo la etiqueta de
+licencia: hay que leer la cláusula.
+
+### Hidrógeno y geotermia: medidos, y el resultado es "delgado pero permisivo"
+
+**Geotermia — un solo repo usable.** `GEOPHIRES-X` (**MIT**, 67 ★, 49 forks, push 2026-11-19, 83
+issues) es el único activo y permisivo. Su propio predecesor `GEOPHIRES-v2` es **GPL-3.0** y está
+congelado desde 2023-10-31: *mismo simulador, licencia distinta según versión*. Lo demás es
+`ICWallis/geothermal-cookbook` (Apache-2.0, 27 ★, sin push desde 2022) y
+`SmartTensors/GeoThermalCloud.jl` (**GPL-3.0**, 36 ★). **Veredicto: hay base para un estudio
+técnico-económico geotérmico; no hay ecosistema.**
+
+**Hidrógeno — el término de búsqueda está inservible.** `hydrogen in:name stars:>50` devuelve, en
+orden: `Shopify/hydrogen` (framework web, 2.183 ★), `nteract/hydrogen` (plugin de Jupyter, 4.018 ★),
+`hydrogen-music/hydrogen` (caja de ritmos, 1.357 ★). **Ni un resultado energético en los primeros
+quince.** Buscando por `electrolyzer` y por organización, lo que hay es:
+`NatLabRockies/electrolyzer` (Apache-2.0, 35 ★, 28 forks), `NatLabRockies/HOPP` (BSD-3, 41 ★, 66
+forks), `gassraphael/AlphaPEM` (**BSD-3-Clause**, 49 ★, 15 forks, push 2026-11-18, simulación de pila
+PEMFC) y `e2nIEE/pandapipes` (ya en la KB). El resto son modelos académicos de 2-25 ★ sin licencia.
+
+Añádase a la lista de términos inutilizables del cuarto pase: **`hydrogen` es un término de comercio
+electrónico en GitHub, no de energía.**
+
+### El gap de ejecución de mercado sigue abierto, ahora con la excepción nombrada
+
+Consulta `day-ahead bidding electricity in:name,description`, 15 resultados. El mejor es
+[`jo20ow/Obsyd`](https://github.com/jo20ow/Obsyd) (**AGPL-3.0**, 12 ★, creado 2026-03-04): 37 zonas
+de oferta europeas con precios a 15 minutos — pero es **lectura de datos, no colocación de ofertas**,
+y su AGPL muerde en un SaaS. Lo demás son 0-2 ★ y casi todo sin licencia:
+`ThomasStatic/capstone-optimal-bidding` (sin licencia, agente RL de pujas),
+`axelsjoberg1/elbud` (0 ★, SE1-SE4), `BRSTKL/powerbid` (0 ★, mercado turco).
+La única pieza permisiva y real que *actúa* sobre precios es
+[`romilandc/battery-storage-optimization-energy-ancillary`](https://github.com/romilandc/battery-storage-optimization-energy-ancillary)
+(**Apache-2.0**, 11 ★): co-optimización de energía y servicios auxiliares que consume precios **vía
+`gridstatus`**. Es un ejemplo de 11 ★, no una base de producción.
+
+**Veredicto sin cambios respecto al tercer pase: no proponer un bot de pujas mayoristas.** Lo nuevo
+es que ahora la frontera está dibujada: *leer* el mercado es MIT/BSD y maduro; *pujar* en él no tiene
+base open source en ninguna de las cuatro regiones.
+
+---
+
 ## 2026-11-20 — pase 4 (sincrofasores MIT, medición y verificación, y simulación de protocolo)
 
 **Titular del pase: tres categorías enteras estaban ausentes, y la más valiosa comercialmente no es

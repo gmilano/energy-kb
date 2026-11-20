@@ -158,6 +158,42 @@ delimitado y vendible.
 IA en 2026. No se encontró fuente primaria. **No usar en una propuesta** sin consultar los dockets de
 NERC/FERC directamente.
 
+#### Actualización del quinto pase (2026-11-20)
+
+**El regulador nombró a los operadores, y existe una librería BSD-3 que lee a todos.** El
+2026-06-18 la FERC emitió *show-cause orders* bajo la §206 de la Federal Power Act a **seis
+operadores regionales** —PJM, MISO, SPP, CAISO, ISO-NE y NYISO— cubriendo, según el anuncio, unos
+200 millones de personas en más de 30 estados, a petición del Secretario de Energía. La coincidencia
+operativa es el dato aprovechable: **esos seis, más ERCOT, son exactamente los siete ISO/RTO que
+[`gridstatus`](https://github.com/gridstatus/gridstatus) (BSD-3-Clause, 456 ★) extrae con una sola
+interfaz** (ver `repos/foundations.md`).
+
+Matices que cambian el alcance de una propuesta:
+
+- **No es una norma nacional.** La FERC actuó por órdenes, no por reglamento final: **no** se crea una
+  regla única de interconexión para datacenters. Las fuentes secundarias **discrepan** sobre los
+  plazos (unas hablan de 60 días para justificar o reformar tarifas, otras de informes a 30 días);
+  tratar la fecha como indicativa.
+- **ERCOT queda en gran medida fuera** de la jurisdicción de la FERC. Un alcance "EE. UU." que
+  prometa homogeneidad regulatoria entre ERCOT y los demás es incorrecto.
+- **El coste de conexión lo paga el datacenter**, incluidas las mejoras asociadas a su propia
+  conexión, bajo el marco descrito.
+- **NERC emitió una alerta de Nivel 3 en mayo de 2026** — la tercera en sus 58 años de historia — y
+  la FERC le encargó desarrollar reglas de fiabilidad para **grandes cargas computacionales**, con
+  recomendaciones finales previstas para finales de 2026.
+- **DOE, septiembre de 2026:** 31 proyectos en 26 estados seleccionados en el programa **SPARK**
+  (reconductorado acelerado y tecnologías avanzadas de transmisión).
+
+**Oportunidad concreta, no genérica:** analítica de **cola de interconexión y de grandes cargas** para
+los seis operadores nombrados. La base de datos es `gridstatus` (BSD-3), el dimensionado del recurso
+en sitio es `REopt_API` (BSD-3 + marca), y la huella horaria es `open-grid-emissions` (MIT). Los tres
+son nuevos en esta KB y los tres son de origen norteamericano.
+
+**Reserva de método:** todo lo regulatorio de este bloque viene de fuentes secundarias (prensa
+especializada, blogs jurídicos y notas de análisis). Las órdenes de la FERC y los expedientes de
+NERC son las referencias autoritativas y **no se han podido abrir desde este entorno**. Sirve para
+planear; no para firmar un compromiso de cumplimiento con fecha.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -273,6 +309,50 @@ incluyen `FlexMeasures` (LF Energy), `iec104-python` (Fraunhofer FIT), `Gurux` D
 `JutulDarcy.jl` y `ecalc`/`xtgeo`/`resdata` (Equinor), `PowerDynamics.jl`, `Simplus-Grid-Tool`,
 `RL2Grid`, `EV2Gym`, `open-meteo` y los MCP de NESO. **Es la región con mayor oferta open source
 del sector, por un margen amplio** — argumento de soberanía tecnológica utilizable tal cual.
+
+#### Actualización del quinto pase (2026-11-20)
+
+**Hay hoja de ruta europea de IA en energía, hay dinero asignado, y la barrera declarada es de
+datos — que es precisamente lo que un repo nuevo de esta KB resuelve.**
+
+- **Hoja de ruta de IA para la energía (Comisión Europea).** Alcance declarado: conexiones de red,
+  abastecimiento de energía limpia, **servicios de flexibilidad** y recuperación de calor residual.
+- **Horizon Europe: ~75 M€ para tecnologías de IA en energía en 2026-2027** (documento del Consejo
+  ST-10101-2026, 4 de junio de 2026), con foco en **redes, autoconsumo y almacenamiento**. Es la
+  cifra de financiación más concreta que esta KB ha podido situar en EMEA.
+- **Legislación prevista en 2026** para acelerar el despliegue de contadores inteligentes y
+  establecer **indicadores de rendimiento de red inteligente a escala UE**.
+- **Esquema de calificación de datacenters** (eficiencia energética, agua, energía limpia,
+  reutilización de calor residual y **flexibilidad**); el acuerdo modelo se esperaba para el segundo
+  semestre de 2026.
+- **Recomendación regulatoria explícita:** integrar la gestión energética basada en IA **dentro** de
+  la regulación de red, y construir un marco UE unificado para **flexibilidad de demanda dirigida por
+  IA**.
+- **Utilities nombradas** en el informe de la CE como exploradoras de IA: **Enedis, E.ON, Stedin e
+  i-DE**. Son nombres accionables para prospección, no un mercado abstracto.
+
+**El dato de adopción, que es el que vale.** Según la lectura de una consultora del *summit* de
+utilities de Ámsterdam (marzo de 2026): las utilities europeas se desplazan hacia sistemas basados en
+flexibilidad **pero carecen de vías claras de monetización**, y siguen desplegando IA como
+**soluciones puntuales aisladas**, con poca integración en sistemas y flujos de trabajo centrales.
+Eso describe un mercado de **integración**, que es exactamente lo que esta KB sostiene que es
+proponible, y no un mercado de modelos.
+
+**La barrera declarada tiene una respuesta técnica nueva.** El informe de la CE sobre IA en redes
+inteligentes cita el cumplimiento de **GDPR**, la recolección de datos y el preprocesado extenso como
+obstáculos para **entrenar** modelos. [`OpenSynth-energy/OpenSynth`](https://github.com/OpenSynth-energy/OpenSynth)
+(**Apache-2.0**, 77 ★, cohorte LF Energy) publica modelos generadores de **perfiles sintéticos de
+consumo de contador**: datos que no pertenecen a ningún consumidor. Para un cliente europeo que no
+puede exportar datos de medición, va **antes** de `openstef` en el pipeline. Es el encaje
+regulación→repo más limpio de este pase.
+
+**Capa de datos de mercado:** [`fboerman/entsoe-py`](https://github.com/fboerman/entsoe-py) (**MIT**,
+745 ★, 270 forks) es el cliente canónico de la API de ENTSO-E y **el repo con más estrellas añadido
+en cinco pases**. La alternativa "GridStatus europeo", `jo20ow/Obsyd` (37 zonas de oferta), es
+**AGPL-3.0**: no usarla en un SaaS de cliente.
+
+**Lo que sigue sin equivalente abierto en EMEA:** emisiones horarias de red. `open-grid-emissions`
+(MIT) sólo cubre EE. UU. Gap medido, no omisión.
 
 ### APAC
 
@@ -394,6 +474,57 @@ punto de partida que lo cubre.
 subsuelo) y `douyimin/CIG-bench` (MIT, 66 ★). **El hueco es de oferta, no de demanda**: APAC es, según
 un informe, la región que lidera la *adopción*. Para un encargo APAC se integra stack EMEA o
 norteamericano; no hay base regional sobre la que construir.
+
+#### Actualización del quinto pase (2026-11-20)
+
+**La asimetría temporal es el argumento comercial de la región, y ahora tiene cifra.** Según la
+lectura de los informes de la AIE: la capacidad de IA se construye en **1-2 años**, las mejoras de
+red tardan **5-10 años**, y **la brecha es más ancha en APAC que en ninguna otra región**. Todo lo
+que esta KB propone —previsión, flexibilidad, optimización de lo existente— vive dentro de esa
+brecha, porque es lo único que se puede desplegar en el plazo corto.
+
+**El dato de adopción más riguroso que esta KB ha encontrado en cinco pases.** Encuesta de la AIE a
+operadores de red de **13 países**, China y Japón incluidos:
+
+| Uso de IA | Operadores que lo aplican |
+|-----------|---------------------------|
+| **Operación en tiempo real** | **23 %** |
+| Planificación de desarrollo de red | 54 % |
+| Mantenimiento de activos y planificación operativa | ~70 % |
+
+Leído para una propuesta: el mantenimiento y la planificación ya están adoptados —ahí se compite
+contra incumbentes—, y **el tiempo real está casi vacío**. También explica por qué
+`operatorfabric-core` (capa *human-in-the-loop*) importa: el salto de 54 % a 23 % es el salto de
+recomendar a actuar, y ningún operador lo da sin trazabilidad.
+
+**Demanda y mercado (fuentes de consultora, indicativas):**
+
+- **790 TWh** de incremento atribuido a datacenters; fuera de China, **India concentra ~50 %** del
+  crecimiento regional de demanda y el **Sudeste Asiático ~25 %**.
+- En **Japón**, los datacenters están **revirtiendo una década de caída** de la demanda energética.
+- **China:** State Grid opera IA en red; se describe una plataforma de orquestación a escala de
+  ciudad que integra **previsión, *trading*, regulación y liquidación en un solo sistema operativo**.
+  Advertencia recogida: la **falta de flexibilidad** de las redes chinas podría anular las ganancias
+  de eficiencia de la IA.
+- **India:** más de **200 millones de contadores inteligentes** aprobados bajo el RDSS; plan de Adani
+  de ~100 000 M USD de infraestructura de IA anclada en renovables.
+- **Japón:** TEPCO Power Grid desarrolla drones automatizados para captura 3D de equipos; Chubu
+  Electric entrenó un modelo de red neuronal sobre datos de red a **30 segundos** de resolución.
+- **Diseño de mercado:** licitaciones que **exigen cada vez más almacenamiento y flexibilidad** en
+  2026; China despliega *Green Power Direct Connection* a escala completa; **Tailandia y Vietnam**
+  avanzan marcos de PPA directo.
+
+**El gap de repos de origen APAC se mueve, poco pero verificado.**
+[`PyPSA/PyPSA-China`](https://github.com/PyPSA/PyPSA-China) es un modelo del sistema energético chino
+con **licencia MIT confirmada** (declarada en README y en `LICENSES/MIT.txt`; la API de GitHub dice
+`null` por el esquema REUSE). 49 ★, 15 forks, push 2026-07-14. Con `MyEMS` (MIT, 763 ★) y
+`price_forecast` (MIT, 25 ★) del cuarto pase, **ya son tres piezas permisivas y verificadas** con
+alcance APAC.
+
+**Precisión obligada:** `PyPSA-China` vive bajo la organización `PyPSA`, de liderazgo europeo. Es un
+modelo **de** China, no necesariamente un repo **de origen** chino. La hipótesis de que el ecosistema
+local está en Gitee **sigue sin ser testeable** desde este entorno (`gitee.com` → 403, octavo pase
+consecutivo). **No afirmar cobertura local en una propuesta APAC.**
 
 ### LATAM
 
@@ -558,6 +689,65 @@ con protocolos de red completos. La capa agéntica MIT de esta KB se monta encim
 código GPL**, como servicio separado. Es una oferta con componente regional genuino —no una
 importación— y aplicable a utilities medianas de toda la región.
 
+#### Actualización del quinto pase (2026-11-20)
+
+**Brasil pasó de intención a precedente regulatorio, y apareció una cifra que es directamente un
+encargo.**
+
+- **Precedente de acceso a red:** en **septiembre de 2026 ANEEL autorizó la conexión directa de
+  Scala a la red de alta tensión de 525 kV**. Es el primer precedente citable de conexión directa de
+  un datacenter en la región.
+- **Escala de la cola:** el Ministerio de Minas y Energía reportó **205 datacenters en operación** en
+  junio de 2026 y **38 GW en solicitudes de parecer de acceso**.
+- **Brasil concentra más del 40 %** de la inversión en datacenters de América Latina.
+- **La cifra que es un encargo: el *curtailment* alcanzó el 20,6 % de la generación eólica y solar
+  total en 2025 — unos 20 TWh de electricidad limpia desperdiciada.** Eso no es un problema de
+  capacidad instalada: es un problema de previsión, despacho y flexibilidad, que es exactamente lo
+  que esta KB sabe componer con repos permisivos (`openstef` MPL-2.0, `atlite` MIT, `OpenOA` BSD-3,
+  `PyPSA` MIT, `FlexMeasures` Apache-2.0).
+- **Riesgo recurrente:** las aprobaciones **municipales** siguen siendo un punto de fallo para la
+  elección de emplazamiento.
+
+**México — la restricción más dura de la región.** Las autoridades de **Querétaro programaron cortes
+de energía** para evitar el colapso del sistema. La capacidad renovable no crece al ritmo de la
+demanda inducida por IA, y los **costes y plazos de interconexión no están claros**. Para una
+propuesta: México es un mercado de **eficiencia y gestión de demanda en sitio**, no de nueva carga.
+
+**Chile — la restricción es permisología, no recurso.** El criterio específico del Servicio de
+Evaluación Ambiental para datacenters **entró en vigor el 25 de febrero de 2026**. La Comisión
+Nacional de Energía advierte que la expansión de infraestructura eléctrica no sigue el ritmo de la
+demanda de datacenters. El cuello de botella chileno es **transmisión y permisos**.
+
+- **Ventana regional citada por la industria:** ~**10 GW en 18 meses** como oportunidad de América
+  Latina para alimentar la era de la IA. Cifra de evento sectorial: usar como marco narrativo, no
+  como dato.
+- **Contrapunto honesto, y conviene llevarlo en la propuesta:** un análisis independiente describe
+  los datacenters latinoamericanos como *"vendidos como renovables, alimentados con fósiles"*. Un
+  discurso de descarbonización sin medición verificable es atacable; con `opendsm` (Apache-2.0,
+  Receta 17) y huella horaria, es defendible.
+
+**El gap de repos LATAM cambia de naturaleza: ya no es de oferta, es de permiso.**
+[`FTDT-PyPSA/PyPSA-AR`](https://github.com/FTDT-PyPSA/PyPSA-AR) — "PyPSA Argentina" — **existe**: 10 ★,
+1 fork, creado 2026-03-04, push 2026-04-30. Los cuatro pases anteriores registraron "cero repos
+institucionales con tracción" para Argentina. Ahora hay un modelo del sistema argentino, y **no tiene
+archivo de licencia en ninguna rama** (verificado: sin `LICENSE`, sin SPDX en README, sin
+`LICENSES/`). No se puede incluir en un entregable.
+
+| País | Credencial verificable | Estado al quinto pase |
+|------|------------------------|------------------------|
+| **Brasil** | `json-scada`, `OSHMI` (autor individual) | Sin cambios; sigue siendo la credencial más fuerte |
+| **Colombia** | `API_XM`, `datasets` (institucional, XM) | Sin cambios; la única institucional de la región |
+| **Argentina** | `PyPSA-AR` (10 ★, **sin licencia**) | **Nuevo**: existe el modelo, falta el permiso |
+| **Chile** | — | **Cero.** Búsqueda por "Coordinador Eléctrico Nacional" y por dominio: nada con tracción |
+| **México** | — | **Cero.** Búsqueda por "CENACE": nada energético con tracción |
+
+**Por qué las búsquedas de Chile y México no encuentran nada (para no repetirlas).** El término
+`eléctrico` está inutilizado en GitHub: `CENACE OR coordinador electrico in:name,description`
+devuelve un contenedor de apps Electron (`electrico`, 809 ★), patinetes eléctricos, cargadores y
+trabajos de curso. Es el mismo fenómeno que `hydrogen`. Lo que **sí** funcionó para Argentina fue
+buscar por **nombre de modelo** (`pypsa`), no por institución ni por dominio. **Recomendación para el
+próximo pase: buscar `PyPSA-CL`, `PyPSA-MX` y `PyPSA-BR` por nombre.**
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -608,6 +798,40 @@ verificables con fuente. "El mercado vale X" no lo es, y un cliente del sector l
 adopción**. Ambas no pueden ser la misma métrica. Probablemente una mide ingresos de vendors y la
 otra ritmo de despliegue — pero ninguna lo aclara. **No usar ninguna de las dos como afirmación de
 liderazgo regional.**
+
+
+### Actualización del quinto pase: la dispersión ahora es de 5,5× en el mismo año
+
+Dos consultoras, el mismo segmento (**IA agéntica en energía y utilities**), el mismo año:
+
+| Fuente | 2026 | Horizonte | CAGR | Nota |
+|--------|------|-----------|------|------|
+| Fact.MR | **4,8 B USD** | 36,2 B USD (2036) | — | Atribuye el **34 %** de la demanda a operación de red |
+| Mordor Intelligence | **0,87 B USD** | 4,11 B USD (2031) | 36,35 % | — |
+
+**5,5× de diferencia para 2026.** Es una ratificación más fuerte de la regla que esta KB ya aplica:
+**citar adopción, no tamaño**. La cifra de adopción utilizable es la de la AIE en el bloque APAC
+(23 % tiempo real / 54 % planificación / ~70 % mantenimiento).
+
+**Dos datos de adopción que sí son accionables, y ambos son advertencias:**
+
+- **Sólo la mitad de las utilities que han adoptado IA reportan ROI positivo** (análisis de un
+  integrador global, 2026). Es el dato que hay que poner encima de la mesa en una primera reunión:
+  la conversación no es "si IA", es "por qué la mitad no lo recupera".
+- **El 54 % de los encuestados del sector energético señala la incertidumbre regulatoria y de
+  cumplimiento como su principal preocupación** para desplegar IA agéntica (encuesta de una auditora,
+  2026). Encaja con la posición de esta KB: lo que se vende es integración y trazabilidad, no
+  autonomía.
+
+**Movimiento de incumbentes (para saber contra qué se compite):** en mayo de 2026 Siemens añadió
+capacidades agénticas a su plataforma **Gridscale X** para planificación de transmisión. Y los
+*foundation models* de red que el cuarto pase encontró en GitHub (`gridfm-datakit`,
+`gridfm-graphkit`) tienen ahora respaldo institucional identificado: se reporta que **IBM, LF Energy,
+Hydro-Québec y ETH Zúrich** desarrollan **GridFMs**. Eso explica la relación fork/star anómala que el
+cuarto pase midió en `gridfm-graphkit` (0,36): no es moda, es un consorcio.
+
+**Reserva:** todas las cifras de este bloque son de consultora o de nota de prensa. Ninguna se ha
+podido confirmar contra fuente primaria desde este entorno.
 
 ## Nota de método sobre las fuentes de este documento
 

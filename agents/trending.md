@@ -9,6 +9,66 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 5 (la cohorte LF Energy de septiembre, y una trampa de verificación propia)
+
+**Titular del pase: los cuatro proyectos que LF Energy anunció el 15 de septiembre de 2026 existen,
+son localizables y tres de los cuatro son permisivos o MPL — pero ninguno pasa de 34 ★.** El pase 4
+cerró diciendo que faltaba el modelo y lo encontró (`gridfm`, `GridSFM`). Este pase cierra el circuito
+institucional: el consorcio que publica esos modelos tiene además una **familia agéntica de red**
+recién nacida, con gobernanza de la Linux Foundation y convertidores hacia los dos motores que esta
+KB ya tenía (`powsybl` y `pandapower`).
+
+**Nuevo esta semana — cohorte LF Energy (anuncio 2026-09-15), verificada repo por repo:**
+
+| Repo | Licencia | ★ | Forks | Issues | Push | Señal |
+|------|----------|---|-------|--------|------|-------|
+| [energnn/energnn](https://github.com/energnn/energnn) | **MPL-2.0** | 34 | 4 | 15 | 2026-11-16 | GNN para redes de energía **reales**, no sintéticas. Creado 2025-10-16 |
+| [assetlife-project/assetlife](https://github.com/assetlife-project/assetlife) | **Apache-2.0** | 7 | 3 | **32** | 2026-11-19 | Modelado estocástico de vida de activo. Creado 2026-09-03: **32 issues sobre 7 ★** |
+| [SMART-HEMS-Benchmark/smart-hems-benchmark](https://github.com/SMART-HEMS-Benchmark/smart-hems-benchmark) | **MIT** | 7 | 2 | 0 | 2026-07-09 | Banco de pruebas HEMS; el par de evaluación de `agentic-ai-hems` |
+| [energnn/tensio](https://github.com/energnn/tensio) | **MPL-2.0** | 1 | 0 | 0 | 2026-10-19 | Aplicación de EnerGNN a mejora de tensiones |
+| [energnn/pypowsybl-to-energnn](https://github.com/energnn/pypowsybl-to-energnn) | **MPL-2.0** | 3 | 2 | 2 | 2026-10-15 | Conversor `pypowsybl` → grafo EnerGNN |
+| [energnn/pandapower-to-energnn](https://github.com/energnn/pandapower-to-energnn) | **MPL-2.0** | 0 | 0 | 0 | 2026-09-08 | Conversor `pandapower` → grafo EnerGNN |
+
+**Por qué los conversores importan más que la librería.** `energnn` sola es una librería de GNN con 34 ★:
+nada que justifique una propuesta. Los dos conversores la convierten en otra cosa — una capa que lee
+el modelo de red que el cliente **ya tiene** en PowSyBl o pandapower y lo entrega como grafo
+entrenable. El valor no está en el modelo, está en que no hay que rehacer el modelo de red.
+
+**La señal de `assetlife` es la relación issues/estrellas, no las estrellas.** 32 issues abiertas
+sobre 7 ★ y dos meses y medio de vida es desarrollo activo de un equipo, no abandono. El pase 4 de
+esta KB estableció la regla de comprobar `forks_count` antes de comprometer alcance; este pase añade
+el corolario: **en un repo recién nacido, `open_issues_count` alto es señal positiva**, al revés que
+en uno maduro.
+
+### Corrección de método: mi propio verificador se equivocó, y el error era en la dirección peligrosa
+
+Al resolver licencias leyendo el archivo crudo, el detector marcó `energnn/energnn` como **AGPL-3.0**.
+La API de GitHub decía **MPL-2.0**. Ganó la API: el texto de la MPL-2.0 **nombra la AGPL en su propia
+cláusula 1.12** ("Secondary Licenses" = GPL-2.0, LGPL-2.1, AGPL-3.0), de modo que cualquier detección
+por `grep` de la cadena *"GNU Affero"* convierte toda MPL-2.0 en AGPL.
+
+**Consecuencia para esta KB:** la familia europea de LF Energy es MPL-2.0 de forma consistente
+(ver nota del tercer pase) — es decir, **toda ella** es vulnerable a este falso positivo. Un pase
+futuro que "rescate licencias leyendo el crudo" sin esta precaución reclasificaría media KB a AGPL e
+inventaría una obligación de liberar el servicio que no existe. Regla: **ante conflicto entre la API
+y un detector de texto sobre una licencia de la familia MPL, gana la API**; el archivo crudo sólo
+decide cuando la API dice `null` o `NOASSERTION`.
+
+### La cola larga de agentes LLM energéticos sigue sin ser proponible
+
+Consulta `energy agent LLM in:name,description created:>2026-06-01`, 15 resultados. **Ninguno pasa de
+7 ★**; la mayoría son 0 ★ de autor individual (`langgraph-energy-agent` MIT 0 ★,
+`energyplus-llm-hvac-agent` MIT 0 ★, `renewable-energy-LLM-agent` sin licencia,
+`Knowledge-Orchestrated-LLM-Agent-Workflow` 1 ★ sin licencia). Es el mismo patrón que el pase 3 midió
+en LATAM: la demanda se ve, la oferta es personal y sin licencia.
+
+**Lectura:** lo creíble en esta categoría sigue siendo lo institucional que esta KB ya tiene
+(`Power-Agent/PowerMCP`, `LBNL-ETA/EnergyPlus-MCP`, `idfkit/idfkit-mcp`,
+`open-energy-transition/pypsa-mcp`). **No** hay un "agente energético" open source de propósito
+general con tracción. Sigue siendo integración, no instalación.
+
+---
+
 ## 2026-11-20 — pase 4 (los foundation models de red, y una trampa de estrellas)
 
 **Titular del pase: apareció la capa que faltaba entre el servidor MCP y el entorno RL — modelos

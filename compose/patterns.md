@@ -595,6 +595,114 @@ Amplía la Receta 6 (carga de EV) del nivel hogar al nivel **flota**, que es don
 más limpio de esta KB, y además el de mayor masa crítica comunitaria (T7). Para un primer encargo
 energético con un cliente nuevo, es el de menor riesgo técnico y legal.
 
+### Receta 21 — Analítica de cola de interconexión y grandes cargas (North America, dirigida por la orden de la FERC)
+
+**Disparador comercial concreto:** el 2026-06-18 la FERC emitió *show-cause orders* a **seis**
+operadores regionales (PJM, MISO, SPP, CAISO, ISO-NE, NYISO). Cada uno tiene que justificar o
+reformar cómo conecta grandes cargas. Esos seis, más ERCOT, son **exactamente** los siete que
+`gridstatus` lee con una sola interfaz.
+
+**Stack, todo permisivo:**
+
+1. [`gridstatus/gridstatus`](https://github.com/gridstatus/gridstatus) (**BSD-3-Clause**, 456 ★) —
+   ingesta homogénea de los siete ISO/RTO: carga, precios nodales, mix de generación.
+2. [`singularity-energy/open-grid-emissions`](https://github.com/singularity-energy/open-grid-emissions)
+   (**MIT**, 96 ★) — convierte generación horaria en **intensidad de carbono horaria**.
+3. [`NatLabRockies/ReEDS-2.0`](https://github.com/NatLabRockies/ReEDS-2.0) (**BSD-3**, 176 ★) o
+   [`sylvan-energy/gridpath`](https://github.com/sylvan-energy/gridpath) (**Apache-2.0**, 138 ★) —
+   escenarios de expansión bajo la nueva carga.
+4. [`sandialabs/quest_planning`](https://github.com/sandialabs/quest_planning) (ya en la KB) —
+   planificación de almacenamiento como alternativa al refuerzo de red.
+5. [`Green-Software-Foundation/carbon-aware-sdk`](https://github.com/Green-Software-Foundation/carbon-aware-sdk)
+   (**MIT**, ya en la KB) — desplaza cómputo flexible a las horas limpias.
+
+**Cómo se cablea:** `gridstatus` escribe series horarias normalizadas en un almacén temporal →
+`open-grid-emissions` las enriquece con factor de emisión por hora y región →
+`ReEDS-2.0`/`gridpath` consume el perfil de carga nueva como escenario → el resultado alimenta un
+informe de localización (*dónde conectar cuesta menos y emite menos*). El `carbon-aware-sdk` cierra
+el lazo del lado del cliente de datacenter.
+
+**Entregable que se vende:** un informe comparativo de **siete mercados con el mismo método**. Hoy
+cada ISO se analiza con su propio *scraper* ad hoc; la homogeneidad es el producto.
+
+⚠️ **Límites que hay que decir en la propuesta:** ERCOT queda en gran medida **fuera** de la
+jurisdicción de la FERC, así que no se puede prometer un marco regulatorio homogéneo entre los siete.
+Y los plazos de las órdenes **discrepan entre fuentes secundarias** (60 días vs. informes a 30):
+no comprometer fechas.
+
+---
+
+### Receta 22 — Del dimensionado del activo a la verificación del ahorro, en una sola cadena (las cuatro regiones)
+
+**El hueco que cierra:** esta KB sabía operar un activo (`OpenEMS`, `FlexMeasures`) y sabía certificar
+un ahorro (`opendsm`, Receta 17), pero no sabía **decidir qué activo instalar**. Esa es la primera
+pregunta de todo encargo de energía distribuida y ahora tiene motor abierto.
+
+**Cadena completa, cuatro etapas:**
+
+1. **Decidir el activo** — [`NatLabRockies/REopt_API`](https://github.com/NatLabRockies/REopt_API)
+   (BSD-3 + marca REopt®, 128 ★, 70 forks): mezcla óptima de solar + BESS + genset contra la tarifa
+   real del emplazamiento. Es el motor de `reopt.nrel.gov`, no una reimplementación.
+2. **Modelar el edificio si la carga es térmica** —
+   [`NatLabRockies/OpenStudio`](https://github.com/NatLabRockies/OpenStudio) (BSD-3 + marca, 660 ★)
+   sobre `EnergyPlus` (ya en la KB), y `sinergym` si se quiere control por RL.
+3. **Operar** — `OpenEMS` (EPL-2.0) o `FlexMeasures` (Apache-2.0), ya en la KB, con
+   [`Enapter/marketplace`](https://github.com/Enapter/marketplace) (**MIT**) para la integración de
+   dispositivos heterogéneos.
+4. **Certificar el ahorro** — [`opendsm/opendsm`](https://github.com/opendsm/opendsm)
+   (**Apache-2.0**, 244 ★): métodos estándar NMEC. Sin esta etapa el proyecto produce un número que
+   nadie firma.
+
+**Previsión como entrada transversal:** `openstef` (MPL-2.0) en EMEA,
+[`NatLabRockies/BuildingsBench`](https://github.com/NatLabRockies/BuildingsBench) (**BSD-3**, 123 ★)
+como *benchmark* para justificar la elección de modelo de carga.
+
+**Por qué esta receta cierra una venta mejor que las anteriores:** es la única que va de la pregunta
+inicial del cliente (*¿qué instalo?*) a la factura final (*¿cuánto ahorré, demostrado?*) sin ningún
+componente propietario en medio.
+
+⚠️ **Dos cláusulas de marca en la cadena.** `REopt®` y `OpenStudio®`: el producto de Globant **no
+puede llamarse** con esos nombres, ni usarlos en promoción, y una versión modificada debe citar el
+original. Resolver el *naming* al principio del proyecto, no al final.
+
+---
+
+### Receta 23 — Entrenar un modelo de carga en EMEA sin tocar datos personales de medición
+
+**El problema real, declarado por el propio regulador:** el informe de la Comisión Europea sobre IA en
+redes inteligentes señala **GDPR**, la recolección de datos y el preprocesado extenso como obstáculos
+para entrenar modelos. Un cliente europeo que no puede exportar curvas de carga de sus consumidores
+no puede entrenar nada — y ésa es la objeción que mata el proyecto en la fase legal, no en la técnica.
+
+**Secuencia que la resuelve:**
+
+1. [`OpenSynth-energy/OpenSynth`](https://github.com/OpenSynth-energy/OpenSynth) (**Apache-2.0**,
+   77 ★, cohorte LF Energy) — genera perfiles **sintéticos** de consumo de contador. No son de ningún
+   consumidor, así que no hay titular de datos.
+2. [`NatLabRockies/BuildingsBench`](https://github.com/NatLabRockies/BuildingsBench) (**BSD-3**,
+   123 ★) — preentrena y **mide** el modelo de previsión de carga contra un banco estándar.
+3. [`OpenSTEF/openstef`](https://github.com/OpenSTEF/openstef) (**MPL-2.0**, ya en la KB) — lleva el
+   modelo a producción con el pipeline que ya usan Alliander y RTE.
+4. **Afinado en sitio** con los datos reales del cliente, que **nunca salen** de su perímetro.
+5. [`fboerman/entsoe-py`](https://github.com/fboerman/entsoe-py) (**MIT**, 745 ★) — aporta precio y
+   generación de mercado, que son datos públicos y no personales.
+
+**El argumento de venta es jurídico antes que técnico:** se entrena fuera con datos que no son de
+nadie, se afina dentro con datos que no se mueven. Es una arquitectura que pasa revisión legal, y
+ésa es la razón por la que el cliente la compra.
+
+**Dónde encaja la familia `energnn`:** si el cliente es un operador con modelo de red en PowSyBl o
+pandapower,
+[`energnn/pypowsybl-to-energnn`](https://github.com/energnn/pypowsybl-to-energnn) y
+[`energnn/pandapower-to-energnn`](https://github.com/energnn/pandapower-to-energnn) (**MPL-2.0**)
+convierten ese modelo en grafo entrenable sin rehacerlo. Son de 0-3 ★: **vía de evaluación**, igual
+que la Receta 19, no base de producción.
+
+⚠️ **MPL-2.0 en `openstef` y en `energnn`**: copyleft por archivo. Integrar sí; marca blanca con el
+motor modificado, no.
+
+---
+
 ## Qué **no** proponer (gaps medidos, actualizado en el tercer pase del 2026-11-20)
 
 Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
@@ -675,6 +783,56 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
 | `navariltd/utility-billing` (70 ★) | app de facturación sobre ERPNext | **AGPL-3.0** sobre ERPNext **GPL-3.0** | Cláusula de red en cualquier SaaS de utility |
 | Familia LF Energy (`Grid2Op`, `PowSyBl`, `operatorfabric-core`, `ExpertOp4Grid`, `power-grid-model-ai`) | "open source europeo" | **MPL-2.0** de forma consistente | Copyleft por archivo: integración sí, marca blanca con motor modificado no |
 
+
+### Actualización del quinto pase (2026-11-20)
+
+**Entradas que se caen de la lista "no proponer":**
+
+| Lo que decía un pase anterior | Estado al quinto pase |
+|-------------------------------|------------------------|
+| (implícito) "la ingesta de datos de mercado es desarrollo propio" | ✅ **Falso para EMEA y North America.** `entsoe-py` (MIT, 745 ★) y `gridstatus` (BSD-3, 456 ★). Sigue siendo cierto en **LATAM y APAC** |
+| "Dimensionar el activo es desarrollo propio" | ✅ **Cerrado.** `REopt_API` es el motor real de NREL (BSD-3 + marca) → Receta 22 |
+
+**Nuevos "no proponer", medidos en este pase:**
+
+- **Un bot de pujas mayoristas.** Reafirmado por quinta vez y ahora con la frontera dibujada (T25):
+  *leer* el mercado es MIT/BSD y maduro; *pujar* no tiene base en ninguna región. 15 resultados de
+  `day-ahead bidding`, ninguno por encima de 12 ★, casi todos sin licencia.
+- **Huella de carbono horaria fuera de EE. UU.** `open-grid-emissions` (MIT) cubre **sólo** la red
+  estadounidense. Prometer intensidad de carbono horaria verificable en EMEA, APAC o LATAM es
+  prometer desarrollo de la capa de factores de emisión. **Gap nuevo de este pase.**
+- **Una plataforma geotérmica.** Hay **un** repo usable (`GEOPHIRES-X`, MIT, 67 ★) y es un simulador
+  técnico-económico, no una plataforma. Y cuidado: `GEOPHIRES-v2` es **GPL-3.0** — mismo simulador,
+  licencia distinta según versión.
+- **Un ecosistema de hidrógeno.** Tres repos permisivos (`electrolyzer` Apache-2.0 35 ★, `HOPP`
+  BSD-3 41 ★, `AlphaPEM` BSD-3 49 ★) más `pandapipes`. Base para un estudio; no para un producto.
+- **`PyPSA-AR` en un entregable para Argentina.** Existe (10 ★) y **no tiene archivo de licencia**
+  en ninguna rama. Es el caso `GEM` otra vez: gap de permiso, no de oferta.
+- **Nada basado en `resstock` para un cliente académico o sin ánimo de lucro** sin revisión legal
+  previa. Ver la tabla de trampas.
+
+### Trampas de licencia añadidas en el quinto pase
+
+| Repo | Parece | Es | Consecuencia si se asume mal |
+|------|--------|----|------------------------------|
+| `NatLabRockies/resstock` (147 ★) | laboratorio nacional → "BSD permisiva" | **BSD-3 + copyleft condicionado al TIPO DE REDISTRIBUIDOR + marca ResStock™** | **Si el cliente es universidad, laboratorio nacional u ONG, hay que publicar todo el código correspondiente de la redistribución, modificada o no.** Se activa por quién es el cliente, no por lo que se hace |
+| `NatLabRockies/REopt_API` (128 ★) | BSD-3 | **BSD-3 + cláusula de designación `REopt®` + no-endoso DOE** | La versión modificada no puede llamarse REopt® y **debe** citar el original como REopt® |
+| `NatLabRockies/OpenStudio` (660 ★) | BSD-3 | **BSD-3 + marca `OpenStudio®`** | Igual que `EnergyPlus`: el nombre no puede ir en producto ni promoción |
+| `richard-weinhold/pomato` (101 ★) | la API dice `NOASSERTION` → "sin licencia" | **LGPL-3.0** declarada en `LICENSE.md` | Se descartaría un repo usable; y es copyleft de biblioteca (sin push desde 2025-08) |
+| `NatLabRockies/electrolyzer` (35 ★) | la API dice `NOASSERTION` | **Apache-2.0** limpia | Se descartaría la única base permisiva de electrolizador |
+| `PyPSA/pypsa-eur` (640 ★) | la API dice `null` → "sin licencia" | **Código MIT + documentación/datos CC-BY-4.0** (esquema REUSE, `LICENSES/`) | Se descartaría el modelo europeo de referencia |
+| `PyPSA/PyPSA-China` (49 ★) | la API dice `null` | **MIT** (README + `LICENSES/MIT.txt`) | Se descartaría la única pieza APAC con licencia verificada |
+| `FTDT-PyPSA/PyPSA-AR` (10 ★) | "es un PyPSA, será MIT" | **sin licencia alguna** | Se incluiría en un entregable argentino sin derecho a hacerlo |
+| `energnn/energnn` (34 ★) y familia | un `grep` del texto dice **AGPL-3.0** | **MPL-2.0** | Falso positivo: la MPL-2.0 **nombra la AGPL en su cláusula 1.12**. Se inventaría una obligación de liberar el servicio |
+| `jo20ow/Obsyd` (12 ★) | "el GridStatus europeo" | **AGPL-3.0** | Cláusula de red en un SaaS de cliente |
+
+**La lección transversal del ecosistema PyPSA**: usa el esquema **REUSE** (licencias en `LICENSES/`
+y cabeceras SPDX), por lo que la API de GitHub devuelve `null` para casi toda la familia mientras el
+código es perfectamente usable. Resultado medido en cinco repos: **`pypsa-eur` MIT+CC-BY-4.0 ·
+`PyPSA-China` MIT · `PyPSA-GB` MIT · `pypsa-earth` AGPL-3.0-or-later · `PyPSA-AR` sin licencia**.
+Mismo ecosistema, **cinco resultados distintos**. Nunca inferir la licencia de un `PyPSA-*` por
+familia: hay que leer cada uno.
+
 ---
-*Verificado 2026-11-20 en cuatro pases (20 recetas). Re-verificar licencias y stars antes de
+*Verificado 2026-11-20 en cinco pases (23 recetas). Re-verificar licencias y stars antes de
 comprometer alcance.*

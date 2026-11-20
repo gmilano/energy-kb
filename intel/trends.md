@@ -354,6 +354,114 @@ subsector es copyleft") sacada de 3–4 repos es una conclusión sobre la muestr
 un pase declara una propiedad de un subsector entero, el siguiente debe intentar refutarla
 explícitamente. Este pase lo hizo y la refutó.
 
+## T22 — La KB sabía simular los mercados y no sabía leerlos
+
+Cuatro pases catalogaron 147 repos: modelado de red, optimización, expansión de capacidad,
+simulación de mercados, entornos RL, servidores MCP, *foundation models*. Faltaba la capa que un
+encargo necesita el **primer día**: bajar precio, carga y generación reales del operador.
+
+Lo que faltaba no era marginal ni oscuro:
+
+- [`fboerman/entsoe-py`](https://github.com/fboerman/entsoe-py) — **MIT**, **745 ★**, 270 forks,
+  creado en 2017, 11 issues abiertas. **El repo con más estrellas que esta KB ha añadido en cinco
+  pases.**
+- [`gridstatus/gridstatus`](https://github.com/gridstatus/gridstatus) — **BSD-3-Clause**, 456 ★,
+  los siete ISO/RTO de EE. UU. con una sola interfaz.
+
+**Diagnóstico:** los pases anteriores buscaron por **función** (`forecasting`, `optimization`,
+`DERMS`, `agent`) y nunca por **fuente de datos**. Es la confirmación más cara de T10 ("los gaps eran
+gaps de vocabulario"), porque el hueco estaba en la categoría más elemental de todas y llevaba nueve
+años tapado a la vista.
+
+**Regla operativa para el próximo pase:** antes de buscar por capacidad, buscar por **el nombre del
+operador y del dato** — `ENTSO-E`, `ISO`, `RTO`, `SCADA`, `AMI`, `CGMES`, `settlement`, `tariff`.
+
+## T23 — MPL-2.0 nombra la AGPL dentro de su propio texto, y eso rompe la verificación por `grep`
+
+Hallazgo de método, con consecuencia directa sobre el valor de esta KB.
+
+Un detector de licencias por lectura del archivo crudo marcó `energnn/energnn` como **AGPL-3.0**. La
+API de GitHub decía **MPL-2.0**, y la API tenía razón: la cláusula **1.12** de la MPL-2.0 define
+"Secondary Licenses" **nombrando** GPL-2.0, LGPL-2.1 y **AGPL-3.0**. Cualquier `grep` de *"GNU
+Affero"* sobre un archivo MPL devuelve un falso positivo.
+
+**Por qué es grave en esta KB en particular:** T9 y la nota del tercer pase establecieron que
+**MPL-2.0 es la licencia por defecto del sector eléctrico europeo** — `Grid2Op`, `PowSyBl`,
+`operatorfabric-core`, `ExpertOp4Grid`, `power-grid-model`, `power-grid-model-ai`, `openstef`,
+`VeraGrid`, `dpsim` y ahora toda la familia `energnn`. Un pase que "rescate licencias leyendo el
+crudo" sin esta precaución **reclasificaría a AGPL buena parte de la KB** e inventaría una obligación
+de liberar el servicio del cliente que no existe.
+
+**Jerarquía de verificación, corregida:**
+
+1. Si la API da un SPDX concreto → **ese es el dato**.
+2. Si la API da `null` o `NOASSERTION` → leer el archivo crudo.
+3. Al leer el crudo, identificar la licencia por su **título** (primera línea), nunca por la mención
+   de otras licencias en el cuerpo.
+4. Ante conflicto entre API y texto en la familia MPL → **gana la API**.
+
+## T24 — `NOASSERTION` en un laboratorio nacional no es un defecto de la API: es el dato correcto
+
+El cuarto pase trató `NOASSERTION` como ruido a corregir. En los repos de laboratorio nacional es
+**exacto**: esas licencias **no son OSI**. Leídas en crudo, tres patrones distintos:
+
+| Patrón | Repo | Qué añade sobre BSD-3 |
+|--------|------|------------------------|
+| **Copyleft condicionado al tipo de redistribuidor** | `NatLabRockies/resstock` (147 ★) | Si redistribuye una **universidad, laboratorio nacional u ONG**, todo el código correspondiente debe publicarse bajo la misma licencia |
+| **Cláusula de designación de marca** | `NatLabRockies/REopt_API` (128 ★), `OpenStudio` (660 ★), `EnergyPlus` (ya registrado) | La versión modificada no puede usar el nombre, y debe citar el original con su marca |
+| **No-endoso gubernamental** | `REopt_API`, `resstock` | Prohibido invocar DOE o el gobierno de EE. UU. para promocionar el derivado |
+
+**El caso `resstock` es de un tipo nuevo para esta KB.** Todas las trampas catalogadas hasta ahora se
+activaban por **lo que haces** con el código: servirlo en SaaS (AGPL), modificar el motor (MPL),
+enlazarlo (LGPL). Esta se activa por **quién es tu cliente**. Un encargo de modelado de parque
+residencial con una universidad o una fundación —perfiles de cliente habituales en proyectos de
+eficiencia financiados— **obliga a publicar el entregable**. No se detecta leyendo la etiqueta: hay
+que leer la cláusula.
+
+**Implicación de proceso:** el *gate* de compliance no puede basarse en el campo `license` de la API.
+Para cualquier repo de `NatLabRockies` o de laboratorio equivalente, **leer el archivo completo**.
+
+## T25 — Leer el mercado es maduro y permisivo; pujar en él no tiene base en ninguna región
+
+El tercer pase declaró el gap de *trading* y el cuarto lo mantuvo. Este pase lo **delimita por
+completo**, y la frontera resulta ser nítida:
+
+| Capa | Estado | Evidencia |
+|------|--------|-----------|
+| **Leer** precio/carga/generación | ✅ **Maduro y permisivo** | `entsoe-py` MIT 745 ★ · `gridstatus` BSD-3 456 ★ · `API_XM` (Colombia) · `Obsyd` AGPL 12 ★ (EU, 37 zonas) |
+| **Simular** el mercado | 🟡 **Hay base** | `assume` MIT 128 ★ · `elecsim` MIT 61 ★ · `pomato` **LGPL-3.0** 101 ★ (sin push desde 2025-08) · `gridpath` Apache-2.0 138 ★ |
+| **Optimizar** una cartera contra precios | 🟡 **Ejemplos, no bases** | `battery-storage-optimization-energy-ancillary` Apache-2.0 **11 ★** (co-optimiza energía + servicios auxiliares leyendo `gridstatus`) |
+| **Pujar** de verdad | ❌ **Cero** | 15 resultados de `day-ahead bidding`: ninguno pasa de 12 ★, casi todos **sin licencia** (`capstone-optimal-bidding`, `elbud`, `powerbid`) |
+
+**Conclusión estable a cinco pases: no proponer un bot de pujas mayoristas.** Lo nuevo es que ya no
+es una ausencia difusa, sino una frontera medida: el salto de *simular* a *ejecutar* no lo ha dado
+nadie en open source, en ninguna de las cuatro regiones. Un cliente que lo pida está pidiendo
+desarrollo desde cero más integración con el operador de mercado, y conviene presupuestarlo así.
+
+## T26 — Dos categorías enteras resultaron delgadas pero permisivas: hidrógeno y geotermia
+
+Buscadas explícitamente en este pase, con resultado medido en lugar de silencio:
+
+- **Geotermia: un solo repo usable.** `GEOPHIRES-X` (**MIT**, 67 ★, 49 forks, push 2026-11-19, 83
+  issues). Su predecesor `GEOPHIRES-v2` es **GPL-3.0** y está congelado desde 2023 — *mismo
+  simulador, licencia distinta según versión*, patrón que conviene comprobar siempre. El resto:
+  `geothermal-cookbook` (Apache-2.0, 27 ★, muerto desde 2022) y `GeoThermalCloud.jl` (GPL-3.0, 36 ★).
+- **Hidrógeno: existe, y el término de búsqueda no sirve.** `hydrogen in:name stars:>50` devuelve un
+  framework de comercio electrónico (`Shopify/hydrogen`, 2.183 ★), un plugin de Jupyter (4.018 ★) y
+  una caja de ritmos (1.357 ★): **ni un resultado energético en quince**. Buscando por
+  `electrolyzer`, `PEMFC` y por organización aparece lo real y es permisivo:
+  `NatLabRockies/electrolyzer` (**Apache-2.0**, 35 ★), `HOPP` (BSD-3, 41 ★, **66 forks**),
+  `AlphaPEM` (**BSD-3**, 49 ★), más `pandapipes` para la red de gas/H₂.
+
+**Veredicto para ambas:** hay base para un **estudio técnico-económico**, no hay ecosistema para una
+plataforma. Presupuestar como ingeniería de modelo, no como integración de producto.
+
+**Añadido a la lista de términos inutilizables en GitHub** (que ya incluía los genéricos del cuarto
+pase): **`hydrogen`** y **`eléctrico`/`electrico`**. El segundo es el que ha estado ocultando
+LATAM: buscar `CENACE` o `coordinador electrico` devuelve contenedores de Electron, patinetes y
+cargadores. Lo que funcionó para encontrar Argentina fue buscar por **nombre de modelo**
+(`pypsa`), no por institución.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
@@ -470,6 +578,46 @@ existe es tan dañino como uno que no se declara.
 - **Pesos de modelo con licencia verificada**: `huggingface.co` sigue sin resolver desde este entorno
   (sexto pase consecutivo). Ninguna afirmación sobre licencia de pesos es verificable aquí.
 
+
+### Estado al cierre del quinto pase (2026-11-20)
+
+**Cerrados en este pase:**
+
+- **Acceso a datos de mercado y de red** → `entsoe-py` (MIT, 745 ★) para EMEA, `gridstatus` (BSD-3,
+  456 ★) para North America, `open-grid-emissions` (MIT, 96 ★) para emisiones horarias de EE. UU.
+  Era el gap más básico y el que llevaba más tiempo sin verse.
+- **Tecno-economía de generación y de activo** → `REopt_API`, `gridpath`, `ReEDS-2.0`, `Egret`,
+  `pysam`, `ROSCO`, `HOPP`, `bifacial_radiance`, `GEOPHIRES-X`.
+- **SDK de edificios bajo EnergyPlus** → `OpenStudio` (660 ★) y `resstock` (147 ★, con la cláusula
+  que hay que leer).
+- **Datos de entrenamiento sin problema de GDPR** → `OpenSynth` (Apache-2.0, 77 ★). Responde a la
+  barrera que la propia Comisión Europea declara.
+- **Geotermia** → acotado: un repo usable (`GEOPHIRES-X`, MIT).
+- **Hidrógeno** → acotado: tres repos permisivos, ningún ecosistema.
+
+**Abiertos, con el límite medido (actualizado):**
+
+- **Ejecución de mercado (pujas reales)**: cero en las cuatro regiones. Ver T25. **Es la frontera
+  mejor medida de esta KB.**
+- **Emisiones horarias de red fuera de EE. UU.**: `open-grid-emissions` sólo cubre EE. UU. **Gap
+  nuevo, declarado explícitamente en este pase.**
+- **DERMS open source completo**: sin cambios. Piezas, no sistema.
+- **Oferta de origen LATAM**: cambia de naturaleza. `PyPSA-AR` (Argentina) **existe** con 10 ★ y
+  **sin archivo de licencia**: ya no es gap de oferta, es **gap de permiso**. Chile y México siguen en
+  **cero** verificado, y ahora se sabe que el término `eléctrico` es la causa de que las búsquedas
+  por institución no encuentren nada.
+- **Oferta de origen APAC**: se mueve poco pero verificado. `PyPSA-China` tiene **MIT confirmada** por
+  README y `LICENSES/MIT.txt`. Precisión obligada: vive bajo la organización `PyPSA`, de liderazgo
+  europeo — es un modelo **de** China, no un repo **de origen** chino. `gitee.com` → 403, **octavo
+  pase consecutivo**.
+- **Pesos de modelo con licencia verificada**: `huggingface.co` sigue sin resolver, **séptimo pase
+  consecutivo**.
+- **Confirmación primaria regulatoria**: sin cambios y ahora con más superficie expuesta. Lo añadido
+  en este pase (órdenes de la FERC de junio de 2026, alerta NERC de nivel 3, hoja de ruta de la CE,
+  los 75 M€ de Horizon Europe, la autorización de ANEEL a Scala, el criterio del SEA chileno) es
+  **todo secundario**. `eur-lex.europa.eu` sigue devolviendo 403. Sirve para planear; **no para
+  firmar**.
+
 ---
-*Investigado 2026-11-20 en cuatro pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en cinco pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

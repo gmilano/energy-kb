@@ -280,6 +280,91 @@ pega a `api.open-meteo.com` y luego pasa a producción comercial cambia de régi
 nadie lo note. Decidir desde el día uno: plan comercial de Open-Meteo, o proveedor meteorológico del
 cliente, o aceptar AGPL. Es la clase de detalle que aparece en la auditoría, no en el piloto.
 
+## Acceso a datos de mercado y de red: la capa que faltaba (quinto pase, 2026-11-20)
+
+Cuatro pases construyeron capacidad de **simular** mercados y **ninguna** de leerlos. Estas son las
+librerías canónicas del sector para bajar precio, carga, generación y flujos reales del operador.
+Son el primer día de cualquier encargo.
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [fboerman/entsoe-py](https://github.com/fboerman/entsoe-py) | **MIT** | Cliente Python de la API de ENTSO-E: precios, generación, carga y flujos transfronterizos de toda Europa. Creado 2017, 11 issues abiertas | 745 | 270 | 2026-11-17 | EMEA |
+| [gridstatus/gridstatus](https://github.com/gridstatus/gridstatus) | **BSD-3-Clause** | Extrae datos de los siete ISO/RTO estadounidenses (CAISO, ERCOT, PJM, MISO, SPP, NYISO, ISO-NE) con una sola interfaz | 456 | 89 | 2026-11-18 | North America |
+| [PyPSA/powerplantmatching](https://github.com/PyPSA/powerplantmatching) | **MIT** (SPDX en README) | Reconcilia varias bases de datos de centrales eléctricas en un registro único y deduplicado | 235 | 77 | 2026-11-19 | EMEA |
+| [singularity-energy/open-grid-emissions](https://github.com/singularity-energy/open-grid-emissions) | **MIT** | Generación y emisiones **horarias** de la red de EE. UU.; 97 issues abiertas sobre 96 ★ = proyecto trabajado | 96 | 7 | 2026-11-19 | North America |
+| [gridstatus/gridstatusio](https://github.com/gridstatus/gridstatusio) | **BSD-3-Clause** | Cliente de la API alojada de GridStatus.io (misma familia, servicio gestionado) | 58 | 5 | 2026-11-16 | North America |
+| [entsoe/application-profiles-library](https://github.com/entsoe/application-profiles-library) | **Apache-2.0** | Artefactos RDFS/SHACL **oficiales** de CGMES y perfiles CIM. Cuenta institucional `entsoe` | 29 | 9 | 2026-10-28 | EMEA |
+| [entsoe/ReliCapGrid](https://github.com/entsoe/ReliCapGrid) | NOASSERTION | Modelos de prueba CGMES y perfiles CIM de códigos de red; útil para validar integraciones | 21 | 6 | 2026-11-18 | EMEA |
+| [jo20ow/Obsyd](https://github.com/jo20ow/Obsyd) | **AGPL-3.0** | "GridStatus para Europa": 37 zonas de oferta, precios *day-ahead* a 15 minutos. Nuevo (creado 2026-03-04) | 12 | 1 | 2026-11-11 | EMEA |
+
+**Cómo encaja con lo que ya había.** `gridstatus` → `open-grid-emissions` → `carbon-aware-sdk` (ya en
+la KB) cierra la cadena *dato de red → emisión horaria → decisión de carga* enteramente en MIT/BSD
+para North America. En EMEA el equivalente es `entsoe-py` → `openstef`, y la pieza de emisiones
+horarias **no tiene equivalente abierto**: es un gap medido, no una omisión.
+
+**Advertencia sobre `Obsyd`:** es lo más parecido a un "GridStatus europeo" y es **AGPL-3.0**. En un
+SaaS de cliente obliga a liberar el servicio. Para EMEA, la ruta permisiva es `entsoe-py` (MIT).
+
+## Plataformas de planificación y tecno-economía de laboratorio nacional (quinto pase)
+
+La KB tenía los modelos académicos de expansión de capacidad; faltaban las plataformas que la
+industria y los laboratorios usan de verdad.
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [NatLabRockies/ROSCO](https://github.com/NatLabRockies/ROSCO) | **Apache-2.0** | Controlador de referencia de aerogenerador; la capa de control que faltaba sobre `openfast` y `floris`. 125 forks sobre 182 ★ | 182 | 125 | 2026-09-29 | Global |
+| [NatLabRockies/ReEDS-2.0](https://github.com/NatLabRockies/ReEDS-2.0) | **BSD-3-Clause** | Modelo de expansión de capacidad del sistema eléctrico de EE. UU. a escala nacional | 176 | 79 | 2026-04-22 | North America |
+| [grid-parity-exchange/Egret](https://github.com/grid-parity-exchange/Egret) | **BSD-3-Clause** (leída en crudo; la API dice `NOASSERTION`) | Bloques de construcción para problemas de optimización de sistemas de potencia (unit commitment, OPF) | 173 | 72 | 2026-11-08 | North America |
+| [NatLabRockies/pysam](https://github.com/NatLabRockies/pysam) | **BSD-3-Clause** | Envoltorio Python del System Advisor Model: modelo técnico **y** financiero de proyecto | 157 | 87 | 2026-09-27 | Global |
+| [sylvan-energy/gridpath](https://github.com/sylvan-energy/gridpath) | **Apache-2.0** | Plataforma que resuelve planificación **y** operación en un mismo modelo; 58 issues abiertas | 138 | 71 | 2026-11-19 | Global |
+| [NatLabRockies/REopt_API](https://github.com/NatLabRockies/REopt_API) | BSD-3 + **cláusula de marca REopt®** | Dimensionado óptimo de DER en un emplazamiento (solar + BESS + genset + tarifa). Motor de reopt.nrel.gov | 128 | 70 | 2026-11-17 | North America |
+| [NatLabRockies/BuildingsBench](https://github.com/NatLabRockies/BuildingsBench) | **BSD-3-Clause** | Preentrenamiento a gran escala y *benchmark* de previsión de carga a corto plazo | 123 | 24 | 2026-02-25 | North America |
+| [NatLabRockies/ParaEMT_public](https://github.com/NatLabRockies/ParaEMT_public) | **BSD-3-Clause** | Simulación de transitorios electromagnéticos paralelizada; complementa `dpsim` | 113 | 54 | 2026-01-15 | North America |
+| [NatLabRockies/bifacial_radiance](https://github.com/NatLabRockies/bifacial_radiance) | **BSD-3-Clause** | Trazado de rayos para fotovoltaica bifacial; 85 issues abiertas | 111 | 56 | 2026-09-25 | Global |
+| [OpenSynth-energy/OpenSynth](https://github.com/OpenSynth-energy/OpenSynth) | **Apache-2.0** | Modelos generadores de **datos sintéticos** de consumo de contador (cohorte LF Energy) | 77 | 12 | 2026-10-12 | EMEA |
+| [NatLabRockies/GEOPHIRES-X](https://github.com/NatLabRockies/GEOPHIRES-X) | **MIT** | Simulador técnico-económico **geotérmico**: reservorio, pozo y planta de superficie | 67 | 49 | 2026-11-19 | Global |
+| [NatLabRockies/HOPP](https://github.com/NatLabRockies/HOPP) | **BSD-3-Clause** | Plantas híbridas: renovable + almacenamiento + hidrógeno. **66 forks sobre 41 ★** | 41 | 66 | 2026-04-10 | North America |
+
+**`OpenSynth` merece atención aparte.** La inteligencia de mercado de este pase registra que el
+informe de la Comisión Europea sobre IA en redes inteligentes señala **GDPR y preprocesado** como
+barreras para entrenar modelos. `OpenSynth` publica generadores de perfiles de consumo sintéticos:
+datos de contador que no pertenecen a ningún consumidor. Va **antes** de `openstef` o
+`BuildingsBench` en el pipeline de un cliente europeo que no puede exportar datos de medición.
+
+## Edificios: el SDK que faltaba bajo EnergyPlus (quinto pase)
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [NatLabRockies/OpenStudio](https://github.com/NatLabRockies/OpenStudio) | BSD-3 + **marca OpenStudio®** | SDK y colección de herramientas para modelado energético de edificio completo sobre EnergyPlus; 281 issues | 660 | 241 | 2026-11-17 | Global |
+| [NatLabRockies/resstock](https://github.com/NatLabRockies/resstock) | **Licencia propia: BSD-3 + copyleft condicionado al tipo de redistribuidor + marca ResStock™** | Modelado granular del **parque residencial** a escala nacional, regional y local, sobre OpenStudio | 147 | 85 | 2026-11-19 | North America |
+
+⚠️ **`resstock` tiene la cláusula más peligrosa catalogada en esta KB.** Ver `compose/patterns.md`.
+
+## Hidrógeno y pila de combustible: delgado, pero permisivo (quinto pase)
+
+Categoría buscada explícitamente y medida. El término `hydrogen` **no sirve en GitHub** (lo copan
+`Shopify/hydrogen`, `nteract/hydrogen` y una caja de ritmos). Buscando por `electrolyzer` y por
+organización, lo utilizable es:
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [gassraphael/AlphaPEM](https://github.com/gassraphael/AlphaPEM) | **BSD-3-Clause** | Simulación de sistemas de pila de combustible PEMFC | 49 | 15 | 2026-11-18 | EMEA |
+| [NatLabRockies/electrolyzer](https://github.com/NatLabRockies/electrolyzer) | **Apache-2.0** (rescatada del crudo; la API dice `NOASSERTION`) | Modelo de electrolizador; 31 issues abiertas | 35 | 28 | 2026-08-12 | North America |
+
+Más `NatLabRockies/HOPP` (BSD-3, arriba) para el dimensionado del conjunto y `e2nIEE/pandapipes` (ya
+en la KB) para la red de gas/H₂. **Todo lo demás encontrado son modelos académicos de 2 a 25 ★ sin
+archivo de licencia.** Hay base para un estudio; no hay ecosistema.
+
+## Geotermia: un solo repo usable (quinto pase)
+
+`GEOPHIRES-X` (**MIT**, 67 ★, tabla de arriba) es el único activo y permisivo. Registrado para que no
+se vuelva a buscar:
+
+- `NatLabRockies/GEOPHIRES-v2` — **GPL-3.0**, 48 ★, sin push desde 2023-10-31. *Mismo simulador,
+  licencia distinta según la versión*: usar siempre la X.
+- `ICWallis/geothermal-cookbook` — Apache-2.0, 27 ★, sin push desde 2022-10-25.
+- `SmartTensors/GeoThermalCloud.jl` — **GPL-3.0**, 36 ★.
+
 ## Notas de licencia que cambian decisiones
 
 - **`NatLabRockies/EnergyPlus` no es BSD-3 plano.** El `LICENSE.txt` crudo añade una **cláusula (4)
