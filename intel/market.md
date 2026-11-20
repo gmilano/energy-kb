@@ -270,6 +270,49 @@ red principal de Texas, que está en gran medida fuera de su jurisdicción. Una 
 cliente tejano no puede apoyarse en este argumento regulatorio; hay que reconstruirlo sobre las reglas
 de ERCOT. No proponer lo mismo en Houston que en Richmond.
 
+
+#### Actualización del octavo pase (2026-11-20): de la orden regulatoria a la factura, y quién la paga
+
+Lo que el octavo pase añade a las órdenes de la FERC ya registradas es **la pelea distributiva que
+viene detrás**, que es la que un cliente de utility tiene hoy en la agenda:
+
+- **Lo que las órdenes de la FERC explícitamente no resolvieron**: no abordan la **escasez de
+  capacidad de generación** y no aprueban ningún datacenter concreto. Son reforma de **tarifa de
+  conexión**, no de oferta. Una propuesta que prometa "resolver la interconexión" sobre este
+  argumento se queda corta en la mitad del problema.
+- **El servicio minorista es competencia estatal.** Las comisiones estatales aprueban las tarifas
+  minoristas con las que una utility sirve a un datacenter, y **varios estados están escribiendo sus
+  propias tarifas de carga grande**. Consecuencia directa: *no hay una propuesta nacional de EE. UU.*
+  — hay tantas como comisiones estatales. Es el mismo límite jurisdiccional que ya se registró para
+  ERCOT, generalizado.
+- **Proyecto de ley federal pendiente**: la *Bipartisan American Affordability and Jobs Act of 2026*
+  contendría protecciones obligatorias al contribuyente; su §2107 instruiría a la FERC a que las
+  utilities cobren a los datacenters la transmisión a **coste incorporado e incremental**. Brookings
+  señala que **con la ley actual la FERC no puede imponer esas medidas**. ⚠️ Pendiente: no citar como
+  derecho vigente.
+- **Investigación de Harvard** sostiene que las utilities ofrecen **contratos especiales secretos** a
+  datacenters y aprovechan huecos entre regulación federal y estatal para desplazar costes a la
+  factura del consumidor común. Es el riesgo reputacional del cliente: una propuesta que incluya
+  **trazabilidad y auditabilidad de la asignación de costes** se vende sola en ese contexto.
+
+**Dato de adopción que conviene llevar a una reunión** (National Grid Partners, *2026 Utility
+Innovation Survey*): la **fiabilidad de red superó al net zero** como preocupación principal del
+sector —del 43 % al **73 %** de los líderes que la ponen en su top 3—; el **74 %** dice que el
+crecimiento de carga por datacenters de IA ya afecta la fiabilidad; y el **78 %** declara estar
+**desplegando u operacionalizando al menos una aplicación de IA** para gestionar la demanda de
+interconexión. Ese 78 % es el número que convierte esta KB en oferta: el comprador ya decidió.
+
+**Precedente citable nuevo:** **Emerald AI** (del portafolio de National Grid Partners) corrió un
+piloto en el Reino Unido con **National Grid y NVIDIA** en el que software de IA recortó el consumo
+de un datacenter durante estrés de red simulado **en más de un tercio y en menos de un minuto**. Es
+el caso de *flexibilidad de carga como producto de red* (*Receta 4*) con nombres propios.
+
+⚠️ **Contrapeso de IDC que conviene decir antes de que lo diga el cliente**: según Gaia Gallotti, la
+barrera para escalar IA agéntica en operaciones centrales de energía **no es la tecnología sino el
+entorno de datos**, más la escasez de perfiles y una cultura sectorial cautelosa. Eso reordena la
+propuesta: **la primera fase es ingeniería de datos**, y conviene venderla como tal en lugar de
+prometer agentes en producción en el trimestre uno.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -516,6 +559,55 @@ secundaria** del mismo documento COM/2026/501 (despachos jurídicos y prensa sec
 cifra presupuestaria ni una fecha de artículo en una propuesta sin abrir antes el documento oficial.**
 Para que el próximo pase pueda cerrar esto, haría falta habilitar `eur-lex.europa.eu` en la política de
 red de la sesión.
+
+
+#### Actualización del octavo pase (2026-11-20): la hoja de ruta se vuelve instrumento, y el cuello de botella se cuantifica
+
+- **Esquema europeo de calificación de datacenters, con umbral concreto.** El 21 de septiembre de
+  2026 la Comisión propuso un esquema de *rating* para datacenters de **al menos 500 kW de potencia
+  TI**, que calificaría eficiencia energética **y de agua**, estrés hídrico local, reutilización de
+  calor residual y **cómo la instalación interactúa con la red eléctrica**. Las normas mínimas de
+  desempeño están en **consulta hasta el 14 de diciembre de 2026** y la propuesta legislativa se
+  planea para **2027**. ⚠️ Ese umbral de 500 kW es el dato operativo: define **qué clientes quedan
+  dentro**, y la ventana de consulta abierta es una oportunidad de posicionamiento, no sólo de
+  cumplimiento.
+- **"Interacción con la red" como criterio calificable** es la novedad estratégica: convierte la
+  flexibilidad de carga de un ahorro voluntario en un **atributo que se puntúa**. La *Receta 4* pasa
+  de optimización a cumplimiento.
+- **Acuerdos tripartitos de conexión a red** y un marco europeo de **intercambio transfronterizo
+  simplificado de datos energéticos** son dos de las medidas clave de la hoja de ruta del 3 de junio
+  de 2026 ya registrada (COM/2026/501). El segundo es el que habilita técnicamente el resto.
+- **Financiación, con una cifra que amplía la ya registrada**: bajo **Horizon Europe** se habrían
+  asignado alrededor de **75 M€ para tecnologías de IA en energía durante 2026 y 2027**. ⚠️ Esta KB
+  tenía registrado 30 M€ (2026) + 20 M€ (2027) = 50 M€ para *foundation models* de gestión y
+  planificación de red. Las dos cifras no se contradicen necesariamente —una es el subconjunto de
+  *foundation models* y la otra el total de IA en energía— pero **ninguna está confirmada contra
+  fuente primaria desde este entorno**. Citar el rango, no un número.
+- **El cuello de botella, cuantificado**: más de **70 proyectos de datacenter europeos** fueron
+  bloqueados, rechazados o fuertemente restringidos **en los primeros cuatro meses de 2026**,
+  afectando una inversión estimada en **42.000 M USD**. En **Irlanda** los datacenters consumen ya
+  en torno al **23 % de la electricidad** del país. **Energinet**, el operador danés, declaró en
+  **marzo de 2026** una pausa temporal de nuevas solicitudes de conexión para vaciar el *backlog*.
+- **Respuestas nacionales divergentes** (OCDE): Italia mejorando la planificación locacional, el
+  Reino Unido reformando las colas de conexión, los Países Bajos usando **zonas de gestión de
+  congestión**. Un regulador nacional exigiría a los datacenters nuevos instalar generación
+  despachable o almacenamiento **en sitio**. ⚠️ La fuente no nombra el país en el extracto: verificar
+  antes de usarlo en una propuesta concreta.
+- **Posición competitiva, con sesgo declarado**: el *chief digital officer* de Schneider Electric
+  sostiene que EE. UU. va claramente delante, seguido de China, con Europa rezagada y Medio Oriente
+  creciendo más rápido. ⚠️ Schneider vende infraestructura: interés comercial en ese diagnóstico.
+
+**Dónde está el trabajo proponible en EMEA, en orden de cercanía al dinero:**
+
+1. **Expediente de *rating* de datacenter** contra el esquema de ≥500 kW: medición de eficiencia
+   energética e hídrica, calor residual e **interacción con la red**. Es un entregable documental y
+   analítico con plazo regulatorio, y hoy no tiene herramienta abierta de referencia.
+2. **Analítica de cola de conexión para el modelo europeo**, que es donde el stack CIM/CGMES ya
+   catalogado (`powsybl-core`, `entsoe/application-profiles-library`, `Talk2PowerSystem`) rinde de
+   inmediato. El caso de Energinet demuestra que el *backlog* es el problema declarado del operador.
+3. **Modelado de escenarios con datos nacionales ya publicados y permisivos**: `MAHTEP/TEMOA-Italy` y
+   `TEMOA-Europe` (código MIT, datos CC-BY-4.0) eliminan el coste de construir el dataset del país
+   en Italia y a escala europea.
 
 ### APAC
 
@@ -786,6 +878,54 @@ concreto de China, India ni Japón** sobre IA en energía. Hay cifras de inversi
 despliegue, pero no el equivalente de la orden de la FERC o de COM/2026/501. No se puede construir un
 argumento de cumplimiento para esos tres países con lo que hay hoy en esta KB. Es un hueco de
 investigación, no una ausencia de regulación.
+
+
+#### Actualización del octavo pase (2026-11-20): el regulador deja de dar acceso y empieza a pedir contrapartida
+
+- **Magnitud, con dos mediciones concordantes**: Wood Mackenzie (junio de 2026) cifra en más de
+  **32 GW** la capacidad de datacenter planificada en más de **1.150 proyectos** presionando las
+  redes de la región, y sostiene que **la disponibilidad de red es la restricción definitoria** del
+  crecimiento. Oxford Economics reporta que el *pipeline* de desarrollo regional alcanzó un récord de
+  **26,5 GW en el primer semestre de 2026**. Dos casas distintas, mismo orden de magnitud.
+- **El giro regulatorio, y es el dato más accionable del pase para APAC**: los reguladores de la
+  región se están alejando de los acuerdos tradicionales de utility hacia marcos que exigen a los
+  datacenters **compartir responsabilidad** por fiabilidad, flexibilidad y descarbonización de la
+  red. Wood Mackenzie agrupa las medidas en **cuatro categorías**, y conviene usarlas como checklist
+  de propuesta:
+
+  | Categoría de medida | Qué exige | Entregable que genera |
+  |---------------------|-----------|----------------------|
+  | **Acceso condicional** | La conexión se concede contra compromisos | Expediente de compromisos y su verificación |
+  | **Diversificación geográfica** | Llevar el proyecto a donde hay red | Análisis locacional y de sitio |
+  | **Requisitos de soporte a la red** | Flexibilidad, respuesta de demanda, almacenamiento | Diseño y operación de flexibilidad (*Receta 4*) |
+  | **Controles de capacidad** | Topes y escalonamiento de la carga | Plan de rampa y modelado de escenarios |
+
+- **Australia es el caso más avanzado**: el marco nacional obligaría a los grandes operadores a
+  **financiar su propia generación y los costes de conexión**, e impondría estándares obligatorios de
+  eficiencia energética y conservación de agua. JLL añade que la legislación esperada exigiría que
+  los desarrolladores **garanticen generación renovable nueva que iguale la capacidad adicional**.
+  ⚠️ Parte del detalle viene de un solo medio: verificar antes de apoyarse en ello. Es coherente, eso
+  sí, con que Australia sea también la **única jurisdicción APAC con repos abiertos de su norma de
+  conexión** (`CSIP-AUS`, `IEEE 2030.5`, `open-dynamic-export` MIT, `sep2_client` Apache-2.0).
+- **El resto de mercados también aprieta**: en **Japón, India y Corea del Sur** los gobiernos empezaron
+  a dirigir el desarrollo de datacenters hacia regiones con mejor disponibilidad de red y suministro
+  más bajo en carbono. La actividad de protesta se extiende desde Corea del Sur hacia **Japón,
+  Malasia, Indonesia e India**: es riesgo de licencia social, igual que en LATAM.
+- **Efecto competitivo que conviene nombrar en una propuesta**: los requisitos de eficiencia, compra
+  de renovable y evaluación de impacto en red **elevan la barrera de entrada y favorecen a los
+  operadores grandes y bien capitalizados**. Y los inversores tratan ya el **estado de red y la
+  ubicación como primer punto de *due diligence*** en mercados eléctricos liberalizados. Eso define
+  el comprador: operadores grandes e inversores, no desarrolladores pequeños.
+- **Infraestructura regional de largo plazo**: la **Pan-Asia Power Grid Initiative** del Banco
+  Asiático de Desarrollo permitiría exportar electricidad entre países con exceso de solar, viento e
+  hidro mediante redes de transmisión interconectadas, acompañada de un **Asia-Pacific Digital
+  Highway** de 20.000 M USD para corredores de fibra, cables submarinos, satélite y datacenters
+  regionales. ⚠️ Es **propuesta, no programa en operación**: no construir un caso de negocio sobre
+  ella.
+
+**Players nombrados en las fuentes de este pase**: Wood Mackenzie (analista Xiaonan Feng), JLL (James
+Cameron, *APAC energy advisory*), Oxford Economics con AEMO, y el Banco Asiático de Desarrollo. Los
+hiperescaladores invierten en Singapur, Malasia, Indonesia, Tailandia y Filipinas.
 
 ### LATAM
 
@@ -1118,6 +1258,69 @@ que los incentivos propuestos **no exigen** a las empresas reservar capacidad de
 local ni divulgar consumo de energía y agua. Es un punto de fricción pública creciente, y un cliente
 que anuncie un datacenter sin una respuesta preparada sobre energía y agua tendrá un problema de
 licencia social.
+
+
+#### Actualización del octavo pase (2026-11-20): Brasil ya es escala, México es el cuello de botella, Argentina es la apuesta
+
+**Brasil — pasó de promesa a capacidad instalada, y el límite es la entrega de red.**
+
+- Cruzó el umbral de **1 GW comisionado** en el primer trimestre de 2026, con São Paulo, **Campinas**
+  y **Fortaleza** como anclas.
+- El Ministerio de Minas y Energía reportó **205 datacenters en operación en junio de 2026** y
+  **38 GW en solicitudes de parecer de acceso a red**. ⚠️ **Los 38 GW son solicitudes, no capacidad
+  construida** — la distancia entre ambas cifras *es* el mercado de ingeniería de viabilidad.
+- Red limpia como ventaja vendible: entre **80 % y 90 % renovable** según fuente, con del orden de
+  **12 GW de capacidad de transmisión disponible**.
+- **Regulación que habilita**: **REDATA** promulgada como **Lei 15.504 el 15 de septiembre de 2026**;
+  y en septiembre de 2026 **ANEEL autorizó acceso directo a la red de alta tensión**, con un proyecto
+  que planifica **1,8 GW de demanda para 2033**.
+- **Contratos con nombre propio**: Microsoft, con dos salas nuevas en São Paulo dentro de un
+  compromiso de **2.700 M USD**; **Equinix** con un **PPA con Auren Energia** por eólica y solar; y
+  **ByteDance** con un compromiso de **200 MW** en Fortaleza en un sitio que **Omnia Data Centers**
+  empezó a construir en el primer trimestre.
+
+**México — la demanda existe, la red y el permiso no acompañan.**
+
+- **Querétaro concentra en torno al 70 %** de los datacenters del país, incluidos sitios de AWS y
+  Google, con una red que no fue diseñada para cargas así. En **El Marqués** las autoridades están
+  **programando cortes de energía** para evitar el colapso del sistema.
+- **Tiempos de conexión**: un desarrollador cita **al menos ocho meses** en circunstancias normales
+  para obtener un contrato de conexión eléctrica.
+- **Proyección de demanda**: la industria espera **1.730 MW para 2031**, unas **6,2 veces** la
+  capacidad instalada reportada de **279 MW en 2026**.
+- **Matriz**: la electricidad mexicana proviene de forma abrumadora de **gas natural**, y las
+  asociaciones empresariales argumentan que hace falta mucha más renovable para atraer inversión de
+  IA. La **Asociación Mexicana de Data Centers (MEXDC)** advierte que proyectos se están **desplazando
+  a Brasil y Chile** por el retraso de la planificación energética.
+- **Coordinación institucional nueva**: **CFE y MEXDC** establecieron un arreglo de coordinación en
+  **septiembre de 2026** para planificar el suministro de los sitios nuevos. Es la puerta de entrada
+  institucional para trabajo de planificación en México.
+- ⚠️ **Los conteos de instalaciones varían entre fuentes** (71 vs. 66 para México; 225 vs. 218 para
+  Brasil). Usar el orden de magnitud y la proporción —Brasil es ~3× México—, no la cifra exacta.
+
+**Argentina — una sola apuesta, muy grande y aún no firme.**
+
+- **OpenAI y Sur Energy** firmaron en octubre una carta de intención por un proyecto de hasta
+  **25.000 M USD en Patagonia**, que se construiría bajo el régimen de incentivos **RIGI**.
+- ⚠️ **Es carta de intención, no inversión comprometida.** El dato útil no es la cifra sino **qué
+  habilita el RIGI**: un cliente argentino preguntará por la estructura del incentivo antes que por
+  la arquitectura.
+
+**Lo que esto cambia en la propuesta LATAM, y es un cambio real respecto de pases anteriores.** La KB
+venía diciendo que en LATAM el trabajo de mayor valor es **ingeniería de viabilidad** y no
+optimización algorítmica. Este pase lo confirma y lo especializa por país:
+
+| País | El problema del cliente | El entregable que lo resuelve |
+|------|------------------------|------------------------------|
+| **Brasil** | 38 GW de solicitudes contra 12 GW disponibles; acceso directo a AT recién autorizado | Priorización de cola de acceso y casos de PPA (`pypsa-ppa` MIT + `pypsa-meets-brazil`) |
+| **México** | Querétaro saturado, 8 meses de conexión, matriz de gas | Análisis locacional alternativo y modelado de escenarios (`pypsa-mexico_base` MIT) vía la mesa CFE-MEXDC |
+| **Chile** | Receptor del desplazamiento desde México | Estudio de viabilidad comparada (`PyPSA-CL`, `pypsa-chile` MIT) |
+| **Argentina** | Estructura de incentivo RIGI antes que tecnología | Caso de inversión y modelado de escenarios (`PyPSA-AR` MIT) |
+
+⚠️ **Y la advertencia de licencia social que ya estaba, ahora con evidencia regional**: un informe
+sostiene que los datacenters latinoamericanos se **venden como renovables y se alimentan de fósiles**.
+Un cliente que anuncie un datacenter sin una respuesta preparada sobre energía y agua tendrá un
+problema público — y la respuesta preparada es un entregable.
 
 ## Posicionamiento Globant
 

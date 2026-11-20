@@ -652,6 +652,82 @@ primera mano) — mientras `gh api repos/{owner}/{repo}` devuelve **403** por al
 `curl github.com` / `api.github.com` devuelven **403** por política del host. **51 de 51** repos nuevos
 de este pase resolvieron por el primer canal.
 
+## T36 — Refinamiento de T32: lo que abre una región es el **protocolo**, no la norma
+
+T32 (séptimo pase) afirmó que el término que abre una región es el nombre de su norma de conexión.
+El octavo pase lo puso a prueba con los cinco candidatos que T32 dejó listados y **la afirmación hay
+que corregirla**: de `VDE-AR-N 4105` (Alemania), `CEI 0-21` (Italia), `G99` (Reino Unido),
+`NOM-001-SEDE` (México) y `PRODIST` (Brasil), **ninguno devolvió un repo institucional con tracción**.
+
+La versión corregida distingue dos clases de instrumento:
+
+| Clase de instrumento | Ejemplos | Qué produce en GitHub |
+|---------------------|----------|----------------------|
+| **Protocolo máquina-a-máquina con implementación obligatoria** | `IEEE 2030.5`, `CSIP-AUS`, `OpenADR`, `IEC 61850`, `DLMS/COSEM`, CIM/CGMES | Librerías, clientes, servidores, suites de conformidad |
+| **Norma documental de cumplimiento** | `VDE-AR-N 4105`, `CEI 0-21`, `G99`, `NOM-001-SEDE`, `PRODIST` | Hojas de cálculo y calculadoras de 0 ★, de autor individual |
+
+**La diferencia no es la madurez eléctrica del país.** Alemania e Italia no están detrás de
+Australia; lo que ocurre es que Australia **obliga a que dos máquinas se hablen** y Alemania obliga a
+entregar un expediente. Donde la norma impone interoperabilidad, el open source aparece; donde impone
+documentación, aparece el PDF.
+
+**Consecuencia para el método de esta KB:** antes de declarar que una región tiene o no tiene oferta,
+preguntar **qué clase de instrumento rige**. Si es documental, el gap de repos es esperable y **no
+mide la madurez del mercado** — mide la naturaleza de la norma. Y esa asimetría es, en sí, una
+oportunidad: el expediente de cumplimiento documental es trabajo que nadie ha automatizado.
+
+## T37 — Las cuatro regiones convergieron en el mismo instrumento regulatorio: acceso condicional
+
+T28 registró que las regiones convergieron en la frase *"la IA asiste, no decide"*. El octavo pase
+registra una segunda convergencia, y es más accionable porque crea entregables:
+
+| Región | Instrumento de 2026 | Qué condiciona el acceso a la red |
+|--------|--------------------|-----------------------------------|
+| **North America** | Órdenes de la FERC del 18-jun-2026 a los seis operadores + tarifas estatales de carga grande | Reforma de la tarifa de conexión; los datacenters pagarían las mejoras que causan |
+| **EMEA** | Esquema de calificación de datacenters ≥500 kW TI (propuesto 21-sep-2026) | Califica eficiencia energética e hídrica, calor residual **e interacción con la red** |
+| **APAC** | Marcos de *acceso condicional, diversificación geográfica, soporte a la red y controles de capacidad* | La conexión se concede contra compromisos de fiabilidad y flexibilidad |
+| **LATAM** | REDATA (Lei 15.504, 15-sep-2026) y acceso directo a AT autorizado por ANEEL | Habilita el acceso y lo ordena; 38 GW de solicitudes contra ~12 GW disponibles |
+
+**La tendencia, dicha en una frase:** en las cuatro regiones el permiso de conectarse dejó de ser un
+trámite de capacidad y pasó a ser **un expediente que hay que argumentar**. Eso traslada el gasto
+desde el equipamiento hacia el **análisis**, que es exactamente lo que esta KB puede equipar.
+
+⚠️ **Y el contrapeso que hay que decir antes de que lo diga el cliente**: según IDC (Gaia Gallotti),
+la barrera para escalar IA agéntica en operaciones centrales de energía **no es la tecnología sino el
+entorno de datos**, más escasez de perfiles y una cultura cautelosa. Converge con T34 (el proyecto
+muere después del piloto) y reordena la propuesta: **fase uno es ingeniería de datos.**
+
+## T38 — Una organización confiable no es una licencia
+
+El octavo pase catalogó alrededor de treinta repos de **Open Energy Transition**, la autora de
+`pypsa-mcp`. MIT domina, **y dentro de la misma organización hay cuatro repos AGPL-3.0**
+(`solver-benchmark`, `demandcast`, `geothermal-modelling`, `efuels-supply-potentials`) y al menos
+tres **sin archivo de licencia**, uno de ellos con 80 ★ (`Awesome-Grid-Model-Data`).
+
+El caso que más muerde es `demandcast`: es precisamente la pieza que uno querría para un producto de
+forecasting de demanda, y su **AGPL-3.0 obliga a liberar el servicio derivado**. Un equipo que
+apruebe "la organización" en lugar del repo se lleva esa cláusula sin verla.
+
+**Regla:** la aprobación de licencia es **por repo**, siempre, incluso dentro de una organización ya
+usada en producción. Y la heurística inversa también falla: `pudl` (MIT, 621 ★) viene de una
+cooperativa pequeña y es más permisivo que repos de laboratorios nacionales.
+
+## T39 — En modelos energéticos nacionales, `NOASSERTION` suele significar licencia dual, no ausencia
+
+Esta KB ya tenía cuatro sitios donde buscar una licencia que la API de GitHub reporta como
+`NOASSERTION` (`LICENSE*`, `COPYING`, el SPDX de `pyproject.toml`, un `legal.html` dentro del árbol).
+`MAHTEP/TEMOA-Italy` añade un quinto caso, y es de una clase nueva: **un único `LICENSE` que se parte
+por tipo de contenido**. El texto crudo dice *"released under two licenses, according to the type of
+content"* — **CC-BY-4.0** para bases de datos (`*.sql`, `*.zip`), documentación y figuras, y **MIT**
+para todo el código (`*.py`).
+
+Tiene sentido estructural: un modelo energético nacional **es** dos cosas —un dataset del país y el
+código que lo resuelve— y sus autores les ponen licencias distintas a propósito. Un gate automático
+de licencias habría descartado un modelo nacional europeo completo del Politecnico di Torino.
+
+**Regla:** ante `NOASSERTION` en un modelo energético nacional, leer el `LICENSE` crudo **entero**, no
+sus primeras líneas: en TEMOA-Italy la parte MIT aparece *después* de la parte Creative Commons.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
@@ -809,5 +885,5 @@ existe es tan dañino como uno que no se declara.
   firmar**.
 
 ---
-*Investigado 2026-11-20 en seis pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en ocho pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

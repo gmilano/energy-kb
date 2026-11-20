@@ -497,5 +497,43 @@ Confirma la lección del pase de automotive: **buscar el estándar o el protocol
 sustantivo del dominio**. Las consultas productivas de este pase fueron `IEC 61850`, `OpenADR`,
 `IEEE 2030.5`, `DLMS COSEM`, `DERMS` y `"battery energy storage"`.
 
+## Octavo pase (2026-11-20): observabilidad del propio stack de modelos, y el quinto cero consecutivo en operación de red
+
+### La única novedad agéntica del pase, registrada con su tamaño real
+
+| Nombre | Licencia | Descripción | Stars | Push | Región origen |
+|--------|----------|-------------|-------|------|---------------|
+| [open-energy-transition/gridlens](https://github.com/open-energy-transition/gridlens) | MIT | App *AI-native* para ver **qué modelo energético usa quién, dónde y para qué decisión de red** | 1 | 2026-11-19 | EMEA |
+
+⚠️ **Un día de vida y 1 ★: no es una dependencia.** Se cataloga por dos razones concretas. (a) Confirma
+que **Open Energy Transition** —autora de `pypsa-mcp` (MIT, 74 ★)— está construyendo deliberadamente
+la capa agéntica alrededor de PyPSA, lo que convierte a esa organización en el proveedor abierto más
+probable de este vertical. (b) El problema que nombra —**trazabilidad de qué modelo sostiene qué
+decisión**— es el entregable que un cliente regulado pide en la primera reunión de gobernanza y que
+ningún repo de esta KB cubría. Vigilar en el próximo pase; proponer sólo como patrón, no como
+componente.
+
+### Quinto pase consecutivo sin agente de operación de red, ahora medido por un canal distinto
+
+Los pases 4-7 midieron este cero contando repos. El octavo lo midió **fuera de GitHub**: la consulta
+global prescrita (`top open source AI agents energy 2026 github MIT`) devuelve exclusivamente agentes
+de propósito general —OpenClaw, Hermes, OpenCode, OpenHands, CrewAI, Browser Use— **sin una sola
+entrada energética**, y las fuentes se contradicen entre sí en estrellas y en licencia. Dos canales
+independientes miden lo mismo, y conviene decirlo en una propuesta con esas palabras:
+
+> La capa agéntica energética abierta hoy es **institucional** (`Power-Agent/*` MIT, `PowerMCP`,
+> `EnergyPlus-MCP` BSD, `Talk2PowerSystem` Apache-2.0 de Statnett) o es **de forecasting**
+> (`timecopilot` MIT, `chronos` Apache-2.0). No hay agente de operación de red con tracción de
+> mercado. Quien lo necesite, lo construye — y eso es trabajo facturable, no un riesgo.
+
+### Lo que el barrido de normas de conexión devolvió en la capa agéntica
+
+Una sola pieza, y no es proponible: [`Nero-Engine/spark-pack-mcp`](https://github.com/Nero-Engine/spark-pack-mcp)
+— servidor MCP de herramientas de cálculo eléctrico para electricistas del Reino Unido (dimensionado
+de cable, Part P, verificación de certificados, **G98/G99**), **0 ★ y sin archivo de licencia**. Sin
+concesión expresa es copyright exclusivo del autor. Se registra porque demuestra que **el patrón
+"MCP sobre norma de conexión local" ya se le ocurrió a alguien**, y está libre: es un hueco de
+producto, no un competidor.
+
 ---
 *Verificado contra GitHub REST API el 2026-11-20. Re-verificar antes de citar en una propuesta.*

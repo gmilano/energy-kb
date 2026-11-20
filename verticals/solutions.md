@@ -357,5 +357,47 @@ propio Ditto.
    de la plataforma — nunca al actuador directamente.
 4. UI conversacional sobre el sistema base, con los límites de seguridad en el servicio, no en el prompt.
 
+## Octavo pase (2026-11-20): el PPA como plataforma, y la confirmación externa de que no hay CIS de utility abierto
+
+### Lo nuevo: contratación de energía (PPA) deja de ser una hoja de cálculo
+
+Esta KB registraba el **dato de mercado** del PPA —LATAM firmando por debajo de 0,06 USD/kWh,
+Equinix contratando eólica y solar con Auren en Brasil, Microsoft comprometiendo 2.700 M USD en São
+Paulo— y **no tenía ninguna herramienta abierta para estructurarlo**. Es el artefacto que un cliente
+corporativo pide primero: *¿a qué precio y con qué riesgo firmo?*
+
+| Plataforma | Licencia | Qué cubre | Stars | Último push | Región origen |
+|------------|----------|-----------|-------|-------------|---------------|
+| [open-energy-transition/pypsa-ppa](https://github.com/open-energy-transition/pypsa-ppa) | **MIT** | Simulación y optimización de **Power Purchase Agreements** bajo distintos escenarios, sobre PyPSA | 8 | 2026-11-09 | EMEA |
+| [open-energy-transition/earthpv](https://github.com/open-energy-transition/earthpv) | **MIT** | Mapeo de solar en tejado desde imagen satelital gratuita: inventario de DER que la distribuidora no tiene | 22 | 2026-11-20 | EMEA |
+| [open-energy-transition/rooftopsenti](https://github.com/open-energy-transition/rooftopsenti) | **MIT**, ⚠️ **archivado** | Detección de solar en tejado con Sentinel-2 a escala país/estado/provincia | 7 | 2026-07-05 | EMEA |
+| [catalyst-cooperative/pudl](https://github.com/catalyst-cooperative/pudl) | **MIT** | Formularios de FERC, EIA y EPA convertidos en datos listos para análisis (EE. UU.) | 621 | 2026-11-20 | North America |
+
+⚠️ **`pypsa-ppa` tiene 8 ★.** Es MIT y resuelve el problema correcto, pero no hay comunidad detrás:
+tratarlo como **punto de partida de un acelerador propio**, no como plataforma con soporte. La
+dependencia sólida de esa pila es PyPSA (MIT, ya catalogado); `pypsa-ppa` es la capa de escenarios
+sobre ella.
+
+### Confirmación independiente: no existe CIS/MDM de utility open source permisivo
+
+El tercer pase concluyó esto buscando en GitHub. El octavo lo volvió a medir **por un canal
+distinto** (búsqueda web de plataformas de *utility billing / CIS / MDM* permisivas) y el resultado
+es el mismo, lo que sube la confianza de la afirmación de "no encontrado" a "medido dos veces por
+canales independientes":
+
+- Lo que aparece como CIS/MDM de utility es **producto comercial** (Fluentgrid, SMART360): ninguno
+  open source.
+- Lo permisivo que existe es **facturación genérica, no energética**: `killbill` (Apache-2.0) y
+  `openmeter` (Apache-2.0), ya catalogados arriba. Las alternativas de moda —Lago, Flexprice— son
+  **AGPLv3**, lo que las descarta para un entregable cerrado.
+- **La lógica tarifaria regulada sigue siendo desarrollo propio en los cuatro regiones.** Esa frase
+  es un argumento de venta, no una disculpa: es alcance facturable y defendible.
+
+⚠️ **Trampa de término, para no volver a gastar un pase en ella:** en GitHub y en la web de producto,
+**`MDM` significa casi siempre *mobile device management***, no *meter data management*. Headwind MDM
+(Apache-2.0), Fleet (MIT), MicroMDM y NanoMDM (MIT) son gestión de dispositivos Android y Apple y no
+tienen nada que ver con medición eléctrica. Los términos que sí funcionan para medición siguen siendo
+`"smart meter"`, `DLMS`, `COSEM`, `rtlamr` y `"meter reading"`.
+
 ---
 *Ver `compose/patterns.md` para recetas concretas que combinan estas plataformas con los agentes.*

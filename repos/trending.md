@@ -9,6 +9,157 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 8 (había una organización entera de ~30 repos permisivos catalogada en uno solo)
+
+**Titular del pase: esta KB tenía a Open Energy Transition catalogada por un repo (`pypsa-mcp`) y la
+organización tiene alrededor de treinta, la mayoría MIT y casi todos con push de noviembre de
+2026.** Es la adición de oferta más grande de cualquier pase de esta KB, y no vino de una búsqueda
+por dominio: vino de consultar `org:open-energy-transition` después de que la organización apareciera
+de pasada en un resultado de búsqueda web.
+
+### El clúster Open Energy Transition, verificado repo por repo (`search/repositories`, 2026-11-20)
+
+| Repo | Licencia | ★ | Push | Qué aporta |
+|------|----------|---|------|-----------|
+| [grid2poster](https://github.com/open-energy-transition/grid2poster) | MIT | 272 | 2026-10-23 | Genera pósters de la red eléctrica de un país. Suena cosmético: es renderizado de topología de red a partir de datos abiertos |
+| [Awesome-Electrical-Grid-Mapping](https://github.com/open-energy-transition/Awesome-Electrical-Grid-Mapping) | CC0-1.0 | 171 | 2026-11-17 | Dataset curado de mapas y datasets de red eléctrica globales. **CC0** = dominio público, sin fricción |
+| [MapYourGrid](https://github.com/open-energy-transition/MapYourGrid) | CC-BY-4.0 | 103 | 2026-10-01 | Iniciativa y tooling para mapear la red eléctrica por país en OpenStreetMap |
+| [Awesome-Grid-Model-Data](https://github.com/open-energy-transition/Awesome-Grid-Model-Data) | ⚠️ **sin licencia** | 80 | 2025-07-24 | Catálogo abierto de datasets de red para probar interoperabilidad y reproducibilidad |
+| [solver-benchmark](https://github.com/open-energy-transition/solver-benchmark) | ⚠️ AGPL-3.0 | 78 | 2026-11-19 | Benchmark de solvers (MI)LP sobre problemas de modelado energético |
+| [pypsa-mcp](https://github.com/open-energy-transition/pypsa-mcp) | MIT | 74 | 2026-03-20 | *(ya catalogado)* Servidor MCP que expone PyPSA a LLMs |
+| [Awesome-Electricity-Demand](https://github.com/open-energy-transition/Awesome-Electricity-Demand) | MIT | 74 | 2026-11-19 | *(ya catalogado como fuente)* Recursos de demanda eléctrica horaria y sub-horaria |
+| [demandcast](https://github.com/open-energy-transition/demandcast) | ⚠️ AGPL-3.0 | 47 | 2026-11-19 | Descarga demanda histórica + clima + socioeconómicos y genera demanda sintética futura |
+| [earthpv](https://github.com/open-energy-transition/earthpv) | MIT | 22 | 2026-11-20 | Mapeo de solar en tejado a partir de imagen satelital gratuita |
+| [PyPSA-Explorer](https://github.com/open-energy-transition/PyPSA-Explorer) | MIT | 18 | 2026-09-03 | Explorador interactivo de redes PyPSA |
+| [deckGlDashboard](https://github.com/open-energy-transition/deckGlDashboard) | MIT | 15 | 2025-06-27 | Dashboard de visualización de PyPSA-Earth (deck.gl) |
+| [grid-mapping-starter-kit](https://github.com/open-energy-transition/grid-mapping-starter-kit) | CC0-1.0 ⚠️ **archivado** | 14 | 2025-06-16 | Kit de arranque para mapear red de transmisión en OpenStreetMap |
+| [osm-powerplants](https://github.com/open-energy-transition/osm-powerplants) | MIT | 11 | 2026-07-01 | Extrae y procesa datos de centrales eléctricas de OpenStreetMap |
+| [pypsa-ppa](https://github.com/open-energy-transition/pypsa-ppa) | MIT | 8 | 2026-11-09 | **Toolkit PyPSA para simular y optimizar PPAs bajo distintos escenarios** |
+| [rooftopsenti](https://github.com/open-energy-transition/rooftopsenti) | MIT ⚠️ **archivado** | 7 | 2026-07-05 | Detecta instalaciones grandes de solar en tejado con Sentinel-2 a escala país/estado |
+| [openmod-features](https://github.com/open-energy-transition/openmod-features) | MIT | 6 | 2026-11-01 | Inventario de capacidades de las herramientas de modelado energético abierto |
+| [geothermal-modelling](https://github.com/open-energy-transition/geothermal-modelling) | ⚠️ AGPL-3.0 | 6 | 2026-11-16 | Modelado geotérmico. **Cierra el "gap de geotermia"** que el pase 7 marcó como sospechoso de sintaxis |
+| [geodiff-tool](https://github.com/open-energy-transition/geodiff-tool) | MIT | 4 | 2026-10-11 | Diff entre dos datasets geoespaciales |
+| [osm-wikidata-toolset](https://github.com/open-energy-transition/osm-wikidata-toolset) | CC0-1.0 | 4 | 2026-11-15 | Extrae y analiza elementos eléctricos de Wikidata |
+| [efuels-supply-potentials](https://github.com/open-energy-transition/efuels-supply-potentials) | ⚠️ AGPL-3.0 | 4 | 2026-07-08 | Modelado de red para potencial de suministro de electrocombustibles |
+| [gridlens](https://github.com/open-energy-transition/gridlens) | MIT | 1 | 2026-11-19 | App AI-native: qué modelo energético usa quién, dónde y para qué decisión de red |
+
+⚠️ **La advertencia de licencia más útil de este pase, y es contraintuitiva: una organización
+confiable no es una licencia.** Dentro de esta misma organización, MIT domina **pero cuatro repos son
+AGPL-3.0** (`solver-benchmark`, `demandcast`, `geothermal-modelling`, `efuels-supply-potentials`) y
+al menos tres **no tienen licencia** (`Awesome-Grid-Model-Data` con 80 ★, `pypsa-moon`,
+`pypsa-training-sessions`). `demandcast` es el caso que más muerde: es exactamente la pieza que uno
+querría para un producto de forecasting de demanda, y su AGPL-3.0 obliga a liberar el servicio
+derivado. **Verificar repo por repo, incluso dentro de una organización ya aprobada.**
+
+**Las dos piezas de este clúster que cambian una propuesta hoy:**
+
+1. **[`pypsa-ppa`](https://github.com/open-energy-transition/pypsa-ppa) (MIT, 8 ★, push 2026-11-09)**
+   — simulación y optimización de **Power Purchase Agreements**. Esta KB tenía registrado el dato de
+   mercado de que LATAM firma PPAs a menos de 0,06 USD/kWh y que Equinix contrató eólica y solar con
+   Auren en Brasil, **y no tenía ninguna herramienta abierta de PPA**. 8 ★ es poca tracción, pero es
+   MIT y resuelve el artefacto que un cliente corporativo pide primero: *¿a qué precio y con qué
+   riesgo firmo?*
+2. **[`earthpv`](https://github.com/open-energy-transition/earthpv) (MIT, 22 ★, push 2026-11-20) +
+   [`rooftopsenti`](https://github.com/open-energy-transition/rooftopsenti) (MIT, 7 ★, ⚠️ **archivado**)** — detección
+   de solar en tejado desde satélite gratuito. Es el insumo de la *generación distribuida invisible*:
+   el problema real de una distribuidora que no sabe cuánta DER tiene conectada.
+
+### Segunda adición: la capa de datos de utilities de EE. UU. que faltaba
+
+| Repo | Licencia | ★ | Push | Qué aporta |
+|------|----------|---|------|-----------|
+| [catalyst-cooperative/pudl](https://github.com/catalyst-cooperative/pudl) | MIT | 621 | 2026-11-20 | **Public Utility Data Liberation**: datos del sistema energético de EE. UU. (FERC, EIA, EPA) limpiados y listos para análisis |
+| [TextureHQ/commongrid](https://github.com/TextureHQ/commongrid) | ⚠️ **ODbL-1.0** (verificada en `LICENSE` crudo) | 14 | 2026-11-19 | Registro abierto de la red eléctrica de EE. UU. (iniciativa de Texture) |
+
+`pudl` con 621 ★ y push del mismo día es el repo más grande que esta KB no tenía. Es **MIT** y es el
+atajo que convierte los formularios de FERC y EIA en tablas analizables — precisamente el trabajo
+sucio que precede a cualquier analítica de cola de interconexión (*Receta 21*).
+
+### Tercera adición: el ecosistema alrededor de los frameworks de planificación
+
+El pase 7 mandó generalizar el hallazgo del pase 6 (`pypsa-` + país) al resto de frameworks. Se hizo,
+y **el resultado es mixto de una forma que conviene precisar**: la generalización funciona, pero lo
+que destapa es sobre todo **tooling de ecosistema** y **modelos de tesis de 0 ★**, no instancias
+nacionales institucionales como las de PyPSA.
+
+| Repo | Licencia | ★ | Push | Qué aporta |
+|------|----------|---|------|-----------|
+| [OSeMOSYS/otoole](https://github.com/OSeMOSYS/otoole) | MIT | 33 | 2024-11-18 | Conversión de datos de entrada/salida de OSeMOSYS. ⚠️ Sin push desde nov-2024 |
+| [EAPD-DRB/MUIOGO](https://github.com/EAPD-DRB/MUIOGO) | Apache-2.0 | 26 | 2026-10-31 | Interfaz de usuario de modelado para OG-Core y OSeMOSYS |
+| [OSeMOSYS/MUIO](https://github.com/OSeMOSYS/MUIO) | Apache-2.0 | 22 | 2026-10-01 | Interfaz de usuario de modelado de OSeMOSYS |
+| [transition-zero/tz-osemosys](https://github.com/transition-zero/tz-osemosys) | ⚠️ AGPL-3.0 | 46 | 2026-11-02 | Reimplementación moderna de OSeMOSYS por TransitionZero |
+| [OSeMOSYS/osemosys_global](https://github.com/OSeMOSYS/osemosys_global) | ⚠️ AGPL-3.0 | 46 | 2026-06-22 | Generador de modelos de sistema eléctrico **global** |
+| [MAHTEP/TEMOA-Italy](https://github.com/MAHTEP/TEMOA-Italy) | **MIT (código) + CC-BY-4.0 (datos)** — ver nota | 13 | 2026-11-16 | Modelo del sistema energético italiano 2006-2050. Politecnico di Torino, grupo MAHTEP |
+| [MAHTEP/TEMOA-Europe](https://github.com/MAHTEP/TEMOA-Europe) | **MIT (código) + CC-BY-4.0 (datos)** | 4 | 2026-10-25 | Modelo europeo de región única con base de datos abierta hasta 2050 |
+| [CANOE-main/canoe-electricity](https://github.com/CANOE-main/canoe-electricity) | MIT | 3 | 2026-09-10 | Sector eléctrico canadiense para el modelo CANOE (datasets Temoa) |
+| [CANOE-main/canoe-transportation](https://github.com/CANOE-main/canoe-transportation) | MIT | 3 | 2026-11-18 | Sector transporte canadiense del modelo CANOE |
+| [CANOE-main/canoe-industry](https://github.com/CANOE-main/canoe-industry) | MIT | 2 | 2026-09-04 | Sector industrial canadiense del modelo CANOE |
+| [calliope-project/ec_modules](https://github.com/calliope-project/ec_modules) | MIT ⚠️ **archivado** | 4 | 2026-04-02 | Módulos reutilizables de workflow para modelos Calliope |
+| [NetZeroAtlantic/ACES-Temoa](https://github.com/NetZeroAtlantic/ACES-Temoa) | ⚠️ GPL-2.0 | 1 | 2026-09-02 | Modelo del sistema energético del Atlántico canadiense |
+| [DavidLikesLearning/temoa-dataCenter-3Pillars](https://github.com/DavidLikesLearning/temoa-dataCenter-3Pillars) | BSD-3-Clause | 0 | 2026-11-12 | Temoa de EE. UU. midiendo regulación de energía limpia **para datacenters** |
+
+⚠️ **Nuevo patrón de licencia, y es el quinto sitio donde hay que mirar.** La KB ya registraba cuatro
+lugares (`LICENSE*`, `COPYING`, el SPDX de `pyproject.toml`, un `legal.html` dentro del árbol).
+`MAHTEP/TEMOA-Italy` añade un quinto caso: **un único `LICENSE` que se parte por tipo de contenido**.
+La API de GitHub lo reporta `NOASSERTION`; el texto crudo dice, literalmente, *"TEMOA-Italy is
+released under two licenses, according to the type of content"* — **CC-BY-4.0** para bases de datos
+(`*.sql`, `*.zip`), documentación y figuras, y **MIT** para todo el código (`*.py`). Un gate
+automático lo habría descartado, y es un modelo nacional europeo completo de una universidad
+politécnica. **Regla: `NOASSERTION` en un modelo energético nacional casi siempre significa licencia
+dual, no ausencia de licencia.**
+
+**Nota honesta sobre el alcance de esta generalización.** Con `pypsa-` + país el pase 6 encontró
+modelos nacionales institucionales. Con `temoa-`, `calliope-` y `osemosys-` lo que aparece es:
+instrumentación del ecosistema (`otoole`, `MUIO`, `ec_modules`, `openmod-features`), dos familias
+institucionales reales (**MAHTEP** en Italia/Europa y **CANOE** en Canadá) y una cola larga de
+modelos de tesis de 0 ★ (`Calliope-Morocco`, `cumplido2025-thesis-sisol-amazonbr-calliope`,
+`Thesis-model`, `OutwithEnergy`). **El patrón "framework + país" es real pero su rendimiento depende
+del framework**: PyPSA tiene comunidad nacional, Temoa y Calliope tienen comunidad académica.
+
+### Fuentes de descubrimiento nuevas (y una con reserva)
+
+| Repo | Licencia | ★ | Push | Nota |
+|------|----------|---|------|------|
+| [martymcenroe/best-of-pes-ai](https://github.com/martymcenroe/best-of-pes-ai) | CC-BY-SA-4.0 | 3 | 2026-11-14 | Ranking de proyectos open source de IA/ML para los dominios de la IEEE Power & Energy Society. Complementa `best-of-ps` con el eje de IA |
+| [DatariusAI/AI-in-Energy](https://github.com/DatariusAI/AI-in-Energy) | ⚠️ **sin licencia** | 0 | 2026-11-20 | Hub de investigación y código de IA para energía, refrescado a diario. Útil como *feed*; sin licencia, nada de ahí se cita como dependencia |
+
+⚠️ Ambas son de 0-3 ★. Se registran como **fuentes de descubrimiento para el próximo pase**, no como
+hallazgos de contenido: su valor es que reducen el coste de encontrar, no que aporten código.
+
+### Buscado y no encontrado en este pase (para no repetirlo)
+
+- **CIS / MDM de utility open source permisivo**: no existe. Buscado por `utility billing`, `CIS`,
+  `MDM`, `meter data management`. Lo que aparece es (a) producto comercial (Fluentgrid, SMART360) y
+  (b) facturación genérica no energética: `killbill` (Apache-2.0) y `openmeter` (Apache-2.0) sí son
+  permisivos y sí sirven como sustrato, pero **no conocen una tarifa eléctrica**. "MDM" en GitHub es,
+  casi siempre, *mobile device management*. Ver `verticals/solutions.md` para el detalle.
+- **`user:texture-hq`**: devuelve HTTP 422 ("los usuarios y repositorios listados no se pueden
+  buscar"). La organización es `TextureHQ`, sin guion. Un 422 de `search/repositories` es un error de
+  nombre de organización, **no** la inexistencia de la organización.
+
+### Hallazgos de la pasada de verificación de este pase (50 URLs, `search/repositories`)
+
+Se verificaron **las 50 URLs** escritas en este pase. 48 resolvieron; las dos que no, y los tres
+repos archivados, son lecciones de método:
+
+1. **`repo:NREL/EnergyPlus` y `repo:NREL/floris` devuelven HTTP 422, no 404.** La organización NREL
+   **se renombró a `NatLabRockies`** —algo que el pase 1 de esta KB ya había registrado— y las
+   recetas nuevas de este pase se habían escrito con el nombre viejo. Corregido a
+   [`NatLabRockies/EnergyPlus`](https://github.com/NatLabRockies/EnergyPlus) (1.626 ★, push
+   2026-11-19) y [`NatLabRockies/floris`](https://github.com/NatLabRockies/floris) (BSD-3-Clause,
+   302 ★, push 2026-11-18). **Un 422 de `search/repositories` significa casi siempre nombre de
+   organización equivocado o renombrado, nunca "el repo no existe".** Es el mismo diagnóstico que
+   `user:texture-hq`, y apareció dos veces en el mismo pase.
+2. **Tres repos están ARCHIVADOS y ninguna búsqueda lo advierte en el título**:
+   `open-energy-transition/rooftopsenti` (MIT, 7 ★), `open-energy-transition/grid-mapping-starter-kit`
+   (CC0-1.0, 14 ★) y `calliope-project/ec_modules` (MIT, 4 ★). Están marcados como tales en todas las
+   tablas de esta KB. Un repo archivado sigue siendo legible y forkeable y su licencia sigue valiendo,
+   pero **no recibirá arreglos**: se vendoriza como referencia, no se declara como dependencia.
+   **El campo `archived` de la API es obligatorio en la verificación**, no opcional.
+3. **`powsybl/powsybl-core` es MPL-2.0**, confirmado en este pase (196 ★, push 2026-11-20). Copyleft
+   débil por archivo: enlazable en un producto propietario, pero las modificaciones **al propio
+   powsybl** se publican. Importa porque es el motor de la *Receta 31*.
+
 ## 2026-11-20 — pase 7 (la categoría más grande del open source energético estaba catalogada al 30 %: carga de EV, y la capa CIM que la red europea ya habla)
 
 **Titular del pase: el propio trend T7 de esta KB dice desde el pase 2 que "movilidad eléctrica es

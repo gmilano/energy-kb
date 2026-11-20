@@ -1015,10 +1015,16 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
   Coordinador Eléctrico Nacional, CENACE) y por término de dominio: **cero repos institucionales con
   tracción**. La credencial LATAM verificable es **Brasil** (`json-scada`, `OSHMI`, autor individual)
   y **Colombia** (`API_XM`, institucional).
-- **"Plataforma OpenGrid" o "registro CommonGrid" como base técnica.** Son anuncios
-  institucionales de 2026 (Linux Foundation y Texture). Buscados en GitHub: **sin repo de código
-  localizable**. `CommonGrid` además está bajo **Open Database License**, que es licencia de datos y
-  obliga a un análisis legal distinto al de software. Seguirlos, no comprometerlos en alcance.
+- **"Plataforma OpenGrid" como base técnica.** Anuncio institucional de 2026 (Linux Foundation).
+  Buscado en GitHub: **sin repo de código localizable**. Seguirlo, no comprometerlo en alcance.
+- **`CommonGrid` como dataset empotrado — corregido en el octavo pase (2026-11-20).** Los pases
+  anteriores registraron "sin repo de código localizable": **era un error de vocabulario de
+  organización**. El repo existe y es [`TextureHQ/commongrid`](https://github.com/TextureHQ/commongrid)
+  (14 ★, push 2026-11-19); `user:texture-hq` devuelve HTTP 422 porque la organización es `TextureHQ`,
+  sin guion. **La advertencia de licencia se confirma y se endurece** desde el `LICENSE` crudo: *Open
+  Data Commons Open Database License (ODbL) v1.0, Copyright (c) 2025-2026 Texture, Inc.* Es licencia
+  de **base de datos** con obligación de compartir los derivados de la base. Utilizable **como fuente
+  consultada**; **no empotrable** como dataset dentro de un entregable cerrado sin análisis legal.
 - **Modelo de estela de DTU vía `PyWake` en GitHub.** Lo que hay allí es un **espejo** del GitLab de
   DTU: licencia `null` y último push 2024-11-25. Usar `floris` (BSD-3) salvo que el cliente exija
   DTU, en cuyo caso la fuente es GitLab y la licencia hay que resolverla aparte.
@@ -1202,6 +1208,106 @@ código es perfectamente usable. Resultado medido en cinco repos: **`pypsa-eur` 
 Mismo ecosistema, **cinco resultados distintos**. Nunca inferir la licencia de un `PyPSA-*` por
 familia: hay que leer cada uno.
 
+## Recetas del octavo pase (2026-11-20)
+
+### Receta 30 — Estructurador de PPA: del dato de mercado al contrato firmable
+
+**El problema del cliente.** Un comprador corporativo (datacenter, industria, retail) tiene que
+firmar energía renovable a largo plazo y la pregunta que trae a la primera reunión es *¿a qué precio
+y con qué riesgo firmo?*. Hasta este pase esta KB tenía el **dato de mercado** del PPA y ninguna
+herramienta para estructurarlo.
+
+**Las piezas, todas verificadas y permisivas:**
+
+| Capa | Repo | Licencia | Rol |
+|------|------|----------|-----|
+| Motor de red y despacho | [PyPSA/PyPSA](https://github.com/PyPSA/PyPSA) | MIT | Optimización del sistema; ya catalogado |
+| Escenarios de PPA | [open-energy-transition/pypsa-ppa](https://github.com/open-energy-transition/pypsa-ppa) | MIT | Simula y optimiza estructuras de PPA bajo escenarios |
+| Modelo del país | `pypsa-meets-brazil`, `PyPSA-CL`, `pypsa-mexico_base`, `PyPSA-AR` | MIT | Red real del país en lugar de un sistema de juguete |
+| Perfil de recurso | [pvlib/pvlib-python](https://github.com/pvlib/pvlib-python) + [NatLabRockies/floris](https://github.com/NatLabRockies/floris) | BSD-3 | Generación solar y eólica esperada |
+| Baseline de forecast | [williamhobbs/hefty](https://github.com/williamhobbs/hefty) | BSD-3 | Pronóstico corto honesto contra el que medir |
+| Datos de EE. UU. | [catalyst-cooperative/pudl](https://github.com/catalyst-cooperative/pudl) | MIT | Formularios FERC/EIA/EPA como tablas, si el caso es norteamericano |
+
+**Cómo se cablea.** `pypsa-ppa` define las estructuras contractuales candidatas (*pay-as-produced*,
+*pay-as-consumed*, *baseload* con firmeza, con o sin tope) y las evalúa sobre el modelo PyPSA del
+país; `pvlib`/`floris` generan los perfiles horarios del recurso del sitio concreto; `hefty` aporta
+la banda de error de pronóstico que fija el coste de desbalance. La salida es una **tabla de
+estructuras con su precio esperado, su exposición a desbalance y su peor escenario**, no un número
+único. El LLM redacta la memoria de supuestos y la compara entre estructuras; **no elige la
+estructura**.
+
+⚠️ **Lo que hay que decirle al cliente.** `pypsa-ppa` tiene **8 ★ y push de 2026-11-09**: es MIT y
+resuelve el problema correcto, pero **no hay comunidad detrás**. Tratarlo como punto de partida de un
+acelerador propio. La dependencia sólida es PyPSA. Y el resultado es **un análisis de decisión, no
+asesoría financiera ni legal**: la estructura la firma el cliente con sus asesores.
+
+**Dónde se vende hoy, con el dato que lo justifica.** Brasil (Equinix firmó PPA con Auren; 38 GW de
+solicitudes de acceso contra ~12 GW disponibles), LATAM en general (PPAs bajo 0,06 USD/kWh) y EMEA,
+donde el esquema de calificación de datacenters puntúa el abastecimiento renovable.
+
+### Receta 31 — Expediente de interacción con la red para el *rating* europeo de datacenters
+
+**El problema del cliente.** La Comisión propuso el 21 de septiembre de 2026 un esquema de
+calificación para datacenters de **≥500 kW de potencia TI** que puntúa eficiencia energética e
+hídrica, estrés hídrico local, reutilización de calor residual y **cómo la instalación interactúa con
+la red**. Las normas mínimas están en **consulta hasta el 14 de diciembre de 2026** y la propuesta
+legislativa se planea para **2027**. Ningún operador tiene hoy ese expediente armado, y **no existe
+herramienta abierta de referencia para producirlo**.
+
+**Las piezas:**
+
+| Capa | Repo | Licencia | Rol |
+|------|------|----------|-----|
+| Modelo de red europeo | [powsybl/powsybl-core](https://github.com/powsybl/powsybl-core) | MPL-2.0 (verificada 2026-11-20) | Cálculo de flujos sobre el modelo CGMES |
+| Perfiles CGMES | [entsoe/application-profiles-library](https://github.com/entsoe/application-profiles-library) | ver ficha | El formato que el operador europeo habla |
+| Flexibilidad de carga | [OpenADR](https://github.com/oadr3-org) / `OpenLEADR` | Apache-2.0 | Señal de respuesta de demanda demostrable |
+| Simulación del edificio/instalación | [NatLabRockies/EnergyPlus](https://github.com/NatLabRockies/EnergyPlus) + [LBNL-ETA/EnergyPlus-MCP](https://github.com/LBNL-ETA/EnergyPlus-MCP) | BSD | Eficiencia y calor residual, con el MCP para iterar conversacionalmente |
+| Escenarios de sistema | [MAHTEP/TEMOA-Europe](https://github.com/MAHTEP/TEMOA-Europe) | MIT (código) + CC-BY-4.0 (datos) | Contexto europeo con datos ya publicados |
+| Trazabilidad del modelo | [open-energy-transition/gridlens](https://github.com/open-energy-transition/gridlens) | MIT | **Patrón**, no dependencia: qué modelo sostiene qué afirmación del expediente |
+
+**Cómo se cablea.** `EnergyPlus` (vía su MCP, 35 herramientas) produce las métricas de eficiencia y
+el balance de calor recuperable; `powsybl-core` sobre el modelo CGMES del nodo de conexión cuantifica
+el impacto en red y el efecto de curtailar; `OpenADR` demuestra que la flexibilidad es **despachable
+y verificable**, no declarativa. El agente compone el expediente y **cita cada número con el modelo y
+la versión que lo produjo** — que es el patrón que `gridlens` nombra y que un regulador exige.
+
+⚠️ **Dos advertencias.** (1) El esquema está **en consulta**: el entregable de hoy es un expediente
+*preparatorio* y una posición para la consulta, no cumplimiento de una norma vigente. Venderlo como lo
+segundo es un error. (2) El umbral de 500 kW define qué clientes quedan dentro: **verificarlo por
+cliente** antes de proponer.
+
+### Receta 32 — Inventario de la generación distribuida que la distribuidora no sabe que tiene
+
+**El problema del cliente.** Una distribuidora no conoce cuánta solar en tejado está conectada a sus
+circuitos. Eso rompe el forecast, la planificación de capacidad de alojamiento y la gestión de
+tensión — y es un problema universal, no regional.
+
+**Las piezas, todas MIT:**
+
+| Capa | Repo | Licencia | Rol |
+|------|------|----------|-----|
+| Detección desde satélite gratuito | [open-energy-transition/earthpv](https://github.com/open-energy-transition/earthpv) | MIT | Mapeo de solar en tejado desde imagen satelital libre |
+| Detección a escala regional | [open-energy-transition/rooftopsenti](https://github.com/open-energy-transition/rooftopsenti) | MIT, ⚠️ **archivado** | Instalaciones grandes con Sentinel-2 a escala país/estado |
+| Activos de red desde OSM | [open-energy-transition/osm-powerplants](https://github.com/open-energy-transition/osm-powerplants) | MIT | Centrales eléctricas desde OpenStreetMap |
+| Topología de red | [open-energy-transition/MapYourGrid](https://github.com/open-energy-transition/MapYourGrid) + [grid-mapping-starter-kit](https://github.com/open-energy-transition/grid-mapping-starter-kit) (⚠️ archivado) | CC-BY-4.0 / CC0-1.0 | A qué circuito pertenece cada cosa |
+| Flujos de distribución | [pandapower](https://github.com/e2nIEE/pandapower) | BSD-3 | Impacto en tensión y capacidad de alojamiento |
+| Producción esperada | [pvlib/pvlib-python](https://github.com/pvlib/pvlib-python) | BSD-3 | Convertir el área detectada en energía horaria |
+| Control de reactiva (Alemania) | [KIT-IAI/PIDE](https://github.com/KIT-IAI/PIDE) | MIT | Referencia de método para control autónomo de reactiva bajo VDE-AR-N |
+
+**Cómo se cablea.** `earthpv`/`rooftopsenti` detectan el área de paneles; `pvlib` la convierte en
+perfil horario; `MapYourGrid` asigna cada detección a un circuito; `pandapower` calcula tensión y
+capacidad de alojamiento restante por alimentador. La salida es un **mapa de DER oculta por
+alimentador con su capacidad de alojamiento remanente** — directamente accionable para la cola de
+conexión y para la respuesta al cliente que pide conectar más.
+
+⚠️ **Límites que conviene fijar por contrato.** `earthpv` tiene 22 ★ y push del 2026-11-20: es la
+pieza viva de la receta. **`rooftopsenti` y `grid-mapping-starter-kit` están ARCHIVADOS** (verificado
+2026-11-20): su código es MIT/CC0 y sigue siendo legible y forkeable, pero **no recibirán arreglos** —
+tratarlos como referencia a vendorizar, no como dependencia mantenida. La precisión de detección
+depende de la resolución satelital y hay que **validarla contra una muestra terreno del cliente antes
+de comprometer un número**. Y la salida es un **inventario estimado**, no un censo regulatorio:
+decirlo en el entregable.
+
 ---
-*Verificado 2026-11-20 en seis pases (24 recetas). Re-verificar licencias y stars antes de
+*Verificado 2026-11-20 en ocho pases (32 recetas). Re-verificar licencias y stars antes de
 comprometer alcance.*

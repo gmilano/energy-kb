@@ -9,6 +9,80 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 8 (el método de "buscar la norma local" no generaliza, y la razón es utilizable)
+
+**Titular del pase: la lección que abrió APAC en el pase 7 no se exporta a EMEA ni a LATAM, y el
+por qué es una regla de búsqueda, no una conclusión sobre el sector.** El pase 7 dejó cinco
+candidatos —`CEI 0-21` (Italia), `VDE-AR-N 4105` (Alemania), `G99` (Reino Unido), `PRODIST`
+(Brasil), `NOM-001-SEDE` (México)— con la hipótesis de que nombrar la norma de conexión local
+abriría cada región como `CSIP-AUS` e `IEEE 2030.5` abrieron Australia. Las cinco consultas se
+corrieron contra `search/repositories`. **Ninguna devolvió un repo institucional con tracción.**
+
+| Término buscado | Resultados | Lo mejor que apareció | Licencia | ★ |
+|-----------------|-----------|----------------------|----------|---|
+| `VDE-AR-N` (Alemania) | 188 | [KIT-IAI/PIDE](https://github.com/KIT-IAI/PIDE) — simulación de integración de DER y control autónomo de reactiva en redes de distribución | **MIT** (verificada en `LICENSE` crudo: Karlsruhe Institute of Technology, IAI) | 5 |
+| `NOM-001-SEDE` (México) | 74 | [jacometoss/PyEWS](https://github.com/jacometoss/PyEWS) — dimensionado de conductores eléctricos | GPL-3.0 | 4 |
+| `G99` (Reino Unido) | 24 | [Nero-Engine/spark-pack-mcp](https://github.com/Nero-Engine/spark-pack-mcp) — servidor MCP de cálculo eléctrico con G98/G99 | **sin licencia** | 0 |
+| `CEI 0-21` (Italia) | 10 | calculadoras fotovoltaicas italianas de autor individual | MIT / varias | 0 |
+| `PRODIST` (Brasil) | 142 | **nada**: colisión de nombres completa | — | — |
+
+**La regla que sale de esto, y vale para cualquier industria de esta KB: buscar el *protocolo*, no
+la *norma*.** `IEEE 2030.5` y `CSIP-AUS` son protocolos máquina-a-máquina con implementación
+obligatoria: producen librerías, clientes y servidores. `VDE-AR-N 4105`, `CEI 0-21`, `G99` y
+`NOM-001-SEDE` son normas documentales de cumplimiento: producen hojas de cálculo y calculadoras de
+0 ★. La diferencia no es la madurez eléctrica del país —Alemania e Italia no están detrás de
+Australia— sino **si la norma obliga a que dos máquinas se hablen**. Donde obliga, hay código
+abierto; donde sólo obliga a entregar un expediente, hay PDF.
+
+⚠️ **`PRODIST` se suma a la lista de términos inutilizables** (`hydrogen`, `AMI`, `utility billing`,
+`reservoir`, registrados en pases anteriores): 142 resultados y **ninguno** es el PRODIST de ANEEL.
+"ProDist" es, en GitHub, cálculo de distribuciones de probabilidad, un sistema de gestión de
+distribuidores y un curso de programación distribuida. Para Brasil hay que volver al vocabulario que
+sí funcionó en el pase 6: **el nombre del framework más el país** (`pypsa-meets-brazil`).
+
+**Único rescate institucional del barrido: `KIT-IAI/PIDE` (MIT, 5 ★, push 2026-08-05).** Es del
+Institute for Automation and Applied Informatics del KIT, y simula integración de generación
+distribuida con control autónomo de potencia reactiva. 5 ★ no es tracción: vale como **referencia de
+método verificable** para una propuesta en Alemania, no como dependencia.
+
+### Quinto pase consecutivo sin agente de operación de red — ahora medido también desde fuera de GitHub
+
+La consulta global prescrita (`top open source AI agents energy 2026 github MIT`) devuelve listicles
+de agentes de propósito general —OpenClaw, Hermes, OpenCode, OpenHands, CrewAI, Browser Use— **sin
+una sola entrada energética**. Las fuentes además se contradicen en estrellas y licencias entre sí.
+Eso confirma, desde un canal distinto al conteo de repos, lo que los pases 4-7 midieron: la capa
+agéntica energética **es institucional o es de forecasting**, y no de mercado. Lo proponible sigue
+siendo `Power-Agent/*` (MIT), `pypsa-mcp` (MIT), `EnergyPlus-MCP` (BSD) y la cadena de forecasting
+del pase 7.
+
+### Novedad agéntica real del pase, pequeña y honesta
+
+[`open-energy-transition/gridlens`](https://github.com/open-energy-transition/gridlens) — **MIT**,
+1 ★, push **2026-11-19**. Se describe como *"AI-native app to see who's using which energy models,
+where, and for what grid decisions"*. Es el primer repo que esta KB registra cuyo objeto es
+**observabilidad del propio ecosistema de modelos**: qué modelo usa quién y para qué decisión de red.
+
+⚠️ **Cómo proponerlo:** 1 ★ y un día de vida. **No es una dependencia.** Vale por dos cosas
+concretas: (a) confirma que Open Energy Transition —el autor de `pypsa-mcp`— está construyendo la
+capa agéntica alrededor de PyPSA, y (b) el problema que nombra (*trazabilidad de qué modelo sostiene
+qué decisión*) es exactamente el entregable que un cliente regulado pide y que ningún repo cubría.
+Si se vuelve real, es la pieza de governance del stack.
+
+### Correcciones de este pase a afirmaciones de pases anteriores
+
+1. **`CommonGrid` sí tiene repo de código localizable.** `compose/patterns.md` e `intel/trends.md`
+   registraron *"buscados en GitHub: sin repo de código localizable"*. Es
+   [`TextureHQ/commongrid`](https://github.com/TextureHQ/commongrid) — 14 ★, push 2026-11-19. El
+   fallo fue de vocabulario de organización: `user:texture-hq` devuelve HTTP 422 y la organización
+   real es `TextureHQ`. **La advertencia de licencia que la KB había hecho se confirma y se
+   endurece**: el `LICENSE` crudo dice literalmente *"Open Data Commons Open Database License (ODbL)
+   v1.0 — Copyright (c) 2025-2026 Texture, Inc."* Es licencia de **base de datos**, con obligación de
+   compartir derivados de la base: utilizable como fuente, **no empotrable** como dataset en un
+   entregable cerrado.
+2. **El "gap de geotermia" era, en efecto, artefacto de sintaxis** (como el pase 7 sospechó): existe
+   [`open-energy-transition/geothermal-modelling`](https://github.com/open-energy-transition/geothermal-modelling)
+   — **AGPL-3.0**, 6 ★, push 2026-11-16. Gap cerrado en oferta; abierto en licencia proponible.
+
 ## 2026-11-20 — pase 7 (aparece el agente que faltaba, y no es un agente de red: es de forecasting)
 
 **Titular del pase: por primera vez en cuatro pases la capa agéntica energética tiene una novedad

@@ -559,6 +559,94 @@ producto licenciado.** En una propuesta vale como anexo, no como dependencia té
 | `open-meteo/open-meteo` (6.703 ★) | API de clima "gratis", muy usada en forecasting renovable | **AGPL-3.0** y su API pública es *non-commercial use*. Dos restricciones distintas y ambas muerden en un SaaS de cliente |
 | `wind-python/windpowerlib` | MIT, 397 ★ | Sin mantenimiento desde **2024-02-20**: la licencia está bien, el riesgo es de soporte |
 
+## Open Energy Transition: la organización que sostiene la capa de datos de red abierta (octavo pase, 2026-11-20)
+
+Esta KB tenía catalogado un repo de esta organización (`pypsa-mcp`) y la organización tiene alrededor
+de treinta. Es la mayor adición de oferta de cualquier pase. Importa para una fundación —y no sólo
+como *trending*— porque cubre la capa que estaba más vacía: **de dónde salen los datos de red**.
+Todas las filas verificadas con `search/repositories` el 2026-11-20.
+
+| Repo | Licencia | Descripción | ★ | Push | Región origen |
+|------|----------|-------------|---|------|---------------|
+| [open-energy-transition/grid2poster](https://github.com/open-energy-transition/grid2poster) | MIT | Renderiza la topología de la red eléctrica de un país a partir de datos abiertos | 272 | 2026-10-23 | EMEA |
+| [open-energy-transition/Awesome-Electrical-Grid-Mapping](https://github.com/open-energy-transition/Awesome-Electrical-Grid-Mapping) | CC0-1.0 | Dataset curado de mapas y datasets de red eléctrica globales; dominio público | 171 | 2026-11-17 | EMEA |
+| [open-energy-transition/MapYourGrid](https://github.com/open-energy-transition/MapYourGrid) | CC-BY-4.0 | Iniciativa y tooling para mapear la red eléctrica por país sobre OpenStreetMap | 103 | 2026-10-01 | EMEA |
+| [open-energy-transition/earthpv](https://github.com/open-energy-transition/earthpv) | MIT | Mapeo de solar en tejado desde imagen satelital gratuita | 22 | 2026-11-20 | EMEA |
+| [open-energy-transition/PyPSA-Explorer](https://github.com/open-energy-transition/PyPSA-Explorer) | MIT | Explorador interactivo de redes PyPSA | 18 | 2026-09-03 | EMEA |
+| [open-energy-transition/osm-powerplants](https://github.com/open-energy-transition/osm-powerplants) | MIT | Extrae y procesa datos de centrales eléctricas desde OpenStreetMap | 11 | 2026-07-01 | EMEA |
+| [open-energy-transition/pypsa-ppa](https://github.com/open-energy-transition/pypsa-ppa) | MIT | Toolkit PyPSA para simular y optimizar **PPAs** bajo distintos escenarios | 8 | 2026-11-09 | EMEA |
+| [open-energy-transition/rooftopsenti](https://github.com/open-energy-transition/rooftopsenti) | MIT, ⚠️ **archivado** | Detecta solar en tejado con Sentinel-2 a escala país/estado/provincia | 7 | 2026-07-05 | EMEA |
+| [open-energy-transition/openmod-features](https://github.com/open-energy-transition/openmod-features) | MIT | Inventario comparado de capacidades de las herramientas de modelado energético abierto | 6 | 2026-11-01 | EMEA |
+
+⚠️ **Dentro de esta misma organización hay cuatro repos AGPL-3.0 y al menos tres sin licencia.** Son
+`solver-benchmark` (78 ★), `demandcast` (47 ★), `geothermal-modelling` (6 ★) y
+`efuels-supply-potentials` (4 ★) en AGPL-3.0; `Awesome-Grid-Model-Data` (80 ★), `pypsa-moon` (8 ★) y
+`pypsa-training-sessions` (7 ★) sin archivo de licencia. **Una organización confiable no es una
+licencia.** El caso que más muerde es `demandcast`: es exactamente la pieza que uno querría para un
+producto de forecasting de demanda, y su AGPL-3.0 obliga a liberar el servicio derivado.
+
+### Datos de utilities de EE. UU.: la capa que precede a toda la analítica
+
+| Repo | Licencia | Descripción | ★ | Push | Región origen |
+|------|----------|-------------|---|------|---------------|
+| [catalyst-cooperative/pudl](https://github.com/catalyst-cooperative/pudl) | MIT | **Public Utility Data Liberation**: formularios de FERC, EIA y EPA limpiados y entregados como datos listos para análisis | 621 | 2026-11-20 | North America |
+| [TextureHQ/commongrid](https://github.com/TextureHQ/commongrid) | ⚠️ **ODbL-1.0** | Registro abierto de la red eléctrica de EE. UU. (iniciativa de Texture) | 14 | 2026-11-19 | North America |
+
+`pudl` (MIT, 621 ★, push del mismo día) es el repo de mayor tracción que esta KB no tenía. Es el
+atajo que convierte los formularios regulatorios de EE. UU. en tablas analizables: **el trabajo sucio
+que precede a cualquier analítica de cola de interconexión**.
+
+⚠️ `commongrid` corrige una afirmación de pases anteriores —que no tenía repo de código localizable—
+y confirma la advertencia de licencia desde el `LICENSE` crudo: *Open Data Commons Open Database
+License (ODbL) v1.0, Copyright (c) 2025-2026 Texture, Inc.* Es licencia de **base de datos** con
+obligación de compartir derivados de la base: **fuente sí, dataset empotrado en un entregable
+cerrado no.**
+
+## Ecosistema de los frameworks de planificación: OSeMOSYS, Temoa y Calliope (octavo pase, 2026-11-20)
+
+La KB ya tenía los motores (`OSeMOSYS` Apache-2.0, `temoa` MIT, `calliope` Apache-2.0). Faltaba lo
+que los hace usables: conversión de datos, interfaces y las instancias nacionales.
+
+| Repo | Licencia | Descripción | ★ | Push | Región origen |
+|------|----------|-------------|---|------|---------------|
+| [OSeMOSYS/otoole](https://github.com/OSeMOSYS/otoole) | MIT | Conversión de datos de entrada/salida de OSeMOSYS. ⚠️ Sin push desde 2024-11-18 | 33 | 2024-11-18 | EMEA |
+| [EAPD-DRB/MUIOGO](https://github.com/EAPD-DRB/MUIOGO) | Apache-2.0 | Interfaz de modelado para OG-Core y OSeMOSYS | 26 | 2026-10-31 | North America |
+| [OSeMOSYS/MUIO](https://github.com/OSeMOSYS/MUIO) | Apache-2.0 | Interfaz de usuario de modelado de OSeMOSYS | 22 | 2026-10-01 | EMEA |
+| [MAHTEP/TEMOA-Italy](https://github.com/MAHTEP/TEMOA-Italy) | **MIT** (código) + **CC-BY-4.0** (datos) | Modelo del sistema energético italiano 2006-2050. Politecnico di Torino, grupo MAHTEP | 13 | 2026-11-16 | EMEA |
+| [MAHTEP/TEMOA-Europe](https://github.com/MAHTEP/TEMOA-Europe) | **MIT** (código) + **CC-BY-4.0** (datos) | Modelo europeo de región única con base de datos abierta hasta 2050 | 4 | 2026-10-25 | EMEA |
+| [CANOE-main/canoe-electricity](https://github.com/CANOE-main/canoe-electricity) | MIT | Sector eléctrico canadiense para el modelo CANOE (datasets compatibles Temoa) | 3 | 2026-09-10 | North America |
+| [CANOE-main/canoe-transportation](https://github.com/CANOE-main/canoe-transportation) | MIT | Sector transporte canadiense del modelo CANOE | 3 | 2026-11-18 | North America |
+| [CANOE-main/canoe-industry](https://github.com/CANOE-main/canoe-industry) | MIT | Sector industrial canadiense del modelo CANOE | 2 | 2026-09-04 | North America |
+| [calliope-project/ec_modules](https://github.com/calliope-project/ec_modules) | MIT, ⚠️ **archivado** | Módulos reutilizables de workflow para modelos Calliope | 4 | 2026-04-02 | EMEA |
+
+⚠️ **Variantes del mismo ecosistema que NO son permisivas**, y conviene saberlo antes de elegir:
+`transition-zero/tz-osemosys` (46 ★) y `OSeMOSYS/osemosys_global` (46 ★) son **AGPL-3.0**;
+`NetZeroAtlantic/ACES-Temoa` es **GPL-2.0**. La ruta permisiva al modelado de expansión sigue siendo
+`temoa` (MIT) / `calliope` (Apache-2.0) / `oemof-solph` (MIT), **con el coste de construir los datos
+del país** — salvo en Italia, Europa y Canadá, donde MAHTEP y CANOE ya los publicaron bajo MIT.
+
+### El quinto sitio donde buscar una licencia: un `LICENSE` que se parte por tipo de contenido
+
+La regla de esta KB tenía cuatro lugares (`LICENSE*`, `COPYING`, el SPDX de `pyproject.toml`, un
+`legal.html` dentro del árbol del paquete). `MAHTEP/TEMOA-Italy` añade el quinto: la API de GitHub
+reporta `NOASSERTION` y el texto crudo dice *"TEMOA-Italy is released under two licenses, according
+to the type of content"* — **CC-BY-4.0** para bases de datos (`*.sql`, `*.zip`), documentación y
+figuras, y **MIT** para todo el código (`*.py`). Un gate automático de licencias lo habría
+descartado, y es un modelo nacional europeo completo de una universidad politécnica.
+
+**Regla operativa:** `NOASSERTION` en un **modelo energético nacional** casi siempre significa
+licencia dual (datos vs. código), no ausencia de licencia. Leer el `LICENSE` crudo entero, no sus
+primeras líneas: en TEMOA-Italy la parte MIT aparece **después** de la parte CC.
+
+### Alemania: el único rescate institucional del barrido de normas de conexión
+
+| Repo | Licencia | Descripción | ★ | Push | Región origen |
+|------|----------|-------------|---|------|---------------|
+| [KIT-IAI/PIDE](https://github.com/KIT-IAI/PIDE) | **MIT** (verificada en `LICENSE` crudo) | Simulación de integración de generación distribuida y control autónomo de potencia reactiva en redes de distribución (VDE-AR-N) | 5 | 2026-08-05 | EMEA |
+
+Del Institute for Automation and Applied Informatics del Karlsruhe Institute of Technology. 5 ★ no es
+tracción: vale como **referencia de método citable** en una propuesta alemana, no como dependencia.
+
 ## Fuentes de descubrimiento (para el próximo pase)
 
 Catálogos curados que rinden más que cualquier búsqueda por buzzword:
@@ -569,6 +657,9 @@ Catálogos curados que rinden más que cualquier búsqueda por buzzword:
 | [ps-wiki/best-of-ps](https://github.com/ps-wiki/best-of-ps) | CC-BY-SA-4.0 | Ranking semanal de librerías de análisis de sistemas de potencia | 297 |
 | [open-energy-transition/Awesome-Electricity-Demand](https://github.com/open-energy-transition/Awesome-Electricity-Demand) | MIT | Recursos de demanda eléctrica horaria y sub-horaria | 74 |
 | [zhgqcn/awesome-NILM-with-code](https://github.com/zhgqcn/awesome-NILM-with-code) | CC-BY-4.0 | Non-Intrusive Load Monitoring con código | 149 |
+| [martymcenroe/best-of-pes-ai](https://github.com/martymcenroe/best-of-pes-ai) | CC-BY-SA-4.0 | Ranking de proyectos open source de IA/ML para los dominios de la IEEE Power & Energy Society; complementa `best-of-ps` con el eje de IA (añadido en el octavo pase) | 3 |
+| [open-energy-transition/Awesome-Grid-Model-Data](https://github.com/open-energy-transition/Awesome-Grid-Model-Data) | ⚠️ **sin licencia** | Catálogo de datasets de red para probar interoperabilidad y reproducibilidad. Útil para orientarse; sin licencia no se redistribuye (octavo pase) | 80 |
+| [DatariusAI/AI-in-Energy](https://github.com/DatariusAI/AI-in-Energy) | ⚠️ **sin licencia** | Hub de investigación y código de IA para energía refrescado a diario. Vale como *feed*, no como dependencia (octavo pase) | 0 |
 
 ---
 *Ver también `verticals/solutions.md` para plataformas verticales completas.*
