@@ -680,3 +680,39 @@ su formato, su huso y sus unidades.
 
 Es de **autor individual y 3 ★**: **patrón a copiar, no dependencia a asumir.** La licencia
 (Apache-2.0) permite justamente eso — tomar el diseño de normalización y mantenerlo en el proyecto.
+
+## Lectura local de medidor como plataforma de arranque (decimotercer pase, 2026-11-20)
+
+El patrón de esta sección —tomar un sistema real y personalizable y poner IA encima— tiene en la capa
+de medición una variante barata que esta KB no había registrado: **no hay que construir el
+*head-end*, hay que leer el medidor localmente**.
+
+[`marq24/ha-tibber-pulse-local`](https://github.com/marq24/ha-tibber-pulse-local) (**Apache-2.0**,
+297 ★, 20 forks, **0 issues abiertas**, push 2026-11-08) lee el Tibber Pulse **por LAN, sin pasar por
+la nube del fabricante**. Combinado con
+[`volkszaehler/mbmd`](https://github.com/volkszaehler/mbmd) (**BSD-3-Clause**, 281 ★) como demonio de
+adquisición Modbus y
+[`Apollon77/smartmeter-obis`](https://github.com/Apollon77/smartmeter-obis) (**MIT**) como
+normalizador OBIS multi-fabricante, se obtiene una **plataforma de telemetría doméstica/edificio
+completa y permisiva** sin licencia de producto y sin dependencia de nube.
+
+**Por qué es una solución vertical y no sólo una librería:**
+
+1. **Es el argumento de privacidad convertido en arquitectura.** "El dato del medidor no sale de la
+   instalación" es una propiedad verificable del despliegue, no una promesa contractual. En EMEA, con
+   el acceso local a datos del hogar como política, es el punto de partida correcto.
+2. **Convierte un mandato regulatorio en base instalada direccionable.** Donde hay mandato de medidor
+   inteligente —EMEA, y Brasil si la consulta del MME se convierte en norma— hay parque de medidores
+   que alguien tiene que leer.
+3. **El modelo de datos ya existe y es normativo**:
+   [`sunspec/models`](https://github.com/sunspec/models) (Apache-2.0) para inversores y DER,
+   [`NeverBlink-OSS/saref-linkml`](https://github.com/NeverBlink-OSS/saref-linkml) (BSD-3-Clause) para
+   la semántica SAREF. No hay que inventar el esquema, que es donde estos proyectos se atascan.
+
+**Y la trampa de esta vertical, que hay que conocer antes de dibujar el diagrama:** es la capa de la
+KB con **más densidad de licencias no-OSI**, y las piezas bloqueadas tienen **más estrellas** que las
+limpias. `UtilitechAS/amsreader-firmware` (471 ★) parece la elección obvia para el lado firmware y es
+**Fair Source License 0.9 con tope de 5 usuarios**; `binsentsu/home-assistant-solaredge-modbus`
+(420 ★) no tiene licencia. **Elegir por estrellas aquí rompe el entregable.** Sustitutos limpios:
+`lvzon/dsmr-p1-parser` (Apache-2.0) para firmware/edge y
+`WillCodeForCats/solaredge-modbus-multi` (Apache-2.0) para SolarEdge.

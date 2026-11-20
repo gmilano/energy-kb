@@ -816,21 +816,71 @@ REST"). Verificado por error y corregido en este pase:
   como **MIT** sólo por el *fallback* a `master` — en `main` el archivo devuelve 404. Un pase que
   sólo pruebe `main` concluirá "sin licencia" sobre repos que sí la tienen.
 
-## T45 — "Sin licencia" ya bloquea la única implementación de un protocolo entero
+## T45 — ~~"Sin licencia" ya bloquea la única implementación de un protocolo entero~~ **DEROGADA EN EL PASE 13**
 
-T20 definió "sin licencia" como categoría bloqueada. Este pase encontró el caso donde eso cuesta una
-capacidad completa, no un repo:
+> ❌ **T45 era falsa y se deroga.** Se conserva aquí porque su modo de fallo es la lección, y porque
+> el dato equivocado se había propagado a `agents/top.md`, `compose/patterns.md` y este archivo.
+> La sustituye **T46**.
 
-- [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) — **la única
-  implementación de OpenADR 3.0** encontrada (VTN + VEN en Rust, 107 ★, 30 forks, push 2026-11-20)
-  y **no tiene archivo de licencia** en `main`, `master` ni `develop`.
-- Su hermano [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python) es
-  **Apache-2.0** (161 ★) pero implementa **sólo OpenADR 2.0b**.
+**Lo que T45 afirmaba:** que [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs)
+—la implementación de OpenADR 3.0 (VTN + VEN en Rust, 107 ★, 30 forks)— **no tenía archivo de
+licencia** en `main`, `master` ni `develop`, y que por tanto **"OpenADR 3.0 no tiene implementación
+abierta licenciada"**.
 
-**Resultado: OpenADR 3.0 no tiene implementación abierta licenciada.** Para una receta de respuesta
-a la demanda en North America —donde OpenADR es el protocolo de referencia— eso significa que el
-camino permisivo es **2.0b**, o build propio, o negociación de licencia con el proyecto. Es una
-decisión de arquitectura, y hasta este pase estaba invisible.
+**Lo que el pase 13 verificó, en tres canales independientes:**
+
+| Canal | Resultado |
+|-------|-----------|
+| `Cargo.toml` (manifiesto del paquete) | `license = "Apache-2.0 OR MIT"` |
+| `raw.githubusercontent.com/.../main/LICENSE-MIT` | **200** (texto MIT, "Copyright (c) 2024 Stichting ElaadNL and Contributors") |
+| `raw.githubusercontent.com/.../main/LICENSE-APACHE` | **200** (texto Apache-2.0 canónico) |
+
+Ambos archivos devuelven **200 también en `master`**. **`openleadr-rs` es doble Apache-2.0 / MIT y
+es perfectamente usable en un entregable de cliente.**
+
+**Por qué falló la medición, que es lo único que hay que recordar:** la lista de sondas de esta KB
+era `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING`, `LICENCE`. **Ninguna de ellas existe en este
+repo** — `LICENSE` da 404 en las tres ramas, que es exactamente lo que el pase anterior midió y
+reportó con honestidad. Lo que faltaba era saber que **el ecosistema Rust parte la licencia en dos
+archivos** (`LICENSE-MIT` + `LICENSE-APACHE`), convención del propio Cargo para el dual-licensing
+que casi todo el ecosistema usa. La sonda no estaba mal ejecutada: estaba **incompleta para el
+lenguaje**.
+
+**El coste de no haberlo visto, dicho sin rodeos:** la KB recomendaba durante dos pases entregar
+sobre **OpenADR 2.0b**, o negociar licencia durante semanas, o **reimplementar 3.0 desde la
+especificación como "trabajo facturable"**. Las tres eran innecesarias. Es el error más caro que
+esta KB ha cometido y registrado: no un repo mal clasificado, sino **una decisión de arquitectura
+regional tomada sobre un hecho falso**.
+
+## T46 — La licencia la declara el gestor de paquetes, y hay que leerla ahí primero
+
+Sustituye a T45 y generaliza T39 (`NOASSERTION` es una pregunta, no un dato) y T44 (probar varias
+ramas).
+
+**La regla:** antes de concluir cualquier cosa sobre la licencia de un repo, leer el **manifiesto
+del gestor de paquetes**, porque contiene la licencia como **expresión SPDX declarada por el autor**
+en una sola línea legible por máquina:
+
+| Ecosistema | Archivo | Campo |
+|-----------|---------|-------|
+| Rust / Cargo | `Cargo.toml` | `license = "..."` (y la convención `LICENSE-MIT` + `LICENSE-APACHE`) |
+| Python | `pyproject.toml`, `setup.py`, `setup.cfg` | `license`, `classifiers` |
+| JS / Node | `package.json` | `"license"` |
+| Java / Maven | `pom.xml` | `<licenses>` |
+| Go | sin campo — hay que caer a los archivos | — |
+| .NET | `*.csproj` | `<PackageLicenseExpression>` |
+
+**Lista de sondas corregida y completa**, en este orden:
+`Cargo.toml`/`pyproject.toml`/`package.json`/`pom.xml` → `LICENSE` → `LICENSE.md` → `LICENSE.txt`
+→ `LICENSE-MIT` → `LICENSE-APACHE` → `COPYING` → `LICENCE`, cada uno contra las ramas
+`main`, `master`, `develop`.
+
+**Y la consecuencia transversal, que vale para todas las industrias de esta rotación, no sólo
+energy:** cualquier KB de esta familia que haya clasificado un repo de **Rust** como "sin licencia"
+leyendo sólo `LICENSE` tiene **un falso negativo con la misma firma** y debe re-verificarse. El
+patrón diagnóstico es exacto y se puede buscar: **`LICENSE` da 404 en todas las ramas y el repo
+sigue vivo y con tracción** ⇒ no es un repo sin licencia, es un repo cuyo archivo de licencia tiene
+otro nombre.
 
 Otras piezas que entran en la misma categoría bloqueada este pase: `runyao-yu/PriceFM` (158 ★,
 foundation model de precio), `california-energy-commission/MIDAS` (dato tarifario **oficial** de un
@@ -1020,7 +1070,9 @@ existe es tan dañino como uno que no se declara.
   búsqueda.
 - **Cumplimiento NERC CIP**: **cero** herramientas del sector frente al plazo de diciembre de 2026.
 - **MDM / meter-to-cash**: el mejor repo tiene **7 ★** y dos años sin push.
-- **OpenADR 3.0**: sin implementación abierta **licenciada** (T45). El camino permisivo es 2.0b.
+- ~~**OpenADR 3.0**: sin implementación abierta licenciada (T45)~~ → **GAP CERRADO, NUNCA EXISTIÓ**
+  (pase 13). `openleadr-rs` es **Apache-2.0 OR MIT** por `Cargo.toml`; `ElaadNL/openadr3-client` es
+  Apache-2.0. Ver T45 derogada y T46.
 - **Foundation models de red descargables**: `gridfm-graphkit` (Apache-2.0) **no publica
   checkpoint preentrenado**. Hay framework de entrenamiento, no modelo listo.
 - **Relación DOE "GridFM 2.0" ↔ organización GitHub `gridfm/*`**: **no verificada**. Adyacente por
@@ -1436,3 +1488,78 @@ El dato institucional LATAM sigue siendo escaso y vale recordarlo: el único usa
 institucional sigue siendo `equipoanaliticaxm/api_xm` (XM, Colombia). Y **Brasil sigue en cero**: el
 mayor mercado de datacenter de la región no tiene presencia de código abierto de su operador (ONS)
 tras doce pases — el gap de mayor valor potencial que queda en LATAM.
+
+## T47 — La capa de medición es donde se concentran las licencias no-OSI, y la tracción engaña
+
+Añadida en el decimotercer pase (2026-11-20). Generaliza T20 ("sin licencia" = bloqueada, distinta de
+ausente) y T33 (existe la licencia revocable, indetectable por SPDX).
+
+El pase 12 encontró **una** licencia revocable (Energinet `MTB`) y la registró como caso. El pase 13
+barrió la capa de medición (`SunSpec`, `IEC 62056`, `SAREF`) y encontró que **no era un caso aislado
+sino una familia con cuatro clases distintas**, todas informadas como `NOASSERTION` por la API:
+
+| Clase | Ejemplo | ★ | Efecto en un entregable |
+|-------|---------|---|------------------------|
+| Permisiva **con tope de usuarios** | `UtilitechAS/amsreader-firmware` — *Fair Source License 0.9*, `Use Limitation: 5 users` | **471** | **Bloqueo duro.** Un tope de 5 usuarios no se resuelve con atribución |
+| **No comercial** | `bolagnaise/PowerSync` — *PolyForm Noncommercial 1.0.0* | 96 | **Bloqueo total.** Un encargo es uso comercial por definición |
+| **Revocable** (T33) | `Energinet-SimTools/MTB` | 83 | **Bloqueo de continuidad**, no de atribución |
+| **Permisiva en sustancia, no OSI** | `universaldevices/oadr30` — *"Universal Devices Free/MIT License"* de redacción propia | 10 | **No bloquea**: requiere lectura legal, no descarte |
+
+**La regla práctica, que es la parte nueva:** en esta capa **la tracción y la usabilidad legal están
+descorreladas**, y es la única capa de esta KB donde eso ocurre de forma sistemática. Los sustitutos
+limpios tienen **menos** estrellas que las piezas bloqueadas:
+
+| Bloqueada | ★ | Sustituto limpio | ★ |
+|-----------|---|------------------|---|
+| `binsentsu/home-assistant-solaredge-modbus` (sin licencia) | 420 | `WillCodeForCats/solaredge-modbus-multi` (Apache-2.0) | 343 |
+| `matthijskooijman/arduino-dsmr` (sin licencia, parado 2023) | 145 | `lvzon/dsmr-p1-parser` (Apache-2.0) | 60 |
+| `UtilitechAS/amsreader-firmware` (Fair Source, 5 usuarios) | 471 | `pwitab/iec62056-21` (BSD-3) / `volkszaehler/mbmd` (BSD-3) | 89 / 281 |
+
+**Consecuencia para el método de esta KB: en la capa de consumidor/*prosumer*, el filtro de licencia
+va ANTES del filtro de popularidad.** En las capas de motor de red, entornos RL y laboratorio
+nacional, ordenar por estrellas da una primera aproximación razonable. Aquí da sistemáticamente la
+respuesta equivocada, porque el repo popular de esta capa nació como proyecto de aficionado con
+licencia elegida para proteger al autor, no para habilitar reutilización comercial.
+
+**Y la asimetría del coste, que explica por qué merece una entrada propia:** descartar una pieza
+limpia por pereza cuesta una alternativa; meter `amsreader-firmware` en un diagrama de arquitectura y
+descubrir el tope de 5 usuarios en la revisión legal del cliente cuesta **el rediseño de la capa de
+adquisición a mitad de proyecto**.
+
+## T48 — Un negativo nuevo no gana a un positivo verificado sólo por ser más reciente
+
+Añadida en el decimotercer pase. Es una regla de **gobierno de la propia KB**, no una observación del
+sector, y nace del error más caro que esta KB ha cometido y registrado (ver T45 derogada y T46).
+
+**Lo que pasó:** un pase resolvió correctamente la licencia de `openleadr-rs` como doble MIT /
+Apache-2.0 y lo escribió en una tabla titulada *"Licencias rescatadas leyendo el archivo crudo"*. Un
+pase posterior volvió a medirla con una lista de sondas más corta, obtuvo 404 —correctamente, porque
+`LICENSE` no existe con ese nombre en ese repo— y **escribió la conclusión contraria sin consultar el
+registro propio**. El dato falso se propagó a tres archivos y sostuvo una receta entera que
+recomendaba trabajo innecesario.
+
+**La regla:**
+
+> Antes de escribir un hallazgo **negativo** —"sin licencia", "cero repos", "no existe", "no hay
+> implementación"— **buscar la entidad en la propia KB**. Si existe un registro positivo previo, el
+> negativo nuevo **debe explicar la discrepancia**, no sobrescribirla.
+
+**Por qué el sesgo correcto es asimétrico y no neutral.** Un positivo verificado es la salida de una
+medición que **encontró algo**: alguien leyó un archivo y lo citó. Un negativo es la salida de una
+medición que **no encontró nada**, y eso tiene dos causas posibles —no existe, o no se buscó bien— que
+son indistinguibles desde dentro del resultado. Esta KB tiene **el registro acumulado de la segunda
+causa**: `PRODIST`, `hydrogen` con paréntesis, `IEEE 1547`, `AMI`, `reservoir`, *forks* no indexados,
+`NOASSERTION`, `master` frente a `main`, y ahora `LICENSE-MIT`. Nueve maneras documentadas de medir
+cero sin que el cero sea real.
+
+**Coste asimétrico, que es el argumento final:** un falso positivo mete un repo malo en una tabla y
+se corrige en la siguiente revisión. Un falso negativo **borra una capacidad del catálogo y nadie la
+vuelve a buscar, porque ya está "medida"** — el gap falso de OpenADR 3.0 sobrevivió dos pases por eso
+exactamente, y lo que lo rompió no fue una búsqueda nueva sino **leer el registro propio**.
+
+**Aplicación concreta para el próximo pase, en orden de coste creciente:**
+
+1. `grep` de la entidad en los 8 archivos antes de escribir cualquier negativo. Coste: segundos.
+2. Re-verificar los repos de **Rust** que esta KB o sus hermanas clasificaron "sin licencia" leyendo
+   sólo `LICENSE`. Firma buscable: **`LICENSE` 404 en todas las ramas + repo vivo con tracción**.
+3. Barrer los `NOASSERTION` pendientes leyendo el **manifiesto del gestor de paquetes** primero (T46).

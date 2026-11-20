@@ -1077,3 +1077,52 @@ Licencia impecable (MIT, los cinco), **datos muertos**. Ninguno está marcado co
 no hay señal automática: el único indicador es la fecha. Para series vivas, usar `entsoe-py`,
 `ClariGrid`, `gridstatus` o `rebase-energy/energydatamodel`. Para **datos históricos reproducibles
 hasta 2020 con licencia limpia**, siguen siendo la mejor fuente que existe — ese es su uso legítimo.
+
+## Capa de medición y modelo de datos de DER (añadida en el decimotercer pase, 2026-11-20)
+
+Esta KB tenía el **motor** de red, los **entornos RL**, los **protocolos de carga** y la **capa
+agéntica**. Faltaba el cimiento de abajo: **cómo se lee el medidor y el inversor, y con qué modelo de
+datos**. Sin esta capa, un piloto de agente se queda en simulación; con ella, toca hardware real del
+cliente. Se abrió con tres términos de **protocolo** (`SunSpec`, `IEC 62056`, `SAREF`), aplicando la
+regla del pase 8 — *buscar el protocolo máquina-a-máquina, no la norma documental de cumplimiento*.
+
+Todas las filas verificadas por consulta `repo:` exacta contra `search/repositories` el 2026-11-20.
+Ninguna archivada.
+
+### Modelo de datos normativo de DER e inversores
+
+| Repo | Licencia | ★ | Forks | Último push | Por qué es cimiento |
+|---|---|---|---|---|---|
+| [sunspec/models](https://github.com/sunspec/models) | **Apache-2.0** | 135 | 67 | 2026-08-20 | **Definiciones de modelos de la propia alianza SunSpec.** Es el diccionario de datos normativo de inversores y DER: convierte "registro Modbus 40072" en un campo con semántica. Pieza de referencia, no implementación de un tercero |
+| [sunspec/pysunspec2](https://github.com/sunspec/pysunspec2) | **Apache-2.0** | 76 | 32 | 2026-10-21 | Librería Python **oficial** de la alianza para hablar con dispositivos SunSpec por Modbus TCP/RTU |
+| [volkszaehler/mbmd](https://github.com/volkszaehler/mbmd) | **BSD-3-Clause** | 281 | 95 | 2026-11-09 | *ModBus Measurement Daemon* en Go: un demonio, no una librería — se despliega como servicio y publica lecturas. El camino más corto a telemetría continua |
+| [WillCodeForCats/solaredge-modbus-multi](https://github.com/WillCodeForCats/solaredge-modbus-multi) | **Apache-2.0** | 343 | 29 | 2026-11-19 | Integración SolarEdge multi-inversor por Modbus/TCP. **Sustituto limpio** de `binsentsu/home-assistant-solaredge-modbus` (420 ★, **sin licencia**) |
+| [CJNE/ha-sunspec](https://github.com/CJNE/ha-sunspec) | **MIT** | 90 | 27 | 2026-11-19 | SunSpec sobre Home Assistant: banco de pruebas con inversor real en horas, no semanas |
+
+### Lectura de medidor (IEC 62056 / DLMS-COSEM / OBIS / P1)
+
+| Repo | Licencia | ★ | Forks | Último push | Por qué es cimiento |
+|---|---|---|---|---|---|
+| [marq24/ha-tibber-pulse-local](https://github.com/marq24/ha-tibber-pulse-local) | **Apache-2.0** | 297 | 20 | 2026-11-08 | Lectura **local, sin nube**, por LAN. **0 issues abiertas** — el repo más limpio de esta capa. Demuestra el patrón "el dato del medidor no sale de casa", que es el argumento de privacidad en EMEA |
+| [pwitab/iec62056-21](https://github.com/pwitab/iec62056-21) | **BSD-3-Clause** | 89 | 25 | 2026-04-13 | Implementación Python de **IEC 62056-21** (antes IEC 1107). Implementa **el estándar**, no un fabricante: es lo que la hace cimiento y no integración |
+| [lvzon/dsmr-p1-parser](https://github.com/lvzon/dsmr-p1-parser) | **Apache-2.0** | 60 | 14 | 2026-02-27 | Parser en C generado con Ragel del puerto **P1** DSMR y telegramas IEC 62056-21. Para firmware y *edge*, donde Python no entra. **Sustituto limpio** de `arduino-dsmr` (145 ★, sin licencia, parado en 2023) |
+| [Apollon77/smartmeter-obis](https://github.com/Apollon77/smartmeter-obis) | **MIT** | 57 | 20 | 2026-06-04 | Normaliza varios protocolos de medidor que siguen la lógica de números **OBIS**. Es la capa de traducción que evita escribir un adaptador por fabricante |
+
+### Ontología y grafo semántico de energía
+
+| Repo | Licencia | ★ | Forks | Último push | Por qué es cimiento |
+|---|---|---|---|---|---|
+| [JBjoernskov/Twin4Build](https://github.com/JBjoernskov/Twin4Build) | **MIT** | 31 | 13 | 2026-11-18 | Gemelo digital de edificio con modelos **diferenciables** e integración con **modelos semánticos**. La **única pieza encontrada que une ontología y simulación dinámica**: permite que un agente razone sobre el modelo y además lo simule |
+| [NeverBlink-OSS/saref-linkml](https://github.com/NeverBlink-OSS/saref-linkml) | **BSD-3-Clause** | 11 | 1 | 2026-11-09 | **SAREF** —el estándar semántico europeo de energía— expresado en **LinkML**, de donde se generan esquemas y código. Es el puente entre una ontología OWL y un *pipeline* de datos real |
+| [sensorlab/energy-knowledge-graph](https://github.com/sensorlab/energy-knowledge-graph) | **BSD-3-Clause** | 9 | 3 | 2026-08-24 | Grafo de conocimiento de consumo construido sobre datasets de medición. Pocas estrellas: **patrón a copiar**, no dependencia |
+
+⚠️ **Advertencia de licencia específica de esta capa, y es la más densa de toda la KB.** Es la única
+capa donde **ordenar por estrellas produce sistemáticamente la recomendación equivocada**: cuatro de
+los repos más estrellados del barrido están bloqueados y sus sustitutos limpios tienen menos
+estrellas. Bloqueados: `UtilitechAS/amsreader-firmware` (**471 ★**, *Fair Source License 0.9* con
+**tope de 5 usuarios**), `binsentsu/home-assistant-solaredge-modbus` (**420 ★**, sin licencia),
+`matthijskooijman/arduino-dsmr` (145 ★, sin licencia y parado), `bolagnaise/PowerSync` (96 ★,
+**PolyForm Noncommercial** — prohíbe uso comercial). `scs/smartmeter-datacollector` (95 ★) es
+**GPL-2.0-only**: servicio separado sí, enlazado en producto propietario no. **La API de GitHub
+informa `NOASSERTION` en todos ellos**: hay que abrir el archivo, repo por repo. Detalle completo en
+`agents/top.md`, decimotercer pase.

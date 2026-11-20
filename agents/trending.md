@@ -9,6 +9,91 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 13 (el hallazgo es un error propio: la KB había resuelto bien una licencia y un pase posterior la "des-resolvió"; y OpenADR 3.0 deja de ser un gap)
+
+**Titular del pase: por primera vez el hallazgo principal no viene de fuera sino de dentro.**
+Durante dos pases esta KB afirmó que [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs)
+no tenía archivo de licencia y que por tanto **"OpenADR 3.0 no tiene implementación abierta
+licenciada"** (T45, ahora derogada). Es falso: `Cargo.toml` declara `license = "Apache-2.0 OR MIT"`
+y `LICENSE-MIT` + `LICENSE-APACHE` devuelven **200** en `main` y en `master`.
+
+Lo que lo hace grave no es el error, es **que la KB ya tenía la respuesta correcta escrita**. En
+`agents/top.md`, en una tabla titulada *"Licencias rescatadas leyendo el archivo crudo"*, consta de
+un pase anterior: `openleadr-rs | NOASSERTION | doble MIT / Apache-2.0 | LICENSE-MIT + LICENSE-APACHE`.
+Un pase posterior volvió a medir con una lista de sondas más corta, obtuvo 404 (correctamente: esos
+archivos no existen con esos nombres) y **escribió la conclusión contraria sin mirar el registro
+propio**. El dato falso se propagó a tres archivos y sostuvo una receta entera.
+
+**Lo que costaba:** la KB recomendaba entregar respuesta a la demanda sobre **OpenADR 2.0b**,
+negociar licencia durante semanas, o **reimplementar 3.0 desde la especificación "como trabajo
+facturable"**. Las tres innecesarias. No es un repo mal clasificado: es **una decisión de
+arquitectura regional tomada sobre un hecho falso**.
+
+**La regla, que es la más barata de aplicar de toda esta KB:** antes de escribir un negativo —"sin
+licencia", "cero repos", "no existe"— **buscar la entidad en la propia KB**. Si hay registro
+positivo previo, el negativo nuevo tiene que **explicar la discrepancia**, no sobrescribirla. Un
+negativo reciente no gana a un positivo verificado por ser más reciente. El coste es asimétrico: un
+falso positivo mete un repo malo en una tabla, un falso negativo **borra una capacidad del catálogo
+y nadie la vuelve a buscar porque ya está "medida"**.
+
+### La capa OpenADR 3.0 que el gap falso ocultaba, con dos piezas más
+
+| Agente / pieza | Repo | Licencia | ★ / forks | Push | Qué hace |
+|---|---|---|---|---|---|
+| **openleadr-rs** | [OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs) | **Apache-2.0 OR MIT** | 107 / 30 | 2026-11-20 | VTN + VEN de OpenADR 3.0 en Rust (Stichting ElaadNL). **Licencia rectificada este pase** |
+| **openadr3-client** | [ElaadNL/openadr3-client](https://github.com/ElaadNL/openadr3-client) | Apache-2.0 | 6 / 3 | 2026-11-19 | Cliente BL + VEN de OpenADR 3.0 en **Python**, mismo origen: un equipo Python ya no tiene que bajar a 2.0b |
+| **volttron-openadr-ven** | [eclipse-volttron/volttron-openadr-ven](https://github.com/eclipse-volttron/volttron-openadr-ven) | Apache-2.0 | 6 / 6 | 2026-07-21 | VEN como agente **VOLTTRON**: empalma la respuesta a la demanda con el framework de agentes de edificio del PNNL que esta KB ya cataloga |
+| **oadr30** | [universaldevices/oadr30](https://github.com/universaldevices/oadr30) | ⚠️ *"Universal Devices Free/MIT"* (redacción propia) | 10 / 1 | 2026-05-07 | Paquete Python OpenADR 3.0. **Permisiva en sustancia, no identificador OSI**: requiere lectura legal, no descarte |
+
+### Capa nueva: medición y modelo de datos de DER — 12 repos permisivos nuevos
+
+Barrido por **protocolo** (regla del pase 8), con tres términos: `SunSpec`, `IEC 62056`, `SAREF`.
+Hasta aquí la KB tenía el motor de red, los entornos RL, los protocolos de carga y la capa MCP.
+Faltaba **cómo se lee el medidor y el inversor, y con qué modelo de datos** — la capa que decide si
+un piloto agéntico llega a tocar hardware del cliente.
+
+Lo relevante para la caza de agentes: **`sunspec/models` (Apache-2.0, 135 ★) es el diccionario de
+datos normativo de la propia alianza SunSpec**, no una implementación de terceros. Un agente que
+tenga que razonar sobre inversores necesita ese vocabulario; es la pieza que convierte "leer un
+registro Modbus" en "leer un campo con semántica". Lo mismo hace `saref-linkml` (BSD-3-Clause) del
+lado europeo, y `Twin4Build` (MIT) es la única pieza encontrada que **une ontología con simulación
+dinámica**. Las 16 filas verificadas están en `agents/top.md` y `repos/foundations.md`.
+
+### El riesgo del pase: la capa de medición concentra las licencias no-OSI
+
+El pase 12 encontró la licencia **revocable** (Energinet `MTB`). Este pase demuestra que **no era un
+caso aislado sino una familia**, y que se concentra en la capa de consumidor/*prosumer*. Cuatro de
+los repos con más tracción del barrido **no se pueden usar**, y la API informa `NOASSERTION` en todos:
+
+- [`UtilitechAS/amsreader-firmware`](https://github.com/UtilitechAS/amsreader-firmware) — **471 ★**,
+  **Fair Source License 0.9** con **`Use Limitation: 5 users`**. Un tope de cinco usuarios.
+- [`bolagnaise/PowerSync`](https://github.com/bolagnaise/PowerSync) — 96 ★, **PolyForm
+  Noncommercial 1.0.0**: prohíbe el uso comercial, que es exactamente lo que es un encargo.
+- [`binsentsu/home-assistant-solaredge-modbus`](https://github.com/binsentsu/home-assistant-solaredge-modbus)
+  — **420 ★ y ningún archivo de licencia** en ninguna rama.
+- [`matthijskooijman/arduino-dsmr`](https://github.com/matthijskooijman/arduino-dsmr) — 145 ★ /
+  **123 forks**, sin licencia y parado desde 2023. La proporción fork/★ de 0,85 dice que se usa
+  **copiando código**, que es la peor forma de depender de un repo sin licencia.
+
+Las cuatro tienen más estrellas que varias de las piezas limpias que sí se pueden proponer. **En
+esta capa la tracción y la usabilidad legal están descorreladas**, y es la única capa de esta KB
+donde eso pasa de forma sistemática.
+
+### Términos inutilizables nuevos
+
+- **`IEEE 1547`** (460 resultados): devuelve `PENTESTING-BIBLE` (14.028 ★), GNN para
+  recomendación, *optical flow*. **Un número de norma a secas no es término de búsqueda**: "1547"
+  coincide con cualquier cita o identificador. Usar el protocolo que la implementa (**IEEE 2030.5**).
+- **`virtual power plant DER aggregation`** (96 resultados): diseño de proteínas, *conformal
+  prediction*, Segment Anything. **Una frase genérica larga coincide con `awesome-*`**, y las listas
+  curadas contienen todo el vocabulario técnico del mundo.
+
+Misma causa en los dos: el término no es *específico del dominio* sino *frecuente en todo el corpus*.
+El discriminador que funciona es el **nombre propio de un artefacto**: protocolo, ontología, formato
+u organización.
+
+---
+
 ## 2026-11-20 — pase 12 (se rompe el cero de agentes de operación de red, y lo rompe RTE; y la cola larga de MCP se midió entera: 0–4 ★)
 
 **Titular del pase: el cero más persistente de esta KB —"ningún agente de operación de red"—

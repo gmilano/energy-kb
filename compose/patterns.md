@@ -1412,28 +1412,40 @@ siendo válido pero exige aislamiento.
   `NIBEGroup/openeebus` (Apache-2.0) — y si el cliente exige el estándar **S2**, decirle que el
   tooling existe (`flexmeasures-s2`, Apache-2.0) y tiene **2 estrellas**.
 
-### Receta 35 — Respuesta a la demanda en North America cuando el protocolo de referencia está bloqueado
+### Receta 35 — Respuesta a la demanda en North America con OpenADR 3.0 *(premisa corregida en el pase 13)*
+
+> ⚠️ **Esta receta se escribió sobre un hecho falso y queda rectificada.** La versión anterior
+> decía que `openleadr-rs` no tenía archivo de licencia y que por tanto **"OpenADR 3.0 no tiene
+> implementación abierta licenciada"**. Es incorrecto: el pase 13 verificó que `Cargo.toml` declara
+> `license = "Apache-2.0 OR MIT"` y que `LICENSE-MIT` y `LICENSE-APACHE` devuelven **200** en `main`
+> y en `master`. **No hay que elegir 2.0b, ni negociar licencia, ni implementar 3.0 desde cero.**
 
 **Problema que resuelve.** El cliente pide un agregador de respuesta a la demanda que hable
-**OpenADR**, que es el protocolo de referencia de la región. La implementación de **3.0** no se
-puede usar.
+**OpenADR**, el protocolo de referencia de North America, en su versión **3.0**.
 
-**El hecho, verificado en este pase:**
+**El hecho, verificado en el pase 13 contra tres canales independientes:**
 
 | Pieza | Versión | Licencia | Estado |
 |-------|---------|----------|--------|
-| [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) | **3.0** (VTN + VEN) | ⚠️ **ningún archivo de licencia** en `main`/`master`/`develop` | **Bloqueada** (107 ★, push 2026-11-20) |
-| [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python) | **2.0b** | **Apache-2.0** | Usable (161 ★, 67 forks) |
+| [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) | **3.0** (VTN + VEN, Rust) | **Apache-2.0 OR MIT** (doble) | ✅ **Usable** (107 ★, 30 forks, push 2026-11-20) |
+| [`ElaadNL/openadr3-client`](https://github.com/ElaadNL/openadr3-client) | **3.0** (cliente BL + VEN, Python) | **Apache-2.0** | ✅ Usable (6 ★, push 2026-11-19) |
+| [`eclipse-volttron/volttron-openadr-ven`](https://github.com/eclipse-volttron/volttron-openadr-ven) | VEN sobre VOLTTRON | **Apache-2.0** | ✅ Usable (6 ★, push 2026-07-21) |
+| [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python) | **2.0b** | **Apache-2.0** | Usable, pero versión anterior (161 ★, 67 forks) |
 
-**Las tres vías, y cuál recomendar:**
+**La vía recomendada, que ya no es un compromiso:**
 
-1. **Entregar sobre 2.0b con `openleadr-python`** (Apache-2.0). Es lo defendible hoy; se documenta
-   como decisión de licencia, no como limitación técnica. **Recomendada por defecto.**
-2. **Pedir concesión expresa de licencia** al proyecto para `openleadr-rs`. Es una conversación de
-   semanas y un riesgo de cronograma; sólo si 3.0 es requisito contractual duro.
-3. **Implementar 3.0 contra la especificación.** Es trabajo facturable y real, y conviene decir que
-   nadie ha publicado una implementación abierta licenciada — no es un atajo que el cliente se esté
-   perdiendo.
+1. **Entregar sobre 3.0 con `openleadr-rs` como VTN/VEN de referencia** (doble Apache-2.0/MIT). Es
+   la misma organización —Stichting ElaadNL— que publica el cliente Python `openadr3-client`, de
+   modo que hay **dos piezas del mismo origen** que hablan la misma versión del protocolo.
+2. **Si el equipo del encargo es Python y no Rust**, montar el lado cliente con
+   `ElaadNL/openadr3-client` (Apache-2.0) y dejar `openleadr-rs` como VTN de pruebas.
+3. **`openleadr-python` (2.0b) sólo si el cliente ya tiene una flota 2.0b desplegada.** Es
+   compatibilidad hacia atrás, no la opción por defecto.
+
+**Lo que hay que decirle al cliente, y conviene decirlo:** la capa 3.0 existe, es permisiva y está
+viva (push del mismo día del pase), pero tiene **107 ★ y 30 forks**: es infraestructura joven. El
+riesgo real no es de licencia —ése era el dato equivocado— sino de **madurez y de tamaño de
+comunidad**, y se gestiona con pruebas de conformidad propias, no con una cláusula legal.
 
 **El resto de la receta, con lo ya catalogado:**
 
@@ -1915,3 +1927,74 @@ interfaz de datos: REST/Parquet/tabla):
 + frontera de licencia documentada y revisada por legal **antes** del desarrollo. **Primer hito:** un
 contrafactual de despacho reproducible contra datos reales de AEMO, con el diagrama de licencias
 firmado.
+
+### Receta 46 — Agente de flexibilidad doméstica de punta a punta, todo permisivo y sin nube (EMEA primero)
+
+**Problema que resuelve.** El cliente —una distribuidora, un *retailer* de energía o un agregador—
+quiere un agente que lea el consumo real de una vivienda o un edificio, entienda qué hay conectado y
+responda a señales de flexibilidad del operador. Hasta este pase esta KB podía montar la mitad de
+arriba (señal, optimización, simulación) pero **no la mitad de abajo**: la lectura del medidor y del
+inversor. El pase 13 cierra esa mitad, y la cierra con piezas **permisivas y de origen EMEA**.
+
+**La cadena completa, pieza por pieza, toda verificada el 2026-11-20:**
+
+| Capa | Pieza | Licencia | Qué aporta |
+|------|-------|----------|------------|
+| **Medidor** | [`pwitab/iec62056-21`](https://github.com/pwitab/iec62056-21) | **BSD-3-Clause** | Lectura local IEC 62056-21 en Python |
+| **Medidor (edge/firmware)** | [`lvzon/dsmr-p1-parser`](https://github.com/lvzon/dsmr-p1-parser) | **Apache-2.0** | Parser P1 en C para microcontrolador o gateway |
+| **Normalización** | [`Apollon77/smartmeter-obis`](https://github.com/Apollon77/smartmeter-obis) | **MIT** | Traduce OBIS de varios fabricantes a un esquema único |
+| **Inversor / DER** | [`volkszaehler/mbmd`](https://github.com/volkszaehler/mbmd) + [`sunspec/pysunspec2`](https://github.com/sunspec/pysunspec2) | **BSD-3** / **Apache-2.0** | Adquisición Modbus como servicio + cliente SunSpec oficial |
+| **Modelo de datos** | [`sunspec/models`](https://github.com/sunspec/models) | **Apache-2.0** | Diccionario normativo de DER: semántica, no registros crudos |
+| **Semántica del sitio** | [`NeverBlink-OSS/saref-linkml`](https://github.com/NeverBlink-OSS/saref-linkml) | **BSD-3-Clause** | SAREF en LinkML: esquemas generados, no OWL a mano |
+| **Gemelo / simulación** | [`JBjoernskov/Twin4Build`](https://github.com/JBjoernskov/Twin4Build) | **MIT** | Simula el edificio sobre el **mismo** modelo semántico |
+| **Señal de flexibilidad** | [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) (VTN/VEN) + [`ElaadNL/openadr3-client`](https://github.com/ElaadNL/openadr3-client) (Python) | **Apache-2.0 OR MIT** / **Apache-2.0** | **OpenADR 3.0** real — ver la nota de licencia abajo |
+| **Actuación EV / carga** | `evcc` (MIT), `EVerest` (Apache-2.0) | — | Ya catalogados en esta KB |
+| **Optimización / RL** | `CityLearn` (MIT), `sinergym` (MIT) | — | Ya catalogados: entrenar y evaluar antes de tocar la casa |
+
+**Cómo se cablea, y el orden importa:**
+
+1. **`mbmd` y el lector de medidor publican a un *broker*** (MQTT). Son servicios con ciclo de vida
+   propio, no librerías dentro del agente: si el agente cae, la telemetría sigue.
+2. **`smartmeter-obis` normaliza** antes de persistir. Normalizar **en la entrada**, no en consulta:
+   si el esquema OBIS entra crudo, cada modelo posterior hereda el fabricante.
+3. **El esquema generado desde `saref-linkml` es el contrato** entre telemetría y agente. El agente
+   razona sobre conceptos SAREF, no sobre `modbus/40072`. Es lo que hace que añadir un fabricante sea
+   un conector nuevo y no un cambio en el agente.
+4. **`Twin4Build` simula sobre ese mismo modelo semántico.** Es la propiedad que lo hace elegible:
+   el gemelo y el agente comparten vocabulario, así que lo aprendido en simulación se transfiere sin
+   re-mapeo.
+5. **`openleadr-rs` como VEN recibe la señal del operador** (OpenADR 3.0). Si el equipo es Python,
+   `ElaadNL/openadr3-client` —mismo origen, misma versión del protocolo.
+6. **La actuación va por `evcc`/`EVerest`**, y **detrás de un confirmador humano o de un envolvente
+   de seguridad explícito**. Es la regla que el `automotive-kb` dejó probada y que aquí aplica igual:
+   el texto del razonamiento del modelo **nunca** llega al actuador; sólo llega un comando validado.
+
+**La nota de licencia, que en este pase es el hallazgo y no una nota al pie:** durante dos pases esta
+KB dijo que `openleadr-rs` no tenía licencia y que **OpenADR 3.0 no tenía implementación abierta
+licenciada**, y recomendó bajar a 2.0b o reimplementar. **Era falso** (T45 derogada, ver T46):
+`Cargo.toml` declara `license = "Apache-2.0 OR MIT"` y `LICENSE-MIT`/`LICENSE-APACHE` devuelven 200.
+**Esta receta no existía porque un dato de licencia equivocado la hacía parecer imposible.**
+
+**La trampa que hay que esquivar al dibujar el diagrama, y es específica de esta capa:** si se eligen
+las piezas por estrellas, **el entregable se rompe**. `UtilitechAS/amsreader-firmware` (471 ★) es la
+opción aparentemente obvia para el firmware del lector y es **Fair Source License 0.9 con tope de
+5 usuarios**; `binsentsu/home-assistant-solaredge-modbus` (420 ★) **no tiene licencia**;
+`bolagnaise/PowerSync` (96 ★) es **PolyForm Noncommercial**, que prohíbe exactamente el uso que es un
+encargo. Los sustitutos limpios tienen **menos** estrellas. **En esta capa el filtro de licencia va
+antes del filtro de popularidad**, y se corre abriendo el archivo repo por repo.
+
+**Dimensionado.** 4-6 semanas para una instalación piloto instrumentada de punta a punta con un
+fabricante de medidor y uno de inversor (el 70 % del esfuerzo es conectores y normalización, no IA).
+10-14 semanas para multi-fabricante con gemelo calibrado y VEN de OpenADR 3.0 certificado contra el
+VTN del operador. **Primer hito que conviene fijar:** una semana de telemetría continua normalizada
+a esquema SAREF **antes** de proponer cualquier modelo — si la telemetría no es estable, el agente no
+es el problema.
+
+**Regiones donde aplica, y por qué en este orden.** **EMEA primero**: 9 de las 13 piezas nuevas son
+de origen EMEA y el mandato de medidor inteligente más el acceso local a datos del hogar son políticas
+europeas, así que hay base instalada y argumento regulatorio. **North America**: aplica igual, con
+`volttron-openadr-ven` (Apache-2.0, PNNL) como VEN si el cliente ya tiene VOLTTRON, y con OpenADR
+como protocolo de referencia de la región. **LATAM**: viable en Brasil **si** la consulta del MME
+sobre medidor inteligente se convierte en norma — hoy es consulta, no obligación. **APAC**: en Japón
+hay que contar con la fragmentación a dos frecuencias; en India el trabajo previo es de
+instrumentación y datos, no de modelo.

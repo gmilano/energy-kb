@@ -9,6 +9,102 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 13 (barrido por protocolo, ronda 2: se abre la capa de medición; y un falso negativo de licencia que la propia KB había resuelto bien dos pases antes)
+
+**Titular del pase: el método que paga sigue siendo el mismo —buscar el nombre propio de un
+artefacto técnico— y esta vez abre la capa de abajo del stack: la medición.** Tres términos de
+protocolo (`SunSpec`, `IEC 62056`, `SAREF`) devolvieron **12 repos permisivos nuevos**, todos
+verificados por consulta `repo:` exacta contra `search/repositories`, ninguno archivado.
+
+Hasta este pase la KB cubría cuatro capas: motor de red (pypowsybl, pandapower, PyPSA), entornos RL
+(CityLearn, Grid2Op, PowerGridworld), protocolos de carga (OCPP, ISO 15118, EEBUS) y capa agéntica
+(MCP). **Faltaba la capa que toca el hardware: cómo se lee el medidor y el inversor, y con qué
+modelo de datos.** Es la capa que decide si un piloto de agente se queda en simulación.
+
+### Lo que entra, por sub-capa
+
+| Sub-capa | Repos | Pieza de referencia |
+|----------|-------|---------------------|
+| **Modelo de datos de DER / inversores** | [`sunspec/models`](https://github.com/sunspec/models) (Apache-2.0, 135 ★), [`sunspec/pysunspec2`](https://github.com/sunspec/pysunspec2) (Apache-2.0, 76 ★), [`CJNE/ha-sunspec`](https://github.com/CJNE/ha-sunspec) (MIT, 90 ★), [`WillCodeForCats/solaredge-modbus-multi`](https://github.com/WillCodeForCats/solaredge-modbus-multi) (Apache-2.0, 343 ★), [`volkszaehler/mbmd`](https://github.com/volkszaehler/mbmd) (BSD-3, 281 ★) | `sunspec/models` — **publicado por la propia alianza**: es el diccionario de datos normativo, no una implementación de terceros |
+| **Lectura de medidor (IEC 62056 / OBIS)** | [`marq24/ha-tibber-pulse-local`](https://github.com/marq24/ha-tibber-pulse-local) (Apache-2.0, 297 ★, **0 issues**), [`pwitab/iec62056-21`](https://github.com/pwitab/iec62056-21) (BSD-3, 89 ★), [`lvzon/dsmr-p1-parser`](https://github.com/lvzon/dsmr-p1-parser) (Apache-2.0, 60 ★), [`Apollon77/smartmeter-obis`](https://github.com/Apollon77/smartmeter-obis) (MIT, 57 ★) | `iec62056-21` — implementación del estándar, no de un fabricante |
+| **Ontología / grafo semántico** | [`JBjoernskov/Twin4Build`](https://github.com/JBjoernskov/Twin4Build) (MIT, 31 ★), [`NeverBlink-OSS/saref-linkml`](https://github.com/NeverBlink-OSS/saref-linkml) (BSD-3, 11 ★), [`sensorlab/energy-knowledge-graph`](https://github.com/sensorlab/energy-knowledge-graph) (BSD-3, 9 ★), [`open-renewable-energy-systems/gaifare`](https://github.com/open-renewable-energy-systems/gaifare) (Apache-2.0, 10 ★, **vigilar, no base**) | `Twin4Build` — **la única pieza encontrada que une ontología con simulación dinámica** |
+
+**Observación de origen regional, porque contradice el patrón de esta KB:** de las 13 piezas con
+origen identificable, **9 son EMEA** (Alemania, Países Bajos, Suecia, Dinamarca, Eslovenia) y 4 North
+America. La capa de medición es **la capa más europea del stack**, y el motivo es regulatorio: el
+mandato de medidor inteligente y el acceso local a los datos del hogar son políticas europeas, y
+producen código. Refuerza la conclusión del pase 12 de que un encargo EMEA puede montarse de punta a
+punta sobre código de origen EMEA.
+
+⚠️ **Nota de método sobre la columna "región origen", que esta KB usa en todas sus tablas:** el
+origen se **infiere** del propietario del repo, del idioma de la documentación y del estándar que
+implementa; la API de GitHub no publica un campo de país. Está bien soportado donde el estándar lo
+delata (`lvzon/dsmr-p1-parser` implementa **DSMR**, que es la norma neerlandesa; `volkszaehler` es un
+proyecto alemán; `pwitab` es la sueca Palmlund Wahlgren; `Twin4Build` sale de la DTU danesa;
+`sensorlab` del Instituto Jožef Stefan esloveno) y es **más débil** en cuentas personales sin señal
+geográfica (`CJNE`, `Apollon77`, `marq24`, `NeverBlink-OSS`). La proporción 9/4 es por tanto una
+**tendencia bien fundada, no un censo**: no citar el ratio como dato en material de cliente, sí la
+conclusión de que la capa es predominantemente europea, que el motivo regulatorio sostiene por sí solo.
+
+### El falso negativo de licencia, que es el hallazgo serio del pase
+
+[`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) (107 ★, 30 forks, push
+2026-11-20) estaba registrado en esta KB como **"sin archivo de licencia"** y por tanto bloqueado,
+con la conclusión derivada de que **OpenADR 3.0 no tenía implementación abierta licenciada**. Es
+falso:
+
+```
+Cargo.toml  ->  license = "Apache-2.0 OR MIT"
+raw .../main/LICENSE-MIT      -> 200   (MIT, Stichting ElaadNL)
+raw .../main/LICENSE-APACHE   -> 200   (Apache-2.0 canónico)
+raw .../main/LICENSE          -> 404   <- lo único que el pase anterior probó
+```
+
+**Y la KB ya lo tenía bien resuelto**: en `agents/top.md`, tabla *"Licencias rescatadas leyendo el
+archivo crudo"*, constaba `openleadr-rs | doble MIT / Apache-2.0 | LICENSE-MIT + LICENSE-APACHE`.
+Un pase posterior re-midió con sondas más cortas y **sobrescribió el acierto con el error**.
+
+Dos consecuencias de método, y la segunda vale para todas las industrias de esta rotación:
+
+1. **Leer primero el manifiesto del gestor de paquetes.** `Cargo.toml`, `pyproject.toml`,
+   `package.json`, `pom.xml`, `*.csproj` declaran la licencia como **expresión SPDX del autor** en
+   una línea legible por máquina. Es más autoritativo y más barato que adivinar nombres de archivo.
+   Lista de sondas corregida: manifiesto → `LICENSE` → `LICENSE.md` → `LICENSE.txt` →
+   **`LICENSE-MIT`** → **`LICENSE-APACHE`** → `COPYING` → `LICENCE`, × `main`/`master`/`develop`.
+2. **Cualquier repo de Rust que esta familia de KBs haya clasificado "sin licencia" leyendo sólo
+   `LICENSE` es sospechoso de falso negativo.** La firma es exacta y buscable: **`LICENSE` 404 en
+   todas las ramas + repo vivo y con tracción** ⇒ el archivo existe con otro nombre.
+
+### Licencias no-OSI: de caso aislado a familia, y concentrada en esta capa
+
+El pase 12 encontró una licencia **revocable** (Energinet `MTB`). Este barrido demuestra que es una
+**familia** y que vive en la capa de consumidor/*prosumer*:
+
+| Repo | ★ / forks | Archivo de licencia | Clase |
+|------|-----------|---------------------|-------|
+| [`UtilitechAS/amsreader-firmware`](https://github.com/UtilitechAS/amsreader-firmware) | **471** / 88 | **Fair Source License 0.9**, `Use Limitation: 5 users` | Permisiva **con tope de usuarios** — nueva clase en esta KB |
+| [`bolagnaise/PowerSync`](https://github.com/bolagnaise/PowerSync) | 96 / 24 | **PolyForm Noncommercial 1.0.0** | **No comercial** — nueva clase |
+| [`universaldevices/oadr30`](https://github.com/universaldevices/oadr30) | 10 / 1 | *"Universal Devices Free/MIT License"*, redacción propia | **Permisiva en sustancia, no OSI** — el caso que evita el error inverso |
+| [`binsentsu/home-assistant-solaredge-modbus`](https://github.com/binsentsu/home-assistant-solaredge-modbus) | **420** / 91 | ninguno | Sin licencia (T20) |
+| [`matthijskooijman/arduino-dsmr`](https://github.com/matthijskooijman/arduino-dsmr) | 145 / **123** | ninguno | Sin licencia + parado (2023) |
+| [`scs/smartmeter-datacollector`](https://github.com/scs/smartmeter-datacollector) | 95 / 34 | **GPL-2.0-only** | OSI, copyleft fuerte: servicio separado sí, enlazado no |
+
+**La conclusión operativa, que es contraintuitiva y hay que decirla en una propuesta:** en la capa de
+medición **la tracción y la usabilidad legal están descorreladas**. Cuatro de los repos más
+estrellados del barrido están bloqueados, y sus sustitutos limpios tienen menos estrellas
+(`solaredge-modbus-multi` 343 ★ reemplaza a `home-assistant-solaredge-modbus` 420 ★;
+`lvzon/dsmr-p1-parser` 60 ★ reemplaza a `arduino-dsmr` 145 ★). Es la única capa de esta KB donde
+ordenar por estrellas produce **sistemáticamente** la recomendación equivocada.
+
+### Términos inutilizables añadidos
+
+- **`IEEE 1547`** (460 res.) → `PENTESTING-BIBLE` 14.028 ★, GNN, *optical flow*. Un número de norma
+  a secas coincide con cualquier cita. Usar **IEEE 2030.5**.
+- **`virtual power plant DER aggregation`** (96 res.) → diseño de proteínas, *conformal prediction*,
+  Hi-C. Las frases genéricas largas coinciden con `awesome-*`.
+
+---
+
 ## 2026-11-20 — pase 12 (ronda 3 del barrido por institución: se va a APAC y a LATAM, y aparece una región entera; más: `NOASSERTION` resultó falso negativo 3 veces de 4)
 
 **Titular del pase: el método del barrido por institución sigue sin agotarse, y esta vez paga en la

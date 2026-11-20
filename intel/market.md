@@ -504,6 +504,38 @@ EPRI. Se busca y no aparece **código abierto de ORNL para `Grid-Orch`** (arXiv 
 sería la pieza MCP más completa de distribución si se liberase: **36 herramientas en once
 categorías** sobre OpenDSS, con dashboard QSTS. Hoy es un paper, no un cimiento.
 
+#### Actualización del decimotercer pase (2026-11-20)
+
+**Estado de ejecución de las órdenes de FERC de junio de 2026** — la KB ya registraba las órdenes;
+lo nuevo es que **han empezado a producir expedientes concretos**, que es lo que crea trabajo:
+
+- **MISO presentó revisiones tarifarias ante FERC el 28 de agosto de 2026** (expediente
+  **ER26-3650**) para fijar requisitos de fiabilidad en la interconexión de **cargas grandes**.
+  Un expediente abierto con número es un punto de entrada verificable, no una tendencia.
+- Las órdenes exigieron a cada operador **justificar o reformar su tarifa de carga grande en 60
+  días** y presentar **informe de adecuación de generación en 30 días**.
+- El reparto de costes que se consolida: **el datacenter paga íntegro el refuerzo de red atribuible
+  a su propia interconexión**. Eso convierte el *estudio de interconexión* en una pieza de
+  negociación económica, no sólo técnica.
+- **ERCOT queda en gran medida fuera de la jurisdicción de FERC**: Texas —uno de los mercados de
+  datacenter más activos— **no** se rige por estas órdenes. Un encargo de EE. UU. no es un encargo
+  homogéneo: hay que preguntar el mercado antes de prometer el marco.
+- FERC pidió además considerar **"tecnologías alternativas de transmisión"** y mayor acomodo a la
+  generación **detrás del medidor** (*behind-the-meter*).
+
+⚠️ *Fuentes secundarias (prensa sectorial y blogs jurídicos). El expediente ER26-3650 y los textos
+de las órdenes no se han leído en la fuente primaria de FERC. Verificar antes de citar un número
+ante cliente.*
+
+**Consecuencia directa de la corrección de licencia de este pase, y es específicamente de North
+America:** **OpenADR es el protocolo de referencia de respuesta a la demanda de esta región**, y
+esta KB afirmaba que su versión 3.0 no tenía implementación abierta licenciada. Era falso
+(T45 derogada). **La capa 3.0 está disponible y es permisiva** —`openleadr-rs` (Apache-2.0 OR MIT),
+`ElaadNL/openadr3-client` (Apache-2.0) y `eclipse-volttron/volttron-openadr-ven` (Apache-2.0, de
+origen **North America**, PNNL)— de modo que una propuesta de agregador de respuesta a la demanda en
+esta región **ya no tiene que ofrecerse sobre 2.0b ni presupuestar una reimplementación**. Es el
+cambio de posición comercial más concreto que produce este pase.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -989,6 +1021,49 @@ el acuerdo tripartito. Súmese la **Receta 27** (tubería CGMES, dirigida por CO
   Energy (ilustración exacta de T15). **Terna** y **Swissgrid** no tienen organización localizable y
   aparecen sólo como fuente de datos de terceros. **Fingrid** no publica repos propios pero expone
   API pública con clave gratuita.
+
+#### Actualización del decimotercer pase (2026-11-20)
+
+**Calendario del AI Act, con el matiz que importa para energía.** Fuentes de este pase (bufetes y
+guías sectoriales, **todas secundarias**) coinciden en:
+
+- El **Reglamento (UE) 2026/1744** se publicó en el **Diario Oficial el 24 de julio de 2026** y se
+  aplica desde el **27 de julio de 2026**.
+- Desplaza las obligaciones de **alto riesgo del Anexo III** —donde cae *la mayor parte de la IA
+  operativa de energía*— de **2 de agosto de 2026** a **2 de diciembre de 2027**.
+- Las de **IA embebida en productos del Anexo I** pasan a **2 de agosto de 2028**.
+- **Precisión de alcance que corrige lecturas anteriores:** la guía de 2025 trataba el control de
+  red y el mantenimiento predictivo como alto riesgo **en bloque**; la lectura posterior lo **estrecha
+  a los sistemas en que un fallo de la IA pondría en peligro el suministro** (IA como *componente de
+  seguridad* en electricidad, gas y calor). No todo modelo que toca la red es Anexo III, y afirmar lo
+  contrario infla el presupuesto de cumplimiento de una propuesta.
+
+⚠️ **Esta KB ha arrastrado tres calendarios del AI Act incompatibles durante varios pases, y sigue
+sin leerse la fuente primaria.** El `automotive-kb` registró el mismo problema. **Recomendación
+explícita para el próximo pase de energy: gastar el presupuesto en UNA fuente primaria (el texto del
+Reglamento (UE) 2026/1744 en el Diario Oficial) en lugar de más lectura secundaria.** Es el único
+ítem de este archivo cuya incertidumbre no baja buscando más.
+
+**Hoja de ruta de la Comisión (3 de junio de 2026)** — la KB ya la menciona; se añaden dos
+elementos accionables:
+
+- Estructura en **tres pilares**, con **`AI.grids`** como eje de red.
+- Incluye un **esquema europeo de clasificación de datacenters** sobre eficiencia energética, **uso
+  de agua**, consumo de energía limpia, **reutilización de calor residual** y **flexibilidad**.
+  Es un instrumento de *reporting*: produce **obligación de medir y declarar**, que es exactamente la
+  forma de trabajo que un estudio de datos puede entregar. El pilar de flexibilidad y el de calor
+  residual conectan con las recetas de DR y de edificios ya catalogadas.
+
+**Hallazgo de oferta de este pase, y refuerza la tesis de soberanía de EMEA:** la **capa de medición
+y de modelo de datos de DER es la capa más europea del stack**. De las 13 piezas nuevas con origen
+identificable, **9 son EMEA** (Alemania, Países Bajos, Suecia, Dinamarca, Eslovenia) y 4 North
+America. El motivo es regulatorio y no cultural: el **mandato de medidor inteligente** y el **derecho
+de acceso local a los datos del hogar** son políticas europeas, y producen código. Sumado a lo que el
+pase 12 ya registró, **un encargo EMEA puede montarse de punta a punta sobre código de origen EMEA,
+desde el medidor hasta el motor de red** — `mbmd` / `iec62056-21` / `dsmr-p1-parser` (medición) →
+`saref-linkml` (semántica) → `openleadr-rs` + `openadr3-client` (flexibilidad) → `pypowsybl` (red).
+Eso responde la objeción de soberanía digital **sin ningún modelo ni librería de origen estadounidense
+o chino en la ruta crítica**.
 
 ### APAC
 
@@ -1492,6 +1567,45 @@ expediente.
   alguna de publicación de código por AIST ni por KEPCO** — se declara en vez de dejarlo en silencio.
   **State Grid China** despliega IA a gran escala y **no publica**: el mayor asimétrico de la región
   entre capacidad y apertura.
+
+#### Actualización del decimotercer pase (2026-11-20)
+
+**Tamaños de mercado nacionales (estimaciones de consultora, baja confianza).** Se registran porque
+la KB no tenía cifra por país en APAC, con la advertencia habitual de este archivo —las consultoras
+no concuerdan entre sí y estas cifras no están corroboradas por una segunda fuente independiente:
+
+| País | IA en energía 2025 | 2026 (proyectado) |
+|------|--------------------|-------------------|
+| Japón | ~USD 1,31 B | ~USD 1,66 B |
+| India | ~USD 1,19 B | ~USD 1,52 B |
+
+⚠️ **Usar la forma, no el número**: ambos mercados crecen ~27 % interanual según la misma fuente, y
+China sigue descrita como el mayor mercado de la región. Para una propuesta sirve el orden de
+magnitud ("mercado nacional de mil millones de dólares, creciendo a dos dígitos altos"), no el decimal.
+
+**Restricción estructural de Japón que cambia el diseño técnico:** la red japonesa está
+**fragmentada y opera a dos frecuencias distintas** (50 Hz / 60 Hz). No es una curiosidad: significa
+que un modelo de optimización o un agente de balance entrenado sobre un área **no se transfiere** a
+la otra sin re-parametrizar, y que la interconexión entre áreas es un recurso escaso y caro. Cualquier
+propuesta de "optimización nacional" en Japón que no nombre esta restricción se delata como genérica.
+Utilities como **Chubu Electric** ya operan sistemas propios de IA para operación de red.
+
+**India — los dos anclajes de política que dan presupuesto:** la **National Smart Grid Mission** y el
+objetivo nacional de **500 GW de capacidad no fósil para 2030**. El crecimiento está acoplado a
+**datacenters + renovables** (el plan de ~USD 100 B de Adani se presenta como ancla de infraestructura
+de IA sobre energía renovable). La restricción declarada por las propias fuentes: **madurez desigual
+de la red y huecos de infraestructura digital** — es decir, en India el trabajo previo a cualquier
+agente es de **datos e instrumentación**, no de modelo.
+
+**China:** la IA en energía está tratada como **prioridad estratégica nacional** con financiación
+central para redes inteligentes e integración de renovables en el marco del **14.º Plan Quinquenal**.
+Se mantiene lo que la KB ya registraba de las reglas de la NDRC/NEA.
+
+📄 **Fuente primaria disponible y no leída (tarea concreta para el próximo pase):** la IEA publica
+**"Energy and AI in East Asia"** (`iea.blob.core.windows.net`). Es un informe de agencia
+intergubernamental, no de consultora — **la mejor fuente de esta región que esta KB tiene
+identificada y aún no ha abierto**. Debería ser la primera lectura del próximo pase de APAC, por
+delante de cualquier búsqueda nueva.
 
 ### LATAM
 
@@ -2136,6 +2250,57 @@ acceso directo a transmisión autorizado — es donde el proyecto de datacenter 
 Chile son mercados de **ingeniería de restricción**: estudio de interconexión, flexibilidad y
 expediente ambiental, no de capacidad. Y con `api_xm` (Colombia) y el modelo nacional chileno ya
 publicado, las **Recetas 10, 16 y 24** siguen siendo las vías de entrada con cimiento regional real.
+
+#### Actualización del decimotercer pase (2026-11-20)
+
+**Despliegue de referencia regional, y es el más citable que tiene esta sección:** **Eletrobras**
+—la transmisora de control estatal brasileña— está desplegando la plataforma **Grid Intelligence de
+C3 AI sobre toda su red de transmisión**, bajo una iniciativa propia llamada **"Eletro.ia"**. El
+objetivo declarado es reforzar la fiabilidad y prepararse para la entrada creciente de eólica y
+solar; las fuentes describen identificación de fallos de red **en tiempo real**.
+
+Por qué importa más que una cifra de mercado, y conviene decirlo tal cual en una propuesta:
+
+1. **Es la prueba de que el presupuesto existe en LATAM** y que se gasta en IA de red a escala de
+   sistema nacional, no en pilotos.
+2. **Es un competidor concreto y nombrado** en el *market map* regional: C3 AI, no un genérico
+   "hiperescalador". Esta sección tenía despliegues europeos y norteamericanos nombrados y **ninguno
+   brasileño**; ahora lo tiene.
+3. **Define el hueco de Globant por contraste.** C3 AI entra con plataforma propietaria de extremo a
+   extremo en la **transmisora**. Lo que queda abierto es (a) la **distribución** y el
+   *meter-to-cash*, (b) la **capa agéntica y de integración encima** de plataformas ya compradas, y
+   (c) el expediente regulatorio. Es la misma posición que el "Posicionamiento Globant" de más abajo
+   ya defiende — ahora con un caso regional que la sostiene.
+
+**Regulación: el primer instrumento brasileño con número que esta sección puede citar.** El
+**Ministério de Minas e Energia** abrió **consulta pública para acelerar la adopción de medidor
+inteligente**, con una propuesta que **obligaría a las distribuidoras a instalar medidores para al
+menos el 4 % de sus clientes en el primer año**. Almacenamiento y generación distribuida siguen en
+discusión.
+
+Si se confirma, es **el driver regional más fuerte de esta sección**, por la misma razón que el pase
+de automotive identificó en CONTRAN 962: **un mandato crea base instalada con fecha**, y una base
+instalada de medidores es precisamente lo que la **capa de medición abierta de este pase** sabe leer
+(`iec62056-21`, `smartmeter-obis`, `dsmr-p1-parser`, `mbmd` — todos permisivos). Es la primera vez
+que una oportunidad LATAM de esta KB tiene **mandato regulatorio + stack abierto correspondiente**
+en la misma frase.
+
+⚠️ **Estado de verificación, sin adornos:** consulta **en curso**, porcentaje **propuesto**, no
+norma vigente. Fuente secundaria (prensa sectorial de conferencia, **páginas promocionales** en
+varios casos). **No presentar el 4 % como obligación en vigor.** Tarea para el próximo pase: buscar
+el número de consulta pública del MME y, si existe, la Resolução Normativa de ANEEL asociada.
+
+**Cifra regional, con la salvedad de siempre:** LATAM ≈ **USD 1,69 B en 2025** para IA en *power
+utilities*, ≈ **9,77 % de los ingresos globales** (una sola consultora, sin corroborar). Brasil
+domina la inversión regional en datacenters, lo que acopla la demanda de IA a la tensión de red; su
+ventaja declarada es **energía renovable abundante y barata** y su restricción, **la capacidad de red**.
+
+**Hueco de oferta que sigue abierto, medido otra vez:** el barrido de este pase por protocolo
+(`SunSpec`, `IEC 62056`, `SAREF`) devolvió **cero repos de origen LATAM** — 9 EMEA, 4 North America.
+No se re-midió con vocabulario español/portugués porque **esta KB ya lo hizo cuatro veces con
+resultado cero**, y repetirlo no añade información. La conclusión se mantiene y se refuerza: en la
+capa de medición **no hay ecosistema abierto regional con el que competir**, y por tanto **publicar
+una pieza propia sigue siendo la jugada más barata de posicionamiento** en la región.
 
 ## Posicionamiento Globant
 

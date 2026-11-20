@@ -582,7 +582,7 @@ es perfil de autor único.
 
 | Pieza | Problema | Consecuencia |
 |-------|----------|--------------|
-| [OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs) | **Ningún archivo de licencia** en `main`, `master` ni `develop` (107 ★, 30 forks, push 2026-11-20) | Es la **única implementación de OpenADR 3.0** encontrada y es legalmente inusable. `openleadr-python` (Apache-2.0, 161 ★) sólo cubre **2.0b** → **OpenADR 3.0 no tiene implementación abierta licenciada** |
+| ~~[OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs)~~ — **FILA RETIRADA EN EL PASE 13** | ❌ **El dato era falso.** `Cargo.toml` declara `license = "Apache-2.0 OR MIT"`, y `LICENSE-MIT` + `LICENSE-APACHE` devuelven **200** en `main` **y** en `master` | **Es usable: doble Apache-2.0 / MIT** (Stichting ElaadNL). OpenADR 3.0 **sí** tiene implementación abierta licenciada. Ver el decimotercer pase |
 | [runyao-yu/PriceFM](https://github.com/runyao-yu/PriceFM) | Sin licencia (158 ★) | Foundation model de precio, bloqueado |
 | [california-energy-commission/MIDAS](https://github.com/california-energy-commission/MIDAS) | Sin licencia (9 ★) | Dato tarifario **oficial** de la California Energy Commission, no redistribuible |
 | `pnoker/iot-dc3` *(ya en esta tabla desde un pase previo)* | `LICENSE.txt` crudo = **"IoT DC3 License Notice, Version: 2026.5"**, licencia **propia** | No es licencia estándar: revisión legal obligatoria antes de cualquier uso. La API lo informa como `NOASSERTION` |
@@ -833,3 +833,141 @@ que es la clasificación práctica correcta aunque por el motivo equivocado. Ver
 prequalificación de Energinet**, que es lo que de hecho es. Un proyecto de cumplimiento de red en
 Dinamarca necesita saber qué comprueba el MTB; eso se lee del repo sin incorporar su código. Lo que
 no se puede es empaquetarlo dentro de una herramienta propia y vendérsela a un cliente.
+
+## Decimotercer pase (2026-11-20): la KB tenía la respuesta correcta y la perdió; y aparece la capa de medición
+
+**Titular del pase: el hallazgo no es un repo, es un error de esta KB que habría costado una
+decisión de arquitectura en un encargo real.** Durante dos pases la KB afirmó que
+[`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) no tenía licencia y que
+**"OpenADR 3.0 no tiene implementación abierta licenciada"** (T45), y recomendaba en consecuencia
+entregar sobre 2.0b, negociar licencia durante semanas o reimplementar 3.0 desde la especificación.
+**Las tres recomendaciones eran innecesarias.** `Cargo.toml` declara
+`license = "Apache-2.0 OR MIT"`, y `LICENSE-MIT` y `LICENSE-APACHE` devuelven **200** en `main` y en
+`master`.
+
+### Lo que lo convierte en lección y no en erratum: era una regresión, no un hueco
+
+La parte incómoda es que **esta KB ya lo había resuelto bien**. En `agents/top.md`, en una tabla
+titulada *"Licencias rescatadas leyendo el archivo crudo"*, consta desde un pase anterior:
+
+```
+| `OpenLEADR/openleadr-rs` | NOASSERTION | doble MIT / Apache-2.0 (Stichting ElaadNL) | `LICENSE-MIT` + `LICENSE-APACHE` |
+```
+
+Un pase posterior volvió a medirlo con una lista de sondas más corta (`LICENSE`, `LICENSE.md`,
+`LICENSE.txt`, `COPYING`, `LICENCE`), obtuvo 404 en las tres ramas —correctamente, porque ninguno de
+esos archivos existe— y **escribió la conclusión contraria sin consultar el registro propio**. El
+dato falso se propagó a tres archivos (`agents/top.md`, `compose/patterns.md`, `intel/trends.md`) y
+generó una receta entera construida sobre él.
+
+**La regla que sale de aquí, y es la más barata de aplicar de toda esta KB:**
+
+> **Antes de escribir un hallazgo negativo —"sin licencia", "cero repos", "no existe"— buscar la
+> entidad en la propia KB.** Si ya hay un registro positivo, el nuevo negativo **tiene que explicar
+> la discrepancia**, no sobrescribirla. Un negativo nuevo no gana a un positivo verificado sólo por
+> ser más reciente.
+
+El coste asimétrico es evidente: un falso positivo mete un repo malo en una tabla; un falso negativo
+**borra una capacidad entera del catálogo** y nadie vuelve a buscarla, porque ya está "medida".
+
+### Lista de sondas de licencia, corregida (ver T46)
+
+Leer **primero el manifiesto del gestor de paquetes**, que declara la licencia como expresión SPDX
+del propio autor: `Cargo.toml` (`license =`), `pyproject.toml`, `package.json`, `pom.xml`,
+`*.csproj`. Sólo después los archivos: `LICENSE`, `LICENSE.md`, `LICENSE.txt`, **`LICENSE-MIT`**,
+**`LICENSE-APACHE`**, `COPYING`, `LICENCE`, × ramas `main`, `master`, `develop`.
+
+Firma diagnóstica a memorizar: **`LICENSE` da 404 en todas las ramas y el repo está vivo y con
+tracción** ⇒ no es un repo sin licencia, es un repo cuyo archivo de licencia se llama de otra manera.
+
+## Capa nueva de este pase: modelos de datos de medición y de DER
+
+Hasta este pase la KB cubría el **motor** de red (pypowsybl, pandapower, PyPSA), los **entornos RL**,
+los **protocolos de carga** (OCPP, ISO 15118, EEBUS) y la **capa agéntica** (MCP). Faltaba la capa de
+abajo: **cómo se leen el medidor y el inversor, y con qué modelo de datos**. Son las piezas que
+convierten un piloto de agente en algo que toca hardware real del cliente.
+
+Se abrió con tres términos de protocolo —`SunSpec`, `IEC 62056`, `SAREF`— aplicando la regla del
+pase 8 (*buscar el protocolo máquina-a-máquina, no la norma documental*). **Doce repos nuevos,
+todos verificados contra `search/repositories` por consulta `repo:` exacta, ninguno archivado.**
+
+### Modelo de datos de DER e inversores (SunSpec)
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [sunspec/models](https://github.com/sunspec/models) | **Apache-2.0** | **Definiciones de modelos SunSpec** publicadas por la propia alianza: es el diccionario de datos normativo de inversores y DER. La pieza de referencia, no una implementación de terceros | 135 | 67 | 2026-08-20 | North America |
+| [sunspec/pysunspec2](https://github.com/sunspec/pysunspec2) | **Apache-2.0** | Librería Python oficial para hablar con dispositivos SunSpec (Modbus TCP/RTU) | 76 | 32 | 2026-10-21 | North America |
+| [CJNE/ha-sunspec](https://github.com/CJNE/ha-sunspec) | **MIT** | Integración SunSpec/Modbus para Home Assistant: el camino más corto a un banco de pruebas con inversor real | 90 | 27 | 2026-11-19 | EMEA |
+| [WillCodeForCats/solaredge-modbus-multi](https://github.com/WillCodeForCats/solaredge-modbus-multi) | **Apache-2.0** | Integración SolarEdge completa por Modbus/TCP, multi-inversor | 343 | 29 | 2026-11-19 | North America |
+| [volkszaehler/mbmd](https://github.com/volkszaehler/mbmd) | **BSD-3-Clause** | *ModBus Measurement Daemon*: lectura de medidores e inversores por Modbus, en Go | 281 | 95 | 2026-11-09 | EMEA (Alemania) |
+
+### Lectura de medidores (IEC 62056 / DLMS-COSEM / OBIS)
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [marq24/ha-tibber-pulse-local](https://github.com/marq24/ha-tibber-pulse-local) | **Apache-2.0** | Lectura **local** (sin nube) del Tibber Pulse por LAN. El repo más estrellado y limpio de esta capa: 0 issues abiertas | 297 | 20 | 2026-11-08 | EMEA |
+| [pwitab/iec62056-21](https://github.com/pwitab/iec62056-21) | **BSD-3-Clause** | Librería Python de **IEC 62056-21** (antes IEC 1107): lectura local de medidores de energía | 89 | 25 | 2026-04-13 | EMEA (Suecia) |
+| [lvzon/dsmr-p1-parser](https://github.com/lvzon/dsmr-p1-parser) | **Apache-2.0** | Parser en C (Ragel) del puerto **P1** DSMR y telegramas IEC 62056-21 asimilables | 60 | 14 | 2026-02-27 | EMEA (Países Bajos) |
+| [Apollon77/smartmeter-obis](https://github.com/Apollon77/smartmeter-obis) | **MIT** | Lectura y parseo de protocolos de medidor que siguen la lógica de números **OBIS**, normalizando varios fabricantes | 57 | 20 | 2026-06-04 | EMEA |
+
+### Ontología y grafo semántico de energía (SAREF)
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [JBjoernskov/Twin4Build](https://github.com/JBjoernskov/Twin4Build) | **MIT** | Gemelo digital de edificio: simulación dinámica con modelos diferenciables **integrada con modelos semánticos**. La pieza que une ontología y simulación | 31 | 13 | 2026-11-18 | EMEA (Dinamarca) |
+| [NeverBlink-OSS/saref-linkml](https://github.com/NeverBlink-OSS/saref-linkml) | **BSD-3-Clause** | Las ontologías **SAREF** expresadas en **LinkML**: convierte el estándar semántico europeo en esquemas y código generables | 11 | 1 | 2026-11-09 | EMEA |
+| [sensorlab/energy-knowledge-graph](https://github.com/sensorlab/energy-knowledge-graph) | **BSD-3-Clause** | Grafo de conocimiento de consumo energético a partir de datasets de medición | 9 | 3 | 2026-08-24 | EMEA (Eslovenia) |
+| [open-renewable-energy-systems/gaifare](https://github.com/open-renewable-energy-systems/gaifare) | **Apache-2.0** | *Generative AI For Autonomous Renewable Energy*: andamiaje temprano, se cataloga como **pieza a vigilar**, no como base | 10 | 1 | 2026-09-12 | EMEA |
+
+### Capa OpenADR 3.0, ahora que se sabe que es usable
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs) | **Apache-2.0 OR MIT** | **VTN + VEN de OpenADR 3.0** en Rust (Stichting ElaadNL). Licencia **rectificada en este pase**: ver T45/T46 | 107 | 30 | 2026-11-20 | EMEA (Países Bajos) |
+| [ElaadNL/openadr3-client](https://github.com/ElaadNL/openadr3-client) | **Apache-2.0** | Cliente **BL + VEN** de OpenADR 3.0 en Python, del mismo origen que `openleadr-rs`: permite equipo Python sin salir de la versión 3.0 | 6 | 3 | 2026-11-19 | EMEA (Países Bajos) |
+| [eclipse-volttron/volttron-openadr-ven](https://github.com/eclipse-volttron/volttron-openadr-ven) | **Apache-2.0** | Agente **VEN** sobre VOLTTRON: conecta la capa de respuesta a la demanda con el framework de agentes de edificio del PNNL que esta KB ya cataloga | 6 | 6 | 2026-07-21 | North America |
+
+## El hallazgo de riesgo del pase: la capa de medición es donde se concentran las licencias no-OSI
+
+Esta capa es **populosa, viva y engañosa**. De los repos con más tracción del barrido, **cuatro no se
+pueden usar en un entregable de cliente**, y ninguno de los cuatro es detectable por *grep* de SPDX:
+la API de GitHub informa `NOASSERTION` en todos. El pase 12 descubrió la licencia **revocable**
+(Energinet `MTB`, T33); este pase encuentra que no era un caso aislado sino **una familia**.
+
+| Repo | ★ / forks | Lo que dice el archivo | Por qué bloquea |
+|------|-----------|------------------------|-----------------|
+| [UtilitechAS/amsreader-firmware](https://github.com/UtilitechAS/amsreader-firmware) | **471** / 88 | **Fair Source License 0.9**, con **`Use Limitation: 5 users`** | Permiso con **tope de 5 usuarios**. No es open source y es **incompatible con cualquier despliegue de cliente**: el límite no se negocia con atribución, se negocia con el licenciante |
+| [bolagnaise/PowerSync](https://github.com/bolagnaise/PowerSync) | 96 / 24 | **PolyForm Noncommercial 1.0.0** | **Prohíbe el uso comercial.** Un encargo de Globant es uso comercial por definición. Bloqueo total, no condicional |
+| [binsentsu/home-assistant-solaredge-modbus](https://github.com/binsentsu/home-assistant-solaredge-modbus) | **420** / 91 | **Ningún archivo de licencia** en ninguna rama probada | 420 ★ sin licencia. Bloqueado por T20; usar `WillCodeForCats/solaredge-modbus-multi` (Apache-2.0, 343 ★) que cubre lo mismo |
+| [matthijskooijman/arduino-dsmr](https://github.com/matthijskooijman/arduino-dsmr) | 145 / **123** | **Ningún archivo de licencia**; último push **2023-11-08** | Sin licencia **y** parado tres años, con una proporción fork/★ de 0,85 que indica que se usa copiando código. Usar `lvzon/dsmr-p1-parser` (Apache-2.0) |
+| [scs/smartmeter-datacollector](https://github.com/scs/smartmeter-datacollector) | 95 / 34 | **GPL-2.0-only** (SPDX explícito en el archivo) | OSI, pero **copyleft fuerte**: utilizable como servicio separado, **no** enlazable dentro de un producto propietario del cliente. Decisión de arquitectura, no bloqueo |
+
+Y el matiz que evita el error inverso: **"no-OSI" no significa automáticamente "bloqueado"**.
+[`universaldevices/oadr30`](https://github.com/universaldevices/oadr30) (10 ★) trae una *"Universal
+Devices Free/MIT License"* de redacción propia que concede *"free to use/distribute/share/modify with
+no attribution"* — **permisiva en sustancia** aunque no sea un identificador OSI. Requiere lectura
+legal, no descarte. La conclusión correcta sobre un archivo de licencia no estándar es siempre
+**"hay que leerlo"**, en los dos sentidos.
+
+**Lo que esto cambia en una propuesta:** si un cliente pide "leer sus medidores y sus inversores", la
+capa existe y es rica, pero **el filtro de licencia hay que correrlo repo por repo y leyendo el
+archivo**, porque es la capa de la KB con mayor densidad de licencias raras. El subconjunto limpio y
+proponible de este pase son las **16 filas de las cuatro tablas de arriba**; las 5 de esta tabla son
+las que hay que saber descartar antes de que aparezcan en un diagrama.
+
+## Términos de búsqueda inutilizables añadidos en este pase
+
+Se suman a la lista acumulada (`hydrogen`, `AMI`, `utility billing`, `reservoir`, `PRODIST`):
+
+| Término | Resultados | Qué devuelve en realidad | Lección |
+|---------|-----------|--------------------------|---------|
+| `IEEE 1547` | 460 | `PENTESTING-BIBLE` (14.028 ★), redes de recomendación con GNN, *optical flow*, listas de papers de ICRA | **Un número de norma a secas no es un término de búsqueda.** "1547" coincide con cualquier cita bibliográfica, número de línea o identificador. Hay que pegarle una palabra de dominio (`IEEE 1547 interconnection DER`) o usar el protocolo que la implementa (**IEEE 2030.5**), que sí es buscable |
+| `virtual power plant DER aggregation` | 96 | diseño de proteínas con deep learning, *conformal prediction*, Segment Anything, herramientas Hi-C | **Una frase genérica larga en inglés ya no discrimina: coincide con `awesome-*`.** Las listas curadas contienen todo el vocabulario técnico del mundo, así que cuanto más genérica la frase, más listas devuelve y menos repos de dominio |
+
+Corolario de método, que vale para toda la rotación: los dos fallos tienen la **misma causa** —el
+término no es *específico del dominio*, sino *frecuente en todo el corpus*. El discriminador bueno es
+siempre el **nombre propio de un artefacto técnico**: un protocolo (`IEC 62056`, `SunSpec`,
+`OpenADR 3.0`), una ontología (`SAREF`), un formato (`OBIS`, `P1 DSMR`) o una organización (`org:sunspec`).
+
+*Verificado contra la GitHub REST API (`search/repositories`, consulta `repo:` exacta) y contra
+`raw.githubusercontent.com` el 2026-11-20 (decimotercer pase). Re-verificar antes de citar en una propuesta.*
