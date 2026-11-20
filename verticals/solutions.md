@@ -1,17 +1,78 @@
+---
+industry: energy
+region: Global
+updated: 2026-11-20
+---
+
 # 🏭 Verticales de partida — Energy
 
-> Plataformas verticales existentes customizables con AI.
-> Modelo: partir de algo funcional, añadir capa agentica arriba.
+> Plataformas verticales reales y funcionales, customizables con una capa agéntica arriba.
+> Equivalentes energéticos de lo que Odoo es a ERP u OpenMRS a salud.
+> Verificadas contra la GitHub REST API el **2026-11-20**.
 
-## Plataformas recomendadas
+## SCADA / EMS / ADMS — el núcleo operativo
 
-| Plataforma | Licencia | URL | Stack | Caso de uso |
-|------------|----------|-----|-------|-------------|
-| — | — | — | — | Por completar |
+| Plataforma | Licencia | URL | Stack | Caso de uso | Stars | Región origen |
+|------------|----------|-----|-------|-------------|-------|---------------|
+| **{json:scada}** | GPL-3.0 | [riclolsen/json-scada](https://github.com/riclolsen/json-scada) | Node.js 24, Go 1.26, .NET 8, MongoDB 8, PostgreSQL 18, TimescaleDB, Grafana 13 | SCADA/EMS/IIoT completo con IEC 61850, ICCP, IEC 60870-5-101/104, DNP3, OPC-UA, OPC-DA, Modbus, MQTT/Sparkplug B | 513 | **LATAM (Brasil)** |
+| **OSHMI** | GPL-3.0 | [riclolsen/OSHMI](https://github.com/riclolsen/OSHMI) | HMI de subestación | HMI SCADA para subestaciones y automatización | 467 | **LATAM (Brasil)** |
+| **OpenEMS** | AGPL-3.0 | [OpenEMS/openems](https://github.com/OpenEMS/openems) | Java/OSGi + Angular | Energy Management System modular; desplegado en utilities europeas | 1631 | EMEA (Alemania) |
+| **OpenRemote** | AGPL-3.0 | [openremote/core](https://github.com/openremote/core) | Java + Angular, MQTT | Plataforma IoT/EMS: assets, reglas, dashboards, gestión de EV | 2162 | EMEA (Países Bajos) |
+| **MyEMS** | MIT | [MyEMS/myems](https://github.com/MyEMS/myems) | Python + React | EMS para edificios, fábricas, malls, hospitales y campus: electricidad, agua, gas, frío, calor | 763 | APAC (China) |
+
+## Optimización y operación de activos
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | Stars | Región origen |
+|------------|----------|-----|-------|-------------|-------|---------------|
+| **EOS (Akkudoktor)** | Apache-2.0 | [Akkudoktor-EOS/EOS](https://github.com/Akkudoktor-EOS/EOS) | Python, FastAPI | Energy Optimization System: optimiza distribución y despacho con PV, batería y tarifa dinámica | 1731 | EMEA (Alemania) |
+| **Scaphandre** | Apache-2.0 | [hubblo-org/scaphandre](https://github.com/hubblo-org/scaphandre) | Rust | Agente de metrología de consumo energético de cómputo; exporta a Prometheus | 2019 | EMEA (Francia) |
+| **vessim** | MIT | [dos-group/vessim](https://github.com/dos-group/vessim) | Python | Simulación de sistemas energéticos de **datacenter** (carbono, batería, PV on-site) | 103 | EMEA (Alemania) |
+
+## Movilidad eléctrica y carga (el vertical con más tracción open source)
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | Stars | Región origen |
+|------------|----------|-----|-------|-------------|-------|---------------|
+| **evcc** | MIT | [evcc-io/evcc](https://github.com/evcc-io/evcc) | Go + Vue | Carga inteligente de EV con excedente solar y tarifa dinámica; **el repo energético open source con más tracción de esta KB** (7638 ★ / 1649 forks) | 7638 | EMEA (Alemania) |
+| **SteVe** | GPL-3.0 | [steve-community/steve](https://github.com/steve-community/steve) | Java | Servidor OCPP y gestión de estaciones de carga en producción | 1151 | EMEA (Alemania) |
+| **ocpp (Python)** | MIT | [mobilityhouse/ocpp](https://github.com/mobilityhouse/ocpp) | Python | Implementación del Open Charge Point Protocol | 1052 | EMEA |
+
+## Conectividad de campo / protocolos (la capa que nadie quiere escribir dos veces)
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | Stars | Región origen |
+|------------|----------|-----|-------|-------------|-------|---------------|
+| **node-opcua** | MIT | [node-opcua/node-opcua](https://github.com/node-opcua/node-opcua) | TypeScript/Node | Stack OPC UA completo: puente a histórico industrial y PLC | 1671 | Global |
+| **libiec61850** | GPL-3.0 | [mz-automation/libiec61850](https://github.com/mz-automation/libiec61850) | C | Librería de referencia de los protocolos IEC 61850 (MMS, GOOSE, SV) | 1253 | EMEA (Alemania) |
+| **mbmd** | BSD-3-Clause | [volkszaehler/mbmd](https://github.com/volkszaehler/mbmd) | Go | Daemon de lectura de medidores e inversores Modbus | 281 | EMEA (Alemania) |
+
+**16 plataformas reales.** Ninguna fila es plantilla.
+
+## El riesgo de licencia es el criterio de selección, no una nota al pie
+
+Este vertical está dominado por **copyleft**, a diferencia de la capa de agentes (casi toda MIT):
+
+- **AGPL-3.0** (`OpenEMS`, `openremote/core`): la cláusula de red obliga a ofrecer el código fuente
+  a los usuarios del servicio. Para un SaaS multi-tenant de cliente esto **es** la decisión
+  arquitectónica: o se acepta liberar, o se compra licencia comercial, o se aísla por API.
+  OpenRemote ofrece licenciamiento comercial alternativo.
+- **GPL-3.0** (`json-scada`, `OSHMI`, `SteVe`, `libiec61850`): copyleft fuerte. Ejecutar como
+  proceso separado y hablarle por protocolo/API **no** deriva obra; enlazarlo en el binario del
+  cliente **sí**. MZ Automation vende licencia comercial de `libiec61850` precisamente para eso.
+- **Permisivas y seguras para empotrar**: `MyEMS` (MIT), `evcc` (MIT), `ocpp` (MIT), `node-opcua`
+  (MIT), `EOS` (Apache-2.0), `scaphandre` (Apache-2.0), `vessim` (MIT), `mbmd` (BSD-3).
+
+**Implicación de arquitectura**: para un engagement comercial, poner la plataforma copyleft
+(json-scada, OpenEMS) como **sistema de registro aislado detrás de su propia API**, y construir la
+capa agéntica —que es MIT— como servicio separado. Ese límite de proceso es lo que mantiene limpio
+el código propietario del cliente.
 
 ## Cómo customizar con AI
 
-1. Fork del repo base
-2. Añadir endpoint AI (OpenAI / Anthropic / Ollama local)
-3. Wrappear flujos existentes con agentes
-4. UI conversacional sobre el sistema base
+1. Desplegar la plataforma base sin tocar su código (contenedor, su propia licencia, su propia API).
+2. Añadir la capa agéntica como **servicio aparte**: `PowerMCP` / `EnergyPlus-MCP` / `pypsa-mcp`
+   exponen las herramientas de ingeniería por MCP.
+3. Envolver los flujos existentes con agentes que lean del histórico y escriban **solo** vía la API
+   de la plataforma — nunca al actuador directamente.
+4. UI conversacional sobre el sistema base, con los límites de seguridad en el servicio, no en el prompt.
+
+---
+*Ver `compose/patterns.md` para recetas concretas que combinan estas plataformas con los agentes.*
