@@ -9,6 +9,70 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 12 (se rompe el cero de agentes de operación de red, y lo rompe RTE; y la cola larga de MCP se midió entera: 0–4 ★)
+
+**Titular del pase: el cero más persistente de esta KB —"ningún agente de operación de red"—
+cae, y no por un repo de laboratorio: lo publica un TSO.
+[`powsybl/pypowsybl-mcp`](https://github.com/powsybl/pypowsybl-mcp) (MPL-2.0, 7 ★, 2 forks, push
+2026-11-18, `Copyright (c) 2026, RTE`) expone load flow, seguridad N-1 y sensibilidad como
+herramientas MCP sobre pypowsybl. Es la confirmación ejecutable de T2.**
+
+Lo que cambia respecto de los siete pases anteriores no es que apareciera "un agente más": es **de
+quién viene**. Los pases 4 a 11 midieron el cero con consultas genéricas y lo atribuyeron a
+inmadurez del sector. La lectura correcta, visible ahora, es que **la capa agéntica de red no se
+publica en el vocabulario que la búsqueda genérica usa**: se publica dentro de la organización del
+motor de red (`powsybl`, no "grid agent"), por el equipo del operador, y con un paper de posición
+(arXiv 2607.14158) en vez de un anuncio. Es el mismo fallo de vocabulario que el pase 10 describió
+para `StorageVET` y el 11 para `HELICS`, aplicado por fin a la categoría agéntica.
+
+### La medición que acompaña, y es menos halagüeña
+
+Ocho servidores MCP energéticos de la cola larga, todos verificados por API este pase:
+`MCP-Energy-Hub` (MIT, 2 ★), `energyatit-mcp-server` (MIT, 1 ★), `octopus-mcp` (MIT, 1 ★),
+`homewizard-mcp-server` (MIT, 1 ★), `UBEM-MCP` (BSD-3, 1 ★), `gridhub-mcp` (MIT, 0 ★),
+`szl-energy-mcp` (Apache-2.0, 0 ★), `opendss-mcp-server` (MIT, 4 ★).
+
+**Rango completo 0–4 ★; sólo uno tiene forks > 0.** Licencia y actividad son buenas (casi todo MIT o
+Apache-2.0, cinco con push en 2026). Lo que falta es comunidad. El quinto pase ya lo había dicho;
+este pase lo deja medido y cerrado: **en MCP energético, la procedencia institucional pesa más que
+las estrellas.** `pypowsybl-mcp` con 7 ★ es proponible porque detrás está RTE; `energyatit-mcp-server`
+con 1 ★ se autodescribe "first and only energy MCP server" y no es ni lo uno ni lo otro.
+
+### El repo LATAM que parecía el hallazgo del año, y hay que decir que no lo es
+
+[`saptiva-ai/octavius-energy-lab`](https://github.com/saptiva-ai/octavius-energy-lab) (Apache-2.0,
+Saptiva, México, push 2026-11-10) se presenta como banco de evaluación de *agent harnesses* sobre
+datos de **CENACE** y Low Carbon London, con Qwen3-8B local y TimesFM. Sería exactamente el repo
+agéntico de origen LATAM que esta KB lleva pases pidiendo.
+
+Se leyó el README antes de ficharlo. **El propio README dice que el dominio energético "no está
+todavía en este árbol"**: los datasets y los modelos son fases futuras. Lo que existe es la
+plataforma (Next.js 15, FastAPI con orquestador de tool-calling, Mongo/Redis/MinIO/Weaviate,
+OpenTelemetry/Prometheus/Grafana/Loki) y una regla de método que merece citarse —**"no optimizar el
+benchmark para que el harness parezca bueno"**—. 0 ★, 0 forks. Se autodescribe como "el punto de
+partida".
+
+Además anota que **los pesos de TimesFM 3.0 son de uso no comercial**, lo que cerraría la vía de
+producción aunque el repo sea Apache-2.0.
+
+**Ficha honesta: señal de mercado, no cimiento.** Hay una empresa mexicana de IA construyendo esto
+con licencia permisiva y criterio de evaluación explícito; todavía no hay nada energético dentro.
+**Acción para el pase 13: volver a medirlo.** Si el dominio aterriza, es el primer banco de
+evaluación agéntico energético de origen LATAM y cambia el mapa de la región.
+
+### Método: casi catalogamos un fork de 0 ★ en lugar del upstream de 238 ★
+
+La búsqueda ofreció `CorradoMariaCaminiti/PowerMCP` con descripción completa. El verificador
+(`search/repositories`) dijo `NOTFOUND`; `raw.githubusercontent.com` devolvió `200`. Las dos cosas
+son ciertas: **la API de búsqueda de GitHub no indexa forks**, y eso es un fork de
+[`Power-Agent/PowerMCP`](https://github.com/Power-Agent/PowerMCP) (MIT, **238 ★**, 67 forks), que
+esta KB ya tenía.
+
+**La firma `NOTFOUND` en búsqueda + `200` en raw identifica un fork.** Importa en los dos sentidos:
+un `NOTFOUND` no prueba inexistencia, y —más peligroso— la verificación por `curl raw` que esta KB
+adoptó tras el sexto pase **habría aceptado el fork como hallazgo**. Ver agents/top.md §1 del
+duodécimo pase.
+
 ## 2026-11-20 — pase 11 (el agente de red que la KB tenía fichado como "precedente" tenía dentro una arquitectura, y el README `.adoc` es la razón de que nadie lo supiera)
 
 **Titular del pase: el séptimo cero consecutivo en agentes de operación de red se mantiene por

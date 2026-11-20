@@ -1807,3 +1807,111 @@ lazo midiendo el resultado contra SCADA real.
 **no tiene archivo de licencia en `main`, `master` ni `develop`**. Para el modelo de estela, usar
 `floris` (BSD-3). Y antes de descartar `PyWake` definitivamente, **mirar el GitLab de origen**
 (`gitlab.windenergy.dtu.dk`): estos repos son espejos y el espejo pierde la licencia (ver T53).
+
+### Receta 30 — Copiloto de estudios N-1 sobre el MCP del propio TSO (EMEA, Francia primero)
+
+**Por qué ahora:** hasta este pase, todo copiloto de red de esta KB se apoyaba en motores envueltos
+por terceros. `powsybl/pypowsybl-mcp` lo publica **el operador de la red** (RTE), lo que cambia el
+argumento de venta: no se propone una integración inventada, se propone **adoptar la integración que
+el TSO ya usa internamente** (arXiv 2607.14158).
+
+**Piezas, todas verificadas en el duodécimo pase:**
+
+| Rol | Pieza | Licencia |
+|---|---|---|
+| Capa de herramientas de red para el agente | [`powsybl/pypowsybl-mcp`](https://github.com/powsybl/pypowsybl-mcp) | **MPL-2.0** (RTE) |
+| Motor de red y modelo | [`powsybl/powsybl-core`](https://github.com/powsybl/powsybl-core) + `pypowsybl` | MPL-2.0 |
+| Diagramas unifilares para el expediente | [`powsybl/powsybl-diagram`](https://github.com/powsybl/powsybl-diagram) | MPL-2.0 |
+| Entrada del modelo en formato de red europeo | Capa CGMES del séptimo pase (`sogno-platform/cimgen`, `haigutus/triplets`, `soptim/opencgmes`) | MPL-2.0 / permisivas |
+| Sala de control / human-in-the-loop | [`opfab/operatorfabric-core`](https://github.com/opfab/operatorfabric-core) (LF Energy / RTE) | **MPL-2.0** |
+
+**Cómo se conecta, y los tres detalles que deciden si funciona:**
+
+1. **El servidor MCP es un servicio, no un subproceso.** El transporte es **streamable HTTP, no
+   stdio**: el servidor PyPowsybl **debe estar ya corriendo** antes de que el cliente se conecte. Hay
+   que desplegarlo con ciclo de vida propio (contenedor, *health check*, reinicio), no lanzarlo desde
+   el cliente.
+2. **Las sesiones viven en memoria y se pierden al reiniciar.** El diseño es correcto para privacidad
+   —el modelo de red se queda en el servidor y al agente sólo van identificadores de sesión y
+   resúmenes filtrados, no el volcado de la red al LLM— pero **obliga a poner persistencia propia
+   encima** para cualquier estudio que dure más que el proceso. Esto es trabajo de proyecto, y hay
+   que presupuestarlo.
+3. **El agente encadena, no decide.** Flujo: cargar modelo CGMES → `load flow` → `security analysis`
+   N-1 sobre la lista de contingencias → `sensitivity analysis` sobre las violaciones → generar
+   diagrama → redactar el expediente. La aprobación del resultado es humana, en OperatorFabric. Esto
+   es **T28** ("la IA asiste, no decide"), que es además el único encuadre que pasa un comité de
+   operación.
+
+**Frontera de licencia:** toda la receta es **MPL-2.0** (powsybl, CGMES y OperatorFabric), es decir, un solo régimen de licencia de principio a fin — coincide con la nota del tercer pase de que MPL-2.0 es la licencia por defecto del sector eléctrico europeo. MPL-2.0 es copyleft **por archivo**. Se puede enlazar desde código
+propietario sin contaminarlo; lo que se publica son los ficheros **de powsybl** que se modifiquen. En
+la práctica: no tocar los fuentes del servidor, construir las herramientas propias como ficheros
+nuevos del proyecto.
+
+**Lo que hay que decir en la propuesta y no omitir:** `pypowsybl-mcp` tiene **7 ★ y 2 forks**, y PRs
+abiertos de migración al SDK Python de MCP v2. Es un cimiento **institucional pero joven**: la oferta
+honesta incluye contribuir aguas arriba, y el riesgo de versión es real.
+
+**Entregable:** servicio MCP desplegado + conjunto de herramientas propias del cliente + expediente
+N-1 reproducible con diagramas + integración en sala de control. **Primer hito verificable:** un
+estudio N-1 que un ingeniero firme sin rehacerlo a mano.
+
+---
+
+### Receta 31 — Plataforma de analítica del NEM australiano con la frontera de licencia en el diagrama (APAC, Australia)
+
+**Por qué esta receta es distinta de las demás:** no la organiza la función, la organiza **la
+licencia**. El stack australiano que apareció en el duodécimo pase es **GPL-3.0 en la capa de datos y
+permisivo en la capa de modelo** (T32), y como no hay producto del NEM que esquive `NEMOSIS`, la
+frontera de copyleft **es** la arquitectura. Dibujarla al final es rehacer el proyecto.
+
+**Arquitectura en dos lados de una frontera explícita:**
+
+**Lado GPL — servicio de datos aislado** (contenedor propio, sin enlazado con lo propietario, sólo
+interfaz de datos: REST/Parquet/tabla):
+
+| Pieza | Licencia | Rol |
+|---|---|---|
+| [`UNSW-CEEM/NEMOSIS`](https://github.com/UNSW-CEEM/NEMOSIS) (113 ★) | GPL-3.0-or-later | Ingesta de datos históricos publicados por AEMO |
+| [`UNSW-CEEM/NEMSEER`](https://github.com/UNSW-CEEM/NEMSEER) | GPL-3.0 | Pronósticos de AEMO (pre-dispatch, PASA) |
+| [`Open-ISP/isp-workbook-parser`](https://github.com/Open-ISP/isp-workbook-parser) | GPL-3.0 | Supuestos del **IASR** desde los Excel de AEMO |
+| [`Open-ISP/isp-trace-parser`](https://github.com/Open-ISP/isp-trace-parser) | GPL-3.0 | Series de demanda, solar y viento |
+| [`Open-ISP/ISPyPSA`](https://github.com/Open-ISP/ISPyPSA) (31 ★) | GPL-3.0 | Expansión de capacidad con metodología **ISP de AEMO** |
+
+**Lado permisivo — motor analítico del cliente** (aquí sí se embebe y se puede cerrar):
+
+| Pieza | Licencia | Rol |
+|---|---|---|
+| [`UNSW-CEEM/nempy`](https://github.com/UNSW-CEEM/nempy) (71 ★) | **BSD-3** | Simula el **procedimiento de despacho** real del NEM |
+| [`UNSW-CEEM/NEMED`](https://github.com/UNSW-CEEM/NEMED) | **BSD-3** | Emisiones del NEM |
+| [`UNSW-CEEM/DER_disturbance_analysis`](https://github.com/UNSW-CEEM/DER_disturbance_analysis) | **MIT** | Respuesta de PV y DER a perturbaciones del sistema |
+| [`pypsa/pypsa`](https://github.com/PyPSA/PyPSA) | MIT | Motor bajo `ISPyPSA`; usable directo del lado permisivo |
+
+**Cómo se cablea:**
+
+1. El servicio GPL expone **tablas versionadas** (Parquet en objeto + catálogo), no una librería. El
+   contrato es el esquema de datos.
+2. El motor propietario lee esas tablas y embebe `nempy` para contrafactuales de despacho y `NEMED`
+   para la cuenta de emisiones. **Nada del lado propietario importa `NEMOSIS`.**
+3. Lo que el cliente compra es el **motor** y el **modelo de decisión**; lo que recibe como open source
+   es el servicio de datos, y conviene decirlo así: reduce el *lock-in* percibido y es verdad.
+4. Para expansión de capacidad, `ISPyPSA` corre **dentro del lado GPL** como trabajo por lotes que
+   emite resultados, o se reconstruye sobre `PyPSA` (MIT) directamente si el entregable tiene que ser
+   cerrado. **Es la decisión de diseño más costosa de la receta** y hay que tomarla en la primera
+   semana, no en la décima.
+
+**Trampas verificadas en este pase:**
+
+- **`NEMOSIS` aparece como `NOASSERTION` en la API de GitHub y es GPL-3.0-or-later.** Un verificador
+  automático lo clasificaría como "sin licencia" y lo descartaría — perdiendo la capa de ingesta de
+  toda la región (T31).
+- **`TDA_Python`** (diseño y análisis de tarifas, 8 ★) **no tiene licencia**: bloqueado, aunque sea
+  justo lo que un proyecto de tarifas querría. No incluirlo.
+- **`nem-bidding-dashboard`** (2023) y **`market-control-room`** (2022) son permisivos pero
+  **inactivos**: valen como referencia de UI, no como dependencia.
+- **AEMO no publica su propio modelo.** `Open-ISP` es una reimplementación de su metodología por un
+  tercero. En la propuesta eso se dice: es trazable al ISP, **no es el ISP**.
+
+**Entregable:** servicio de datos del NEM (GPL, aislado) + motor de despacho y emisiones propietario
++ frontera de licencia documentada y revisada por legal **antes** del desarrollo. **Primer hito:** un
+contrafactual de despacho reproducible contra datos reales de AEMO, con el diagrama de licencias
+firmado.

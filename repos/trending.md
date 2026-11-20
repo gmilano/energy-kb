@@ -9,6 +9,123 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 12 (ronda 3 del barrido por institución: se va a APAC y a LATAM, y aparece una región entera; más: `NOASSERTION` resultó falso negativo 3 veces de 4)
+
+**Titular del pase: el método del barrido por institución sigue sin agotarse, y esta vez paga en la
+región donde esta KB era más pobre. Los pases 10 y 11 barrieron instituciones norteamericanas y TSOs
+europeos. Este pase barre el **operador de mercado australiano y su entorno académico**, y APAC pasa
+de ~2 repos a **más de 30**, en dos organizaciones que ninguna consulta genérica había devuelto:
+[`Open-ISP`](https://github.com/Open-ISP) (8 repos) y [`UNSW-CEEM`](https://github.com/UNSW-CEEM) (29
+repos).**
+
+Lo que esta KB tenía de Australia era `unsw-ceem/nemseer` y `bje-/nemo`. Lo que hay es la
+reimplementación abierta del **Integrated System Plan de AEMO** (`ISPyPSA`, GPL-3.0, 31 ★, push el
+día de este pase), el *parser* del **IASR** en Excel (`isp-workbook-parser`), la capa estándar de
+acceso a datos del NEM (`NEMOSIS`, 113 ★) y el modelo del **procedimiento de despacho** (`nempy`,
+BSD-3, 71 ★).
+
+**El motivo de la ceguera, otra vez, es el vocabulario** — y es la tercera confirmación consecutiva
+del mismo patrón (pase 10: `StorageVET`; pase 11: `HELICS`): ninguno de estos repos contiene la
+palabra "energy" ni "grid" en el nombre de su organización. Se llaman por el acrónimo del
+instrumento regulatorio local (`ISP` = Integrated System Plan) o del centro universitario
+(`CEEM`). **AEMO no publica su propio modelo**: lo reimplementa un consorcio que se nombra por el
+documento, no por el sector.
+
+### El dato incómodo del pase: la región nueva es copyleft
+
+| Capa | Repos | Licencia |
+|---|---|---|
+| Acceso a datos del NEM | `NEMOSIS`, `NEMSEER` | **GPL-3.0** |
+| Expansión de capacidad (ISP) | `ISPyPSA`, `isp-trace-parser`, `isp-workbook-parser` | **GPL-3.0** |
+| Despacho, emisiones, pujas, DER | `nempy`, `NEMED`, `nem-bidding-dashboard`, `DER_disturbance_analysis`, `market-control-room` | **BSD-3 / MIT** |
+
+El GPL cae **sobre la capa de entrada de datos**, que es la que no se puede evitar. Un producto
+cerrado del NEM pasa obligatoriamente por `NEMOSIS`. La consecuencia no es "no se puede trabajar en
+Australia": es que **la frontera GPL hay que dibujarla en el diagrama antes de escribir código**
+(aislar GPL tras un servicio separado, lógica propietaria al otro lado). Ver T32 y Receta 31.
+
+### LATAM: el barrido por operador también paga, pero el muro ya no es la existencia — es la licencia
+
+Se barrieron los operadores de la región (CAMMESA en Argentina, CENACE en México y en Ecuador, el
+Coordinador Eléctrico Nacional en Chile). **Hay repos**, y eso corrige el "cero de repos de origen
+LATAM" que esta KB arrastró durante varios pases en varias industrias. Pero casi ninguno es usable:
+
+| Repo | Licencia | ★ | Push | Nota |
+|---|---|---|---|---|
+| [daniraggio/cammesa-dashboard](https://github.com/daniraggio/cammesa-dashboard) | ⛔ **sin licencia** | 0 | 2026-11-20 | Dashboard del mercado mayorista argentino; GitHub Actions cada 10 min contra `api.cammesa.com` → JSON → Pages. **Excluye demanda y generación**: ese endpoint bloquea CORS y no documenta autenticación pública |
+| [fcingolani/cammesa-api](https://github.com/fcingolani/cammesa-api) | **MIT** ✅ | 9 | **2017-07-28** | API REST/CLI no oficial de CAMMESA. Licencia limpia, **nueve años sin push** |
+| [zyangarduno/CENACE-CHALLENGE](https://github.com/zyangarduno/CENACE-CHALLENGE) | ⛔ **sin licencia** | 0 | 2026-11-17 | Pipeline de **precio marginal local** de los nodos de la zona de carga de Monclova (México) |
+| [pabesjimenez/cenace-monitor](https://github.com/pabesjimenez/cenace-monitor) | ⛔ **sin licencia** | 0 | 2026-11-20 | Bot que captura producción y demanda del CENACE de **Ecuador** cada 30 min a SQLite + dashboard. Publica la base como *release* |
+
+**La frase que resume el estado real de LATAM en esta KB, y hay que escribirla porque el silencio
+parece cobertura: ya no es "no hay repos", es "los repos están sin licencia".** Cuatro proyectos
+activos (tres con push en noviembre de 2026), tres de ellos **bloqueados por ausencia de licencia**
+(T20), y el único con MIT está congelado desde 2017. No es un gap de ecosistema: es un gap de
+práctica de licenciamiento. Es además **accionable** de un modo que un gap de existencia no lo es —
+son repos de autor individual, y un *issue* pidiendo licencia es una contribución de coste cero.
+
+El contraste institucional sigue en pie: el único dato de mercado LATAM de origen **institucional**
+que esta KB tiene usable sigue siendo `equipoanaliticaxm/api_xm` (XM, Colombia), del sexto pase.
+
+### Gaps medidos y explícitos de este pase
+
+- **Brasil: cero repos.** Se buscó ONS (Operador Nacional do Sistema) en combinación con los demás
+  operadores de la región y **no devolvió nada**. Brasil es el mayor mercado de datacenter de LATAM
+  (ver intel/market.md) y **no tiene presencia de código abierto de su operador de red** en esta KB
+  tras doce pases. Es el gap LATAM más grande y el de mayor valor potencial.
+- **TenneT (Países Bajos): la organización existe y está vacía.** `tennet-nl-opensource` tiene **un
+  solo repo, `.github`** (0 ★, push 2026-05-04), es decir, sólo el README de la organización. TenneT
+  declara estrategia de open source y la aloja en LF Energy; el código todavía no está. Es la
+  ilustración exacta de **T15** ("el open source energético se está institucionalizando, y todavía no
+  es código").
+- **Terna (Italia) y Swissgrid (Suiza): sin organización localizable.** Aparecen únicamente como
+  *fuente de datos* en proyectos de terceros, no como publicadores.
+- **Fingrid (Finlandia): sin repos propios**, pero con API pública consumida por `ClariGrid`
+  (requiere clave gratuita).
+- **Grid-India, AIST (Japón), KEPCO (Corea): cero repos institucionales.** Lo que existe de India es
+  comunitario y de un solo autor (`randomaban-beep/india-power-demand-pipeline`, MIT, que ingiere
+  informes diarios y telemetría SCADA de Grid-India con ERA5; `carobashok/grid-india`, pipeline desde
+  los PDF del NLDC). **No se encontró ninguna evidencia de publicación de código por AIST ni por
+  KEPCO** — se declara explícitamente en vez de dejarlo en silencio.
+- **Grid-Orch (arXiv 2605.12728, ORNL): paper sin código localizable.** Describe un servidor MCP con
+  **36 herramientas en once categorías** sobre OpenDSS, con plataforma web, dashboard QSTS y
+  visualización de topología. No se encontró repositorio ni licencia. Si se libera, es la pieza más
+  completa de la categoría; hoy no es proponible.
+- **`Open-Power-System-Data`: cinco paquetes MIT, todos congelados entre 2019 y 2020**, ninguno
+  marcado como archivado. Corrección de inventario, ver repos/foundations.md.
+
+### Nota de método: `NOASSERTION` fue falso negativo en 3 de 4 casos
+
+Se resolvieron a mano cuatro repos que la API marcaba `NOASSERTION`: `IMTB` resultó **MPL-2.0**
+(MPL reescrita en Markdown), `NEMOSIS` **GPL-3.0-or-later** (cabecera indentada), `ClariGrid`
+**Apache-2.0** (texto canónico, falso negativo sin causa aparente), y `MTB` resultó **no-OSI con
+permiso revocable**. **T24 queda cualificada: `NOASSERTION` no es un dato, es una pregunta sin
+responder** — y el coste de no abrir el fichero es asimétrico (descartar `NEMOSIS`, 113 ★, por "sin
+licencia" habría costado la región entera). Ver T31 y agents/top.md §2.
+
+
+### Nota de verificación añadida al cierre del pase 12: la regla `.adoc` del pase 11 se confirma en un segundo repo
+
+Al verificar las URLs de este pase, `opfab/operatorfabric-core` devolvió **404 en
+`main/README.md` y en `master/README.md`** — la firma que el pase 11 identificó como "repo
+institucional europeo que parece vacío y no lo está". Se aplicó la regla de ese pase y:
+
+```
+master/README.adoc   -> 200
+develop/README.adoc  -> 200
+```
+
+El repo está **vivo**: MPL-2.0, 42 ★, 29 forks, push **2026-11-20**. Dos ramas publicadas
+(`master` y `develop`, **sin `main`**), documentación en **AsciiDoc**.
+
+Es la **segunda confirmación independiente** de la regla del pase 11 (la primera fue
+`statnett/Talk2PowerSystem`), y añade un matiz que la primera no tenía: **el fallo no era sólo el
+formato del README, también era la rama**. Un `404` sobre `main/README.md` en un repo europeo
+institucional tiene **dos** causas posibles y hay que descartar las dos: `.adoc` en vez de `.md`, y
+`master`/`develop` en vez de `main`. Combinado con la regla del sexto pase sobre la rama por
+defecto, la sonda correcta es el producto cartesiano
+`{main, master, develop} × {README.md, README.adoc, ReadMe.adoc, README.rst}`.
+
 ## 2026-11-20 — pase 11 (la ronda 2 del barrido por institución: HELICS llevaba once pases sin estar, y el "nuclear = openmc y nada más" cayó)
 
 **Titular del pase: el método del pase 10 —buscar la institución— no estaba agotado, estaba a medio

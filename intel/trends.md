@@ -1282,3 +1282,157 @@ en un pipeline.
 estándar** (texto propio institucional — proponible con revisión legal), (3) copyleft, (4) licencia de
 datos/documentación (CC), (5) no comercial (bloqueante), (6) sin archivo de licencia (no proponible).
 Los pases anteriores colapsaban (1) y (2), y mezclaban (4) y (5) dentro de "rescatada".
+
+## T31 — `NOASSERTION` no es un dato: es una pregunta sin responder, y la respuesta depende de la institución
+
+El quinto pase estableció **T24**: "`NOASSERTION` en un laboratorio nacional no es un defecto de la
+API: es el dato correcto". Era cierto en su muestra y **se ha estado generalizando mal**. Este pase
+resolvió a mano cuatro repos `NOASSERTION` fuera de ese perfil (un TSO europeo, una universidad
+australiana, un autor individual) y **tres de los cuatro tenían licencia OSI estándar**:
+
+| Repo | API | Realidad | Causa del falso negativo |
+|---|---|---|---|
+| `Energinet-SimTools/IMTB` | `NOASSERTION` | **MPL-2.0** | MPL **reescrita en Markdown** (`# Mozilla Public License`, `### 1.1.`) |
+| `UNSW-CEEM/NEMOSIS` | `NOASSERTION` | **GPL-3.0-or-later** | Cabecera GPL **indentada**, precedida del nombre del programa |
+| `AlexanderHoogsteyn/ClariGrid` | `NOASSERTION` | **Apache-2.0** | Texto canónico íntegro; falso negativo sin causa aparente |
+| `Energinet-SimTools/MTB` | `NOASSERTION` | **no-OSI, revocable** | Aquí sí era correcto (ver T33) |
+
+**La regla correcta: `NOASSERTION` significa "el *matcher* de GitHub no reconoció el fichero", no
+"no hay licencia".** En laboratorio nacional norteamericano suele resolverse en licencia propia (T24).
+En TSO europeo y universidad, suele resolverse en **licencia OSI mal formateada**.
+
+Lo que hace esto grave y no anecdótico es que **el coste del error es asimétrico en las dos
+direcciones**:
+
+- Descartar `NEMOSIS` (113 ★, la capa de acceso a datos del NEM) por "sin licencia" = **perder el
+  acceso a una región entera** por un problema de indentación.
+- Dar por permisivo el `MTB` de Energinet (83 ★) = **riesgo contractual** en el entregable.
+
+Procedimiento obligatorio antes de concluir cualquier cosa sobre licencia: sondear `LICENSE`,
+`LICENSE.md`, `LICENSE.txt`, `COPYING`, `LICENCE` contra las ramas `main` y `master`, y **leer las
+primeras líneas**. Se añade a la lista de trampas de verificación de esta KB, junto con el `.adoc`
+del pase 11, la rama por defecto del sexto y las cuatro licencias de `pypsa-eur`.
+
+## T32 — El stack eléctrico australiano es copyleft en la capa de datos, y eso decide la arquitectura antes de escribir código
+
+APAC pasó en este pase de ~2 a más de 30 repos, y el reparto de licencias **no es aleatorio: sigue la
+capa**.
+
+- **Copyleft (GPL-3.0): toda la capa de entrada de datos y de supuestos.** `NEMOSIS` (histórico),
+  `NEMSEER` (pronósticos), `isp-workbook-parser` (IASR), `isp-trace-parser` (series), `ISPyPSA`
+  (expansión de capacidad).
+- **Permisivo (BSD-3 / MIT): toda la capa de modelo.** `nempy` (despacho), `NEMED` (emisiones),
+  `DER_disturbance_analysis`, `nem-bidding-dashboard`, `market-control-room`.
+
+El GPL cae justo donde **no se puede esquivar**: no existe producto analítico del NEM que no pase por
+`NEMOSIS`. La consecuencia práctica no es que Australia esté cerrada, es que **la frontera de
+licencia hay que dibujarla en el diagrama de arquitectura antes de la primera línea de código**:
+servicio de datos GPL aislado (proceso o contenedor propio, interfaz de datos, sin enlazado) y lógica
+propietaria del cliente al otro lado, embebiendo `nempy` y `NEMED` que sí lo permiten.
+
+**Esto generaliza y es el valor del hallazgo:** T9 decía que "el perfil de licencia cambia por
+subsector, no por tecnología". Australia añade un eje: **el perfil de licencia cambia por *capa de la
+pila*.** La capa de ingesta tiende a copyleft (la escriben académicos y consorcios que quieren que
+las mejoras vuelvan); la capa de modelo tiende a permisiva (la escriben para que se adopte). Vale la
+pena comprobar si el patrón se repite en las otras tres regiones — sería una regla de selección
+reutilizable, no una curiosidad australiana.
+
+## T33 — En este sector existe la licencia **revocable**, y ningún verificador automático la detecta
+
+[`Energinet-SimTools/MTB`](https://github.com/Energinet-SimTools/MTB) (83 ★, 24 forks, push
+2026-11-19), el repo más estrellado del TSO danés, lleva un `LICENSE.md` que **no nombra ninguna
+licencia**. Concede *"a worldwide, non-exclusive, non-payable right to use, modify and distribute the
+MTB"* y a continuación:
+
+> **"Energinet may withdraw or modify the right to use, modify and distribute."**
+> **"All intellectual property rights, including copyright to the MTB remains at Energinet."**
+
+Un permiso **revocable unilateralmente** no es open source bajo ninguna definición: no hay licencia
+OSI que permita retirar el derecho ya concedido. Y la diferencia con "sin licencia" importa, porque
+el riesgo es de otra naturaleza: no es que falte el permiso, es que **el permiso puede desaparecer
+después de que el entregable esté en producción en el cliente**.
+
+**Por qué ningún automatismo lo ve:** no hay cadena SPDX que *grepear*. No aparece `MIT`, ni
+`Apache`, ni `GPL`, ni `MPL`. Un verificador de identificadores de licencia **no encuentra nada** y
+clasifica el repo como "sin licencia" — que resulta ser la clasificación operativa correcta (T20,
+"bloqueada, distinta de ausente") **por el motivo equivocado**, y por pura suerte. Si el mismo texto
+hubiera incluido la palabra "MIT" en cualquier parte, el verificador lo habría aprobado.
+
+La defensa es de procedimiento y no es automatizable: **cualquier repo institucional con muchas
+estrellas y `NOASSERTION` se lee a mano antes de proponerlo.** Es poco trabajo (son pocos repos) y
+cubre el caso de mayor impacto.
+
+Uso legítimo del `MTB`, que lo tiene: como **especificación de los requisitos de prequalificación de
+Energinet**. Un proyecto de cumplimiento de red en Dinamarca necesita saber qué comprueba el banco;
+eso se lee sin incorporar el código. Lo que no se puede es empaquetarlo y vendérselo a un cliente.
+
+## T34 — La capa agéntica de red no estaba ausente: estaba publicada en el vocabulario del motor, no del sector
+
+Entre los pases 4 y 11, esta KB registró **siete u ocho veces** "cero agentes de operación de red", y
+lo atribuyó a inmadurez del sector. Este pase encontró
+[`powsybl/pypowsybl-mcp`](https://github.com/powsybl/pypowsybl-mcp) (MPL-2.0, `Copyright (c) 2026,
+RTE`, arXiv 2607.14158), que expone load flow, seguridad N-1 y análisis de sensibilidad como
+herramientas MCP.
+
+**No era inmadurez: era vocabulario** — y es la cuarta confirmación consecutiva del mismo fallo
+(pase 10: `StorageVET`; pase 11: `HELICS`; este pase: `Open-ISP` y `pypowsybl-mcp`). La capa agéntica
+de red **no se publica como "grid agent"**: se publica *dentro de la organización del motor de red*,
+por el equipo del operador, y se anuncia en un paper de posición en vez de en un README promocional.
+Buscar "AI agent grid" nunca iba a encontrarla.
+
+**La receta de búsqueda que esto deja, y que debería aplicarse a las demás industrias de esta
+rotación:** no buscar la función (*"agente de X"*), buscar **el motor que la función necesita** y
+mirar si su organización ha publicado una capa MCP o de herramientas encima. `powsybl` → `pypowsybl-mcp`.
+`EnergyPlus` → `energyplus-mcp`. `OpenDSS` → `opendss-mcp-server`. `PyPSA` → `pypsa-mcp`. El patrón
+es tan regular que **predice**: donde haya un motor de simulación con comunidad, buscar su servidor
+MCP antes de declarar el gap.
+
+Corolario sobre madurez, para no sobrevender: `pypowsybl-mcp` tiene **7 ★ y 2 forks**, transporte
+HTTP (no stdio, el servidor debe estar ya corriendo) y **sesiones en memoria que se pierden al
+reiniciar**. Es un cimiento institucional joven. Proponerlo honestamente significa decir que el
+proyecto va a contribuir a él.
+
+## T35 — En MCP energético la procedencia institucional pesa más que las estrellas
+
+Medición completa de este pase, ocho servidores MCP energéticos de la cola larga, todos verificados
+por API: **rango 0–4 ★, y sólo uno con forks > 0**. Licencias buenas (casi todo MIT/Apache-2.0),
+actividad decente (cinco con push en 2026), **comunidad inexistente**.
+
+Al lado: `pypowsybl-mcp` con 7 ★ es proponible, y `Power-Agent/PowerMCP` (MIT, **238 ★**, 67 forks)
+es el centro real de la categoría. La variable que separa a los dos grupos no es la licencia ni la
+actividad ni el número de estrellas en términos absolutos: es **si hay una institución detrás que
+responda del código**.
+
+Esto invierte, para esta categoría, la heurística habitual. Un repo de 7 ★ con un TSO detrás es mejor
+apuesta que uno de 4 ★ sin nadie, aunque la diferencia de estrellas sea estrecha. Y liga con **T19**
+("las estrellas de GitHub ya se compran en este sector"): cuando la métrica es manipulable y los
+números son pequeños, **la procedencia es la señal de calidad más fiable que queda**.
+
+Regla operativa: en MCP energético, **la cola larga es material de referencia y de copia de patrón,
+nunca dependencia**. Para dependencia, exigir institución.
+
+## T36 — El gap de LATAM dejó de ser de existencia y pasó a ser de licenciamiento
+
+Durante varios pases, y en varias industrias de esta rotación, el hallazgo LATAM fue "cero repos de
+origen regional". Este pase barrió los operadores de la región (CAMMESA, CENACE México, CENACE
+Ecuador, Coordinador Eléctrico de Chile) y **encontró repos activos**: `cammesa-dashboard` (push
+2026-11-20), `CENACE-CHALLENGE` (2026-11-17), `cenace-monitor` (2026-11-20), `cammesa-api` (MIT, pero
+parado desde 2017).
+
+**Tres de los cuatro no tienen licencia.** El muro se movió: **ya no es "no hay repos", es "los repos
+están sin licencia"** (T20: bloqueada, distinta de ausente).
+
+La diferencia es importante por dos razones:
+
+1. **Es un diagnóstico distinto.** Un gap de existencia significa que el ecosistema no está; un gap
+   de licenciamiento significa que **está y no se puede usar**. Lo segundo es un problema de práctica
+   de la comunidad, no de capacidad técnica de la región.
+2. **Es accionable a coste cero, y lo primero no lo era.** Son repos de autor individual. Un *issue*
+   pidiendo que añadan una licencia es una contribución que cuesta minutos y que, si prospera,
+   desbloquea la pieza. Es la primera vez en esta KB que un gap regional tiene una acción concreta
+   asociada en vez de "seguir buscando".
+
+El dato institucional LATAM sigue siendo escaso y vale recordarlo: el único usable de origen
+institucional sigue siendo `equipoanaliticaxm/api_xm` (XM, Colombia). Y **Brasil sigue en cero**: el
+mayor mercado de datacenter de la región no tiene presencia de código abierto de su operador (ONS)
+tras doce pases — el gap de mayor valor potencial que queda en LATAM.

@@ -648,3 +648,188 @@ barrer por `org:` los laboratorios e institutos que ya aparecen en esta KB — `
 `argonne-citadel`, `lbl-srg`, `NatLabRockies`, `entsoe`, `statnett`, `alliander-opensource`,
 `equinor`, `eclipse-volttron` — y comprobar si alguno publica ya capa agéntica bajo un nombre que no
 dice "agent".
+
+## Duodécimo pase (2026-11-20): el cero de agentes de operación de red se rompe, y lo rompe un TSO
+
+**Titular del pase: después de siete u ocho pases consecutivos registrando "cero agentes de
+operación de red" por consulta genérica, hay uno, es real, y no viene de un laboratorio ni de una
+universidad: lo publica RTE, el operador de la red de transmisión francesa.
+[`powsybl/pypowsybl-mcp`](https://github.com/powsybl/pypowsybl-mcp) (**MPL-2.0**, 7 ★, 2 forks, push
+**2026-11-18**) expone pypowsybl por MCP: load flow, análisis de seguridad N-1 y análisis de
+sensibilidad como llamadas de herramienta que un agente puede encadenar.**
+
+Esto no es un hallazgo de catálogo: es la confirmación ejecutable de **T2** ("los operadores de red
+se volvieron proveedores de open source"). Hasta este pase, T2 se apoyaba en repos de *modelado* y
+de *interoperabilidad* publicados por TSOs. Ahora el TSO publica la **capa agéntica** sobre su
+propio motor de red.
+
+| Agente | Repo | Licencia | ★ / forks | Push | Qué hace |
+|---|---|---|---|---|---|
+| **pypowsybl-mcp** | [powsybl/pypowsybl-mcp](https://github.com/powsybl/pypowsybl-mcp) | **MPL-2.0** | 7 / 2 | 2026-11-18 | Servidor MCP de RTE sobre pypowsybl: load flow, seguridad N-1, sensibilidad, diagramas y exportación, como herramientas MCP |
+| **PowerMCP** | [Power-Agent/PowerMCP](https://github.com/Power-Agent/PowerMCP) | MIT | 238 / 67 | 2026-11-17 | Colección de servidores MCP sobre PowerWorld, PSS/E y OpenDSS (ya catalogado; **re-medido** este pase) |
+| **opendss-mcp-server** | [ahmedelshazly27/opendss-mcp-server](https://github.com/ahmedelshazly27/opendss-mcp-server) | MIT | 4 / 3 | 2025-10-28 | MCP sobre OpenDSS para análisis de distribución; publicado en PyPI |
+| **UBEM-MCP** | [TensorBuildLab/UBEM-MCP](https://github.com/TensorBuildLab/UBEM-MCP) | BSD-3-Clause | 1 / 0 | 2026-10-26 | MCP de modelado energético urbano de edificios a escala de ciudad |
+| **octavius-energy-lab** | [saptiva-ai/octavius-energy-lab](https://github.com/saptiva-ai/octavius-energy-lab) | Apache-2.0 | 0 / 0 | 2026-11-10 | **Andamiaje**, no producto: banco de evaluación de *agent harnesses*; ver la advertencia abajo |
+
+### Detalle operativo de `pypowsybl-mcp`, que decide si se puede proponer
+
+- **Transporte: streamable HTTP, no stdio.** El servidor PyPowsybl debe estar **ya corriendo** antes
+  de que el cliente (Codex, Claude Desktop, Cursor o un agente propio) se conecte. Esto no es un
+  detalle de confort: cambia el despliegue, porque obliga a un servicio gestionado con ciclo de vida
+  propio en vez de un subproceso del cliente.
+- **Sesiones en memoria.** El modelo de red se mantiene en memoria y con el agente sólo se
+  intercambian identificadores de sesión y resúmenes filtrados. Dos consecuencias opuestas y las dos
+  importan: (1) es la decisión *correcta* de privacidad e de contexto —el modelo de red no se vuelca
+  al LLM—; (2) **el estado se pierde al reiniciar el proceso**, así que cualquier estudio largo
+  necesita persistencia propia por encima.
+- **Autoría y procedencia.** Cabecera `Copyright (c) 2026, RTE`; autores Jérôme Picault y Clément
+  Goubet (RTE). Paper de posición: **arXiv 2607.14158**, que lo describe como usado internamente en
+  RTE y liberado.
+- **Madurez real: baja.** 7 ★ y ~2 forks. PRs recientes abiertos sobre creación/eliminación de
+  elementos de red y migración al SDK Python de MCP v2 (`mcp>=2,<3`). Es **un cimiento institucional
+  joven**, no una pieza estabilizada: proponerlo exige decir que se va a contribuir a él.
+- **MPL-2.0**, no MIT: copyleft por archivo. Se puede enlazar desde código propietario, pero los
+  archivos modificados del propio servidor se publican. Coincide con la nota de licencia del tercer
+  pase (MPL-2.0 es la licencia por defecto del sector eléctrico europeo).
+
+### La advertencia que evita una propuesta falsa: `octavius-energy-lab` es andamiaje
+
+`saptiva-ai/octavius-energy-lab` (Apache-2.0, Saptiva, México) aparece en búsqueda como lo que esta
+KB llevaba pases pidiendo: **un repo agéntico energético de origen LATAM**. Se leyó el README
+completo antes de catalogarlo, y la lectura cambia la ficha:
+
+- El propio README dice que **el dominio energético "no está todavía en este árbol"**: CENACE y Low
+  Carbon London son los datasets *previstos*, y entran en fases posteriores como plugins MCP.
+- **Qwen3-8B** (LLM local) y **TimesFM** (forecasting) están **nombrados, no integrados**. Y anota
+  que los pesos de **TimesFM 3.0 son de uso no comercial** — restricción que invalida el camino de
+  producción aunque el repo sea Apache-2.0.
+- Lo que sí existe y funciona es la **plataforma**: Next.js 15 / React 19, backend FastAPI con
+  orquestador de *tool-calling*, MongoDB/Redis/MinIO/Weaviate por Docker Compose, observabilidad
+  OpenTelemetry/Prometheus/Grafana/Loki, y `make dev` / `make test`.
+- Metodología de evaluación: una sola regla declarada, **"no optimizar el benchmark para que el
+  harness parezca bueno"**. El diseño vive en `docs/`, no en el README.
+- 0 ★, 0 forks. El README se autodescribe como **"el punto de partida"**.
+
+**Veredicto honesto: no es el agente energético LATAM. Es la declaración de intención de una empresa
+mexicana de IA de construirlo, con la plataforma ya montada y el dominio vacío.** Vale como señal de
+mercado (hay quien lo está intentando desde la región, con licencia permisiva y con criterio de
+evaluación explícito) y **no** vale como cimiento técnico que un engagement pueda reutilizar hoy.
+Volver a medirlo el próximo pase: si el dominio energético aterriza, pasa a ser el primer banco de
+evaluación agéntico energético de origen LATAM.
+
+### La cola larga de MCP energético, medida entera y con el mismo veredicto que el quinto pase
+
+El quinto pase escribió que "la cola larga de agentes LLM energéticos sigue sin ser proponible". Este
+pase la **midió completa** en vez de afirmarlo: ocho servidores MCP energéticos encontrados por
+búsqueda, todos verificados por API.
+
+| Repo | Licencia | ★ / forks | Push | Nota |
+|---|---|---|---|---|
+| [karthikravva/MCP-Energy-Hub](https://github.com/karthikravva/MCP-Energy-Hub) | MIT | 2 / 0 | 2025-12-05 | Red de EEUU vía EIA, orientado a *carbon-aware* |
+| [kasathur/energyatit-mcp-server](https://github.com/kasathur/energyatit-mcp-server) | MIT | 1 / 0 | 2026-02-14 | Se autodescribe "first and only energy MCP server" — **es falso**, y el propio repo es de 1 ★ |
+| [mattoddie/octopus-mcp](https://github.com/mattoddie/octopus-mcp) | MIT | 1 / 0 | 2026-11-19 | Octopus Energy (GB): consumo, tarifas Agile, facturas; read-only salvo activación |
+| [mrksmts/homewizard-mcp-server](https://github.com/mrksmts/homewizard-mcp-server) | MIT | 1 / 0 | 2026-04-26 | API local HomeWizard (contador P1), read-only |
+| [TensorBuildLab/UBEM-MCP](https://github.com/TensorBuildLab/UBEM-MCP) | BSD-3-Clause | 1 / 0 | 2026-10-26 | UBEM a escala de ciudad |
+| [jalcodev/gridhub-mcp](https://github.com/jalcodev/gridhub-mcp) | MIT | 0 / 0 | 2026-09-27 | 25 zonas de red (ISOs EEUU, UE, GB, AU); **servicio hospedado**, no autoinstalable |
+| [szl-holdings/szl-energy-mcp](https://github.com/szl-holdings/szl-energy-mcp) | Apache-2.0 | 0 / 0 | 2026-11-19 | Medición con *receipt-gating* (sha256 por resultado), fail-closed, cero dependencias |
+| [ahmedelshazly27/opendss-mcp-server](https://github.com/ahmedelshazly27/opendss-mcp-server) | MIT | 4 / 3 | 2025-10-28 | El único de la cola con forks > 0 |
+
+**Rango completo: 0–4 ★. Ninguno pasa de 4.** La frontera no es la licencia (son casi todos MIT o
+Apache-2.0, es decir, el perfil que Globant puede usar) ni la actividad (cinco con push en 2026). La
+frontera es que **no hay comunidad detrás de ninguno**: sin forks, sin issues, sin segundo
+mantenedor. Para un engagement eso significa que **la cola larga de MCP energético es material de
+referencia y de copia de patrón, no dependencia**. El contraste con `pypowsybl-mcp` (7 ★ pero RTE
+detrás) y con `Power-Agent/PowerMCP` (238 ★, 67 forks) es el dato: en esta categoría **la procedencia
+institucional pesa más que las estrellas**.
+
+### Hallazgos de verificación del duodécimo pase
+
+#### 1. `search/repositories` **excluye los forks**, y por eso un `NOTFOUND` no significa "no existe"
+
+Este es el hallazgo de método más reutilizable del pase, y casi produjo una ficha falsa.
+
+La búsqueda devolvió `CorradoMariaCaminiti/PowerMCP` con una descripción completa y creíble
+("colección open source de servidores MCP para PowerWorld, PSSE y OpenDSS"). El verificador de esta
+KB —`gh api -X GET search/repositories -f q="repo:owner/name"`— respondió **`NOTFOUND`**. Según la
+regla escrita en pases anteriores ("un 404 no es un hallazgo"), ahí había que descartarlo.
+
+Se cruzó con el otro canal antes de descartar:
+
+```
+curl -sI https://raw.githubusercontent.com/CorradoMariaCaminiti/PowerMCP/main/README.md  -> 200
+```
+
+**El repo existe.** Es un **fork** de [`Power-Agent/PowerMCP`](https://github.com/Power-Agent/PowerMCP)
+(MIT, **238 ★**, 67 forks, push 2026-11-17), que esta KB ya tenía catalogado. La API de búsqueda de
+GitHub **no indexa forks por defecto**, de modo que el canal de verificación de esta KB es
+estructuralmente ciego a ellos.
+
+Las dos consecuencias operativas, y tiran en direcciones opuestas:
+
+1. **`NOTFOUND` del canal de búsqueda ≠ inexistente.** Significa "no existe *como repo fuente
+   indexado*". Antes de registrar un gap por esta vía, cruzar con `raw.githubusercontent.com`.
+2. **Y al revés, que es el riesgo real: un resultado de búsqueda web puede ser un fork, y el fork se
+   cataloga igual de bien que el original.** Si la verificación hubiera sido sólo
+   `curl raw.githubusercontent.com` —el canal que esta KB adoptó tras el sexto pase—, este fork de 0 ★
+   habría entrado en la tabla como hallazgo, desplazando al upstream de 238 ★. **La defensa es que
+   `NOTFOUND` en búsqueda + `200` en raw es la firma exacta de un fork**, y obliga a buscar el
+   upstream.
+
+Regla para los próximos pases: **`NOTFOUND` en búsqueda con `200` en raw ⇒ es un fork ⇒ catalogar el
+upstream, no el que devolvió la búsqueda.**
+
+#### 2. `NOASSERTION` fuera del laboratorio nacional es un **falso negativo**, no un dato
+
+El quinto pase escribió **T24**: "`NOASSERTION` en un laboratorio nacional no es un defecto de la
+API: es el dato correcto". Este pase encontró cuatro repos `NOASSERTION` **fuera** de ese perfil
+(TSO europeo y universidad australiana) y los resolvió leyendo el fichero de licencia. **Tres de los
+cuatro tenían una licencia OSI perfectamente estándar**, invisible para la API sólo por el formato
+del fichero:
+
+| Repo | API dijo | El fichero dice | Por qué falló la detección |
+|---|---|---|---|
+| [Energinet-SimTools/IMTB](https://github.com/Energinet-SimTools/IMTB) | `NOASSERTION` | **MPL-2.0** | `LICENSE.md` con la MPL **reescrita en Markdown** (`# Mozilla Public License`, `### 1.1.`) — el *matcher* no reconoce el texto reformateado |
+| [UNSW-CEEM/NEMOSIS](https://github.com/UNSW-CEEM/NEMOSIS) | `NOASSERTION` | **GPL-3.0-or-later** | Cabecera GPL **indentada y precedida del nombre del programa**, no el texto canónico al inicio del fichero |
+| [AlexanderHoogsteyn/ClariGrid](https://github.com/AlexanderHoogsteyn/ClariGrid) | `NOASSERTION` | **Apache-2.0** | Texto Apache íntegro y canónico; falso negativo sin causa aparente |
+| [Energinet-SimTools/MTB](https://github.com/Energinet-SimTools/MTB) | `NOASSERTION` | **NO es OSI** (ver §3) | Aquí `NOASSERTION` era correcto, y además hacia el lado peligroso |
+
+**T24 queda cualificada, no derogada:** `NOASSERTION` no es un dato, es **una pregunta sin
+responder**. En laboratorio nacional norteamericano suele resolverse en licencia propia (lo que T24
+midió). En TSO europeo y universidad, **suele resolverse en licencia OSI estándar mal formateada**.
+La única lectura válida en los dos casos es abrir el fichero. Y el coste de no abrirlo es asimétrico:
+descartar `NEMOSIS` (113 ★, el repo más estrellado del stack australiano) por "sin licencia" es
+perder la pieza central de una región entera; dar por permisivo el `MTB` de Energinet es un riesgo
+contractual.
+
+Sondas que hay que probar, en este orden, antes de concluir cualquier cosa:
+`LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING`, `LICENCE` × ramas `main`, `master`.
+
+#### 3. Existe la licencia **revocable**, y ningún `grep` de SPDX la detecta
+
+[`Energinet-SimTools/MTB`](https://github.com/Energinet-SimTools/MTB) (**83 ★**, 24 forks, push
+2026-11-19) es el repo más estrellado del TSO danés y **no es open source**. Su `LICENSE.md` no
+nombra ninguna licencia: es un texto de "consideraciones de uso" propio de Energinet. Lo que
+concede y lo que se reserva, verbatim:
+
+- Concede **"a worldwide, non-exclusive, non-payable right to use, modify and distribute the MTB"**,
+  entero o en partes.
+- **Y se lo puede quitar: "Energinet may withdraw or modify the right to use, modify and
+  distribute."**
+- **"All intellectual property rights, including copyright to the MTB remains at Energinet."**
+- Los resultados son **"indicative and for informational purposes only"**; sólo el ensayo de
+  Energinet en su propio entorno es concluyente.
+- Uso **"at the facility owners and the users own risk"**, sin responsabilidad por daños.
+
+Un permiso **revocable unilateralmente** es incompatible con la definición de open source (no hay
+licencia OSI que permita retirar el derecho ya concedido) y es **incompatible con construir un
+entregable de cliente encima**: el riesgo no es de atribución, es de continuidad del derecho de uso.
+
+Y es indetectable por automatismo: no hay cadena SPDX que *grepear*, no hay `MIT`, no hay `Apache`,
+no hay `GPL`. Un verificador que busque identificadores de licencia **no encuentra nada y clasifica
+el repo como "sin licencia"** — es decir, en la categoría de T20 ("bloqueada, distinta de ausente"),
+que es la clasificación práctica correcta aunque por el motivo equivocado. Ver **T33**.
+
+**Cómo usar el MTB de todas formas, porque es útil:** como **especificación de requisitos de
+prequalificación de Energinet**, que es lo que de hecho es. Un proyecto de cumplimiento de red en
+Dinamarca necesita saber qué comprueba el MTB; eso se lee del repo sin incorporar su código. Lo que
+no se puede es empaquetarlo dentro de una herramienta propia y vendérsela a un cliente.

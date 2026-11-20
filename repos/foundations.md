@@ -955,3 +955,125 @@ sublicencia y venta con retención de aviso y cláusula de no-uso-del-nombre. Es
 sustancia, equivalente a BSD-3 — pero no es un identificador SPDX**, no pasará un escáner automático
 de licencias y requiere visto bueno legal explícito. "Rescatada como permisiva no estándar" no es lo
 mismo que "rescatada como BSD-3".
+
+## El stack del mercado eléctrico australiano: la región que esta KB tenía con dos repos y tiene treinta (duodécimo pase, 2026-11-20)
+
+Hasta este pase, APAC en esta KB eran esencialmente `unsw-ceem/nemseer`, `bje-/nemo` y
+`pypsa/pypsa-china`. El barrido por institución —el método de los pases 10 y 11, aplicado esta vez al
+**operador de mercado australiano (AEMO) y a su entorno académico**— abre dos organizaciones enteras
+que ninguna consulta genérica había devuelto.
+
+Y abre con una condición de licencia que **decide la arquitectura de cualquier proyecto APAC**: ver
+la frontera al final de la sección y **T32**.
+
+### `Open-ISP`: el Integrated System Plan de AEMO, reimplementado en abierto
+
+AEMO **no publica** su modelo. `Open-ISP` reimplementa su metodología y sus datasets. Los tres repos
+con contenido están **todos bajo GPL-3.0**:
+
+| Repo | Licencia | ★ / forks | Push | Qué es |
+|---|---|---|---|---|
+| [Open-ISP/ISPyPSA](https://github.com/Open-ISP/ISPyPSA) | **GPL-3.0** | 31 / 8 | **2026-11-20** | Modelo de expansión de capacidad sobre **PyPSA** siguiendo la metodología y las asunciones del **Integrated System Plan** de AEMO |
+| [Open-ISP/isp-trace-parser](https://github.com/Open-ISP/isp-trace-parser) | **GPL-3.0** | 19 / 4 | 2026-11-16 | Reformatea y sirve las series temporales de demanda, solar y viento que usa AEMO |
+| [Open-ISP/isp-workbook-parser](https://github.com/Open-ISP/isp-workbook-parser) | **GPL-3.0** | 12 / 6 | 2026-11-16 | Lee los datos del **IASR** (Inputs, Assumptions and Scenarios Report) desde los Excel de AEMO |
+
+Los otros cinco repos de la organización son infraestructura de proyecto (`project-planning`,
+`dev-practices`, `template-repository`, `open-isp-docs`, `.github`) y no aportan código reutilizable.
+
+**Por qué importa que exista `isp-workbook-parser`:** es el repo menos vistoso de los tres y el que
+más tiempo ahorra. El IASR de AEMO se publica como libro de Excel; convertir eso en datos utilizables
+es exactamente el trabajo sucio que un engagement paga dos veces si no sabe que ya está hecho. Mismo
+patrón que `pudl` en North America.
+
+**Nota de actividad:** `ISPyPSA` tenía push **el mismo día de este pase**. La organización está viva,
+no es un archivo.
+
+### `UNSW-CEEM`: la capa de datos y de despacho del NEM (29 repos, barridos)
+
+El Collaboration on Energy and Environmental Markets de la UNSW es, de hecho, el proveedor de datos
+abiertos del NEM. Lo relevante, con licencia **resuelta fichero a fichero** (ver agents/top.md §2 del
+duodécimo pase):
+
+| Repo | Licencia | ★ / forks | Push | Qué es |
+|---|---|---|---|---|
+| [UNSW-CEEM/NEMOSIS](https://github.com/UNSW-CEEM/NEMOSIS) | **GPL-3.0-or-later** ⚠️ la API dice `NOASSERTION` | **113** / 39 | 2026-10-05 | **La capa estándar de acceso** a datos históricos publicados por AEMO. El repo más estrellado del stack |
+| [UNSW-CEEM/nempy](https://github.com/UNSW-CEEM/nempy) | **BSD-3-Clause** | 71 / 36 | 2025-10-22 | Modela el **procedimiento de despacho** del NEM. Permisivo |
+| [UNSW-CEEM/NEMSEER](https://github.com/UNSW-CEEM/NEMSEER) | **GPL-3.0** | 39 / 9 | 2026-11-16 | Descarga y maneja los **pronósticos** de AEMO (pre-dispatch, PASA) |
+| [UNSW-CEEM/NEMED](https://github.com/UNSW-CEEM/NEMED) | **BSD-3-Clause** | 15 / 7 | 2024-05-20 | Datos de **emisiones** del NEM. Permisivo |
+| [UNSW-CEEM/nem-bidding-dashboard](https://github.com/UNSW-CEEM/nem-bidding-dashboard) | **BSD-3-Clause** | 11 / 5 | 2023-08-01 | Visualización de datos de **puja**. Permisivo, pero parado desde 2023 |
+| [UNSW-CEEM/DER_disturbance_analysis](https://github.com/UNSW-CEEM/DER_disturbance_analysis) | **MIT** | 6 / 1 | 2024-04-29 | Respuesta de PV y DER ante **perturbaciones del sistema**. Permisivo |
+| [UNSW-CEEM/TDA_Python](https://github.com/UNSW-CEEM/TDA_Python) | sin licencia ⚠️ | 8 / 2 | 2023-03-03 | Diseño y análisis de **tarifas**. **Bloqueado** (T20) |
+| [UNSW-CEEM/market-control-room](https://github.com/UNSW-CEEM/market-control-room) | **MIT** | 2 / 2 | 2022-12-08 | Explorador web de resultados de simulación de mercado. Permisivo, inactivo |
+
+`UNSW-CEEM/tm_solarshift` (simulación térmica de calentadores eléctricos domésticos) y
+`Pacific_Islands_Energy_Balance` (datos energéticos de países insulares del Pacífico — único repo de
+esta KB que cubre esa subregión) existen **sin licencia declarada**: interesantes, bloqueados.
+
+### ⚠️ La frontera de licencia del NEM, que es una decisión de arquitectura y no una nota al pie
+
+**Lo que un proyecto australiano puede embeber en un entregable propietario:** `nempy` (despacho),
+`NEMED` (emisiones), `nem-bidding-dashboard`, `DER_disturbance_analysis`, `market-control-room` —
+BSD-3 y MIT.
+
+**Lo que no puede embeber:** `NEMOSIS` (acceso a datos), `NEMSEER` (pronósticos), y los tres de
+`Open-ISP` (expansión de capacidad) — **GPL-3.0**.
+
+El reparto es cruel, porque **el GPL cae justo sobre la capa de entrada de datos**: no se puede
+construir un producto cerrado del NEM sin tocar `NEMOSIS`. La salida arquitectónica —y es la única
+limpia— es **aislar GPL detrás de un proceso o servicio separado** (contenedor propio, interfaz de
+datos, sin enlazado), y mantener la lógica propietaria del cliente al otro lado de esa frontera. Es
+exactamente la "regla de arquitectura que atraviesa todas las recetas" de compose/patterns.md,
+aplicada a una región entera. Ver **Receta 31** y **T32**.
+
+## Herramientas de simulación publicadas por TSOs nórdicos (duodécimo pase)
+
+El barrido de TSOs europeos del pase 11 cubrió Statnett (Noruega). Este pase cubre **Energinet
+(Dinamarca)**, y la organización `Energinet-SimTools` tiene exactamente dos repos con contenido — con
+**licencias opuestas**, que es el hallazgo:
+
+| Repo | Licencia | ★ / forks | Push | Qué es |
+|---|---|---|---|---|
+| [Energinet-SimTools/IMTB](https://github.com/Energinet-SimTools/IMTB) | **MPL-2.0** ✅ (la API dice `NOASSERTION`; la MPL está escrita en Markdown) | 41 / 10 | 2026-08-18 | **Immittance Measurement ToolBox**: medida de inmitancia para estudios de estabilidad |
+| [Energinet-SimTools/MTB](https://github.com/Energinet-SimTools/MTB) | ⛔ **NO es OSI — permiso revocable** | **83** / 24 | 2026-11-19 | **Model Test Bench**: automatiza estudios de cumplimiento de red en **PSCAD** y **PowerFactory** |
+
+**`IMTB` es usable** (MPL-2.0, copyleft por archivo, enlazable desde código propietario).
+
+**`MTB` no lo es, y es el más estrellado de los dos.** Su `LICENSE.md` no nombra licencia alguna:
+concede *"a worldwide, non-exclusive, non-payable right to use, modify and distribute"* y acto
+seguido declara que **"Energinet may withdraw or modify the right to use, modify and distribute"**,
+reteniendo toda la propiedad intelectual. Un permiso revocable no es open source y no sostiene un
+entregable de cliente. **Úsese como especificación de los requisitos de prequalificación de
+Energinet** —que es su función real— sin incorporar el código. Ver agents/top.md §3 y **T33**.
+
+Advertencia adicional sobre los dos: ambos orquestan **PSCAD** y **PowerFactory**, que son
+**comerciales**. El repo es abierto; el simulador que necesita, no. Mismo patrón que
+`PowerAgentBench-Dyn` sobre PowerFactory.
+
+## Acceso unificado a datos de mercado europeos: la pieza permisiva que faltaba (duodécimo pase)
+
+| Repo | Licencia | ★ / forks | Push | Qué es |
+|---|---|---|---|---|
+| [AlexanderHoogsteyn/ClariGrid](https://github.com/AlexanderHoogsteyn/ClariGrid) | **Apache-2.0** ✅ (la API dice `NOASSERTION`) | 3 / 0 | 2026-11-19 | Interfaz Python **única y estable** sobre datos de mercado de varias fuentes europeas; devuelve siempre `pandas.DataFrame` con husos horarios, nombres de columna y unidades normalizados |
+
+Complementa, no sustituye, a `entsoe-py` y a la capa CGMES del séptimo pase: lo que aporta es
+**normalización entre fuentes heterogéneas** (incluye conector de Fingrid, que requiere clave de API
+gratuita). Es de autor individual y 3 ★ — **patrón a copiar antes que dependencia a asumir**, con el
+mismo criterio que la cola larga de MCP.
+
+## ⚠️ Corrección de inventario: `Open-Power-System-Data` está congelado desde 2020
+
+Aparece en toda bibliografía europea de datos abiertos y conviene fijar su estado real, porque un
+engagement que lo tome como fuente viva se lleva un dato de hace seis años:
+
+| Repo | Licencia | ★ | Último push |
+|---|---|---|---|
+| [Open-Power-System-Data/time_series](https://github.com/Open-Power-System-Data/time_series) | MIT | 152 | **2020-10-06** |
+| [Open-Power-System-Data/conventional_power_plants](https://github.com/Open-Power-System-Data/conventional_power_plants) | MIT | 54 | **2020-10-01** |
+| [Open-Power-System-Data/national_generation_capacity](https://github.com/Open-Power-System-Data/national_generation_capacity) | MIT | 18 | **2020-10-01** |
+| [Open-Power-System-Data/renewable_power_plants](https://github.com/Open-Power-System-Data/renewable_power_plants) | MIT | 70 | **2020-08-26** |
+| [Open-Power-System-Data/weather_data](https://github.com/Open-Power-System-Data/weather_data) | MIT | 66 | **2019-04-09** |
+
+Licencia impecable (MIT, los cinco), **datos muertos**. Ninguno está marcado como archivado, así que
+no hay señal automática: el único indicador es la fecha. Para series vivas, usar `entsoe-py`,
+`ClariGrid`, `gridstatus` o `rebase-energy/energydatamodel`. Para **datos históricos reproducibles
+hasta 2020 con licencia limpia**, siguen siendo la mejor fuente que existe — ese es su uso legítimo.

@@ -613,3 +613,70 @@ propuesta.
 
 ⚠️ Licencias de `BillRun` y `OpenBRM` **no verificadas** en este pase; aparecieron en resultados sin
 licencia declarada. No proponerlas sin comprobarlas.
+
+## Duodécimo pase (2026-11-20): el vertical de analítica de mercado del NEM, y el "banco de ensayo de cumplimiento" como categoría de producto
+
+### Analítica de mercado eléctrico australiano: hay stack vertical completo, con una costura de licencia en medio
+
+Esta KB ya tenía un vertical de "plataformas de datos de mercado" construido sobre `gridstatus`
+(North America), `entsoe-py` (EMEA) y `api_xm` (LATAM). **APAC estaba vacío y ya no lo está.** Lo que
+hay en Australia no es un repo: es una pila que cubre de la ingesta al despacho.
+
+| Capa del vertical | Pieza | Licencia | Se puede embeber en entregable propietario |
+|---|---|---|---|
+| Ingesta de datos históricos | [`NEMOSIS`](https://github.com/UNSW-CEEM/NEMOSIS) (113 ★) | GPL-3.0-or-later | ⛔ **no** — aislar tras servicio |
+| Ingesta de pronósticos (pre-dispatch, PASA) | [`NEMSEER`](https://github.com/UNSW-CEEM/NEMSEER) | GPL-3.0 | ⛔ **no** — aislar tras servicio |
+| Normalización de supuestos regulatorios (IASR en Excel) | [`isp-workbook-parser`](https://github.com/Open-ISP/isp-workbook-parser) | GPL-3.0 | ⛔ **no** |
+| Series temporales de demanda/solar/viento | [`isp-trace-parser`](https://github.com/Open-ISP/isp-trace-parser) | GPL-3.0 | ⛔ **no** |
+| Expansión de capacidad (metodología AEMO ISP) | [`ISPyPSA`](https://github.com/Open-ISP/ISPyPSA) | GPL-3.0 | ⛔ **no** |
+| **Simulación del despacho real del mercado** | [`nempy`](https://github.com/UNSW-CEEM/nempy) (71 ★) | **BSD-3** | ✅ **sí** |
+| **Emisiones del NEM** | [`NEMED`](https://github.com/UNSW-CEEM/NEMED) | **BSD-3** | ✅ **sí** |
+| **Respuesta de DER a perturbaciones** | [`DER_disturbance_analysis`](https://github.com/UNSW-CEEM/DER_disturbance_analysis) | **MIT** | ✅ **sí** |
+| Visualización de pujas / resultados | [`nem-bidding-dashboard`](https://github.com/UNSW-CEEM/nem-bidding-dashboard), [`market-control-room`](https://github.com/UNSW-CEEM/market-control-room) | BSD-3 / MIT | ✅ sí, pero inactivos (2023, 2022) |
+| Diseño y análisis de tarifas | [`TDA_Python`](https://github.com/UNSW-CEEM/TDA_Python) | ⛔ sin licencia | ⛔ **bloqueado** (T20) |
+
+**La decisión de producto que sale de esta tabla**, y es la razón de ponerla así: lo *embebible* es
+la **capa de modelo** (despacho, emisiones, DER) y lo *copyleft* es la **capa de datos**. Eso define
+el producto vendible en Australia sin ambigüedad: **servicio de datos del NEM aislado (GPL,
+contenedor propio, interfaz estable) + motor analítico propietario encima que usa `nempy` y `NEMED`
+embebidos.** No es una restricción incómoda: es la arquitectura que de todas formas conviene, porque
+la capa de ingesta es la que cambia cuando AEMO cambia sus formatos. Ver Receta 31.
+
+### El banco de ensayo de cumplimiento de red: una categoría de producto que esta KB no tenía
+
+Antes de conectar un parque o una batería a la red, el promotor debe **prequalificar su modelo de
+simulación** contra los requisitos del operador. Es trabajo de ingeniería caro, repetitivo y con un
+entregable formal — es decir, un producto.
+
+| Pieza | Licencia | ★ | Simulador que necesita | Usable |
+|---|---|---|---|---|
+| [`Energinet-SimTools/MTB`](https://github.com/Energinet-SimTools/MTB) | ⛔ **no-OSI, revocable** | 83 | **PSCAD / PowerFactory** (comerciales) | Sólo como **especificación** de requisitos |
+| [`Energinet-SimTools/IMTB`](https://github.com/Energinet-SimTools/IMTB) | **MPL-2.0** ✅ | 41 | PSCAD / PowerFactory | ✅ Sí (copyleft por archivo) |
+
+Dos advertencias que cambian la propuesta, y las dos hay que decirlas antes de prometer nada:
+
+1. **El `MTB` es el repo más estrellado del TSO danés y no es open source.** Su licencia concede
+   derecho de uso, modificación y distribución **y permite a Energinet retirarlo**
+   (*"Energinet may withdraw or modify the right to use, modify and distribute"*), reteniendo toda la
+   propiedad intelectual. No sostiene un entregable de cliente. Ver agents/top.md §3 y T33.
+2. **El simulador subyacente es comercial.** El banco es abierto; PSCAD y PowerFactory no lo son. El
+   proyecto cliente **ya tiene** esas licencias (son el estándar de facto del estudio de red) — pero
+   eso sale del alcance de la oferta y hay que decirlo explícitamente, no descubrirlo en ejecución.
+
+**Dónde está el negocio de todas formas:** la automatización del **expediente** —ejecutar la batería
+de casos, recoger resultados, redactar el informe de cumplimiento contra el requisito del operador y
+mantener la trazabilidad— es trabajo de orquestación y de documento, exactamente lo que la capa
+agéntica hace bien, y es independiente de quién posea el banco. El `MTB` dice *qué* hay que
+comprobar; el proyecto construye el *cómo* se demuestra. Combina con la Receta 30 (`pypowsybl-mcp`
+para la parte de red) y con la Receta 2 (expediente de cumplimiento).
+
+### Acceso unificado a datos de mercado europeos como capa de plataforma
+
+[`ClariGrid`](https://github.com/AlexanderHoogsteyn/ClariGrid) (**Apache-2.0**, 3 ★, push 2026-11-19)
+da una **interfaz Python única** sobre varias fuentes de mercado europeas, devolviendo siempre
+`DataFrame` con husos horarios, nombres de columna y unidades normalizados (incluye conector Fingrid
+con clave gratuita). Resuelve el trabajo aburrido que todo proyecto EMEA repite: cada TSO publica en
+su formato, su huso y sus unidades.
+
+Es de **autor individual y 3 ★**: **patrón a copiar, no dependencia a asumir.** La licencia
+(Apache-2.0) permite justamente eso — tomar el diseño de normalización y mantenerlo en el proyecto.

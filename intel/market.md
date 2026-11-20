@@ -452,6 +452,58 @@ Consistente con la nota de método de este documento: **citar adopción y mandat
 tamaño de mercado.** Fact.MR sí aporta un reparto utilizable: **operación de red = 34 %** de la
 demanda.
 
+### Actualización del duodécimo pase (2026-11-20) — North America
+
+**El dato regulatorio del año, con fecha y con instrumento: el 18 de junio de 2026 la FERC emitió
+órdenes de *show cause* bajo la Sección 206 de la Federal Power Act a los seis operadores regionales
+—PJM, MISO, SPP, CAISO, ISO-NE y NYISO— sobre cómo se conectan a la red las cargas grandes, es decir
+los datacenter de IA.**
+
+Qué exige y qué queda abierto:
+
+- **Plazos: las fuentes se contradicen y hay que tratarlo como tal.** Una dice **60 días** para
+  justificar o reformar las tarifas que rigen la conexión de datacenter, y **30 días** para informar
+  de cómo garantizarán generación suficiente. Otra describe un único plazo de 30 días. **Citar el
+  instrumento (órdenes del 18 de junio de 2026, §206 FPA), no el plazo**, mientras no se consulte el
+  documento primario.
+- **Asignación de costes: hay consenso en lo básico.** El datacenter paga **íntegramente** las mejoras
+  de interconexión directamente atribuibles a su propia conexión, en vez de repartirlas entre la base
+  de clientes. **Lo que sigue abierto** —y es donde se van a pelear los casos— es el reparto de las
+  mejoras de *transmisión* entre el datacenter y los clientes existentes.
+- **No es una regla nacional.** Las órdenes **no cubren ERCOT** (Texas), que queda en su mayor parte
+  fuera de la jurisdicción de la FERC. Cualquier propuesta que hable de "regulación federal de cargas
+  grandes en EEUU" tiene que excluir Texas explícitamente.
+- **Antecedente de la cadena de mando:** el procedimiento arranca de una instrucción del Secretario
+  de Energía Chris Wright a la FERC en **octubre de 2025** para que considerase acelerar la
+  interconexión de cargas grandes.
+- **Fiabilidad, con fecha límite dura:** en **julio de 2026** la FERC ordenó a la **NERC** crear
+  estándares de fiabilidad **exigibles** para datacenter antes del **31 de diciembre de 2026**.
+  (Fuente de menor autoridad; verificar contra NERC.) Esta fecha ya dirigía la **Receta 29** y queda
+  reconfirmada.
+- **Texas por vía legislativa, no regulatoria:** la **SB6** obliga a las cargas grandes a **recortar
+  consumo durante emergencias de red**. En un modelo de ERCOT citado en el análisis, la respuesta de
+  demanda **eliminó el deslastre forzoso en todos los escenarios probados**, con **menos del 5 % de
+  la demanda del datacenter** a lo largo de **86 horas**. Es la cifra más útil del pase para vender
+  flexibilidad: el coste de la flexibilidad necesaria es pequeño y acotado.
+- **Capa estatal:** las comisiones estatales aprueban las tarifas minoristas con las que las
+  utilities sirven al datacenter, y **varios estados ya están escribiendo tarifas de carga grande con
+  clase de tarifa específica para hiperescala**. Es donde se decide el caso de negocio real, cliente
+  por cliente.
+
+**Oportunidad para Globant, concreta y con calendario:** los procedimientos contenciosos que siguen a
+las órdenes tienen intervinientes con intereses opuestos (hiperescalares, utilities, defensores del
+cliente, reguladores estatales) y **todos necesitan análisis cuantitativo de cola de interconexión y
+de adecuación de generación** en plazos de 30–60 días. Eso es la **Receta 21** (analítica de cola de
+interconexión) y la **Receta 29** (cumplimiento NERC), y la ventana de la segunda **se cierra el 31
+de diciembre de 2026**.
+
+**Lado open source de la región en este pase:** sin novedades institucionales. El barrido del pase 10
+(`epri-dev`, `GridProtectionAlliance`, `sandialabs`) sigue siendo la cobertura buena, y el único
+añadido es `ahmedelshazly27/opendss-mcp-server` (MIT, 4 ★), de autor individual, sobre OpenDSS de
+EPRI. Se busca y no aparece **código abierto de ORNL para `Grid-Orch`** (arXiv 2605.12728), que
+sería la pieza MCP más completa de distribución si se liberase: **36 herramientas en once
+categorías** sobre OpenDSS, con dashboard QSTS. Hoy es un paper, no un cimiento.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -876,6 +928,67 @@ de esta KB está sesgada a la baja. El código canónico de investigación europ
 autoalojado** y GitHub indexa espejos que a veces pierden la licencia (ver T53, con evidencia en el
 clúster eólico de DTU). Cualquier afirmación de "no hay oferta europea de X" en pases anteriores debe
 leerse como "no hay oferta europea de X **indexada en GitHub**".
+
+### Actualización del duodécimo pase (2026-11-20) — EMEA
+
+**El paquete regulatorio europeo se completó en dos tiempos y ya tiene umbral numérico: a la
+Hoja de ruta estratégica de digitalización e IA en energía del 3 de junio de 2026 le siguió, el
+21 de septiembre de 2026, una propuesta de reglamento delegado que establece un esquema común de
+calificación de la UE para datacenter con demanda de potencia de TI instalada de 500 kW o más.**
+
+Lo que el esquema obliga a reportar, y que es la lista de requisitos de cualquier producto de
+cumplimiento: **eficiencia energética, uso de agua, consumo de energía limpia, reutilización de
+calor residual y flexibilidad**. Esas cinco métricas son el alcance funcional, no una enumeración
+genérica.
+
+Resto del cuadro, actualizado:
+
+- **Las dos acciones bandera de la Hoja de ruta:** (1) un **acuerdo tripartito modelo** para integrar
+  datacenter en la red, **voluntario**, entre autoridades públicas, operadores de datacenter,
+  operadores de red y suministradores; (2) el esquema de calificación, con trabajo iniciado sobre
+  **estándares mínimos de rendimiento energético**. **Catorce asociaciones industriales europeas**
+  acordaron trabajar en el modelo tripartito bajo dirección de la Comisión. Se esperaba para el
+  segundo semestre de 2026 y **no se ha confirmado su publicación** — comprobar en el pase 13.
+- **Demanda, con cifras de la propia Comisión:** los datacenter europeos consumieron **~68 TWh en
+  2024**, y la Comisión espera **114 TWh en 2030**, **más del 3 % de la demanda eléctrica total de la
+  UE**. Es la serie más citable de este documento porque es del regulador, no de una consultora
+  (comparar con T8 y con la dispersión de 4,6× del noveno pase).
+- **Dinero concreto para IA en energía:** **~75 M€** asignados a tecnologías de IA en energía para
+  **2026–2027** bajo **Horizon Europe**. Y la Comisión lanzó una **Community of Practice** bajo la
+  iniciativa **AI.grids** para apoyar la gestión y planificación de red con IA — es decir, una puerta
+  de entrada institucional, no sólo una convocatoria.
+- **ACER** participa, con catálogos de indicadores de red inteligente a escala UE a finalizar **a
+  mediados de 2026**.
+- **Geografía del mercado (JLL, mitad de 2026):** los proyectos *greenfield* son el **39 % del
+  pipeline 2026–2028** frente al **8 % de lo ya entregado**, y los emplazamientos hiperescalares
+  *greenfield* están ahora a **175 km de media de una ciudad-hub**. Lectura: el datacenter europeo se
+  está yendo a donde está la red y la energía, no a donde está el usuario — lo que **crea** el
+  problema de conectividad y latencia que luego hay que resolver con ingeniería.
+- **Contrapunto de seguridad energética (EUISS):** la UE afronta precios altos, restricciones de red
+  y exposición a importaciones, mientras EEUU, China y el Golfo combinan ambición tecnológica con
+  energía abundante y asequible. Útil como marco de por qué la eficiencia es obligatoria aquí y
+  opcional en otras regiones.
+
+**Oportunidad para Globant:** el esquema de calificación convierte **cinco métricas** en obligación
+de reporte para todo datacenter ≥ 500 kW de TI. Eso es un producto de instrumentación, cálculo y
+expediente auditable, y la métrica de **flexibilidad** es la que conecta con la red (Receta 4) y con
+el acuerdo tripartito. Súmese la **Receta 27** (tubería CGMES, dirigida por COM/2026/501) y la
+**Receta 2** (expediente AI Act).
+
+**Lado open source de la región en este pase**, y es el más productivo:
+
+- **`powsybl/pypowsybl-mcp` (MPL-2.0, RTE)** rompe el cero de agentes de operación de red. Un **TSO**
+  publicando la capa agéntica sobre su propio motor de red es la confirmación ejecutable de T2, y el
+  activo de referencia más vendible de la región (Receta 30).
+- **Energinet (Dinamarca)** publica dos bancos de simulación: **`IMTB` (MPL-2.0, usable)** y **`MTB`
+  (83 ★, ⛔ licencia revocable, no-OSI)**. Ver T33 — es una trampa de procurement, no una nota al pie.
+- **`ClariGrid` (Apache-2.0)**: normalización de datos de mercado europeos entre fuentes. Autor
+  individual, 3 ★: patrón a copiar.
+- **Gaps declarados, con nombre:** **TenneT** tiene organización en GitHub (`tennet-nl-opensource`) y
+  está **vacía — un solo repo, `.github`**, pese a declarar estrategia de open source alojada en LF
+  Energy (ilustración exacta de T15). **Terna** y **Swissgrid** no tienen organización localizable y
+  aparecen sólo como fuente de datos de terceros. **Fingrid** no publica repos propios pero expone
+  API pública con clave gratuita.
 
 ### APAC
 
@@ -1316,6 +1429,69 @@ y `HELICS` (BSD-3, nuevo en este pase) para acoplar los simuladores del estudio.
 
 ⚠️ Las cifras de tamaño de mercado APAC siguen divergiendo (una fuente da **9,45 B USD en 2025**,
 otras bastante más). Citar la regulación y la demanda física, no el tamaño.
+
+### Actualización del duodécimo pase (2026-11-20) — APAC
+
+**El hallazgo de este pase en APAC no es regulatorio: es que la región tenía un ecosistema de código
+abierto completo que esta KB no había visto. Australia pasa de 2 repos a más de 30, y el motivo de la
+ceguera era el vocabulario — se nombran por el instrumento regulatorio local (`ISP` = Integrated
+System Plan) y por el centro universitario (`CEEM`), no por el sector.**
+
+#### El cuadro regulatorio, con los cuatro regímenes separados
+
+- **Corea del Sur — el más duro y ya en vigor.** La **AI Basic Act** entró en vigor en **enero de
+  2026** y es descrita como la primera legislación nacional integral de IA del mundo. Es el régimen
+  que impone más carga de cumplimiento de la región.
+- **China — el más estricto en contenido y registro.** Registro obligatorio, etiquetado de contenido
+  y sanciones de hasta **50 millones de CNY**. Más de **550 servicios de IA generativa registrados a
+  mediados de 2026**. En energía, **State Grid China** ya usa IA para reconocimiento de imagen y voz
+  en gestión de activos, e IA generativa para detección de faltas — es el operador más avanzado del
+  mundo en despliegue real, y no publica código.
+- **Japón — *soft law* deliberado.** La **AI Promotion Act** (aprobada el 28 de mayo de 2025, en
+  vigor el 4 de junio de 2025) es una ley marco **sin sanciones**. En energía, Japón anunció planes
+  de **reubicar centros de datos junto a emplazamientos de eólica marina y nuclear**.
+- **India — sin ley específica.** Guía nacional de gobernanza de IA de **noviembre de 2025** del
+  MeitY, y **incentivos fiscales a datacenter en el presupuesto de 2026**.
+
+#### La restricción física, que en esta región manda sobre la regulatoria
+
+- **Esperas de conexión de red de 5 a 10 años** en muchas jurisdicciones de la región; las
+  limitaciones de red alargan los plazos de desarrollo **varios años** en los mercados clave.
+- **India, calidad de suministro:** la red varía **±5 % en tensión y ±1 Hz en frecuencia de forma
+  rutinaria**. Consecuencia directa de diseño: cualquier carga sensible necesita acondicionamiento
+  propio, y **Reliance Industries está construyendo plantas de generación cautiva** para su
+  infraestructura de IA — lo que **fragmenta la red** y crea el problema de coordinación que luego
+  hay que resolver.
+
+**Cómo vender aquí, y es distinto de las otras regiones:** en North America y EMEA el gancho es el
+**cumplimiento** (orden de la FERC, esquema de calificación de la UE). En APAC el gancho es la
+**restricción física** — conexión, calidad de suministro, generación cautiva. La propuesta que entra
+es la que reduce el plazo de conexión o sustituye red por flexibilidad, no la que produce un
+expediente.
+
+#### Lado open source: Australia es ahora la región mejor cubierta de APAC
+
+- **`Open-ISP`** reimplementa en abierto la metodología del **Integrated System Plan de AEMO** —que
+  AEMO **no publica**—: `ISPyPSA` (31 ★, push el día de este pase), `isp-trace-parser`,
+  `isp-workbook-parser` (lee el **IASR** desde los Excel de AEMO). **Los tres GPL-3.0.**
+- **`UNSW-CEEM`** (29 repos barridos) es de hecho el proveedor de datos abiertos del NEM:
+  **`NEMOSIS`** (113 ★, GPL-3.0-or-later — la API decía `NOASSERTION`, ver T31), **`NEMSEER`**
+  (GPL-3.0, pronósticos), **`nempy`** (71 ★, **BSD-3**, procedimiento de despacho), **`NEMED`**
+  (**BSD-3**, emisiones), **`DER_disturbance_analysis`** (**MIT**).
+- ⚠️ **La frontera de licencia es la decisión de arquitectura de cualquier proyecto australiano:**
+  copyleft en la **capa de datos** (inevitable: no hay producto del NEM que no pase por `NEMOSIS`),
+  permisivo en la **capa de modelo**. Aislar GPL tras un servicio separado y embeber sólo `nempy` y
+  `NEMED`. Ver **T32** y **Receta 31**.
+- **`UNSW-CEEM/Pacific_Islands_Energy_Balance`** es el único activo de esta KB que cubre los países
+  insulares del Pacífico — **sin licencia declarada**, por tanto bloqueado, pero vale saber que
+  existe.
+- **Gaps declarados, con nombre:** **cero repos institucionales de Grid-India, AIST (Japón) y KEPCO
+  (Corea).** De India sólo hay proyectos comunitarios de un autor
+  (`randomaban-beep/india-power-demand-pipeline`, MIT, ingiere informes diarios y telemetría SCADA de
+  Grid-India con ERA5; `carobashok/grid-india`, desde los PDF del NLDC). **No se encontró evidencia
+  alguna de publicación de código por AIST ni por KEPCO** — se declara en vez de dejarlo en silencio.
+  **State Grid China** despliega IA a gran escala y **no publica**: el mayor asimétrico de la región
+  entre capacidad y apertura.
 
 ### LATAM
 
@@ -1878,6 +2054,88 @@ organizaciones de Norteamérica (`GMLC-TDC`, `idaholab`, `pnnl`) y EMEA (`statne
 Nacional, CENACE, universidades) — y eso es una tarea pendiente concreta para el próximo pase, no un
 cero medido. La KB ya tiene `equipoanaliticaxm` (XM, Colombia) y los `pypsa-{país}` del sexto pase,
 lo que indica que la vía institucional **sí rinde** en la región.
+
+### Actualización del duodécimo pase (2026-11-20) — LATAM
+
+**Dos novedades, y la segunda corrige un diagnóstico que esta KB arrastraba: (1) Brasil pasó de
+promesa a régimen legal con el REDATA; (2) el gap de código abierto de la región **ya no es de
+existencia, es de licenciamiento** — hay repos activos de los operadores, y están sin licencia.**
+
+#### Brasil: el único marco legal de datacenter de la región, con número e instrumento
+
+- **REDATA promulgado como la Lei 15.504, el 15 de septiembre de 2026.** Es el régimen específico de
+  datacenter, y el instrumento que hay que citar.
+- **En septiembre de 2026 ANEEL autorizó el acceso directo a la red de transmisión de alta tensión**,
+  con planificación de proyecto para **1,8 GW de demanda a 2033**. Esto es lo que de verdad desbloquea
+  hiperescala: acceso directo sin pasar por la distribuidora.
+- **Cuántos hay, y las fuentes discrepan — citar el rango, no un número:** una fuente sitúa la cuota
+  brasileña por encima del **40 %** de la inversión en datacenter de LATAM; otra dice que Brasil aloja
+  **225 de los más de 500** datacenter de la región; el **Ministério de Minas e Energia** reportó
+  **205 emplazamientos operativos en junio de 2026**.
+- **El riesgo real es municipal, no federal:** las aprobaciones municipales son un riesgo recurrente
+  en la elección de emplazamiento por parte de los hiperescalares. Un proyecto se gana en el
+  ayuntamiento, no en Brasilia.
+
+#### México: la red es la restricción, y ya es visible en la calle
+
+- **Querétaro: las autoridades están programando cortes de energía** para evitar el colapso del
+  sistema en una localidad. Es el dato más duro del pase sobre el estado de la red mexicana.
+- **La interconexión es opaca en coste y en plazo**, y las leyes locales no se han actualizado para
+  facilitar los permisos de construcción de datacenter.
+- México **debate reglas de uso de electricidad y de agua**; sigue **sin ley horizontal de IA** (la
+  restricción es de energía y de permisos, no de IA).
+- Lectura de mercado: **México corre riesgo de quedarse fuera** del auge de datacenter de IA por la
+  restricción energética, justo cuando la cercanía a EEUU debería ser su ventaja.
+
+#### Chile: el cuello es transmisión, no generación
+
+- La **Comisión Nacional de Energía** advierte de que la expansión de la red **no sigue el ritmo** de
+  la demanda de datacenter.
+- **El licenciamiento ambiental ya congeló o canceló proyectos de alto perfil**, y la disponibilidad
+  de agua es la otra preocupación. En Chile el riesgo de proyecto es **permisológico y social**, no
+  de recurso: generación renovable hay.
+
+#### El cuadro regional, con las cifras citables
+
+- **Más de 10 GW** de capacidad lista para red en LATAM en los próximos **dos o tres años**, con el
+  argumento de que **los barreras reales son regulación, permisos y financiación, no la red en sí**.
+- **LATAM absorbió 328 MW en el 1T de 2026, casi el doble del total de todo 2025.** Es la cifra de
+  aceleración más fuerte que esta KB tiene de la región.
+- La ventana se describe como **"10 gigavatios, 18 meses"**, y se plantea explícitamente como
+  oportunidad de capturar el rechazo social al datacenter en EEUU.
+
+#### Lado open source: el muro se movió, y eso cambia la acción
+
+Se barrieron los operadores de la región (CAMMESA Argentina, CENACE México, CENACE Ecuador,
+Coordinador Eléctrico Nacional de Chile) y **hay repos activos**:
+
+| Repo | Licencia | Push | Qué es |
+|---|---|---|---|
+| [`daniraggio/cammesa-dashboard`](https://github.com/daniraggio/cammesa-dashboard) | ⛔ sin licencia | 2026-11-20 | Mercado mayorista argentino; Actions cada 10 min contra `api.cammesa.com`. **Excluye demanda y generación** (CORS, sin auth documentada) |
+| [`zyangarduno/CENACE-CHALLENGE`](https://github.com/zyangarduno/CENACE-CHALLENGE) | ⛔ sin licencia | 2026-11-17 | Precio marginal local, nodos de la zona de carga de Monclova (México) |
+| [`pabesjimenez/cenace-monitor`](https://github.com/pabesjimenez/cenace-monitor) | ⛔ sin licencia | 2026-11-20 | CENACE de **Ecuador**: producción y demanda cada 30 min |
+| [`fcingolani/cammesa-api`](https://github.com/fcingolani/cammesa-api) | **MIT** ✅ | **2017-07-28** | API no oficial de CAMMESA. Licencia limpia, **nueve años parado** |
+
+**Tres de cuatro, bloqueados por ausencia de licencia (T20). El diagnóstico correcto ya no es "LATAM
+no tiene repos": es "LATAM no licencia sus repos".** Y a diferencia de un gap de existencia, **esto
+es accionable a coste cero**: son proyectos de autor individual, y abrir un *issue* pidiendo licencia
+desbloquea la pieza. Ver **T36**.
+
+- **Señal de mercado nueva:** [`saptiva-ai/octavius-energy-lab`](https://github.com/saptiva-ai/octavius-energy-lab)
+  (Apache-2.0, empresa mexicana de IA) se propone como banco de evaluación de *agent harnesses* sobre
+  datos de **CENACE**. Leído el README: **el dominio energético "no está todavía en este árbol"** —
+  es andamiaje de plataforma, no producto. Vale como evidencia de que se está intentando desde la
+  región con licencia permisiva; **no** como cimiento reutilizable hoy. Re-medir en el pase 13.
+- **Brasil sigue en cero, y es el gap de mayor valor de la región:** no se encontró presencia de
+  código abierto del **ONS** tras doce pases, en el mayor mercado de datacenter de LATAM.
+- El único activo de origen **institucional** usable sigue siendo `equipoanaliticaxm/api_xm`
+  (XM, Colombia), del sexto pase.
+
+**Oportunidad para Globant:** Brasil es el único país de la región con régimen legal (REDATA) y con
+acceso directo a transmisión autorizado — es donde el proyecto de datacenter es financiable. México y
+Chile son mercados de **ingeniería de restricción**: estudio de interconexión, flexibilidad y
+expediente ambiental, no de capacidad. Y con `api_xm` (Colombia) y el modelo nacional chileno ya
+publicado, las **Recetas 10, 16 y 24** siguen siendo las vías de entrada con cimiento regional real.
 
 ## Posicionamiento Globant
 
