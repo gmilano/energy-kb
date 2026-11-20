@@ -661,5 +661,93 @@ Catálogos curados que rinden más que cualquier búsqueda por buzzword:
 | [open-energy-transition/Awesome-Grid-Model-Data](https://github.com/open-energy-transition/Awesome-Grid-Model-Data) | ⚠️ **sin licencia** | Catálogo de datasets de red para probar interoperabilidad y reproducibilidad. Útil para orientarse; sin licencia no se redistribuye (octavo pase) | 80 |
 | [DatariusAI/AI-in-Energy](https://github.com/DatariusAI/AI-in-Energy) | ⚠️ **sin licencia** | Hub de investigación y código de IA para energía refrescado a diario. Vale como *feed*, no como dependencia (octavo pase) | 0 |
 
+
+## Añadidos del noveno pase (2026-11-20)
+
+Todas las filas verificadas contra `search/repositories` el 2026-11-20; licencias `NOASSERTION`
+resueltas leyendo `LICENSE` crudo en `raw.githubusercontent.com` probando `main`, `master` y
+`develop` en ese orden.
+
+### Protocolo vehículo↔cargador (ISO 15118): la mitad de la categoría está permisiva y viva, la otra mitad parada
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [ecog-io/iso15118](https://github.com/ecog-io/iso15118) | **Apache-2.0** | ISO 15118 **-2, -20, -8**: Plug & Charge y comunicación V2G | 250 | 142 | 2026-11-17 | EMEA |
+| [ecog-io/josev](https://github.com/ecog-io/josev) | **Apache-2.0** | "Sistema operativo" comunitario para estaciones de carga V2G | 164 | 23 | 2026-11-16 | EMEA |
+| [SwitchEV/RISE-V2G](https://github.com/SwitchEV/RISE-V2G) | **MIT** | Implementación de referencia histórica de la interfaz V2G | 261 | 95 | ⚠️ 2025-12-19 | EMEA |
+| [matth-x/MicroOcpp](https://github.com/matth-x/MicroOcpp) | **MIT** | Cliente OCPP 1.6 / 2.0.1 **para microcontroladores** | 547 | 220 | ⚠️ 2025-12-04 | EMEA |
+
+### Flexibilidad doméstica EMEA (EEBus / SPINE / S2)
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [enbility/eebus-go](https://github.com/enbility/eebus-go) | **MIT** | Stack EEBUS en Go | 123 | 53 | 2026-11-06 | EMEA |
+| [NIBEGroup/openeebus](https://github.com/NIBEGroup/openeebus) | **Apache-2.0** | EEBUS (SHIP + SPINE) en C, de un fabricante de bombas de calor | 68 | 18 | 2026-11-12 | EMEA (Suecia) |
+| [volschin/eebus-ha-bridge](https://github.com/volschin/eebus-ha-bridge) | **MIT** | Puente EEBUS → Home Assistant con API gRPC | 41 | 9 | 2026-11-19 | EMEA |
+| [FlexMeasures/flexmeasures-s2](https://github.com/FlexMeasures/flexmeasures-s2) | **Apache-2.0** | Tooling de mensajes **S2 (EN 50491-12-2)** dentro de FlexMeasures | 2 | 0 | 2026-09-21 | EMEA |
+
+### Ingeniería de subestación IEC 61850 (la configuración, no el runtime)
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [openscd/open-scd](https://github.com/openscd/open-scd) | **Apache-2.0** | Editor de **SCL (IEC 61850-6 Ed2)**: descripción de configuración de subestación | 145 | 53 | ⚠️ 2026-01-12 (229 issues) | EMEA |
+
+**La licencia del stack 61850 se parte por capa:** runtime `libiec61850` **GPL-3.0**, ingeniería
+`open-scd` **Apache-2.0**. Para un producto, la pieza enlazable es la de ingeniería.
+
+### Forecasting de precio y foundation models de forecasting
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [jeslago/epftoolbox](https://github.com/jeslago/epftoolbox) | **Apache-2.0** | Benchmark abierto de **electricity price forecasting**: baseline obligatorio antes de prometer un modelo propio | 417 | 115 | 2026-05-18 | EMEA (España) |
+| [alliander-opensource/s4casting](https://github.com/alliander-opensource/s4casting) | **MPL-2.0** | Time series foundation models para forecasting energético (**Alliander**) | 12 | 2 | **2026-11-20** | EMEA |
+| [runyao-yu/PriceFM](https://github.com/runyao-yu/PriceFM) | ⚠️ **sin licencia** | Foundation model probabilístico de precio: 158 ★ y legalmente inusable | 158 | 13 | 2026-10-25 | — |
+
+### Eólica: recurso, activo de referencia y análisis
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [IEAWindSystems/IEA-15-240-RWT](https://github.com/IEAWindSystems/IEA-15-240-RWT) | **Apache-2.0** | Turbina de referencia de **15 MW** de IEA Wind: activo canónico para dimensionar | 314 | 161 | 2026-10-21 | Global |
+| [ebranlard/welib](https://github.com/ebranlard/welib) | **MIT** | Librería de análisis de turbinas y energía eólica (Python/Matlab) | 120 | 43 | 2026-11-10 | North America |
+
+### Geotermia: corrección de inventario sobre T26 (eran tres repos usables, no uno)
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [MassimoCimmino/pygfunction](https://github.com/MassimoCimmino/pygfunction) | **BSD-3-Clause** | Factores de respuesta térmica (g-functions) de intercambiadores geotérmicos de pozo | 75 | 26 | 2026-09-12 | North America (Canadá) |
+| [waiwera/waiwera](https://github.com/waiwera/waiwera) | LGPL-3.0 | Simulador paralelo de flujo geotérmico | 62 | 16 | **2026-11-20** | APAC (Nueva Zelanda) |
+
+`pygfunction` es **más permisivo y más estrellado que `GEOPHIRES-X`** y T26 no lo tenía. La tesis de
+T26 no cambia (base para estudio técnico-económico, no ecosistema de plataforma); cambia el
+inventario.
+
+### Carbono, semántica y seguridad de medición
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [thegreenwebfoundation/grid-intensity-go](https://github.com/thegreenwebfoundation/grid-intensity-go) | **Apache-2.0** | Intensidad de carbono como factor de decisión de dónde/cuándo correr cómputo (Go) | 84 | 10 | 2026-05-11 | EMEA |
+| [JamesTwallin/GridSeis](https://github.com/JamesTwallin/GridSeis) | **MIT** | Predice intensidad de carbono desde **frecuencia de red** (FFT + gradient boosting) | 31 | 1 | 2026-11-04 | EMEA (UK) |
+| [DataTreehouse/maplib](https://github.com/DataTreehouse/maplib) | **Apache-2.0** | Mapeo a grafos RDF: la pieza entre CIM/CGMES y una capa semántica consultable | 192 | 14 | **2026-11-20** | EMEA (Noruega) |
+| [rsmusllp/termineter](https://github.com/rsmusllp/termineter) | **BSD-3-Clause** | Framework de pruebas de **seguridad de medidores inteligentes** | 281 | 106 | 2026-03-17 | North America |
+| [WillCodeForCats/solaredge-modbus-multi](https://github.com/WillCodeForCats/solaredge-modbus-multi) | **Apache-2.0** | Integración Modbus/TCP completa de inversores SolarEdge | 343 | 29 | 2026-11-19 | North America |
+| [argonne-citadel/grid-stix](https://github.com/argonne-citadel/grid-stix) | GPL-3.0 | Inteligencia de amenazas en formato **STIX** para dominio de red (**Argonne National Laboratory**). 2 ★: señal de dirección | 2 | 1 | 2026-08-19 | North America |
+
+### Petrofísica / O&G: la capa de datos que faltaba
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [kinverarity1/lasio](https://github.com/kinverarity1/lasio) | **MIT** | Lectura/escritura de registros de pozo en formato **LAS** (Log ASCII Standard) | 411 | 175 | 2026-11-18 | APAC (Australia) |
+| [agilescientific/welly](https://github.com/agilescientific/welly) | **Apache-2.0** | Carga de pozos, registros wireline, calidad de log y ciencia de datos de subsuelo | 381 | 141 | ⚠️ 2025-07-16 | North America |
+
+Complementa T21 (el subsector O&G no es "todo GPL"): la **capa de datos** de subsuelo es MIT y
+Apache, y es lo que un agente necesita leer antes de razonar.
+
+### Anomalías ★/fork registradas (no citar como validados por comunidad)
+
+- [`Ali-Marandi/grid-resilience`](https://github.com/Ali-Marandi/grid-resilience) — MIT, análisis de resiliencia N-1 basado en grafos, **108 ★ y 0 forks**.
+- `KEV0143/Comparative-analysis-of-hourly-load-forecasting-using-PatchTST-TFT-NHiTS-and-CatBoost` — Apache-2.0, **1.764 ★ y 0 forks**.
+
+Consistente con T19. Un repo con 1.764 estrellas y cero forks no lo usó nadie.
+
 ---
 *Ver también `verticals/solutions.md` para plataformas verticales completas.*

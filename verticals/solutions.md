@@ -399,5 +399,60 @@ canales independientes":
 tienen nada que ver con medición eléctrica. Los términos que sí funcionan para medición siguen siendo
 `"smart meter"`, `DLMS`, `COSEM`, `rtlamr` y `"meter reading"`.
 
+
+## Añadidos del noveno pase (2026-11-20)
+
+### Operación de carga de EV: la plataforma vertical que esta KB tenía a medias
+
+El octavo pase catalogó el lado del **CSMS** (`steve` GPL-3.0, `EVerest` Apache-2.0, `evcc` MIT,
+`mobilityhouse/ocpp` MIT). Falta registrar como vertical la capa de **protocolo con el vehículo**,
+que es la que decide si el producto puede hacer Plug & Charge:
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | ★ | Región origen |
+|------------|----------|-----|-------|-------------|---|---------------|
+| **Josev (comunidad)** | **Apache-2.0** | [ecog-io/josev](https://github.com/ecog-io/josev) | Python | "Sistema operativo" de estación de carga V2G: orquesta ISO 15118 + OCPP en el poste | 164 | EMEA |
+| **iso15118** | **Apache-2.0** | [ecog-io/iso15118](https://github.com/ecog-io/iso15118) | Python | Pila ISO 15118 **-2, -20, -8**: Plug & Charge, autenticación por certificado, V2G | 250 | EMEA |
+
+**Decisión de arquitectura que esto habilita:** con `josev` + `iso15118` (ambos Apache-2.0) el
+operador de carga puede ofrecer Plug & Charge **sin licenciar una pila propietaria y sin tocar
+GPL**. Si además necesita back-office, `EVerest` (Apache-2.0) encaja permisivo y `steve` (GPL-3.0)
+exige el límite de proceso de la regla de arquitectura.
+
+### Flexibilidad doméstica como vertical en EMEA (EEBus + S2)
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | ★ | Región origen |
+|------------|----------|-----|-------|-------------|---|---------------|
+| **eebus-go** | **MIT** | [enbility/eebus-go](https://github.com/enbility/eebus-go) | Go | Stack EEBUS para hablar con bombas de calor, wallboxes y baterías domésticas | 123 | EMEA |
+| **openeebus** | **Apache-2.0** | [NIBEGroup/openeebus](https://github.com/NIBEGroup/openeebus) | C (SHIP + SPINE) | Igual, publicado por el **fabricante** NIBE: referencia de conformidad del lado del equipo | 68 | EMEA (Suecia) |
+| **FlexMeasures + S2** | **Apache-2.0** | [FlexMeasures/flexmeasures-s2](https://github.com/FlexMeasures/flexmeasures-s2) | Python | Mensajería **S2 (EN 50491-12-2)** sobre el motor FlexMeasures ya catalogado | 2 | EMEA |
+
+Que un **fabricante de bombas de calor** publique el stack de protocolo extiende T2 más allá de los
+operadores de red: en EMEA el integrador ya no necesita una pila EEBus propietaria para controlar un
+activo térmico doméstico. El contrapunto honesto: **el tooling del estándar S2 tiene 2 estrellas** —
+la norma está, la comunidad no.
+
+### Ingeniería de subestación como producto customizable
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | ★ | Región origen |
+|------------|----------|-----|-------|-------------|---|---------------|
+| **Open-SCD** | **Apache-2.0** | [openscd/open-scd](https://github.com/openscd/open-scd) | Web components / TypeScript | Editor de **SCL (IEC 61850-6 Ed2)**: configuración de subestación digital | 145 | EMEA |
+
+⚠️ **Estado real antes de proponerlo:** push **2026-01-12 (10 meses)** y **229 issues abiertas**. Es
+el único editor SCL abierto y es Apache-2.0, lo que lo hace la base correcta para una herramienta de
+ingeniería con capa agéntica encima; pero el mantenimiento hay que asumirlo en el presupuesto, no
+darlo por hecho.
+
+### Atlas del sistema eléctrico nacional (LATAM, México)
+
+| Plataforma | Licencia | URL | Stack | Caso de uso | ★ | Región origen |
+|------------|----------|-----|-------|-------------|---|---------------|
+| **atlas-sen** | **MIT** (API dice `NOASSERTION`; rescatada en `LICENSE` crudo: *"Copyright (c) 2026 Batu Energy"*) | [batuenergy/atlas-sen](https://github.com/batuenergy/atlas-sen) | Web interactiva | Atlas abierto del **Sistema Eléctrico Nacional de México**: generación y transmisión | 10 | **LATAM (México)** |
+
+Creado 2026-06-21, **push 2026-11-20 (hoy)**, respaldado por una empresa (Batu Energy). Es el
+**segundo repo institucional de origen LATAM** que esta KB registra en energía, después de
+`json-scada` / `OSHMI` (Brasil) — y el primero de México. Dato de contraste en la misma consulta:
+`AngelCarballoCremades/CENACE-Scraper-Dashboard` (scraper de CENACE, **sin licencia**, 7 ★) está
+**muerto desde 2021**. La vía viva para México es `atlas-sen`, no el scraper.
+
 ---
 *Ver `compose/patterns.md` para recetas concretas que combinan estas plataformas con los agentes.*

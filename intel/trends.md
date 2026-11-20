@@ -728,6 +728,116 @@ de licencias habría descartado un modelo nacional europeo completo del Politecn
 **Regla:** ante `NOASSERTION` en un modelo energético nacional, leer el `LICENSE` crudo **entero**, no
 sus primeras líneas: en TEMOA-Italy la parte MIT aparece *después* de la parte Creative Commons.
 
+## T40 — La capa de autorización humana dejó de ser una frase de README y es código ejecutable
+
+T28 registró que las tres regiones convergieron en la misma frase: *la IA asiste, no decide*. Este
+pase encontró la **primera implementación** de esa frase en energía:
+[`Ninemilo/OpenVigil`](https://github.com/Ninemilo/OpenVigil) (**Apache-2.0**, 180 ★, 37 forks)
+separa **22 agentes en tres capas — decisión, revisión y ejecución** — y hace que la persona
+autorice las acciones de alto riesgo, con orden de trabajo, evidencia de campo y traza auditable.
+
+Lo que lo hace citable no es su precisión —no publica ninguna— sino que **marca UNVERIFIED** la
+exactitud de campo, la calibración, la operación en sombra y la calificación de release, y admite
+que la salida de su demo viene de **fixtures deterministas, no de modelos en vivo**.
+
+**Tercera confirmación del patrón en esta rotación**: automotive encontró `LionDriver` publicando
+**42 defeaters abiertos** y `wtfault-scanner` con su *"never makes anything up"*; energy encuentra
+`OpenVigil`. **Publicar el propio límite se consolidó como movimiento de credibilidad en industrias
+reguladas** — y es replicable: un entregable de Globant que publique su propia matriz de lo no
+verificado compite mejor, no peor.
+
+## T41 — El plazo regulatorio de EMEA se movió, y la noticia útil es que la prórroga no es firme
+
+El *Digital Omnibus* (acuerdo político del **7 de mayo de 2026**) corre las obligaciones de **alto
+riesgo del Anexo III** —donde cae la mayor parte de la IA operativa de energía— del **2 de agosto de
+2026** al **2 de diciembre de 2027**. Pero **hasta la adopción y publicación formales rigen las
+fechas originales**.
+
+Las dos mitades de esa frase tienen que viajar juntas, y de ahí sale el servicio:
+
+- **Mal asesoramiento**: "hay prórroga, tienen hasta diciembre de 2027".
+- **Asesoramiento correcto**: preparar el expediente contra la **fecha original** y tratar la
+  prórroga como **margen de ejecución**, no como plan.
+
+Esto además **desactiva una confusión entre regiones**: varias fuentes latinoamericanas siguen
+advirtiendo del alcance extraterritorial del AI Act con la fecha del 2 de agosto de 2026. No están
+equivocadas sobre la vigencia; están incompletas sobre el Anexo III. Un exportador LATAM que sirve
+usuarios en la UE necesita **las dos fechas y el estado de la prórroga**, no una.
+
+## T42 — Tres gaps de esta KB ahora tienen número, y dos de ellos están debajo de recetas ya escritas
+
+La diferencia entre "no encontramos nada" y "la oferta abierta es un repo" es presupuestable. Este
+pase midió:
+
+| Gap | Consulta | Resultado | Receta afectada |
+|-----|----------|-----------|-----------------|
+| **Optimización de BESS** | `"battery energy storage" in:name,description stars:>25` | **total = 1** (`DBESS-Arbitrage`, Apache-2.0, 26 ★). El término `BESS` lo ocupan un switch de Berkeley, un overclocker de GPU y funciones de Bessel | **Receta 13** se apoya en una base de un repo → presupuestar como **ingeniería de modelo**, no integración |
+| **Cumplimiento NERC CIP** | `"NERC CIP" in:name,description,readme` | **573 resultados, ninguno del sector**. Único adyacente: `argonne-citadel/grid-stix` (GPL-3.0, **2 ★**, Argonne) | **Receta 29** corre contra el plazo de **diciembre de 2026** con oferta abierta **cero** → el expediente es el entregable |
+| **MDM / meter-to-cash** | `"meter data management"` | 155 resultados; el mejor tiene **7 ★** y dos años sin push | Confirma (no reemplaza) la conclusión del octavo pase en `verticals/solutions.md` |
+
+El único optimizador sectorial de baterías con tracción, `FlexPwr/bess-optimizer` (118 ★), tiene
+además **licencia copyleft de familia GPL** (leída en `LICENSE` crudo; la API dice `NOASSERTION`) y
+**trece meses sin push**. El gap no es de visibilidad: es de oferta.
+
+## T43 — Refinamiento operativo de T36: una consulta con `OR` entre frases entrecomilladas no mide nada
+
+T36 estableció que lo que abre una región es el **protocolo**, no la norma. Este pase encontró
+**cómo se rompe la consulta** al aplicarlo, y es un error silencioso porque devuelve miles de
+resultados en lugar de cero:
+
+| Consulta | Resultados | Primeros hits |
+|----------|-----------|---------------|
+| `EEBus OR "EN 50491" OR "S2 protocol" flexibility` | **1.890.158** | `sindresorhus/awesome`, `tensorflow/tensorflow` |
+| `"Green Button" OR "NERC CIP"` | **355.887** | `30-Days-Of-Python`, un toolkit de macOS |
+| `EEBus` (término único) | **229** | `evcc`, `eebus-go`, `openeebus` — **la categoría real** |
+| `"NERC CIP"` (término único) | **573** | listas de cumplimiento genéricas |
+
+**Regla operativa, válida para cualquier industria de esta rotación: un término por consulta.** El
+`OR` entre frases entrecomilladas diluye el filtro hasta volverlo ruido, y el resultado *parece*
+exitoso porque hay miles de filas.
+
+**Corolario distinto y también medido:** `"Green Button"` **a solas** sigue devolviendo 355.315
+resultados, porque sus dos palabras son demasiado comunes. T35 decía que un cero de la API no es un
+gap del sector hasta reescribir la consulta; T43 añade el caso contrario: **hay nombres de protocolo
+real que GitHub no puede buscar de ninguna forma**. Para esos, la vía es la organización o el
+proveedor, no el término.
+
+## T44 — La frontera del canal de verificación está en el endpoint, no en el host
+
+Precisión sobre lo que el pase de automotive dejó escrito ("`gh api search/repositories` ES la API
+REST"). Verificado por error y corregido en este pase:
+
+- **`gh api search/repositories` NO está limitado al alcance de la sesión**: resuelve cualquier repo
+  público con el calificador `repo:owner/name`, y `license.spdx_id`, `stargazers_count`,
+  `forks_count`, `pushed_at`, `created_at` y `open_issues_count` son campos de primera mano.
+- **`gh api repos/{owner}/{repo}` SÍ está limitado**: devuelve un error JSON pidiendo `add_repo`.
+- **Consecuencia práctica no obvia:** como no se puede leer `default_branch`, la verificación de un
+  `LICENSE` crudo debe **probar `main`, luego `master`, luego `develop`**. `MyEMS/myems` se rescató
+  como **MIT** sólo por el *fallback* a `master` — en `main` el archivo devuelve 404. Un pase que
+  sólo pruebe `main` concluirá "sin licencia" sobre repos que sí la tienen.
+
+## T45 — "Sin licencia" ya bloquea la única implementación de un protocolo entero
+
+T20 definió "sin licencia" como categoría bloqueada. Este pase encontró el caso donde eso cuesta una
+capacidad completa, no un repo:
+
+- [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) — **la única
+  implementación de OpenADR 3.0** encontrada (VTN + VEN en Rust, 107 ★, 30 forks, push 2026-11-20)
+  y **no tiene archivo de licencia** en `main`, `master` ni `develop`.
+- Su hermano [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python) es
+  **Apache-2.0** (161 ★) pero implementa **sólo OpenADR 2.0b**.
+
+**Resultado: OpenADR 3.0 no tiene implementación abierta licenciada.** Para una receta de respuesta
+a la demanda en North America —donde OpenADR es el protocolo de referencia— eso significa que el
+camino permisivo es **2.0b**, o build propio, o negociación de licencia con el proyecto. Es una
+decisión de arquitectura, y hasta este pase estaba invisible.
+
+Otras piezas que entran en la misma categoría bloqueada este pase: `runyao-yu/PriceFM` (158 ★,
+foundation model de precio), `california-energy-commission/MIDAS` (dato tarifario **oficial** de un
+organismo público de California, 9 ★) y `pnoker/iot-dc3`, que no está sin licencia sino con una
+**propia** — `LICENSE.txt` abre con *"IoT DC3 License Notice, Version: 2026.5"*, lo que exige
+revisión legal y no es asimilable a una licencia estándar.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
@@ -884,6 +994,42 @@ existe es tan dañino como uno que no se declara.
   **todo secundario**. `eur-lex.europa.eu` sigue devolviendo 403. Sirve para planear; **no para
   firmar**.
 
+### Estado al cierre del noveno pase (2026-11-20)
+
+**Cerrados o acotados en este pase**
+
+- **Protocolo vehículo↔cargador**: cerrado. `ecog-io/iso15118` (Apache-2.0, 250 ★, 142 forks) e
+  `ecog-io/josev` (Apache-2.0, 164 ★) cubren ISO 15118 -2/-20/-8. Con la advertencia de que
+  `RISE-V2G` y `MicroOcpp`, las piezas más citadas, llevan ~11 meses sin push.
+- **Flexibilidad doméstica EMEA**: cerrado con `enbility/eebus-go` (MIT) y `NIBEGroup/openeebus`
+  (Apache-2.0). Queda **acotado** el estándar **S2**: existe tooling (`flexmeasures-s2`,
+  Apache-2.0) y tiene **2 estrellas**.
+- **Ingeniería IEC 61850 (configuración SCL)**: cerrado con `openscd/open-scd` (Apache-2.0, 145 ★),
+  acotado por mantenimiento: 10 meses sin push, 229 issues.
+- **Benchmark de forecasting de precio**: cerrado con `jeslago/epftoolbox` (Apache-2.0, 417 ★).
+- **Geotermia**: inventario corregido — tres repos usables, no uno (`pygfunction` BSD-3 75 ★,
+  `waiwera` LGPL-3.0 62 ★, `GEOPHIRES-X` MIT 67 ★). La tesis de T26 no cambia.
+- **Capa de datos de subsuelo (O&G)**: cerrado con `lasio` (MIT, 411 ★) y `welly` (Apache-2.0,
+  381 ★, sin push desde 2025-07).
+- **LATAM**: ya son **dos** repos institucionales, no uno. `batuenergy/atlas-sen` (**MIT**
+  rescatada, México, push de hoy) se suma a `json-scada`/`OSHMI` (Brasil).
+
+**Abiertos, ahora con el límite medido**
+
+- **Optimización de BESS**: **un** repo abierto con >25 ★ en toda la categoría. Gap de oferta, no de
+  búsqueda.
+- **Cumplimiento NERC CIP**: **cero** herramientas del sector frente al plazo de diciembre de 2026.
+- **MDM / meter-to-cash**: el mejor repo tiene **7 ★** y dos años sin push.
+- **OpenADR 3.0**: sin implementación abierta **licenciada** (T45). El camino permisivo es 2.0b.
+- **Foundation models de red descargables**: `gridfm-graphkit` (Apache-2.0) **no publica
+  checkpoint preentrenado**. Hay framework de entrenamiento, no modelo listo.
+- **Relación DOE "GridFM 2.0" ↔ organización GitHub `gridfm/*`**: **no verificada**. Adyacente por
+  nombre y tema; no afirmarla en material de cliente.
+- **`Mcp-Brasil/mcp-brasil` (MIT, 1.867 ★) ¿incluye APIs energéticas?**: no verificado. Tarea
+  barata y de alto retorno para el próximo pase.
+- **Protocolos que GitHub no puede buscar**: "Green Button" devuelve 355.315 resultados a solas.
+  Para esos, la vía es la organización o el proveedor (T43).
+
 ---
-*Investigado 2026-11-20 en ocho pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en nueve pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

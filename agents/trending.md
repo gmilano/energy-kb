@@ -9,6 +9,114 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 9 (el agente que opera un activo real: 22 agentes, capa de autorización humana, y publica que no está verificado)
+
+**Titular del pase: apareció el primer repo de esta KB que implementa T28 ("la IA asiste, no decide")
+como código y no como frase de README — y que publica su propio estado como NO VERIFICADO.**
+[`Ninemilo/OpenVigil`](https://github.com/Ninemilo/OpenVigil) (**Apache-2.0** confirmada en `LICENSE`
+crudo, 180 ★, 37 forks, creado 2026-09-04, push 2026-11-17, **0 issues abiertas**) es una plataforma
+de O&M de parque eólico que encadena monitoreo → alarma → diagnóstico → **aprobación humana** →
+orden de trabajo → evidencia de campo → actualización de conocimiento en un flujo auditable.
+
+### Qué tiene dentro, verificado leyendo el repo
+
+| Capa | Implementación |
+|------|----------------|
+| Agentes | **22 agentes** en tres capas: decisión, revisión, ejecución. Runtime de agentes con **16 tools** |
+| Orquestación | **LangGraph** en backend Python + catálogo SQL gobernado con **18 tools** |
+| Modelos | **LiteLLM**; proveedores nombrados: SiliconFlow, Alibaba Bailian, DeepSeek (**origen APAC**) |
+| Datos | SCADA, CMS, meteorología, alarmas manuales; conectores SCADA / MQTT / HTTPS / **EAM** |
+| Backend | FastAPI, PostgreSQL + **TimescaleDB** + **pgvector**, Redis, Dramatiq, MinIO, **Neo4j** |
+| Workers | `pyOMA2` (análisis modal estructural) y parser PDF/OCR basado en **Docling** |
+| Benchmark | **CARE v6** offline (Fraunhofer IEE): 95 eventos, 36 activos, **CC BY-SA 4.0 y NO incluido** en el repo — lo aporta el operador |
+| Frontend | React 19, vinext, Cloudflare Worker + D1 (sólo demo) |
+
+### Por qué es el hallazgo del pase, y qué NO se puede decir de él
+
+Lo valioso es la **postura**, no la precisión: el propio README declara que es una *"production
+candidate implementation, not a system already deployed in production"*, y marca **UNVERIFIED** la
+exactitud de campo, la calibración real, la operación en sombra y la calificación formal de release.
+La salida de la demo proviene de **fixtures deterministas, no de modelos en vivo**, y no hay
+releases publicados. Documentación en **ocho idiomas**.
+
+- **Usar como plantilla** del patrón de autorización: la IA propone alternativas, **la persona
+  autoriza las acciones de alto riesgo**. Es exactamente la regla de arquitectura de esta KB, ya
+  escrita en código y con capa de revisión separada de la de ejecución.
+- **No citar ninguna cifra de desempeño**: no publica ninguna. Es un hallazgo de *viabilidad y
+  diseño*, no de *ranking*. (Misma disciplina que el pase de automotive aplicó a `drivingbench`.)
+- **Riesgos medidos**: 180 ★ y **0 issues abiertas** en 2,5 meses con 63 commits sugieren velocidad
+  de autor único; **no nombra ningún protocolo industrial** (ni OPC UA ni IEC 61400-25), y los
+  contratos reales de SCADA/CMS/EAM siguen pendientes de pruebas de aceptación conjuntas. El gemelo
+  digital es una **vista operativa 2D, no una simulación física**.
+
+**Lectura de patrón, tercera confirmación en esta rotación:** automotive encontró `LionDriver`
+publicando 42 defeaters abiertos; automotive encontró `wtfault-scanner` con "never makes anything
+up"; energy encuentra `OpenVigil` marcando UNVERIFIED lo que no probó. **Publicar el propio límite
+se consolidó como movimiento de credibilidad en industrias reguladas.**
+
+### La capa ISO 15118 / Plug&Charge: esta KB tenía el lado del CSMS y le faltaba el del vehículo
+
+El séptimo pase catalogó la carga de EV como la categoría más grande del open source energético
+(T31) con `evcc`, `EVerest`, `steve` y `mobilityhouse/ocpp`. Faltaba el **protocolo
+vehículo↔cargador**. Buscando `"ISO 15118"` como término único:
+
+| Repo | Licencia | ★ | Forks | Push | Qué aporta |
+|------|----------|---|-------|------|-----------|
+| [ecog-io/iso15118](https://github.com/ecog-io/iso15118) | **Apache-2.0** | 250 | 142 | 2026-11-17 | Implementación de ISO 15118 **-2, -20 y -8**. Ratio fork:★ = **0,57**, señal de construcción, no de estrella |
+| [SwitchEV/RISE-V2G](https://github.com/SwitchEV/RISE-V2G) | **MIT** | 261 | 95 | ⚠️ 2025-12-19 | La implementación de referencia histórica de la interfaz V2G. **11 meses sin push** |
+| [ecog-io/josev](https://github.com/ecog-io/josev) | **Apache-2.0** | 164 | 23 | 2026-11-16 | Versión comunitaria de Josev: "sistema operativo" para estaciones de carga V2G |
+| [matth-x/MicroOcpp](https://github.com/matth-x/MicroOcpp) | **MIT** | 547 | 220 | ⚠️ 2025-12-04 | Cliente OCPP 1.6 / 2.0.1 **para microcontroladores**. 135 issues abiertas y casi un año sin push |
+
+**Lectura honesta: la capa de protocolo existe, es permisiva, y la mitad se está quedando vieja.**
+`ecog-io/*` es lo vivo (push de noviembre de 2026); `RISE-V2G` y `MicroOcpp` son las piezas más
+citadas de la categoría y llevan ~11 meses sin movimiento. Para un SoW: partir de `ecog-io`, usar
+`RISE-V2G` como referencia de lectura, y **no** comprometer `MicroOcpp` en firmware sin antes
+auditar sus 135 issues.
+
+### EEBus/SPINE: el protocolo de flexibilidad doméstica de EMEA, y un fabricante publicando el stack
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [enbility/eebus-go](https://github.com/enbility/eebus-go) | **MIT** | 123 | 53 | 2026-11-06 | Implementación de EEBUS en Go; la base viva de la categoría |
+| [NIBEGroup/openeebus](https://github.com/NIBEGroup/openeebus) | **Apache-2.0** | 68 | 18 | 2026-11-12 | EEBUS (**SHIP y SPINE**) en C, publicado por **NIBE Group**, fabricante sueco de bombas de calor |
+| [volschin/eebus-ha-bridge](https://github.com/volschin/eebus-ha-bridge) | **MIT** | 41 | 9 | 2026-11-19 | Puente EEBUS→Home Assistant sobre `eebus-go`, con API gRPC |
+| [FlexMeasures/flexmeasures-s2](https://github.com/FlexMeasures/flexmeasures-s2) | **Apache-2.0** | 2 | 0 | 2026-09-21 | Tooling para mensajes **S2** (EN 50491-12-2) dentro de FlexMeasures |
+
+**`NIBEGroup/openeebus` extiende T2 un escalón.** T2 decía que *los operadores de red* se volvieron
+proveedores de open source (RTE, Alliander). Aquí el que publica el stack de protocolo es un
+**fabricante de equipo**. La consecuencia comercial: en EMEA el integrador ya no necesita licenciar
+una pila EEBus propietaria para hablar con una bomba de calor.
+
+Y el dato incómodo del mismo cuadro: **el estándar S2 de flexibilidad tiene tooling, y tiene 2
+estrellas.** La norma existe, la comunidad todavía no.
+
+### Dos "resultados de búsqueda" que no eran hallazgos
+
+La búsqueda web de este pase volvió a presentar `DatariusAI/AI-in-Energy` como *"daily-refreshed hub
+of the latest AI, ML and data science research and code for energy and utilities"*. La API dice:
+**0 ★, 0 forks, sin licencia, creado 2026-10-08** — y el octavo pase **ya lo había catalogado con
+esa misma advertencia** en `repos/foundations.md`. Se registra aquí sólo como confirmación
+independiente de que el buscador describe el README y no la tracción.
+
+Lo nuevo de este pase en la misma categoría: `ishandutta2007/Awesome-Energy-Utilities-CRM` (**MIT,
+0 ★**, creado 2026-10-12), única pista hacia la capa meter-to-cash y sin tracción; y
+`AI4Electricity/Awesome-AI-for-Electricity` (**MIT**, 153 ★), que **no tuvo push desde 2025-03-30:
+20 meses**.
+
+Los índices vivos siguen siendo los dos que esta KB ya tenía:
+[`protontypes/open-sustainable-technology`](https://github.com/protontypes/open-sustainable-technology)
+(CC-BY-4.0, 2.586 ★ — aparece en **todas** las consultas de protocolo de este pase, lo que confirma
+que es el mapa del espacio) y [`ps-wiki/best-of-ps`](https://github.com/ps-wiki/best-of-ps)
+(CC-BY-SA-4.0, 297 ★, push 2026-11-20, ranking semanal).
+
+### Anomalías ★/fork que confirman T19 en esta muestra
+
+- [`Ali-Marandi/grid-resilience`](https://github.com/Ali-Marandi/grid-resilience) — MIT, **108 ★ y 0 forks**.
+- `KEV0143/Comparative-analysis-of-hourly-load-forecasting-using-PatchTST-TFT-NHiTS-and-CatBoost` — Apache-2.0, **1.764 ★ y 0 forks**.
+
+Ninguno de los dos se cita como validado por comunidad. Un repo con mil setecientas estrellas y
+cero forks no lo usó nadie.
+
 ## 2026-11-20 — pase 8 (el método de "buscar la norma local" no generaliza, y la razón es utilizable)
 
 **Titular del pase: la lección que abrió APAC en el pase 7 no se exporta a EMEA ni a LATAM, y el

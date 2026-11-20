@@ -535,5 +535,59 @@ concesión expresa es copyright exclusivo del autor. Se registra porque demuestr
 "MCP sobre norma de conexión local" ya se le ocurrió a alguien**, y está libre: es un hueco de
 producto, no un competidor.
 
+
+## Hallazgos del noveno pase (2026-11-20): el agente que opera un activo, y la capa de protocolo del vehículo
+
+### `OpenVigil`: primer agente de esta KB que implementa la autorización humana como código
+
+| Nombre | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|--------|----------|-------------|---|-------|------|---------------|
+| [Ninemilo/OpenVigil](https://github.com/Ninemilo/OpenVigil) | **Apache-2.0** (verificada en `LICENSE` crudo) | O&M de parque eólico de extremo a extremo: **22 agentes** en capas de decisión / revisión / ejecución, runtime de 16 tools, LangGraph + catálogo SQL gobernado de 18 tools, conectores SCADA/MQTT/HTTPS/EAM. La IA propone, **la persona autoriza lo de alto riesgo** | 180 | 37 | 2026-11-17 | **APAC** (LiteLLM → SiliconFlow / Alibaba Bailian / DeepSeek) |
+
+**Cómo usarlo y cómo no.** Es la **plantilla** del patrón de autorización que la regla de
+arquitectura de esta KB exige, ya escrita en código y con la capa de revisión separada de la de
+ejecución. Pero su propio README marca **UNVERIFIED** la exactitud de campo, la calibración real, la
+operación en sombra y la calificación de release; la demo sale de **fixtures deterministas, no de
+modelos en vivo**; no hay releases publicados; y **no nombra ningún protocolo industrial** (ni OPC
+UA ni IEC 61400-25). Benchmark **CARE v6** de Fraunhofer IEE (95 eventos, 36 activos) **no incluido**
+en el repo y bajo CC BY-SA 4.0: lo aporta el operador.
+
+→ Hallazgo de **viabilidad y diseño**, no de ranking. **No citar cifras de desempeño: no publica
+ninguna.** Y verificar mantenimiento antes de depender: 180 ★ con **0 issues abiertas** en 2,5 meses
+es perfil de autor único.
+
+### Agentes y tooling agéntico: filas nuevas verificadas
+
+| Nombre | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|--------|----------|-------------|---|-------|------|---------------|
+| [ecog-io/iso15118](https://github.com/ecog-io/iso15118) | **Apache-2.0** | Implementación de **ISO 15118 -2, -20 y -8** (Plug & Charge). Ratio fork:★ de **0,57** = se construye sobre él | 250 | 142 | 2026-11-17 | EMEA |
+| [ecog-io/josev](https://github.com/ecog-io/josev) | **Apache-2.0** | Versión comunitaria de Josev: sistema operativo para estaciones de carga V2G | 164 | 23 | 2026-11-16 | EMEA |
+| [enbility/eebus-go](https://github.com/enbility/eebus-go) | **MIT** | Implementación de **EEBUS** en Go: el protocolo de flexibilidad doméstica de EMEA | 123 | 53 | 2026-11-06 | EMEA |
+| [NIBEGroup/openeebus](https://github.com/NIBEGroup/openeebus) | **Apache-2.0** | EEBUS (**SHIP y SPINE**) en C, publicado por un **fabricante de bombas de calor** (NIBE Group) | 68 | 18 | 2026-11-12 | EMEA (Suecia) |
+| [vinerya/virtual-power-plant](https://github.com/vinerya/virtual-power-plant) | **MIT** | Librería de gestión, simulación e investigación de **planta virtual (VPP)** | 96 | 26 | 2026-11-16 | Global |
+| [jeslago/epftoolbox](https://github.com/jeslago/epftoolbox) | **Apache-2.0** | Benchmark y toolbox de **forecasting de precio eléctrico**: la vara de medir antes de prometer un modelo propio | 417 | 115 | 2026-05-18 | EMEA (España) |
+| [alliander-opensource/s4casting](https://github.com/alliander-opensource/s4casting) | **MPL-2.0** | **Time series foundation models** para forecasting energético, publicado por el DSO **Alliander** | 12 | 2 | **2026-11-20** | EMEA (Países Bajos) |
+
+### Piezas que NO se pueden proponer, y por qué
+
+| Pieza | Problema | Consecuencia |
+|-------|----------|--------------|
+| [OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs) | **Ningún archivo de licencia** en `main`, `master` ni `develop` (107 ★, 30 forks, push 2026-11-20) | Es la **única implementación de OpenADR 3.0** encontrada y es legalmente inusable. `openleadr-python` (Apache-2.0, 161 ★) sólo cubre **2.0b** → **OpenADR 3.0 no tiene implementación abierta licenciada** |
+| [runyao-yu/PriceFM](https://github.com/runyao-yu/PriceFM) | Sin licencia (158 ★) | Foundation model de precio, bloqueado |
+| [california-energy-commission/MIDAS](https://github.com/california-energy-commission/MIDAS) | Sin licencia (9 ★) | Dato tarifario **oficial** de la California Energy Commission, no redistribuible |
+| `pnoker/iot-dc3` *(ya en esta tabla desde un pase previo)* | `LICENSE.txt` crudo = **"IoT DC3 License Notice, Version: 2026.5"**, licencia **propia** | No es licencia estándar: revisión legal obligatoria antes de cualquier uso. La API lo informa como `NOASSERTION` |
+| [matth-x/MicroOcpp](https://github.com/matth-x/MicroOcpp) | MIT pero **push 2025-12-04** y 135 issues abiertas | La pieza OCPP para microcontroladores más citada está parada: no comprometerla en firmware sin auditoría |
+| [SwitchEV/RISE-V2G](https://github.com/SwitchEV/RISE-V2G) | MIT pero **push 2025-12-19** | Referencia de lectura, no base de producto |
+
+### Confirmación independiente de las correcciones del octavo pase
+
+Este pase re-consultó por su cuenta `CityLearn`, `Grid2Op`, `openSTEF`, `PowerGridworld`, `sinergym`
+y `carbon-aware-sdk` sin mirar primero la tabla de correcciones del octavo pase, y **obtuvo los
+mismos valores** que esa tabla ya registra (662 ★; 494 ★ MPL-2.0; 183-184 ★ MPL-2.0; 188 ★;
+242 ★; 600 ★). No es un hallazgo nuevo: es la verificación de que la corrección del octavo pase
+es correcta y reproducible. Dos licencias más quedaron confirmadas contra `LICENSE` crudo:
+**`e2nIEE/pandapower` es BSD-3-Clause** (Univ. de Kassel + Fraunhofer IEE) y **`Akkudoktor-EOS/EOS`
+es Apache-2.0**, pese a que la API informa `NOASSERTION` en ambos — otra instancia de T39.
+
 ---
-*Verificado contra GitHub REST API el 2026-11-20. Re-verificar antes de citar en una propuesta.*
+*Verificado contra GitHub REST API el 2026-11-20 (noveno pase). Re-verificar antes de citar en una propuesta.*

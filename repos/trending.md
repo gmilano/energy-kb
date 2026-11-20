@@ -9,6 +9,128 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 9 (tres gaps medidos con número, y la frontera exacta del canal de verificación)
+
+**Titular del pase: la oferta nueva está en las capas de protocolo (ISO 15118, EEBus, IEC 61850-6) y
+la escasez está donde esta KB ya tiene recetas escritas — almacenamiento, medición y cumplimiento.**
+Las tres se midieron con consulta y número, no se dedujeron.
+
+### Gap 1 — Optimización de baterías: la oferta abierta es **un** repo
+
+| Consulta | Resultados | Lo real |
+|----------|-----------|---------|
+| `"battery energy storage" in:name,description stars:>25` | **total = 1** | [`BigdogManLuo/DBESS-Arbitrage`](https://github.com/BigdogManLuo/DBESS-Arbitrage) (Apache-2.0, 26 ★, push 2025-11-19) |
+| `BESS in:name,description stars:>25` | 22 | **colisión total de nombres**: un switch de Berkeley (333 ★), una herramienta de overclock de GPU Snapdragon (1.803 ★) y funciones de Bessel (91 ★) |
+
+El único optimizador sectorial con tracción es
+[`FlexPwr/bess-optimizer`](https://github.com/FlexPwr/bess-optimizer) (118 ★, 27 forks): modelo de
+tres mercados en `pyomo` de CF Flex Power GmbH — y tiene **dos problemas**: la API dice
+`NOASSERTION` y el `LICENSE` crudo abre con *"This program is free software: you can redistribute it
+and/or modify"*, es decir **copyleft de familia GPL**, no permisivo; y su último push es
+**2025-10-02, trece meses**.
+
+**Consecuencia directa para esta KB:** la *Receta 13 — Dimensionamiento y garantía de vida de un
+BESS* se apoya en una base de oferta de un repo. Presupuestarla como **ingeniería de modelo**, no
+como integración de producto, y no prometer un acelerador reutilizable que no existe.
+
+### Gap 2 — Medición y facturación: confirmación cuantificada de lo que el octavo pase ya había acotado
+
+**Esto no es un hallazgo nuevo: `verticals/solutions.md` ya tiene la capa meter-to-cash resuelta**
+por el octavo pase (`killbill` Apache-2.0 5.859 ★ como motor genérico, `navariltd/utility-billing`
+AGPL-3.0 sobre ERPNext como única app sectorial, más la trampa de término *MDM = mobile device
+management*). Lo que este pase añade son **los números de la escasez**, que antes no estaban:
+
+| Consulta | Resultados | Lo mejor que aparece |
+|----------|-----------|---------------------|
+| `"meter data management" in:name,description,readme` | 155 | [`aws-solutions-library-samples/guidance-for-meter-data-analytics-on-aws`](https://github.com/aws-solutions-library-samples/guidance-for-meter-data-analytics-on-aws) — Apache-2.0, **7 ★**, push 2024-08-09 |
+| `utility billing in:name,description stars:>30` | **5** | `navariltd/utility-billing` (AGPL-3.0, 70 ★) es el único sectorial; el resto son facturación genérica o falsos positivos |
+
+Con el término correcto (`"meter data management"`, no `MDM`) la búsqueda devuelve 155 repos y el
+mejor tiene **7 estrellas y dos años sin push**. Queda medido: **no hay plataforma MDM abierta**, y
+la conclusión de producto del octavo pase (ERPNext+AGPL o Kill Bill+Apache con el modelo de datos
+energético por construir) es la correcta por ausencia de alternativa, no por preferencia.
+
+### Gap 3 — NERC CIP: 573 resultados, cero herramientas del sector
+
+`"NERC CIP" in:name,description,readme` → **573 resultados y ninguno energético**. Lo que aparece
+arriba son listas genéricas de cumplimiento: `awesome-opa` (905 ★), `awesome-compliance` (111 ★),
+`aws-guard-rules-registry` (146 ★, muerto desde 2024).
+
+Esto importa porque esta KB ya tiene la *Receta 29 — Programa de cumplimiento NERC para carga de
+datacenter* apuntada contra el plazo de **diciembre de 2026** de los estándares de carga
+computacional. **La oferta abierta contra ese plazo es cero**: el expediente es trabajo de
+consultoría, no un repo que forkear. Único hallazgo adyacente real:
+[`argonne-citadel/grid-stix`](https://github.com/argonne-citadel/grid-stix) (GPL-3.0, 2 ★, push
+2026-08-19), de **Argonne National Laboratory**, que lleva inteligencia de amenazas en formato STIX
+al dominio de red. Dos estrellas: es una señal de dirección, no una base.
+
+### Oferta nueva verificada este pase
+
+**Ingeniería IEC 61850 (no el runtime, la configuración):**
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [openscd/open-scd](https://github.com/openscd/open-scd) | **Apache-2.0** | 145 | 53 | ⚠️ 2026-01-12 | Editor de **SCL (IEC 61850-6 Ed2)**: la configuración de subestación. **10 meses sin push y 229 issues abiertas** |
+
+El perfil de licencia del stack 61850 **se parte en dos**: el runtime
+([`mz-automation/libiec61850`](https://github.com/mz-automation/libiec61850), **GPL-3.0**, 1.254 ★)
+y la ingeniería (`open-scd`, **Apache-2.0**). Para un producto, la pieza enlazable es la de
+ingeniería; la de runtime obliga al límite de proceso que ya fija la regla de arquitectura.
+
+**Forecasting de precio: hay benchmark permisivo, y los foundation models están bloqueados o vacíos:**
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [jeslago/epftoolbox](https://github.com/jeslago/epftoolbox) | **Apache-2.0** | 417 | 115 | 2026-05-18 | Benchmark y toolbox de **electricity price forecasting**: la vara académica de la categoría |
+| [runyao-yu/PriceFM](https://github.com/runyao-yu/PriceFM) | ⚠️ **sin licencia** | 158 | 13 | 2026-10-25 | Foundation model probabilístico de precio. 158 ★ y legalmente inusable |
+| [alliander-opensource/s4casting](https://github.com/alliander-opensource/s4casting) | **MPL-2.0** | 12 | 2 | **2026-11-20** | Time series foundation models para forecasting energético, de **Alliander** |
+
+`s4casting` con 12 ★ es la tercera aparición de Alliander en esta KB (`power-grid-model`,
+`openstef`, ahora `s4casting`): **T2 sigue siendo el hallazgo estructural más rentable de esta KB**,
+y la pieza recién publicada por un DSO vale más que un repo de 1.000 ★ sin dueño institucional.
+
+**Geotermia: T26 decía "un solo repo usable" y son tres (corrección):**
+
+| Repo | Licencia | ★ | Forks | Push |
+|------|----------|---|-------|------|
+| [MassimoCimmino/pygfunction](https://github.com/MassimoCimmino/pygfunction) | **BSD-3-Clause** | 75 | 26 | 2026-09-12 |
+| [waiwera/waiwera](https://github.com/waiwera/waiwera) | LGPL-3.0 | 62 | 16 | **2026-11-20** |
+| `NatLabRockies/GEOPHIRES-X` *(ya catalogado)* | MIT | 67 | 49 | 2026-11-19 |
+
+`pygfunction` (factores de respuesta térmica de intercambiadores geotérmicos) es **más permisivo y
+más estrellado que GEOPHIRES-X**, y T26 no lo tenía. `waiwera` es un simulador paralelo de flujo
+geotérmico con push de hoy. El veredicto de T26 ("base para estudio técnico-económico, no
+ecosistema para plataforma") **se mantiene**; la corrección es de inventario, no de tesis.
+
+**Eólica, piezas de recurso y modelo que faltaban:**
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [IEAWindSystems/IEA-15-240-RWT](https://github.com/IEAWindSystems/IEA-15-240-RWT) | **Apache-2.0** | 314 | 161 | 2026-10-21 | Turbina de referencia de **15 MW** de IEA Wind: el activo de referencia para dimensionar |
+| [ebranlard/welib](https://github.com/ebranlard/welib) | **MIT** | 120 | 43 | 2026-11-10 | Librería de energía eólica (Python/Matlab) para análisis de turbinas |
+
+**Carbono y señal de red:**
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [thegreenwebfoundation/grid-intensity-go](https://github.com/thegreenwebfoundation/grid-intensity-go) | **Apache-2.0** | 84 | 10 | 2026-05-11 | Intensidad de carbono como factor de decisión de *dónde y cuándo* correr cómputo, en Go |
+| [JamesTwallin/GridSeis](https://github.com/JamesTwallin/GridSeis) | **MIT** | 31 | 1 | 2026-11-04 | Predice intensidad de carbono a partir de **frecuencia de red** (FFT + gradient boosting) |
+
+**Semántica y protocolo industrial:**
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| [DataTreehouse/maplib](https://github.com/DataTreehouse/maplib) | **Apache-2.0** | 192 | 14 | **2026-11-20** | Mapeo a grafos RDF; la pieza que falta entre CIM/CGMES y una capa semántica consultable |
+| [rsmusllp/termineter](https://github.com/rsmusllp/termineter) | **BSD-3-Clause** | 281 | 106 | 2026-03-17 | Framework de **pruebas de seguridad de medidores inteligentes** |
+| [WillCodeForCats/solaredge-modbus-multi](https://github.com/WillCodeForCats/solaredge-modbus-multi) | **Apache-2.0** | 343 | 29 | 2026-11-19 | Integración Modbus/TCP completa de inversores SolarEdge |
+| [vinerya/virtual-power-plant](https://github.com/vinerya/virtual-power-plant) | **MIT** | 96 | 26 | 2026-11-16 | Librería de gestión y simulación de **planta virtual** |
+
+**Dato público de EE.UU. con problema de licencia:**
+[`california-energy-commission/MIDAS`](https://github.com/california-energy-commission/MIDAS) —
+repo oficial de la **California Energy Commission** (servidor de datos de tarifa para automatización
+de demanda), **9 ★, 5 forks, sin archivo de licencia**. Organismo público, dato autoritativo,
+licencia ausente: entra en la categoría bloqueada de T20, no en la de dato reutilizable.
+
 ## 2026-11-20 — pase 8 (había una organización entera de ~30 repos permisivos catalogada en uno solo)
 
 **Titular del pase: esta KB tenía a Open Energy Transition catalogada por un repo (`pypsa-mcp`) y la

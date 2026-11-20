@@ -1308,6 +1308,168 @@ depende de la resolución satelital y hay que **validarla contra una muestra ter
 de comprometer un número**. Y la salida es un **inventario estimado**, no un censo regulatorio:
 decirlo en el entregable.
 
+## Recetas del noveno pase (2026-11-20)
+
+### Receta 33 — O&M de parque eólico con autorización humana auditable (las cuatro regiones)
+
+**Problema que resuelve.** El operador tiene SCADA, tiene alarmas y tiene un EAM, y entre la alarma
+y la orden de trabajo hay una persona leyendo pantallas. Quiere agentes, y no puede aceptar que un
+agente mande a un técnico a una góndola sin traza.
+
+**Punto de partida — y esto es una plantilla, no un producto a desplegar:**
+[`Ninemilo/OpenVigil`](https://github.com/Ninemilo/OpenVigil) (**Apache-2.0**, 180 ★, 37 forks).
+Aporta la estructura que hay que copiar: **22 agentes en tres capas separadas** (decisión → revisión
+→ ejecución), runtime de 16 tools, catálogo SQL gobernado de 18 tools sobre **LangGraph**, y
+conectores SCADA / MQTT / HTTPS / **EAM**.
+
+**Cableado:**
+
+```
+[SCADA + CMS + meteorología]  ──┐
+                                ├─> ingesta (TimescaleDB) ─> detección de anomalía
+[documentos: PDF/DOCX/MD]  ─────┘        │                   (benchmark CARE v6, offline)
+   via Docling (OCR)                     │
+                                         v
+                         [capa de DECISIÓN: agentes proponen alternativas]
+                                         │
+                                         v
+                         [capa de REVISIÓN: contraste + evidencia citada]
+                                         │
+                                         v
+                    ╔═══════════════════════════════════════╗
+                    ║  AUTORIZACIÓN HUMANA (alto riesgo)    ║  <-- el límite no negociable
+                    ╚═══════════════════════════════════════╝
+                                         │
+                                         v
+                         [capa de EJECUCIÓN: orden de trabajo al EAM]
+                                         │
+                                         v
+                         [evidencia de campo -> actualización de conocimiento]
+```
+
+**Piezas complementarias ya catalogadas:** `OpenFAST` (Apache-2.0) y
+[`IEAWindSystems/IEA-15-240-RWT`](https://github.com/IEAWindSystems/IEA-15-240-RWT) (Apache-2.0,
+314 ★) para el modelo del activo; `NatLabRockies/ROSCO` (Apache-2.0) para el controlador;
+`sltzgs/OpenWindSCADA` (GPL-3.0 — aislar) para datasets de referencia;
+[`ebranlard/welib`](https://github.com/ebranlard/welib) (MIT) para análisis; `PML-UCF/pinn_wind_bearing`
+(MIT) para vida de rodamiento con red neuronal informada por física.
+
+**Lo que hay que decir en la propuesta, textualmente:**
+
+- `OpenVigil` **se declara** *"production candidate implementation, not a system already deployed in
+  production"*, y marca **UNVERIFIED** exactitud de campo, calibración, operación en sombra y
+  calificación de release. **No prometer su desempeño: no publica ninguno.**
+- Su demo corre con **fixtures deterministas**, no con modelos en vivo. Lo que se reutiliza es
+  **la arquitectura**, y el esfuerzo real está en los **contratos de datos** SCADA/CMS/EAM.
+- El benchmark **CARE v6** (Fraunhofer IEE, 95 eventos, 36 activos) es **CC BY-SA 4.0 y no viene en
+  el repo**: lo aporta el cliente, y su licencia *share-alike* contamina derivados del dataset.
+- **No nombra ningún protocolo industrial** (ni OPC UA ni IEC 61400-25): la integración de campo es
+  alcance a presupuestar, no capacidad heredada.
+- 180 ★ con **0 issues abiertas** en 2,5 meses: verificar mantenimiento antes de depender del
+  upstream. Plan B: quedarse con el patrón y reimplementar sobre LangGraph propio.
+
+**Regla de arquitectura aplicada:** el texto de razonamiento del agente se registra para el operador
+y **nunca viaja al actuador**. Aquí el actuador es una orden de trabajo y una consigna de turbina.
+
+### Receta 34 — Plug & Charge sin licenciar pila propietaria y sin tocar GPL (EMEA primero)
+
+**Problema que resuelve.** Un operador de carga quiere ofrecer **Plug & Charge** (ISO 15118) y le
+cotizan una pila propietaria; o la alternativa abierta que encuentra es GPL y su producto es
+propietario.
+
+**La combinación permisiva, verificada licencia por licencia:**
+
+| Capa | Pieza | Licencia | ★ |
+|------|-------|----------|---|
+| Poste / "SO" de la estación | [`ecog-io/josev`](https://github.com/ecog-io/josev) | **Apache-2.0** | 164 |
+| Protocolo vehículo↔cargador | [`ecog-io/iso15118`](https://github.com/ecog-io/iso15118) (-2, -20, -8) | **Apache-2.0** | 250 |
+| Stack de carga / back-office | `EVerest/EVerest` *(ya catalogado)* | **Apache-2.0** | 297 |
+| Simulación sin hardware | `SAP/e-mobility-charging-stations-simulator` *(ya catalogado)* | **Apache-2.0** | 231 |
+| Optimización doméstica | `evcc-io/evcc` *(ya catalogado)* | **MIT** | 7.640 |
+
+```
+[vehículo] ──ISO 15118 (-2/-20/-8)──> [ecog-io/iso15118]
+                                            │
+                                      [ecog-io/josev]  (SO de la estación)
+                                            │ OCPP
+                                      [EVerest]  (back-office permisivo)
+                                            │
+                     [tarifa / flexibilidad: evcc (MIT) | FlexMeasures (Apache-2.0)]
+```
+
+**Toda la cadena es Apache-2.0 o MIT: no hay límite de proceso obligatorio**, lo que la hace apta
+para un entregable propietario de marca blanca. Es la diferencia con `steve` (GPL-3.0), que sigue
+siendo válido pero exige aislamiento.
+
+**Decisiones y advertencias que cambian el presupuesto:**
+
+- **No comprometer `matth-x/MicroOcpp` en firmware** sin auditar antes sus **135 issues abiertas** y
+  sus **~12 meses sin push**, aunque sea MIT y la referencia de la categoría en microcontroladores.
+- `SwitchEV/RISE-V2G` (MIT, 261 ★) es **referencia de lectura**: 11 meses sin push.
+- Validar con el simulador **antes** de comprar postes; es la lección de la *Receta 26*, aquí con la
+  capa de protocolo añadida.
+- Para flexibilidad del lado del hogar en EMEA, el puente al equipo es `enbility/eebus-go` (MIT) o
+  `NIBEGroup/openeebus` (Apache-2.0) — y si el cliente exige el estándar **S2**, decirle que el
+  tooling existe (`flexmeasures-s2`, Apache-2.0) y tiene **2 estrellas**.
+
+### Receta 35 — Respuesta a la demanda en North America cuando el protocolo de referencia está bloqueado
+
+**Problema que resuelve.** El cliente pide un agregador de respuesta a la demanda que hable
+**OpenADR**, que es el protocolo de referencia de la región. La implementación de **3.0** no se
+puede usar.
+
+**El hecho, verificado en este pase:**
+
+| Pieza | Versión | Licencia | Estado |
+|-------|---------|----------|--------|
+| [`OpenLEADR/openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) | **3.0** (VTN + VEN) | ⚠️ **ningún archivo de licencia** en `main`/`master`/`develop` | **Bloqueada** (107 ★, push 2026-11-20) |
+| [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python) | **2.0b** | **Apache-2.0** | Usable (161 ★, 67 forks) |
+
+**Las tres vías, y cuál recomendar:**
+
+1. **Entregar sobre 2.0b con `openleadr-python`** (Apache-2.0). Es lo defendible hoy; se documenta
+   como decisión de licencia, no como limitación técnica. **Recomendada por defecto.**
+2. **Pedir concesión expresa de licencia** al proyecto para `openleadr-rs`. Es una conversación de
+   semanas y un riesgo de cronograma; sólo si 3.0 es requisito contractual duro.
+3. **Implementar 3.0 contra la especificación.** Es trabajo facturable y real, y conviene decir que
+   nadie ha publicado una implementación abierta licenciada — no es un atajo que el cliente se esté
+   perdiendo.
+
+**El resto de la receta, con lo ya catalogado:**
+
+```
+[señal de programa / precio]
+   ├─ OpenADR 2.0b: openleadr-python (Apache-2.0)
+   ├─ tarifa CA: MIDAS (CEC) ⚠️ SIN LICENCIA -> consultar, no redistribuir
+   └─ carbono: grid-intensity-go (Apache-2.0) | CarbonCast (Apache-2.0)
+                           │
+                           v
+            [FlexMeasures (Apache-2.0)]  <- programación y forecast de flexibilidad
+                           │
+         ┌─────────────────┼──────────────────┐
+         v                 v                  v
+ [CityLearn MIT]    [vinerya/virtual-     [evcc MIT / eebus-go MIT]
+ (simular distrito)  power-plant MIT]      (activos reales)
+                           │
+                           v
+            ╔═══════════════════════════════════╗
+            ║  consigna propuesta -> validación  ║
+            ║  del sistema de control del cliente║
+            ╚═══════════════════════════════════╝
+```
+
+**Advertencias de cumplimiento que pertenecen a esta receta en North America:**
+
+- El programa cae bajo el plazo de **estándares de carga computacional de NERC de diciembre de
+  2026** si el recurso es carga de datacenter → encadenar con la *Receta 29*, y recordar que la
+  oferta abierta de cumplimiento NERC CIP medida en este pase es **cero**.
+- Hay **vacío regulatorio declarado**: a agosto de 2026 ninguna comisión estatal había tratado la IA
+  operativa de una utility, y sólo **Arizona** abrió examen formal. Eso **no** significa libertad:
+  significa que el expediente de gobernanza lo escribe el proveedor, y conviene que lo escriba
+  Globant.
+- `MIDAS` es dato **oficial** de la California Energy Commission y **no tiene licencia**: consultarlo
+  sí, redistribuirlo no.
+
 ---
-*Verificado 2026-11-20 en ocho pases (32 recetas). Re-verificar licencias y stars antes de
+*Verificado 2026-11-20 en nueve pases (35 recetas). Re-verificar licencias y stars antes de
 comprometer alcance.*
