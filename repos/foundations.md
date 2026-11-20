@@ -880,3 +880,78 @@ sigue en cero por sexta medición consecutiva.**
 
 ---
 *Ver también `verticals/solutions.md` para plataformas verticales completas.*
+
+## Co-simulación, nuclear, eólica y DLR: el barrido por institución, ronda 2 (undécimo pase, 2026-11-20)
+
+El pase 10 barrió las instituciones norteamericanas de red (`epri-dev`, `GridProtectionAlliance`,
+`sandialabs`). Este pase barrió la capa que quedaba: **laboratorio nacional de propósito general** y
+**TSO europeo que publica código**. Son seis organizaciones (`GMLC-TDC`, `idaholab`, `statnett`,
+`DTUWindEnergy`, `pnnl`, `openenergymonitor`), y la pieza más importante llevaba once pases ausente.
+
+### El bus de co-simulación que faltaba bajo toda esta KB
+
+| Repo | Licencia | ★ / Forks | Push | Qué aporta | Región |
+|------|----------|-----------|------|------------|--------|
+| [GMLC-TDC/HELICS](https://github.com/GMLC-TDC/HELICS) | **BSD-3-Clause** | 178 / 54 | 2026-11-20 | *Hierarchical Engine for Large-scale Infrastructure Co-Simulation*: acopla transmisión, distribución, comunicaciones y mercado en un mismo experimento. Motor del **Grid Modernization Lab Consortium** del DOE. ⚠️ 96 issues | North America |
+
+Esta KB tenía `gridlab-d`, `pandapower`, `powsybl` y una sección de co-simulación — **y no tenía el
+bus que los conecta**. Se escapó porque su nombre no contiene ninguna palabra del dominio y su
+organización se llama por el acrónimo del consorcio. Es la dependencia natural de cualquier receta que
+combine un simulador de distribución con uno de transmisión.
+
+### Nuclear: la fila que el pase 10 cerró en falso
+
+| Repo | Licencia | ★ / Forks | Push | Qué aporta | Región |
+|------|----------|-----------|------|------------|--------|
+| [idaholab/raven](https://github.com/idaholab/raven) | **Apache-2.0** | 274 / 151 | 2026-11-19 | **RAVEN**: riesgo probabilístico y cuantificación de incertidumbre; envoltorio estadístico sobre MOOSE. ⚠️ 197 issues | North America |
+| [idaholab/DeepLynx](https://github.com/idaholab/DeepLynx) | **MIT** *(rescatada en crudo)* | 102 / 36 | 2026-10-30 | Almacén de datos de **gemelo digital** orientado a grafo para integración de datos de ingeniería | North America |
+| [idaholab/MontePy](https://github.com/idaholab/MontePy) | **MIT** | 68 / 32 | 2026-11-19 | Lectura/escritura de *inputs* MCNP en Python | North America |
+| [idaholab/STIG](https://github.com/idaholab/STIG) | **BSD-3-Clause** | 102 / 32 | 2026-09-30 | *Structured Threat Intelligence Graph* (STIX): inteligencia de amenazas en grafo | North America |
+| [idaholab/moose](https://github.com/idaholab/moose) | LGPL-2.1 | 2409 / 1282 | 2026-11-20 | Entorno multifísica. **Enlazable, no incrustable** sin análisis de copyleft | North America |
+| [idaholab/virtual_test_bed](https://github.com/idaholab/virtual_test_bed) | ⚠️ **CC-BY-4.0** | 81 / **103** | 2026-11-19 | Modelos de reactores avanzados (microrreactor, SFR, HTGR, MSR) para MOOSE. Licencia de **datos/documentación**, no de software | North America |
+
+**Cómo proponer esta fila sin exagerarla:** `raven` + `MontePy` + `DeepLynx` son permisivos y
+proponibles. `moose` y `mastodon` son LGPL-2.1. `virtual_test_bed` es CC-BY-4.0: son *modelos*, y de
+una licencia CC **no se hereda permiso de software**. El gap nuclear deja de ser de oferta y pasa a
+ser de licencia.
+
+### Dynamic line rating: la norma implementada, por un TSO, en MIT
+
+| Repo | Licencia | ★ / Forks | Push | Qué aporta | Región |
+|------|----------|-----------|------|------------|--------|
+| [statnett/linerate](https://github.com/statnett/linerate) | **MIT** | 8 / 3 | **2026-11-20** | Ampacidad de líneas aéreas: una función pura por cada ecuación de **CIGRE TB 601**, más CIGRE TB 207 e **IEEE 738**; solver de bisección vectorizado; tipos de conductor, vano y meteorología. Reproduce el *Example B* (pp. 79-81) de CIGRE TB 601. ⚠️ 7 issues | EMEA |
+| [statnett/cimsparql](https://github.com/statnett/cimsparql) | **MIT** | 10 / 7 | 2026-11-16 | Consulta de modelos **CIM** por SPARQL desde Python. Mitad ejecutable del patrón NL→CIM. ⚠️ 9 issues | EMEA |
+
+⚠️ [`statnett/Nordic44`](https://github.com/statnett/Nordic44) (modelo sintético de la red nórdica,
+6 ★, 29 issues) es **CC-BY-NC-SA-4.0** — la API dice `NOASSERTION`. **NonCommercial: no usable en
+encargo de cliente.**
+
+### Eólica: diseño de parque y control de planta
+
+| Repo | Licencia | ★ / Forks | Push | Qué aporta | Región |
+|------|----------|-----------|------|------------|--------|
+| [DTUWindEnergy/WindGym](https://github.com/DTUWindEnergy/WindGym) | **MIT** | 59 / 5 | 2026-11-19 | Entorno de **RL para control de parque eólico**. El único del clúster con tracción y actividad | EMEA |
+| [DTUWindEnergy/TopFarm2](https://github.com/DTUWindEnergy/TopFarm2) | **MIT** | 18 / 14 | 2026-07-16 | Optimización de **layout** de parque | EMEA |
+| [DTUWindEnergy/OptiWindNet](https://github.com/DTUWindEnergy/OptiWindNet) | **MIT** | 14 / 2 | 2026-10-19 | Optimización de la **red de colección** interna | EMEA |
+| [DTUWindEnergy/PyWake](https://github.com/DTUWindEnergy/PyWake) | ⚠️ **sin archivo de licencia** en `main`, `master` ni `develop` | 85 / 28 | 2024-11-25 | Modelo de **estela**. El más citado del clúster y **no proponible** | EMEA |
+
+⚠️ **Advertencia estructural, no anecdótica:** `TopFarm2`, `OptiWindNet`, `WindEnergyToolbox` y
+`WindGym` **declaran en su propia descripción de API ser "Mirror of
+https://gitlab.windenergy.dtu.dk/..."**. El repositorio canónico de la ingeniería eólica europea está
+en un GitLab autoalojado; GitHub indexa espejos, **y a veces el espejo pierde la licencia** — que es
+precisamente lo que le ocurre a `PyWake`. Antes de descartar una pieza europea por "sin licencia",
+hay que ir al GitLab de origen.
+
+### PNNL: aprendizaje con restricciones físicas y ACOPF en GPU
+
+| Repo | Licencia | ★ / Forks | Push | Qué aporta | Región |
+|------|----------|-----------|------|------------|--------|
+| [pnnl/neuromancer](https://github.com/pnnl/neuromancer) | **Battelle — permisiva tipo BSD-3, no SPDX** | 1399 / 190 | 2026-10-22 | Programación diferenciable: control predictivo y aprendizaje **con restricciones físicas**. El de más estrellas del pase | North America |
+| [pnnl/ExaGO](https://github.com/pnnl/ExaGO) | **Battelle — misma licencia** | 93 / 16 | 2026-03-23 | **ACOPF en GPU/HPC**, multiperiodo y estocástico | North America |
+
+⚠️ **Acotación que matiza T46 y que importa en un SoW:** la API dice `NOASSERTION`; el texto en crudo
+es la licencia propia de **Battelle Memorial Institute**, que concede uso, copia, modificación,
+sublicencia y venta con retención de aviso y cláusula de no-uso-del-nombre. Es **permisiva en
+sustancia, equivalente a BSD-3 — pero no es un identificador SPDX**, no pasará un escáner automático
+de licencias y requiere visto bueno legal explícito. "Rescatada como permisiva no estándar" no es lo
+mismo que "rescatada como BSD-3".

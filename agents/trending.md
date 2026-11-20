@@ -9,6 +9,76 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 11 (el agente de red que la KB tenía fichado como "precedente" tenía dentro una arquitectura, y el README `.adoc` es la razón de que nadie lo supiera)
+
+**Titular del pase: el séptimo cero consecutivo en agentes de operación de red se mantiene por
+consulta genérica — pero el inventario agéntico de esta KB sube de calidad sin una sola fila nueva,
+porque la pieza que ya tenía estaba mal clasificada. `statnett/Talk2PowerSystem` (Apache-2.0, TSO
+noruego) no es sólo un precedente: contiene una N-Shot Tool de texto-a-SPARQL sobre CIM, una
+ontología para GraphDB y un conector de recuperación vectorial. Y su mitad ejecutable,
+`statnett/cimsparql` (MIT), estaba sin catalogar.**
+
+### Por qué ningún pase lo vio, y es un hallazgo de método reutilizable
+
+El README de ese repo **no se llama `README.md`: se llama `ReadMe.adoc`** (AsciiDoc). La sonda
+estándar de esta KB —`curl raw.githubusercontent.com/{repo}/main/README.md`— devuelve **404**, y un
+404 de README se interpreta como "repo vacío o sin documentar". Se probaron cinco variantes
+(`main/README.md`, `master/README.md`, `main/readme.md`, `main/README.rst`, `main/docs/index.md`):
+las cinco, 404. El repo tiene documentación extensa, roadmap y changelog, todo en `.adoc`.
+
+**AsciiDoc es el formato de documentación habitual en ingeniería industrial europea** (Eclipse,
+consorcios IEC, TSOs). La regla operativa que se desprende, y que debería aplicarse a cualquier
+medición futura de esta KB: **antes de concluir que un repo institucional europeo está vacío, probar
+`ReadMe.adoc`, `README.adoc` y `README.asciidoc`**. Ver T52.
+
+### Lo que hay dentro, verificado archivo por archivo
+
+| Pieza | Qué es | Por qué importa |
+|-------|--------|-----------------|
+| `qa-dataset-ontology-schema/README.md` | **N-Shot Tool**: recupera las N preguntas más similares del *dataset* de Q&A y las pasa al chatbot **con sus plantillas SPARQL** | Es *few-shot retrieval* texto-a-SPARQL **descrito por el operador de la red**, no por un laboratorio |
+| `connector.rq` | Definición de *retrieval connector* para indexar entidades de la base en una base vectorial | La capa de recuperación, explícita |
+| `ontology.trig` | Ontología para almacenar el *dataset* de Q&A en **GraphDB** | El esquema de evaluación, reutilizable |
+| `qa_dataset-config.ttl` | Configuración del repositorio GraphDB | Reproducible |
+| `demo1/`, `data/`, `diagram/`, `docs/` | Demo, datos, diagramas | No auditados en este pase |
+
+El *dataset* de Q&A en sí **no aparece** en ese directorio (no hay JSON/YAML/CSV de pares
+pregunta-consulta visibles); la página indica "View all files", así que puede estar en otra ruta. **Se
+registra como no verificado**, no como ausente.
+
+### La fila que se añade a la cadena agéntica
+
+| Agente / pieza | Repo | Licencia | ★ | Forks | Push | Región |
+|----------------|------|----------|---|-------|------|--------|
+| Consulta CIM por SPARQL desde Python | [statnett/cimsparql](https://github.com/statnett/cimsparql) | **MIT** | 10 | 7 | 2026-11-16 | EMEA |
+
+Es la mitad ejecutable de `Talk2PowerSystem`: el mismo TSO, licencia más permisiva, **push de hace
+cuatro días** (frente a mayo de 2026 del repo "vitrina"). ⚠️ 9 issues abiertas. Quien quiera montar
+el patrón NL→CIM, **la dependencia es `cimsparql`; `Talk2PowerSystem` es el plano**.
+
+### Reclasificación, con el juicio anterior intacto donde sigue siendo válido
+
+Lo que **cambia**: `Talk2PowerSystem` pasa de *"precedente citable, no dependencia"* a
+**"arquitectura de referencia copiable, publicada por un TSO bajo Apache-2.0"**.
+
+Lo que **no cambia, y hay que seguir diciéndolo en una propuesta**: 17 ★, último push 2026-05-15,
+`Roadmap.adoc` dice *"To be addressed"* y `Contributing` dice *"To Be addressed"*. **No es una base de
+producto.** La única pieza agéntica/predictiva de esta KB con operación real en una *utility* sigue
+siendo [`OpenSTEF/openstef`](https://github.com/OpenSTEF/openstef) (MPL-2.0, Alliander + RTE).
+
+### El cero que se mantiene, medido por séptima vez y ahora también desde fuera de GitHub
+
+La consulta mandada por el ciclo —`top open source AI agents energy 2026 github MIT`, en buscador
+web, no en la API— devuelve **exclusivamente *frameworks* de propósito general**: OpenHands, OpenCode,
+CrewAI, Hermes Agent, OpenClaw, LangGraph, AutoGen, OpenAI Agents SDK, Pydantic AI, LlamaIndex.
+**Ninguno de dominio energético.** Siete pases midiendo el mismo cero por la API de GitHub, y el
+buscador web —otra fuente, otro índice— devuelve el mismo resultado.
+
+Para una conversación con cliente, esto ya se puede decir sin hedging: **no existe hoy un agente
+abierto de operación de red con tracción de mercado.** Lo que existe es (a) la capa institucional
+(`Power-Agent/*`, `PowerMCP`, `EnergyPlus-MCP`, `Talk2PowerSystem` + `cimsparql`), (b) la capa de
+forecasting de propósito general (`timecopilot`, `chronos`), y (c) *frameworks* genéricos sobre los
+que se construye. **El agente se construye; el plano, desde este pase, se puede copiar de un TSO.**
+
 ## 2026-11-20 — pase 10 (la cola larga agéntica tiene número: 33 repos en siete semanas, el mejor con 7 estrellas y sin licencia)
 
 **Titular del pase: este pase no encontró ningún agente energético nuevo proponible, y por primera

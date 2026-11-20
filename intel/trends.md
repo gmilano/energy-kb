@@ -1215,3 +1215,70 @@ explícitamente en la fase de propuesta.**
 ---
 *Investigado 2026-11-20 en diez pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal (ver T49).*
+
+## T52 — Un 404 en `README.md` no es un repo vacío: AsciiDoc es el formato de la ingeniería industrial europea
+
+El canal de verificación de esta KB sondea `raw.githubusercontent.com/{repo}/{branch}/README.md`. Es
+barato y funciona —salvo en la familia de repos donde más importa. `statnett/Talk2PowerSystem`
+devuelve **404 en cinco variantes** (`main/README.md`, `master/README.md`, `main/readme.md`,
+`main/README.rst`, `main/docs/index.md`) y tiene documentación extensa: su README se llama
+**`ReadMe.adoc`**.
+
+**AsciiDoc es el formato habitual de documentación en ingeniería industrial europea** — Eclipse,
+consorcios IEC, TSOs. Y es justamente la población de repos que esta KB más valora (origen EMEA,
+autoría institucional, norma IEC). El sesgo es por tanto **sistemático y dirigido contra el material
+de mayor valor**, no aleatorio.
+
+**Regla operativa:** antes de concluir que un repo institucional europeo está indocumentado, probar
+`ReadMe.adoc`, `README.adoc`, `README.asciidoc`. Y un 404 de README **nunca** justifica por sí solo
+una conclusión sobre el contenido del repo: en este caso costó dos pases clasificar como "precedente"
+lo que era una arquitectura de referencia con ontología y conector incluidos.
+
+## T53 — La oferta europea de investigación vive en GitLab autoalojado, y GitHub indexa espejos que pierden la licencia
+
+Hallazgo de primera mano, leído en el campo `description` de la propia API, no inferido:
+`DTUWindEnergy/TopFarm2`, `OptiWindNet`, `WindEnergyToolbox` y `WindGym` **se describen como
+"Mirror of https://gitlab.windenergy.dtu.dk/..."**. El repositorio canónico de la ingeniería eólica
+europea está en un GitLab institucional; lo que GitHub indexa son réplicas.
+
+Dos consecuencias, y la segunda es la que cuesta dinero:
+
+1. **Toda medición de oferta que esta KB haya hecho con consultas de GitHub subestima a las
+   instituciones europeas.** Varios de los "ceros" históricos de este KB pueden ser ceros de índice,
+   no de oferta — el mismo error de categoría que T47 y el pase 10 ya corrigieron dos veces, ahora en
+   su versión geográfica. No se sabe cuántos; se sabe que el sesgo existe y en qué dirección va.
+2. **El espejo puede perder el archivo de licencia.** `PyWake` —85 ★, el modelo de estela más citado
+   del clúster— **no tiene `LICENSE` en `main`, `master` ni `develop`** en GitHub. Antes de descartar
+   una pieza europea como "no proponible por licencia", hay que ir al GitLab de origen: la licencia
+   puede estar allí y el problema ser del espejo.
+
+**Regla operativa:** para oferta de origen EMEA, GitHub es un índice incompleto. `gitlab.com`, los
+GitLab institucionales (`gitlab.windenergy.dtu.dk`, `git.rwth-aachen.de`, los de Fraunhofer) y el
+Eclipse Marketplace son fuentes de primer orden, no complementos.
+
+## T54 — La licencia permisiva no estándar: un tercer estado entre "permisiva" y "sin licencia"
+
+T46 estableció que `NOASSERTION` en un laboratorio nacional depende del laboratorio. Este pase añade
+el caso que no es ni rescate ni descarte. `pnnl/neuromancer` (1399 ★) y `pnnl/ExaGO` reportan
+`NOASSERTION`, y en crudo tienen la **licencia propia de Battelle Memorial Institute**: concede uso,
+copia, modificación, fusión, publicación, distribución, sublicencia y venta, con retención de aviso y
+cláusula de no-uso-del-nombre. Sustancialmente **es BSD-3**.
+
+Pero **no es un identificador SPDX**. Y eso tiene tres efectos operativos concretos:
+
+- **No pasa un escáner automático de licencias** (FOSSA, Black Duck, Snyk License): aparecerá como
+  desconocida y bloqueará un *pipeline* de cumplimiento del cliente.
+- **Requiere visto bueno legal explícito**, una vez, por texto — no por etiqueta.
+- **No se debe anotar como "BSD-3" en un inventario.** Decir "BSD-3" es cómodo y es falso; lo correcto
+  es "permisiva no estándar (Battelle), equivalente funcional a BSD-3, revisada en crudo el
+  2026-11-20".
+
+El mismo patrón aplica a `virtual_test_bed` por el otro extremo: **CC-BY-4.0 no es una licencia de
+software**. De una licencia Creative Commons no se hereda permiso de software, aunque el contenido
+sea técnicamente utilizable. Son modelos de reactor, no código, y conviene decirlo antes de meterlos
+en un pipeline.
+
+**Taxonomía de licencia que esta KB debería usar desde aquí:** (1) SPDX permisiva, (2) **permisiva no
+estándar** (texto propio institucional — proponible con revisión legal), (3) copyleft, (4) licencia de
+datos/documentación (CC), (5) no comercial (bloqueante), (6) sin archivo de licencia (no proponible).
+Los pases anteriores colapsaban (1) y (2), y mezclaban (4) y (5) dentro de "rescatada".

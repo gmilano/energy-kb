@@ -550,3 +550,66 @@ gestión de subestación térmica en open source. Vender estudio y diseño; no v
 
 ---
 *Ver `compose/patterns.md` para recetas concretas que combinan estas plataformas con los agentes.*
+
+## Undécimo pase (2026-11-20): la plataforma nuclear, la monitorización de consumo, y la cuarta confirmación externa de que no hay ERP de utility
+
+### El patrón "plataforma + modelos" en nuclear: MOOSE como sistema customizable
+
+La categoría que esta KB trata como vertical —un sistema real que se customiza, tipo Odoo u
+OpenMRS— tiene un equivalente nuclear que el pase 10 declaró inexistente por error de consulta:
+
+| Plataforma | Licencia | ★ | Qué es | Cómo se customiza |
+|-----------|----------|---|--------|-------------------|
+| [idaholab/moose](https://github.com/idaholab/moose) | LGPL-2.1 | 2409 | Entorno multifísica de elementos finitos del INL. **Es la plataforma**: los físicos escriben *kernels*, no resuelven ecuaciones | Módulos y *apps* derivadas. ⚠️ **LGPL-2.1: enlazable, no incrustable** sin análisis |
+| [idaholab/raven](https://github.com/idaholab/raven) | **Apache-2.0** | 274 | **RAVEN**: la capa de riesgo probabilístico e incertidumbre **sobre** MOOSE | Plugins y modelos externos. Es la pieza permisiva del par |
+| [idaholab/virtual_test_bed](https://github.com/idaholab/virtual_test_bed) | ⚠️ **CC-BY-4.0** | 81 (**103 forks**) | Modelos listos de reactores avanzados (microrreactor, SFR, HTGR, MSR) | Se bifurca y se adapta: 103 forks frente a 81 ★ dicen que es **material de partida**, no producto |
+| [idaholab/DeepLynx](https://github.com/idaholab/DeepLynx) | **MIT** *(rescatada en crudo)* | 102 | Almacén de datos de **gemelo digital** orientado a grafo para integración de datos de ingeniería | La capa de integración del vertical |
+
+**La lectura de vertical:** `MOOSE` + `RAVEN` + `virtual_test_bed` es exactamente el patrón "el
+sistema existe y se customiza" —plataforma, capa analítica y modelos de referencia— para nuclear
+avanzado. Y `DeepLynx` es la pieza de integración de datos de ingeniería, **MIT**, que sirve fuera de
+nuclear. ⚠️ Pero el perfil de licencia obliga a una arquitectura concreta: lo propio del cliente se
+construye **sobre** `RAVEN` (Apache-2.0) y `DeepLynx` (MIT), con `MOOSE` enlazado y respetando
+LGPL-2.1, y los modelos de `virtual_test_bed` tratados como **datos CC-BY** (atribución obligatoria,
+sin herencia de permiso de software).
+
+### Monitorización de consumo en hardware abierto: útil como referencia, no como dependencia
+
+`org:openenergymonitor` (92 repos) es la referencia del sector en medición de consumo con hardware
+abierto, y es un caso de libro de por qué hay que leer licencias antes de prometer:
+
+| Repo | Licencia | ★ | Push | Nota |
+|------|----------|---|------|------|
+| [EmonLib](https://github.com/openenergymonitor/EmonLib) | **AGPL-3.0** | 628 | 2023-05-08 | Librería de medida eléctrica. **AGPL: incompatible con producto cerrado** |
+| [emonpi](https://github.com/openenergymonitor/emonpi) | ⚠️ sin licencia | 280 | 2026-10-11 | Monitor energético sobre Raspberry Pi: hardware + firmware. **Vivo** |
+| [emonhub](https://github.com/openenergymonitor/emonhub) | ⚠️ sin licencia | 107 | 2026-11-11 | Servicio Python que entrega a MQTT/Emoncms. **Vivo** |
+| [EmonESP](https://github.com/openenergymonitor/EmonESP) | ⚠️ sin licencia | 169 | 2023-09-22 | Puente serie-WiFi ESP8266 |
+
+**Veredicto:** sirve como **arquitectura de referencia y banco de pruebas** para un piloto de
+submedición (el patrón "arrancar sin subestación" que esta KB ya documenta). **No como dependencia de
+producto**: la pieza con licencia es AGPL y el resto no tiene archivo de licencia. Para producto, la
+ruta sigue siendo la capa de protocolo permisiva del pase 10 (`epri-dev/DLMS-COSEM` BSD-3,
+`GridProtectionAlliance/openMIC` MIT).
+
+### ERP/CRM/facturación de utility: cuarta medición, mismo resultado
+
+La consulta mandada —`open source platform energy utility ERP CRM billing MIT Apache 2026`— devuelve
+**cero plataformas específicas de utility**. Lo que hay es genérico, y conviene tenerlo nombrado con
+su licencia porque es la respuesta honesta cuando el cliente pregunta:
+
+| Pieza | Licencia | Qué cubre | Lo que **no** cubre |
+|-------|----------|-----------|---------------------|
+| [Apache OFBiz](https://ofbiz.apache.org/) | **Apache-2.0** | ERP/CRM sobre framework Java; proyecto *top-level* de Apache desde 2006 | Nada de dominio eléctrico |
+| [Kill Bill](https://killbill.io/) | **Apache-2.0** (la edición enterprise *Aviate* es aparte) | Motor de facturación y suscripción | Lógica tarifaria eléctrica |
+| [OpenMeter](https://openmeter.io/) | **Apache-2.0** (de Kong) | Medición de uso y facturación por consumo | Ciclo meter-to-cash regulado |
+| ERPNext / iDempiere / Dolibarr / Axelor | GPLv3 / GPLv2 / GPLv3+ / AGPLv3 | ERP generalista | Copyleft, y sin dominio eléctrico |
+
+**Lo que sigue sin existir, por cuarta medición consecutiva y ahora también vía buscador web:**
+plataforma abierta con **gestión de datos de medida (MDM), motor tarifario y reporting regulatorio**.
+La frontera que el pase 10 movió un escalón hacia abajo —el protocolo ya no se escribe— se mantiene
+donde estaba: **la lógica tarifaria y el ciclo meter-to-cash son desarrollo propio**. Es la
+conclusión más repetidamente verificada de esta KB, y por eso es la más segura de poner en una
+propuesta.
+
+⚠️ Licencias de `BillRun` y `OpenBRM` **no verificadas** en este pase; aparecieron en resultados sin
+licencia declarada. No proponerlas sin comprobarlas.

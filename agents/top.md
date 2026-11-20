@@ -41,12 +41,22 @@ adopción real (≈70 % de operadores en mantenimiento y planificación, **23 % 
 | [arnaud-vs/open-predico](https://github.com/arnaud-vs/open-predico) | Apache-2.0 | Forecasting **energético** con time-series foundation models. Pequeño, pero es el puente explícito TSFM→energía | 54 | 4 | 2026-11-15 | EMEA |
 | [williamhobbs/hefty](https://github.com/williamhobbs/hefty) | BSD-3-Clause | Herramientas ligeras de forecasting de corto plazo para solar, viento y carga. El *baseline* honesto contra el que medir todo lo anterior | 85 | 13 | 2026-11-13 | North America |
 | [statnett/Talk2PowerSystem](https://github.com/statnett/Talk2PowerSystem) | Apache-2.0 | LLM sobre grafo de conocimiento CIM del sistema eléctrico. **Escrito por Statnett**, el TSO noruego: primer agente de red de autoría de un operador que esta KB registra | 17 | 3 | 2026-05-15 | EMEA |
+| [statnett/cimsparql](https://github.com/statnett/cimsparql) | **MIT** | Consulta de modelos **CIM** por SPARQL desde Python. Es la **mitad ejecutable** del patrón de arriba, del mismo TSO y con licencia más permisiva: `Talk2PowerSystem` es el plano, `cimsparql` es la dependencia. ⚠️ 9 issues | 10 | 7 | 2026-11-16 | EMEA |
 
 ⚠️ **Cómo proponer esta fila sin exagerarla.** `timecopilot` y `chronos` son de propósito general:
 lo verificable es que **la cadena existe y es permisiva**, no que esté validada en despacho. La única
 pieza con operación real en una utility sigue siendo [`OpenSTEF/openstef`](https://github.com/OpenSTEF/openstef)
 (MPL-2.0, 184 ★, Alliander + RTE). `Talk2PowerSystem` tiene 17 ★ y último push en mayo de 2026: vale
 como **precedente citable de que un TSO quiere este patrón**, no como dependencia de producto.
+
+🔄 **Corrección del undécimo pase (2026-11-20), y afecta a cómo se vende esta fila.** La frase
+anterior —"precedente, no dependencia"— se escribió sin haber leído el repo por dentro, porque su
+README se llama `ReadMe.adoc` y la sonda a `README.md` devuelve 404 (ver T52). Leído, contiene una
+**N-Shot Tool** de texto-a-SPARQL (recupera las N preguntas más similares del *dataset* de Q&A y las
+pasa al modelo con sus plantillas SPARQL), un conector de recuperación vectorial (`connector.rq`) y
+una ontología para **GraphDB** (`ontology.trig`). Reclasificación: es una **arquitectura de
+referencia copiable**, no sólo un precedente. Lo que **no** cambia: 17 ★, push de mayo de 2026,
+`Roadmap.adoc` dice literalmente *"To be addressed"*. El plano se copia; el producto se construye.
 
 ## Hallazgos de verificación del séptimo pase (2026-11-20)
 

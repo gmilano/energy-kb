@@ -405,6 +405,53 @@ por eso facturable**, y hay que presupuestarlo como desarrollo, nunca como integ
 `repos/trending.md` (pase 10, Gap 3) y **T48**.
 
 
+
+### Actualización del undécimo pase (2026-11-20) — North America
+
+**La regulación federal nombró la categoría, y la oferta abierta que la implementa es de un TSO
+noruego bajo MIT.** Entre las prioridades críticas que FERC publicó en **enero de 2026** figura, con
+esas palabras, *"advanced demand response, **dynamic line ratings**, and emerging cybersecurity
+technologies at the operational level"*. Esta KB había abierto el frente del "activo de campo" en el
+pase 10 con ocho consultas y cuatro ceros — **y no había buscado DLR**. Existe:
+[`statnett/linerate`](https://github.com/statnett/linerate) (MIT, CIGRE TB 601 + TB 207 + IEEE 738,
+push 2026-11-20).
+
+**Oportunidad concreta:** una oferta de DLR en la que las **ecuaciones no se escriben** —están
+implementadas, trazables y referidas a la página del estándar— y lo facturable es telemetría
+meteorológica, integración con el EMS y validación. Se puede defender ante un cliente citando a la
+vez el estándar (CIGRE TB 601) y la prioridad del regulador (FERC, enero 2026).
+
+**El contexto de demanda, actualizado con los movimientos de 2026:**
+
+- **FERC, 18 de junio de 2026:** órdenes de *show cause* a los **seis** operadores regionales (PJM,
+  MISO, SPP, CAISO, ISO-NE, NYISO), con 60 días para justificar o reformar las tarifas de conexión de
+  grandes consumidores y 30 días para informar cómo garantizarán generación suficiente. ⚠️ **No crea
+  una regla nacional de interconexión**: varias fuentes secundarias lo presentaron como regla final y
+  eso es inexacto — fueron órdenes de *show cause*.
+- **Detrás del medidor:** ~**48 GW** de capacidad propuesta de centro de datos con generación
+  *behind-the-meter* a principios de 2026, frente a menos de 2 GW a finales de 2024. El límite de
+  *netting* de PJM se presentó en febrero de 2026 y FERC lo aceptó en junio.
+- **Coste y riesgo tarifario:** los centros de datos pagan su interconexión; el reparto del coste de
+  transmisión sigue abierto. Un informe de la *Electricity Law Initiative* de Harvard Law sostiene que
+  hay contratos especiales opacos que trasladan coste a la factura doméstica. Los reguladores
+  estatales mantienen la tarifa minorista y varios estados están escribiendo **clases tarifarias de
+  gran carga** propias.
+- **Prioridad declarada por las *utilities*:** una encuesta de National Grid Partners sitúa la
+  fiabilidad entre las tres primeras prioridades para el **73 %** de los encuestados, frente al 43 %
+  en 2025. Y el **54 %** señala la **incertidumbre regulatoria** como su principal preocupación para
+  desplegar IA agéntica.
+- **Despliegue agéntico con cifra citable:** en **Duke Energy**, agentes de IA redujeron la
+  preparación de datos para estudios de interconexión *de semanas a horas*, **con los ingenieros
+  tomando todas las decisiones de ingeniería finales**. Esa última cláusula es la que hace el caso
+  proponible en un sector regulado: es el patrón "humano autoriza" que el pase 9 ya identificó.
+- Lanzamientos 2026 del lado vendor: **GE Vernova GridOS for Transmission** y **Delta Energy QORTEX**.
+
+⚠️ **Dispersión de mercado, otra vez:** para IA agéntica en energía y *utilities* en 2026 las cifras
+van de **~0,87 B USD** (Mordor) a **4,8 B USD** (Fact.MR) — un factor **5,5×** en el mismo año.
+Consistente con la nota de método de este documento: **citar adopción y mandato regulatorio, no
+tamaño de mercado.** Fact.MR sí aporta un reparto utilizable: **operación de red = 34 %** de la
+demanda.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -788,6 +835,47 @@ implementado en MIT por **una sola cuenta individual** (`Haigutus`, 2-10 ★ por
 hace operable el CGMES y el punto de fallo más concentrado que ha catalogado esta KB. Proponerlo como
 acelerador internalizado, con plan de mantenimiento propio presupuestado.
 
+
+
+### Actualización del undécimo pase (2026-11-20) — EMEA
+
+**ENTSO-E convirtió al centro de datos en sujeto del sistema eléctrico, y eso crea un entregable
+documental nuevo.** El informe de la asociación de TSOs europeos publicado el **8 de mayo de 2026**
+(hay fuentes secundarias que lo fechan el 15; la nota de prensa primaria dice 8) sostiene que los
+centros de datos *"se están convirtiendo en usuarios eléctricos sistémicamente relevantes cuyo
+comportamiento influye cada vez más en la operación del sistema"*.
+
+- **Demanda:** ENTSO-E espera que la demanda eléctrica de centros de datos en Europa crezca **más del
+  50 % entre 2025 y 2030**. El material del propio informe da un rango de **199-254 TWh** para el año
+  final, sin año explícito en la tabla citada — se registra con esa salvedad.
+- **La advertencia operativa, que es el argumento de venta:** ENTSO-E alerta de que los operadores
+  **podrían verse forzados a reducir la penetración de renovables** si el crecimiento de centros de
+  datos no se gestiona. Es decir: el coste de no gestionar la flexibilidad se paga en renovable
+  vertida.
+- **Palanca regulatoria:** la **EU Cloud and AI Development Act** en preparación; la cobertura
+  apunta a que podría triplicar el tamaño del mercado europeo de centros de datos en 5-7 años.
+- **Peticiones de ENTSO-E a los legisladores:** legislar los beneficios de la flexibilidad y
+  **actualizar los códigos de conexión** para que los centros de datos sostengan la seguridad de red.
+  Un código de conexión actualizado es, otra vez, **expediente de cumplimiento facturable** — el
+  patrón que T50 describe para EMEA.
+- **Cuello de botella declarado por la industria:** la asociación europea de centros de datos sitúa
+  el acceso a red como su principal problema (**67 %** de los operadores según un resumen
+  secundario). Los retrasos de conexión afectan ya a planes de expansión de hiperescalares en Europa.
+
+**Oportunidad concreta y nueva de este pase:** el patrón **NL→CIM trazable** tiene ahora plano y
+dependencia, ambos de un TSO y ambos permisivos —
+[`Talk2PowerSystem`](https://github.com/statnett/Talk2PowerSystem) (Apache-2.0, arquitectura:
+*few-shot* con plantillas SPARQL + GraphDB) y [`cimsparql`](https://github.com/statnett/cimsparql)
+(MIT, ejecutable). Para un TSO/DSO europeo con modelo CGMES, eso es una propuesta de "consulta en
+lenguaje natural sobre tu propio modelo de red, con respuesta trazable al estándar IEC" cuyo
+precedente lo firma un operador par, no un vendor. **Argumento de soberanía incluido: el stack es de
+origen EMEA.**
+
+⚠️ **Nota de oferta, y es una corrección sobre este propio documento:** la medición de oferta europea
+de esta KB está sesgada a la baja. El código canónico de investigación europea vive en **GitLab
+autoalojado** y GitHub indexa espejos que a veces pierden la licencia (ver T53, con evidencia en el
+clúster eólico de DTU). Cualquier afirmación de "no hay oferta europea de X" en pases anteriores debe
+leerse como "no hay oferta europea de X **indexada en GitHub**".
 
 ### APAC
 
@@ -1190,6 +1278,44 @@ cada región pero **comparten el estándar base IEEE 2030.5**: `CSIP-AUS` en Aus
 en Norteamérica (cliente de referencia de EPRI, BSD-3, 96 ★). Buscar `CSIP` a secas devuelve clientes
 **SIP de telefonía**.
 
+
+
+### Actualización del undécimo pase (2026-11-20) — APAC
+
+**APAC es donde el crecimiento de demanda es físico y donde la regulación ya obliga al centro de
+datos a gestionar su propio impacto de red.**
+
+- **Magnitud:** Wood Mackenzie proyecta un aumento de la demanda eléctrica global de **920 TWh en
+  2026**, con **Asia-Pacífico aportando el grueso** del incremento (una fuente titula la cifra
+  regional en **790 TWh**; se registran las dos, con la discrepancia a la vista).
+- **China — el único caso de orquestación de red a escala de ciudad:** **State Grid** opera una
+  plataforma de orquestación con IA que gestiona la red en tiempo real con foco en operación
+  flexible y baja en carbono. En política, la iniciativa **"AI Plus"** sitúa la IA como herramienta de
+  transformación económica incluida la energía, y el **Plan Quinquenal 2026-2030** apunta
+  explícitamente a IA para **volatilidad de red y vertido de renovable**. Es la referencia global de
+  IA aplicada a operación, y es de un operador estatal.
+- **Japón:** foco en resiliencia de red, infraestructura inteligente y eficiencia. Los centros de
+  datos están **revirtiendo por sí solos la tendencia de caída de demanda** eléctrica. Su mercado de
+  futuros eléctricos se describe como el de derivados de electricidad de mayor crecimiento del mundo
+  — base para casos de *trading* y cobertura. La **AI Promotion Act** es de corte promocional y, según
+  fuente secundaria, **sin penalizaciones explícitas**.
+- **India:** el límite no es la ambición sino la **entrega de red**: el objetivo de duplicar capacidad
+  proyectada para el final del próximo ejercicio fiscal choca con retrasos severos de red. El
+  mercado **IEX** opera *day-ahead* y *term-ahead*. Adopción empresarial citable: **Tata Power** con
+  despliegue de Databricks en operaciones de renovable y red inteligente.
+- **Regulación que crea trabajo, y es el dato más accionable:** **Singapur, Malasia y Corea del Sur**
+  exigen a los promotores de centros de datos presentar **planes de almacenamiento en baterías y de
+  gestión de curtailment junto con evaluaciones de impacto de red**. En **Johor** hay prohibición de
+  construcción de instalaciones grandes por tensión hídrica.
+
+**Oportunidad concreta:** el requisito regulatorio "evaluación de impacto de red + plan de BESS +
+gestión de curtailment" es un **entregable técnico-documental repetible** por jurisdicción, y la KB
+tiene con qué hacerlo: `pandapower`/`powsybl` para el estudio de red, el clúster de almacenamiento del
+pase 10 (`snl-quest` BSD-3, `StorageVET`/`DER-VET` BSD-3) para el dimensionado y valoración del BESS,
+y `HELICS` (BSD-3, nuevo en este pase) para acoplar los simuladores del estudio.
+
+⚠️ Las cifras de tamaño de mercado APAC siguen divergiendo (una fuente da **9,45 B USD en 2025**,
+otras bastante más). Citar la regulación y la demanda física, no el tamaño.
 
 ### LATAM
 
@@ -1706,6 +1832,52 @@ almacenamiento. Lo que **no** aportan es dato local ni modelo de red local, y es
 `EC-PowerSystems` (Ecuador). **La arquitectura correcta para LATAM es stack norteamericano permisivo
 + capa de datos local.**
 
+
+
+### Actualización del undécimo pase (2026-11-20) — LATAM
+
+**La tesis de este pase para LATAM, y tiene fuente: el freno no es la demanda, es la capacidad.**
+Moody's sostiene que la expansión de la IA en América Latina está limitada *"no tanto por la demanda
+sino por la capacidad de suministro y de ampliación de la red"*. Eso convierte el trabajo de red —
+estudio de conexión, flexibilidad, almacenamiento— en la vía de entrada, por delante del caso de uso
+de IA.
+
+- **Dónde está la capacidad instalada:** a comienzos de 2026 la región albergaba unos **2.340 MW** en
+  centros de datos, creciendo **15-20 % anual**. Reparto: **Brasil ≈49 %**, **México ≈27 %**,
+  **Chile ≈9 %**. Moody's ve a **Brasil y Chile mejor posicionados** y advierte que las limitaciones
+  eléctricas de **México** amenazan con frenar su desarrollo de IA.
+- **Brasil:** el **3 de junio de 2026** ANEEL aprobó el **marco regulatorio de sistemas de
+  almacenamiento**, que fija requisitos de conexión a la red. Es un mandato nuevo, con fecha, y abre
+  trabajo de dimensionado y cumplimiento de BESS.
+- **Chile:** 2026 es, según Garrigues, **un punto de inflexión en la regulación de BESS**. Hay además
+  proyecto de ley de IA en tramitación con enfoque de riesgo similar al AI Act europeo.
+- **México:** continúa la implementación de la reforma energética de 2025, con la **Ley de Planeación
+  y Transición Energética** y el **Plan de Fortalecimiento y Expansión del Sistema Eléctrico Nacional
+  2025-2030**. Proyectos de ley de IA en trámite (la "Ley Nahui" se menciona sin confirmar).
+- **Brasil** ya cuenta con ley de IA de 2025 con marco de riesgo.
+
+**El hallazgo más vendible del pase para LATAM, y es de ciberseguridad OT, no de IA:** un estudio de
+**ADELAT** mide que el **46 % de las empresas no supervisa sus redes de operación** y que sólo el
+**21 % cuenta con protección activa de los dispositivos de campo**. Y, en paralelo, la ciberseguridad
+de redes eléctricas **carece de reconocimiento tarifario específico en once países de América
+Latina**: el gasto no tiene vía de recuperación regulatoria. Brasil, Chile y Colombia tienen los
+marcos más desarrollados — en Chile, la **Ley 21.663 (2024)** y los estándares del Coordinador
+Eléctrico Nacional imponen obligaciones de protección y notificación de incidentes.
+
+**Cómo se convierte eso en oferta:** un 46 % sin monitorización OT es una línea base de observabilidad
+—no un proyecto de IA— y la KB tiene con qué atacarla con licencia permisiva: la plataforma de datos
+operativos del pase 10 (`openHistorian` MIT + `openXDA` MIT + `PQDashboard` BSD-3 + Grafana) y, nuevo
+en este pase, [`idaholab/STIG`](https://github.com/idaholab/STIG) (BSD-3, grafo STIX de inteligencia
+de amenazas). **El argumento comercial tiene que incorporar la falta de reconocimiento tarifario**:
+si el regulador no permite recuperar el gasto, la propuesta debe justificarse por riesgo evitado y
+continuidad, no por retorno tarifario. Decirlo primero es lo que la hace creíble.
+
+⚠️ **Oferta de origen LATAM: sin cambio en este pase.** El barrido por institución de este pase cubrió
+organizaciones de Norteamérica (`GMLC-TDC`, `idaholab`, `pnnl`) y EMEA (`statnett`, `DTUWindEnergy`).
+**No se ejecutó un barrido equivalente de instituciones LATAM** (CEPEL, ONS, XM, Coordinador Eléctrico
+Nacional, CENACE, universidades) — y eso es una tarea pendiente concreta para el próximo pase, no un
+cero medido. La KB ya tiene `equipoanaliticaxm` (XM, Colombia) y los `pypsa-{país}` del sexto pase,
+lo que indica que la vía institucional **sí rinde** en la región.
 
 ## Posicionamiento Globant
 

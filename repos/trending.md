@@ -9,6 +9,161 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 11 (la ronda 2 del barrido por institución: HELICS llevaba once pases sin estar, y el "nuclear = openmc y nada más" cayó)
+
+**Titular del pase: el método del pase 10 —buscar la institución— no estaba agotado, estaba a medio
+usar. El pase 10 barrió las instituciones *norteamericanas de red* (`epri-dev`,
+`GridProtectionAlliance`, `sandialabs`). Quedaba fuera la capa de **laboratorio nacional de
+propósito general** y, sobre todo, la de **TSO europeo que publica su propio código**. Seis
+organizaciones barridas, y se mueven tres ceros que esta KB había medido con número.**
+
+El hallazgo más incómodo primero: [`GMLC-TDC/HELICS`](https://github.com/GMLC-TDC/HELICS)
+(**BSD-3-Clause**, 178 ★, 54 forks, push **2026-11-20**) **no estaba en esta KB** después de once
+pases. Es el motor de co-simulación del *Grid Modernization Lab Consortium* del DOE: la pieza con la
+que se acoplan transmisión, distribución, comunicaciones y mercado en un mismo experimento. La KB
+tenía `gridlab-d` y tenía una sección entera de "Dinámica, EMT y co-simulación" — y no tenía el
+*bus* que los conecta. No se escapó por licencia ni por actividad: se escapó porque **su nombre no
+contiene ninguna palabra del dominio** (`Hierarchical Engine for Large-scale Infrastructure
+Co-Simulation`), y porque la organización que lo publica se llama por el acrónimo del consorcio,
+`GMLC-TDC`, no por el laboratorio. Es el mismo fallo de vocabulario que el pase 10 describió para
+`StorageVET`, un escalón más arriba. ⚠️ **96 issues abiertas**.
+
+### Gap que cae — "Nuclear: confirmado, sigue siendo `openmc` y nada más" (pase 10) → **roto**
+
+El pase 10 cerró la fila nuclear con esa frase, tras una consulta por `"small modular reactor" OR SMR`
+que devolvió un reproductor de música y tres mods de Minecraft. La consulta era mala por la razón que
+T47 ya había enunciado: **el software nuclear no se llama por el reactor, se llama por el método**, y
+vive en un laboratorio. `org:idaholab` devuelve 165 repos:
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [idaholab/moose](https://github.com/idaholab/moose) | LGPL-2.1 | 2409 | 1282 | 2026-11-20 | *Multiphysics Object-Oriented Simulation Environment*. **Ya estaba en la KB**; lo que no estaba es su ecosistema |
+| [idaholab/raven](https://github.com/idaholab/raven) | **Apache-2.0** | 274 | 151 | 2026-11-19 | **RAVEN**: análisis probabilístico de riesgo y cuantificación de incertidumbre. El envoltorio estadístico sobre MOOSE. ⚠️ **197 issues abiertas** |
+| [idaholab/DeepLynx](https://github.com/idaholab/DeepLynx) | **MIT** *(rescatada en crudo; la API dice `NOASSERTION`)* | 102 | 36 | 2026-10-30 | Almacén de datos de **gemelo digital** orientado a grafo, para integración de datos de ingeniería |
+| [idaholab/STIG](https://github.com/idaholab/STIG) | **BSD-3-Clause** | 102 | 32 | 2026-09-30 | *Structured Threat Intelligence Graph*: grafo de inteligencia de amenazas (STIX) |
+| [idaholab/MontePy](https://github.com/idaholab/MontePy) | **MIT** | 68 | 32 | 2026-11-19 | Lectura/escritura de *inputs* MCNP en Python |
+| [idaholab/virtual_test_bed](https://github.com/idaholab/virtual_test_bed) | ⚠️ **CC-BY-4.0** | 81 | **103** | 2026-11-19 | Modelos de reactores avanzados (microrreactor, SFR, HTGR, MSR) listos para MOOSE. Forks > ★ |
+| [idaholab/mastodon](https://github.com/idaholab/mastodon) | LGPL-2.1 | 52 | 59 | 2026-11-18 | Análisis sísmico de estructuras nucleares |
+
+**La lectura honesta, porque la fila nuclear sigue teniendo una condición:** `raven` (Apache-2.0),
+`DeepLynx` (MIT) y `MontePy` (MIT) son proponibles. `moose` y `mastodon` son **LGPL-2.1** —
+enlazable, no incrustable sin análisis. Y `virtual_test_bed` es **CC-BY-4.0**: una licencia de
+*documentación y datos*, no de software. Eso no lo invalida —son modelos, no código— pero significa
+que **no se hereda permiso de software sobre ellos**, y conviene decirlo antes de meterlos en un
+pipeline. El gap deja de ser "no hay oferta" y pasa a ser "hay oferta, y la mitad es copyleft o CC".
+
+### Categoría que esta KB nunca buscó, y la regulación norteamericana acaba de nombrarla: **dynamic line rating**
+
+El pase 10 abrió el frente del "activo de campo" con ocho consultas y cuatro ceros (incendio,
+transformador, *hosting capacity*, inspección). **No buscó la quinta, que es la que tiene mandato
+regulatorio escrito.** Entre las prioridades críticas que FERC publicó en enero de 2026 figuran, con
+esas palabras, *"advanced demand response, **dynamic line ratings**, and emerging cybersecurity
+technologies at the operational level"*. La oferta abierta existe, es permisiva, y la publica un TSO:
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [statnett/linerate](https://github.com/statnett/linerate) | **MIT** | 8 | 3 | **2026-11-20** | Ampacidad de líneas aéreas: una función pura por **cada ecuación de CIGRE TB 601**, más CIGRE TB 207 e **IEEE 738**. Incluye solver de bisección vectorizado y tipos para conductor/vano/meteorología. ⚠️ 7 issues |
+
+Ocho estrellas. Y es, otra vez, el patrón `plexos2duckdb` del pase 10: **vale mucho más que su
+número de estrellas**, porque lo que entrega no es una app, es la *norma implementada y trazable* —
+el README reproduce el *Example B*, páginas 79-81, de CIGRE TB 601. En una propuesta de DLR, el
+trabajo facturable es la telemetría meteorológica, la integración con el EMS y la validación; **las
+ecuaciones ya no se escriben**, y eso se puede defender ante el cliente citando el estándar.
+
+### La otra mitad de `Talk2PowerSystem`: lo que había dentro y ningún pase leyó
+
+Esta KB registró [`statnett/Talk2PowerSystem`](https://github.com/statnett/Talk2PowerSystem)
+(Apache-2.0, 17 ★) en el pase 9 y lo clasificó, con prudencia correcta, como **"precedente citable,
+no dependencia"**. Esa clasificación se queda corta, y la razón de que se quedara corta es un
+hallazgo de método (ver T52): **el README no se llama `README.md`, se llama `ReadMe.adoc`**, de modo
+que la sonda habitual a `raw.githubusercontent.com/.../README.md` devuelve 404 y el repo parece
+vacío. Leído por dentro, `qa-dataset-ontology-schema/` contiene:
+
+- `README.md` de una **N-Shot Tool**: recupera las N preguntas más parecidas del *dataset* de Q&A y
+  las pasa al chatbot **junto con sus plantillas SPARQL** como ejemplos. Es *few-shot retrieval* de
+  texto-a-SPARQL, descrito por el operador.
+- `connector.rq` — definición de un **retrieval connector** para indexar entidades de la base en una
+  base vectorial.
+- `ontology.trig` — ontología para almacenar el *dataset* de Q&A en **GraphDB**.
+- `qa_dataset-config.ttl` — configuración del repositorio GraphDB.
+
+Y la mitad ejecutable estaba al lado, sin catalogar:
+[`statnett/cimsparql`](https://github.com/statnett/cimsparql) (**MIT**, 10 ★, 7 forks, push
+2026-11-16, ⚠️ 9 issues), que consulta modelos **CIM** por SPARQL desde Python.
+
+**Reclasificación propuesta, y es la contribución de este pase sobre la capa agéntica:**
+`Talk2PowerSystem` deja de ser sólo un precedente y pasa a ser una **arquitectura de referencia
+copiable** —NL → *few-shot* con plantillas SPARQL → GraphDB sobre CIM → respuesta trazable—
+publicada por un TSO bajo Apache-2.0. Lo que **sigue siendo cierto** del juicio anterior: el push es
+de mayo de 2026, `Roadmap.adoc` dice literalmente *"To be addressed"* y `Contributing` también. No es
+una base de producto. Es un plano, y ahora se sabe que el plano tiene planta.
+
+⚠️ **Trampa de licencia en el mismo barrido:** [`statnett/Nordic44`](https://github.com/statnett/Nordic44)
+(modelo sintético de la red de transmisión nórdica, 6 ★, 29 issues) es **CC-BY-NC-SA-4.0** — la API
+reporta `NOASSERTION`. **NonCommercial**: inutilizable en un encargo de cliente. Es el caso más claro
+de por qué este KB lee licencias en crudo.
+
+### Eólica: un clúster entero, y la prueba de por qué GitHub subestima la oferta europea
+
+`org:DTUWindEnergy` (21 repos) cubre diseño de parque y control de planta, una categoría que la KB
+sólo tenía por el lado de NatLabRockies (`floris`):
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [DTUWindEnergy/WindGym](https://github.com/DTUWindEnergy/WindGym) | **MIT** | 59 | 5 | **2026-11-19** | Entorno de **aprendizaje por refuerzo para control de parque eólico**. Vivo, y es el único con tracción |
+| [DTUWindEnergy/TopFarm2](https://github.com/DTUWindEnergy/TopFarm2) | **MIT** | 18 | 14 | 2026-07-16 | Optimización de **layout** de parque eólico |
+| [DTUWindEnergy/OptiWindNet](https://github.com/DTUWindEnergy/OptiWindNet) | **MIT** | 14 | 2 | 2026-10-19 | Optimización de la **red de colección** interna del parque |
+| [DTUWindEnergy/PyWake](https://github.com/DTUWindEnergy/PyWake) | ⚠️ **sin archivo de licencia** (ni `main`, ni `master`, ni `develop`) | 85 | 28 | 2024-11-25 | Modelo de **estela** (*wake*). El más citado del clúster, y el que no se puede proponer |
+| [DTUWindEnergy/WindEnergyToolbox](https://github.com/DTUWindEnergy/WindEnergyToolbox) | ⚠️ NOASSERTION | 34 | 8 | 2026-11-18 | Utilidades de cargas y aeroelasticidad |
+| [DTUWindEnergy/TOPFARM](https://github.com/DTUWindEnergy/TOPFARM) | AGPL-3.0 | 40 | 15 | 2017-10-11 | Predecesor de `TopFarm2`. Abandonado en 2017 |
+
+**El dato de método, y vale para toda la oferta europea de investigación:** `TopFarm2`,
+`OptiWindNet` y `WindEnergyToolbox` **se describen a sí mismos como "Mirror of
+https://gitlab.windenergy.dtu.dk/..."**. No es una inferencia — está en el campo `description` de la
+propia API. `WindGym` dice lo mismo (`Mirror of https://gitlab.windenergy.dtu.dk/sys/windgym`). Es
+decir: **el repositorio canónico de la ingeniería eólica europea está en un GitLab autoalojado, y lo
+que GitHub indexa son espejos** — a veces con la licencia por el camino, que es exactamente lo que le
+pasa a `PyWake`. Toda medición de oferta que esta KB haya hecho con consultas de GitHub **subestima
+sistemáticamente a las instituciones europeas**, y ahora hay evidencia de primera mano. Ver T53.
+
+### Oferta nueva verificada: PNNL, y una licencia permisiva que no es SPDX
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [pnnl/neuromancer](https://github.com/pnnl/neuromancer) | **Battelle (permisiva tipo BSD-3, leída en crudo)** | 1399 | 190 | 2026-10-22 | Programación diferenciable: control predictivo y aprendizaje **con restricciones físicas**. El repo de energía con más estrellas de este pase |
+| [pnnl/ExaGO](https://github.com/pnnl/ExaGO) | **Battelle (misma licencia)** | 93 | 16 | 2026-03-23 | Flujo de potencia óptimo (ACOPF) en **GPU/HPC**, multiperiodo y estocástico |
+
+⚠️ **Acotación de licencia que importa para un SoW, y matiza T46:** la API reporta `NOASSERTION` en
+ambos. Leídos en crudo, el texto es la licencia propia de **Battelle Memorial Institute**: concede
+*use, copy, modify, merge, publish, distribute, sublicense and/or sell* con retención de aviso y
+cláusula de no-uso-del-nombre. Es decir, **permisiva en sustancia, equivalente a BSD-3** — pero **no
+es un identificador SPDX**, de modo que no pasará un escaneo automático de licencias y necesitará
+visto bueno legal explícito. No es lo mismo "rescatada como BSD-3" que "rescatada como permisiva no
+estándar", y conviene no confundirlas en una propuesta.
+
+### Monitorización de consumo: el stack de hardware abierto que faltaba, con su problema
+
+`org:openenergymonitor` (92 repos) es la referencia de medición de consumo en hardware abierto.
+Proponible con cuidado: [`EmonLib`](https://github.com/openenergymonitor/EmonLib) es **AGPL-3.0**
+(628 ★, 430 forks) y la mayor parte del resto —`emonpi` (280 ★, push 2026-10-11), `emonhub`
+(107 ★, push 2026-11-11), `Hardware`, `EmonESP`, `emonTxFirmware`— **no tiene archivo de licencia**.
+Sirve como referencia de arquitectura y como banco de pruebas; **no como dependencia de producto**.
+
+### Lo que este pase buscó y no encontró (registro explícito)
+
+- **`org:Energinet` y `org:Energinet-DataHub`** (el TSO danés, que publica DataHub bajo Apache-2.0
+  según su propia comunicación): la API de búsqueda devuelve **HTTP 422** para ambos. 422 no es 404:
+  significa que el nombre de organización no se resuelve en este canal. **No se declara ausencia de
+  oferta danesa** — se declara que este canal no la alcanza y que hay que verificarla por otra vía.
+- **Agentes energéticos por consulta genérica**: `top open source AI agents energy 2026 github MIT`
+  devuelve, en buscador web, exclusivamente *frameworks* de propósito general (OpenHands, CrewAI,
+  LangGraph, AutoGen, OpenClaw). **Cero resultados de dominio energético.** Es el séptimo cero
+  consecutivo por esta vía, y confirma desde fuera de GitHub lo que la KB mide dentro.
+- **Trending de GitHub filtrado por energía**: no existe como fuente. Lo más cercano es
+  [`DatariusAI/AI-in-Energy`](https://github.com/DatariusAI/AI-in-Energy) (agregador diario de
+  IA/ML para energía y *utilities*, push 2026-11-20) — pero tiene **0 ★, 0 forks y ningún archivo de
+  licencia**, creado el 2026-10-08. Se registra como fuente a vigilar, **no como referencia citable**.
+
 ## 2026-11-20 — pase 10 (dos instituciones del sector eléctrico norteamericano estaban catalogadas con dos repos entre las dos)
 
 **Titular del pase: `epri-dev` tiene 59 repos y `GridProtectionAlliance` tiene 66. Esta KB tenía

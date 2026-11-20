@@ -1676,3 +1676,134 @@ empotrar.
 - **Una propuesta argentina que prometa base local.** **Sexta medición consecutiva en cero.** La
   base para Argentina es regional (`PyPSA-CL`, `pypsa-meets-brazil`) o norteamericana permisiva, y
   conviene decirlo antes de que lo pregunten.
+
+## Recetas del undécimo pase (2026-11-20)
+
+### Receta 42 — Dynamic line rating: la norma ya está implementada, lo facturable es el resto
+
+**A quién:** TSO/utility de transmisión en Norteamérica o EMEA que quiera liberar capacidad de línea
+sin construir. **Por qué ahora:** FERC nombró *dynamic line ratings* entre sus prioridades críticas
+operativas de enero de 2026.
+
+**Piezas:**
+
+1. [`statnett/linerate`](https://github.com/statnett/linerate) (**MIT**, push 2026-11-20) — el núcleo
+   de cálculo: una función pura por cada ecuación de **CIGRE TB 601**, más CIGRE TB 207 e **IEEE 738**;
+   tipos para conductor/vano/meteorología y solver de bisección vectorizado.
+2. [`pvlib/pvlib-python`](https://github.com/pvlib/pvlib-python) (**BSD-3**, ya en la KB) — modelos de
+   irradiancia y posición solar para el término de calentamiento solar del balance térmico.
+3. Fuente meteorológica: la capa de recurso ya catalogada en `repos/foundations.md` (sección "Recurso
+   meteorológico"), más la telemetría de estaciones del cliente.
+4. [`GridProtectionAlliance/openHistorian`](https://github.com/GridProtectionAlliance/openHistorian)
+   (**MIT**, ya en la KB desde el pase 10) — serie temporal de ampacidad calculada, junto a la medida.
+5. [`GMLC-TDC/HELICS`](https://github.com/GMLC-TDC/HELICS) (**BSD-3**, nuevo en este pase) — para
+   validar el efecto del *rating* dinámico en el despacho, acoplando el modelo de red con el térmico.
+
+**Cómo se cablea:** la meteorología (medida + pronóstico) y la geometría del conductor entran como
+`Weather` y `Conductor` de `linerate` → `model.Cigre601` resuelve temperatura de conductor y ampacidad
+por vano → la serie resultante se persiste en `openHistorian` junto a la medida real → el caso de
+despacho se valida en `HELICS` acoplando el modelo de red (`pandapower`/`powsybl`) con la serie de
+ampacidad → el EMS consume el límite dinámico por línea.
+
+**Qué es el entregable, y qué no.** No es el cálculo: eso está hecho y es citable al estándar, página
+a página (el README reproduce el *Example B*, pp. 79-81 de CIGRE TB 601). El entregable es
+**(a)** la ingesta y control de calidad de la telemetría meteorológica por vano, **(b)** la
+integración con el EMS/SCADA, **(c)** la validación frente a *rating* estático y el expediente que la
+acompaña, y **(d)** el régimen de fallback cuando falta el dato. Que las ecuaciones no se escriban es
+**argumento de precio y de riesgo**, no una rebaja del alcance.
+
+⚠️ 8 ★ y 7 issues abiertas: hay que leerlas antes de comprometer. El valor está en la trazabilidad al
+estándar, no en la comunidad.
+
+### Receta 43 — Consulta en lenguaje natural sobre el modelo CIM, con el plano firmado por un TSO
+
+**A quién:** TSO/DSO europeo con modelo **CGMES/CIM** cuyos ingenieros no escriben SPARQL. **Por qué
+es defendible:** el patrón entero está publicado por **Statnett** bajo Apache-2.0; se cita un operador
+par, no un vendor.
+
+**Piezas:**
+
+1. [`statnett/cimsparql`](https://github.com/statnett/cimsparql) (**MIT**, push 2026-11-16) — **la
+   dependencia**: consulta modelos CIM por SPARQL desde Python.
+2. [`statnett/Talk2PowerSystem`](https://github.com/statnett/Talk2PowerSystem) (**Apache-2.0**) — **el
+   plano**, no la dependencia. De él se copia: la **N-Shot Tool** (recupera las N preguntas más
+   similares del *dataset* de Q&A y las pasa al modelo **con sus plantillas SPARQL**),
+   `connector.rq` (conector de recuperación vectorial) y `ontology.trig` (ontología del *dataset* de
+   Q&A para **GraphDB**).
+3. `pycgmes` + `application-profiles-library` + `CIM-Graph` (ya en la KB, receta de CGMES del pase 10)
+   — validación SHACL del modelo antes de cargarlo. **Un modelo que no valida no se consulta.**
+4. GraphDB u otro *triple store* — el repo de Statnett trae la configuración (`qa_dataset-config.ttl`).
+
+**Cómo se cablea:** el CGMES del cliente entra por `pycgmes` → se valida con SHACL contra los perfiles
+→ se carga en el *triple store* → se construye el *dataset* de Q&A del cliente (pregunta en lenguaje
+natural ↔ plantilla SPARQL verificada) con el esquema de `ontology.trig` → en consulta, la N-Shot Tool
+recupera los k ejemplos más próximos y los inyecta como *few-shot* → el LLM emite SPARQL →
+`cimsparql` la ejecuta → la respuesta se devuelve **con la consulta ejecutada y el subgrafo citado**.
+
+**La propiedad que lo hace vendible en un sector regulado:** no es "un chatbot sobre la red". Es que
+la respuesta **es trazable**: lleva adjunta la consulta SPARQL y los nodos CIM de los que sale. El
+ingeniero verifica sin confiar.
+
+**Dónde está el trabajo:** el *dataset* de Q&A con plantillas verificadas del cliente — ése es el
+activo, y es el 70 % del esfuerzo. El *dataset* de Statnett **no es visible** en el directorio
+auditado; asúmase que se construye desde cero.
+
+⚠️ `Talk2PowerSystem` tiene push de mayo de 2026 y su `Roadmap.adoc` dice *"To be addressed"*. **Se
+copia la arquitectura; no se depende del repo.**
+
+### Receta 44 — El expediente de impacto de red que Singapur, Malasia y Corea ya exigen
+
+**A quién:** promotor de centro de datos o su asesor en APAC. **Por qué ahora:** esas tres
+jurisdicciones exigen **plan de almacenamiento en baterías y de gestión de *curtailment* junto con la
+evaluación de impacto de red**. Es un entregable repetible por jurisdicción.
+
+**Piezas:**
+
+1. [`GMLC-TDC/HELICS`](https://github.com/GMLC-TDC/HELICS) (**BSD-3**) — el bus: acopla el simulador
+   de transmisión con el de distribución y el del activo en un mismo experimento.
+2. `pandapower` (**BSD-3**) o `powsybl` (Apache-2.0) — el estudio de red en régimen permanente.
+3. `gridlab-d` (ya en la KB) — el lado de distribución, si el punto de conexión lo requiere.
+4. [`sandialabs/snl-quest`](https://github.com/sandialabs/snl-quest) (**BSD-3**) y
+   [`epri-dev/DER-VET`](https://github.com/epri-dev/DER-VET) (**BSD-3**) — dimensionado y **valoración**
+   del BESS: el plan de almacenamiento que pide el regulador.
+5. `epri-dev/OpenDER` (**BSD-3**) — comportamiento normativo del inversor (IEEE 1547-2018) si hay
+   generación/almacenamiento propio en el punto de conexión.
+
+**Cómo se cablea:** el perfil de carga del centro de datos (incluida su flexibilidad declarada) y el
+modelo de red del punto de conexión se acoplan en `HELICS` → `pandapower`/`powsybl` resuelve los casos
+de contingencia y los límites térmicos y de tensión → los escenarios donde se incumple el límite
+definen el requisito de flexibilidad → `snl-quest`/`DER-VET` dimensionan y valoran el BESS que lo
+cubre → `OpenDER` verifica que el inversor cumple la norma de conexión → el conjunto se redacta como
+**evaluación de impacto + plan de BESS + plan de curtailment**.
+
+**Por qué es buen negocio:** el mismo pipeline se reinstancia por jurisdicción cambiando norma de
+conexión y mercado. Y en EMEA se reutiliza tal cual contra los **códigos de conexión actualizados**
+que ENTSO-E pide legislar.
+
+### Receta 45 — Control y layout de parque eólico: cuatro piezas MIT y una trampa de licencia
+
+**A quién:** promotor u operador de parque eólico. **Lo que aporta de nuevo:** la KB sólo tenía este
+frente por `floris` (NatLabRockies); el clúster de **DTU** cubre layout, red de colección y control.
+
+**Piezas:**
+
+1. [`DTUWindEnergy/WindGym`](https://github.com/DTUWindEnergy/WindGym) (**MIT**, push 2026-11-19) —
+   entorno de **RL para control de parque**: la pieza viva del clúster.
+2. [`DTUWindEnergy/TopFarm2`](https://github.com/DTUWindEnergy/TopFarm2) (**MIT**) — optimización de
+   **layout**.
+3. [`DTUWindEnergy/OptiWindNet`](https://github.com/DTUWindEnergy/OptiWindNet) (**MIT**) — optimización
+   de la **red de colección** interna.
+4. [`NatLabRockies/floris`](https://github.com/NatLabRockies/floris) (**BSD-3**, ya en la KB) — el
+   modelo de estela **proponible**.
+5. `NatLabRockies/OpenOA` (**BSD-3**, ya en la KB) — evaluación operacional contra producción real.
+
+**Cómo se cablea:** `TopFarm2` optimiza posiciones con el modelo de estela → `OptiWindNet` traza la red
+de colección sobre ese layout → `floris` evalúa estela y pérdidas del diseño → `WindGym` entrena la
+política de control de planta (*wake steering*, *derating*) sobre el entorno → `OpenOA` cierra el
+lazo midiendo el resultado contra SCADA real.
+
+⚠️ **La trampa, y es la pieza que uno querría usar:**
+[`PyWake`](https://github.com/DTUWindEnergy/PyWake) (85 ★, el modelo de estela más citado del clúster)
+**no tiene archivo de licencia en `main`, `master` ni `develop`**. Para el modelo de estela, usar
+`floris` (BSD-3). Y antes de descartar `PyWake` definitivamente, **mirar el GitLab de origen**
+(`gitlab.windenergy.dtu.dk`): estos repos son espejos y el espejo pierde la licencia (ver T53).
