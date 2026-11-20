@@ -9,6 +9,108 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 7 (la categoría más grande del open source energético estaba catalogada al 30 %: carga de EV, y la capa CIM que la red europea ya habla)
+
+**Titular del pase: el propio trend T7 de esta KB dice desde el pase 2 que "movilidad eléctrica es
+donde está la masa crítica real de la comunidad" — y la KB tenía cuatro repos de esa categoría.**
+Buscando por el protocolo (`OCPP`, `OCPI`) en vez de por el sector aparecen **once más**, nueve de
+ellos permisivos, con un rango de 48 a 602 ★ y todos con push de noviembre de 2026. No es una cola
+larga: es un stack completo y probable — CSMS, emulador, simulador, firmware embarcado y roaming.
+
+**Carga de EV: lo nuevo, verificado repo por repo por `repo:owner/name`:**
+
+| Repo | Licencia | ★ / forks | Capa | Por qué importa |
+|------|----------|-----------|------|-----------------|
+| [EVerest/EVerest](https://github.com/EVerest/EVerest) | Apache-2.0 | 298 / 215 | Stack completo de carga | Proyecto **LF Energy**; gobernanza de fundación, no de vendor |
+| [citrineos/citrineos-core](https://github.com/citrineos/citrineos-core) | Apache-2.0 | 309 / 175 | CSMS **OCPP 2.0.1** | El CSMS permisivo que faltaba frente al GPL de SteVe |
+| [lbbrhzn/ocpp](https://github.com/lbbrhzn/ocpp) | MIT | 415 / 177 | Integración Home Assistant | La vía de piloto residencial sin hardware de utility |
+| [ocpi/ocpi](https://github.com/ocpi/ocpi) | ⚠️ NOASSERTION | 602 / 230 | **Roaming** entre operadores | Especificación clave, licencia **no resuelta** |
+| [SAP/e-mobility-charging-stations-simulator](https://github.com/SAP/e-mobility-charging-stations-simulator) | Apache-2.0 | 231 / 102 | Simulador de estaciones OCPP-J | Carga sintética a escala; autoría SAP |
+| [monta-app/ocpp-emulator](https://github.com/monta-app/ocpp-emulator) | Apache-2.0 | 182 / 29 | Emulador de punto de carga | Kotlin Multiplatform; corre en escritorio |
+| [tommymalmqvist/rust-ocpp](https://github.com/tommymalmqvist/rust-ocpp) | Apache-2.0 | 106 / 35 | Librerías 1.6 / 2.0.1 / **2.1** | La única que ya cubre **OCPP 2.1** |
+| [ChargeLab/OpenOCPP](https://github.com/ChargeLab/OpenOCPP) | Apache-2.0 | 92 / 47 | Firmware embarcado | Lado estación, multiplataforma |
+| [shiv3/ocpp-cp-simulator](https://github.com/shiv3/ocpp-cp-simulator) | Apache-2.0 | 48 / 22 | Simulador **para pruebas de agentes** | Se declara *"for AI agent testing & CSMS development"* |
+| [dallmann-consulting/OCPP.Core](https://github.com/dallmann-consulting/OCPP.Core) | ⚠️ GPL-3.0 | 304 / 126 | Servidor + UI .NET | Copyleft: no integrar en producto cerrado |
+| [juherr/awesome-ev-charging](https://github.com/juherr/awesome-ev-charging) | CC0-1.0 | 185 / 29 | Índice de la categoría | Punto de partida del próximo pase |
+
+**Segundo hallazgo, y el que más cambia una propuesta en EMEA: la capa CIM / CGMES.** Esta KB tenía
+`powsybl-core`, `entsoe/application-profiles-library` y `ReliCapGrid`, y no tenía el resto del
+ecosistema que convierte el modelo de red europeo en algo programable. El motivo por el que importa
+**ahora** es que la hoja de ruta de la Comisión Europea (COM/2026/501, 3 de junio de 2026) financia
+**foundation models para gestión y planificación de red** con 30 M€ en 2026 y 20 M€ en 2027 — y esos
+modelos consumirán CGMES. Quien tenga la tubería de datos CGMES tiene el acceso al dato.
+
+| Repo | Licencia | ★ | Rol en la tubería CGMES |
+|------|----------|---|--------------------------|
+| [eliagroup/ToOp](https://github.com/eliagroup/ToOp) | MPL-2.0 | 76 | Optimización de **topología** del Elia Group: DC load flow en **GPU**, validación AC |
+| [powsybl/pypowsybl](https://github.com/powsybl/pypowsybl) | MPL-2.0 | 106 | Acceso Python al motor PowSyBl (GraalVM) |
+| [powsybl/powsybl-diagram](https://github.com/powsybl/powsybl-diagram) | MPL-2.0 | 136 | Unifilares y diagramas de red en SVG |
+| [PNNL-CIM-Tools/CIM-Graph](https://github.com/PNNL-CIM-Tools/CIM-Graph) | BSD-3-Clause | 31 | CIM como grafo de propiedades en memoria (PNNL) |
+| [sogno-platform/libcimpp](https://github.com/sogno-platform/libcimpp) | Apache-2.0 | 27 | Import/export CGMES en C++ |
+| [sogno-platform/cimgen](https://github.com/sogno-platform/cimgen) | Apache-2.0 | 25 | Genera código desde el modelo CIM |
+| [alliander-opensource/pycgmes](https://github.com/alliander-opensource/pycgmes) | Apache-2.0 | 19 | Dataclasses CGMES 3 + RDFS + SHACL (DSO Alliander) |
+| [SOPTIM/OpenCGMES](https://github.com/SOPTIM/OpenCGMES) | Apache-2.0 | 9 | Suite RDFS / SHACL / CIMXML |
+| [SOPTIM/RDFArchitect](https://github.com/SOPTIM/RDFArchitect) | Apache-2.0 | 30 | Editor web de esquemas RDFS con extensiones CIM |
+| [eigenergy/powerio](https://github.com/eigenergy/powerio) | Apache-2.0 | 39 | *"Power system compiler infrastructure"* |
+| [Welthulk/Sparlectra.jl](https://github.com/Welthulk/Sparlectra.jl) | Apache-2.0 | 17 | Flujo AC, corto IEC 60909, N-1 y N-2 en Julia |
+
+**Tercer hallazgo: APAC deja de ser un gap de vocabulario.** Los pases anteriores registraron APAC
+como delgado. El término que lo abre no es "APAC": es el **instrumento regulatorio local**. Buscando
+`CSIP-AUS` / `IEEE 2030.5` y `NEM` aparecen repos de origen australiano, reales y permisivos:
+
+- [`longzheng/open-dynamic-export`](https://github.com/longzheng/open-dynamic-export) — **MIT**, 57 ★.
+  Control dinámico de exportación y curtailment de inversores bajo **CSIP-AUS / SEP2 / IEEE 2030.5**.
+  Es exactamente el régimen de conexión obligatorio en Australia.
+- [`ethanndickson/sep2_client`](https://github.com/ethanndickson/sep2_client) — **Apache-2.0**, 24 ★,
+  y `sep2_common` (Apache-2.0, 14 ★): cliente IEEE 2030.5 en Rust.
+- [`UNSW-CEEM/NEMSEER`](https://github.com/UNSW-CEEM/NEMSEER) — GPL-3.0, 39 ★. Pronósticos del
+  **AEMO** para el National Electricity Market, de la UNSW.
+- [`bje-/NEMO`](https://github.com/bje-/NEMO) — GPL-3.0, 55 ★. Optimizador del NEM.
+
+⚠️ Los dos últimos son **GPL-3.0**: sirven de referencia y de validación, no de base de producto.
+
+**Cuarto: modelos de sistema energético y electroquímica, los que el pase 5 dejó a medias.**
+[`macroenergy/MacroEnergy.jl`](https://github.com/macroenergy/MacroEnergy.jl) (**MIT**, 57 ★) es
+multi-sector y permisivo — el perfil que faltaba frente a GenX (GPL-2.0) y openTEPES (AGPL-3.0, 57 ★).
+[`FZJ-IEK3-VSA/FINE`](https://github.com/FZJ-IEK3-VSA/FINE) (⚠️ NOASSERTION, 102 ★, ETHOS.FINE, Jülich).
+En electroquímica: [`BattMoTeam/BattMo`](https://github.com/BattMoTeam/BattMo) (GPL-3.0, 62 ★) y
+[`openFuelCell2/openFuelCell2`](https://github.com/openFuelCell2/openFuelCell2) (GPL-3.0, 64 ★) —
+ambos copyleft, ambos válidos como motor de estudio, ninguno como librería embebida.
+
+**Quinto: la capa de campo y gemelo digital que no es del sector pero se usa en el sector.**
+[`thingsboard/thingsboard-gateway`](https://github.com/thingsboard/thingsboard-gateway) (Apache-2.0,
+**2204 ★**, 1008 forks) es el gateway IoT multiprotocolo con más tracción del conjunto completo de este
+pase; [`eclipse-ditto/ditto`](https://github.com/eclipse-ditto/ditto) (EPL-2.0, 953 ★) es el framework
+de gemelo digital de Eclipse IoT; [`syzygyhack/open-foundry`](https://github.com/syzygyhack/open-foundry)
+(Apache-2.0, 137 ★) es una plataforma de ontología para gemelos operativos;
+[`VILLASframework/node`](https://github.com/VILLASframework/node) (Apache-2.0, 22 ★) es gateway
+multiprotocolo en tiempo real para co-simulación.
+En IEC 61850 aparecen dos implementaciones nuevas:
+[`wendy512/iec61850`](https://github.com/wendy512/iec61850) (⚠️ GPL-3.0, 182 ★, Go) y
+[`mzaniolo/iec61850`](https://github.com/mzaniolo/iec61850) (**MIT**, 15 ★, Rust) — la segunda es
+diminuta pero es la **única MIT** de la familia 61850 que esta KB ha encontrado en siete pases.
+Para seguridad OT: [`Orange-Cyberdefense/awesome-industrial-protocols`](https://github.com/Orange-Cyberdefense/awesome-industrial-protocols)
+(CC0-1.0, 783 ★).
+
+**Sexto: carbono horario, la pieza que vuelve verificable un compromiso de PPA.**
+[`carbonfirst/CarbonCast`](https://github.com/carbonfirst/CarbonCast) (Apache-2.0, 49 ★) predice
+intensidad de carbono **horaria** por red con ML; [`bluehands/Carbon-Aware-Computing`](https://github.com/bluehands/Carbon-Aware-Computing)
+(MIT, 47 ★) desplaza tareas al momento de mínima intensidad. Complementan al ya catalogado
+`carbon-aware-sdk` con la parte de **predicción**, que era la que faltaba.
+
+**Séptimo, y el más útil para vender: LF Energy publicó un marco de coste-beneficio de open source
+para operadores de red.** [`lf-energy/lfe-oss-benefit-cost-framework`](https://github.com/lf-energy/lfe-oss-benefit-cost-framework)
+(Apache-2.0, creado 2026-09-08) es nuevo y pequeño, y resuelve el problema que ninguna de las 24
+recetas de esta KB resolvía: **cómo justificar ante una utility regulada la adopción de open source**.
+Acompaña a [`lf-energy/lfenergy-landscape`](https://github.com/lf-energy/lfenergy-landscape)
+(Apache-2.0, 45 ★), el mapa vivo del ecosistema.
+
+**Nota de método, para no repetir el error del pase 2 de este archivo:** la consulta
+`(electrolyzer OR hydrogen OR geothermal) in:name,description` con paréntesis devolvió **cero filas**
+de forma silenciosa, y la misma búsqueda sin paréntesis devolvió dieciséis. **Un cero de la API de
+GitHub no es un gap del sector hasta haber reescrito la consulta sin paréntesis.** Dos "gaps" de
+hidrógeno y nuclear de pases anteriores pueden ser artefactos de esta sintaxis.
+
 ## 2026-11-20 — pase 6 (LATAM deja de ser un gap de oferta: cuatro modelos nacionales, tres MIT)
 
 **Titular del pase: la recomendación con la que cerró el pase 5 era correcta y se cobró.** Ese pase

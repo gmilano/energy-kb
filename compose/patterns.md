@@ -763,6 +763,229 @@ con sus consecuencias) o construir el modelo de sistema desde `pypsa-earth` asum
 **AGPL-3.0-or-later**. Acción barata: abrir issue pidiendo licencia explícita al autor; si responde,
 la receta cubre los tres mercados grandes de la región en el próximo pase.
 
+### Receta 25 — Evaluación de forecasting agéntico con control de producción (las cuatro regiones)
+
+**El hueco que cierra:** los pases 4-6 declararon ausente la capa agéntica energética. El séptimo
+encontró que existe **para forecasting**, no para operación. Esta receta la pone a trabajar **en vía
+de evaluación**, con una línea base honesta, que es la única forma defendible de proponerla hoy.
+
+**Stack, todo permisivo:**
+
+1. [`TimeCopilot/timecopilot`](https://github.com/TimeCopilot/timecopilot) (**MIT**, 643 ★) —
+   orquestador agéntico: el LLM selecciona y combina modelos, y **explica** el pronóstico.
+2. [`amazon-science/chronos-forecasting`](https://github.com/amazon-science/chronos-forecasting)
+   (**Apache-2.0**, 6328 ★) — foundation model de series temporales, zero-shot.
+3. [`arnaud-vs/open-predico`](https://github.com/arnaud-vs/open-predico) (**Apache-2.0**, 54 ★) —
+   el puente explícito TSFM→energía.
+4. [`williamhobbs/hefty`](https://github.com/williamhobbs/hefty) (**BSD-3-Clause**, 85 ★) —
+   **la línea base a batir**: forecasting clásico de corto plazo solar, viento y carga.
+5. [`OpenSTEF/openstef`](https://github.com/OpenSTEF/openstef) (**MPL-2.0**, 184 ★) —
+   **el control de producción**: el único del conjunto con operación real en utility (Alliander, RTE).
+6. [`gridstatus/gridstatus`](https://github.com/gridstatus/gridstatus) (**BSD-3**) o las APIs de
+   **XM** / `entsoe-py` ya catalogadas — el dato histórico de entrada según la región.
+
+**Cómo se cablea:** una sola serie histórica (carga o precio nodal) se divide en train/test →
+corren **en paralelo** cuatro predictores sobre la misma ventana: `hefty` (baseline clásico),
+`chronos` (zero-shot), `open-predico` (TSFM ajustado) y `openstef` (pipeline de utility) →
+`timecopilot` actúa como **capa de selección y explicación** sobre los cuatro, no como un quinto
+predictor → se publica una tabla de error (MAE/pinball por horizonte) y, junto a ella, la
+**explicación en lenguaje natural** de por qué eligió cada modelo en cada régimen.
+
+**Entregable que se vende:** no un modelo, sino un **veredicto con trazabilidad**: "para esta serie,
+en este mercado, el agente aporta X % sobre el baseline y Y % sobre el pipeline de producción, y aquí
+está el registro de por qué". Para un cliente que ya tiene forecasting, ése es el único argumento que
+justifica cambiarlo.
+
+⚠️ **Límites que hay que decir en la propuesta:** `timecopilot` y `chronos` son de **propósito
+general**, no energéticos; lo verificable es que la cadena existe y es permisiva, **no que esté
+validada en despacho**. Esta receta es una **vía de evaluación**, igual que la Receta 19 para
+foundation models de red: no proponerla como reemplazo de un pipeline operativo en la primera fase.
+Si el cliente opera en EMEA, el expediente de la *Receta 2* (AI Act) aplica también aquí.
+
+---
+
+### Receta 26 — Plataforma de operador de carga de EV, probada sin hardware (EMEA primero, replicable en las cuatro regiones)
+
+**Disparador comercial concreto:** las licitaciones europeas de carga ya exigen **OCPP 2.0.1**, y el
+séptimo pase verificó que existe un CSMS **Apache-2.0** que lo habla. Es el único subsector energético
+donde esta KB puede afirmar que existe el equivalente de un producto vertical customizable.
+
+**Stack, y la decisión de entrada:**
+
+- Si el cliente **gestiona una red** de estaciones de terceros →
+  [`citrineos/citrineos-core`](https://github.com/citrineos/citrineos-core) (**Apache-2.0**, 309 ★)
+  como CSMS.
+- Si el cliente **fabrica u opera** la estación →
+  [`EVerest/EVerest`](https://github.com/EVerest/EVerest) (**Apache-2.0**, 298 ★, **proyecto LF
+  Energy**) como stack integral, con
+  [`ChargeLab/OpenOCPP`](https://github.com/ChargeLab/OpenOCPP) (**Apache-2.0**) en el firmware.
+
+Alrededor, la capa de prueba, que es lo que vuelve el proyecto demostrable en días:
+
+1. [`SAP/e-mobility-charging-stations-simulator`](https://github.com/SAP/e-mobility-charging-stations-simulator)
+   (**Apache-2.0**, 231 ★) — miles de estaciones OCPP-J sintéticas contra el CSMS.
+2. [`monta-app/ocpp-emulator`](https://github.com/monta-app/ocpp-emulator) (**Apache-2.0**, 182 ★) —
+   emulador de escritorio: la demo que corre en una laptop en la reunión.
+3. [`tommymalmqvist/rust-ocpp`](https://github.com/tommymalmqvist/rust-ocpp) (**Apache-2.0**, 106 ★) —
+   la única librería del conjunto que ya cubre **OCPP 2.1**: es el argumento de longevidad.
+4. [`lbbrhzn/ocpp`](https://github.com/lbbrhzn/ocpp) (**MIT**, 415 ★) — piloto residencial vía Home
+   Assistant, coste cero.
+5. [`shiv3/ocpp-cp-simulator`](https://github.com/shiv3/ocpp-cp-simulator) (**Apache-2.0**, 48 ★) —
+   se declara *for AI agent testing*: el banco donde se prueba el agente de la capa siguiente.
+6. [`evcc-io/evcc`](https://github.com/evcc-io/evcc) (**MIT**, 7639 ★, ya en la KB) — carga
+   inteligente del lado del usuario.
+7. [`IZIVIA/ocpi-toolkit`](https://github.com/IZIVIA/ocpi-toolkit) (**MIT**, 39 ★) — roaming entre
+   operadores.
+
+**Cómo se cablea:** `citrineos-core` expone OCPP 2.0.1 → el simulador de SAP genera flota sintética y
+carga de estrés → `ocpi-toolkit` conecta el roaming con otros operadores → `evcc` o `lbbrhzn/ocpp`
+cubren el extremo de usuario → sobre el CSMS se añade la capa de optimización tarifaria, y el agente
+de esa capa se prueba contra `shiv3/ocpp-cp-simulator` antes de tocar una estación real.
+
+**Entregable que se vende:** un CSMS operativo con flota simulada y un informe de conformidad OCPP
+2.0.1, **sin haber instalado un cargador**. El riesgo de ejecución del piloto es casi nulo, y eso es
+lo que cierra la venta.
+
+⚠️ **Dos trampas de licencia que ya costarían dinero:**
+[`steve-community/steve`](https://github.com/steve-community/steve) (1151 ★) es **GPL-3.0** y OCPP
+1.6 — la opción obvia por tracción es la bloqueante por licencia y la atrasada por protocolo;
+`dallmann-consulting/OCPP.Core` (304 ★) también es **GPL-3.0**. Y
+[`ocpi/ocpi`](https://github.com/ocpi/ocpi) (602 ★) tiene licencia **NOASSERTION**: usar
+`IZIVIA/ocpi-toolkit` (MIT) para el roaming, no el repo de la especificación.
+
+---
+
+### Receta 27 — Tubería CGMES para foundation models de red (EMEA, dirigida por COM/2026/501)
+
+**Disparador comercial concreto:** la hoja de ruta de la Comisión Europea del **3 de junio de 2026**
+asigna **30 M€ en 2026 y 20 M€ en 2027** a foundation models para gestión y planificación de red, con
+prueba de concepto en **Q1 2027**. Esos modelos consumen **CGMES**. Hay muchos equipos capaces de
+entrenar un GNN de red; hay pocos que sepan ingerir, **validar con SHACL** y versionar el CGMES de un
+TSO. La tubería es el diferencial, no el modelo.
+
+**Stack, nueve de once piezas permisivas:**
+
+1. [`alliander-opensource/pycgmes`](https://github.com/alliander-opensource/pycgmes) (**Apache-2.0**) —
+   dataclasses CGMES 3 + RDFS + **SHACL**: la puerta de entrada y la validación.
+2. [`entsoe/application-profiles-library`](https://github.com/entsoe/application-profiles-library)
+   (**Apache-2.0**, ya en la KB) — los perfiles oficiales contra los que se valida.
+3. [`SOPTIM/OpenCGMES`](https://github.com/SOPTIM/OpenCGMES) (**Apache-2.0**) y
+   [`SOPTIM/RDFArchitect`](https://github.com/SOPTIM/RDFArchitect) (**Apache-2.0**) — suite RDFS/SHACL/CIMXML
+   y editor de esquemas con extensiones CIM.
+4. [`PNNL-CIM-Tools/CIM-Graph`](https://github.com/PNNL-CIM-Tools/CIM-Graph) (**BSD-3-Clause**) —
+   el modelo como **grafo de propiedades en memoria**: la forma que un GNN quiere consumir.
+5. [`powsybl/pypowsybl`](https://github.com/powsybl/pypowsybl) (**MPL-2.0**) — cálculo de flujo y
+   contingencias sobre el modelo ya cargado.
+6. [`powsybl/powsybl-diagram`](https://github.com/powsybl/powsybl-diagram) (**MPL-2.0**) —
+   unifilares en SVG: la capa que hace auditable el resultado ante un ingeniero.
+7. [`eliagroup/ToOp`](https://github.com/eliagroup/ToOp) (**MPL-2.0**) — optimización de **topología**
+   con DC load flow en GPU y validación AC. Autoría de un **TSO** (Elia Group).
+8. [`gridfm/gridfm-datakit`](https://github.com/gridfm/gridfm-datakit) (**Apache-2.0**, ya en la KB) —
+   generación de datos de flujo para entrenar el modelo.
+9. [`statnett/Talk2PowerSystem`](https://github.com/statnett/Talk2PowerSystem) (**Apache-2.0**) —
+   **precedente citable**, no dependencia: un TSO poniendo un LLM sobre su grafo CIM.
+
+**Cómo se cablea:** el CGMES del cliente entra por `pycgmes` → se valida con SHACL contra los
+perfiles de `application-profiles-library` (este paso es el entregable, no un detalle: un modelo que
+no valida no entrena) → `CIM-Graph` lo convierte en grafo de propiedades → `gridfm-datakit` genera
+los casos de flujo de entrenamiento → el modelo entrenado propone maniobras → `ToOp` las optimiza y
+**valida en AC** → `powsybl-diagram` dibuja el unifilar resultante → `operatorfabric-core` registra la
+aceptación humana.
+
+**Entregable que se vende:** un *data pipeline* CGMES validado y versionado, con informe de calidad
+del modelo de red del cliente. Es el prerrequisito de cualquier convocatoria de AI.grids, y casi
+ninguna utility lo tiene hoy en condiciones.
+
+⚠️ **Límites:** todas las cifras presupuestarias de COM/2026/501 provienen de **cobertura secundaria**
+— `eur-lex.europa.eu` no resuelve desde este entorno, séptimo pase consecutivo. **No citar cifras ni
+fechas de artículo en una propuesta sin abrir el documento oficial.** Y la validación AC de `ToOp`
+no sustituye un estudio de estabilidad: para eso siguen estando `dpsim` y `PowerDynamics.jl`.
+
+---
+
+### Receta 28 — Agregación de DER bajo el régimen de conexión australiano (APAC, Australia primero)
+
+**Disparador comercial concreto:** Australia tiene un régimen de exportación dinámica
+**obligatorio** (**CSIP-AUS**, perfil de IEEE 2030.5), y el séptimo pase encontró que ya existe una
+implementación **MIT** y mantenida. APAC deja de ser un gap de oferta para este caso de uso concreto.
+
+**Stack:**
+
+1. [`longzheng/open-dynamic-export`](https://github.com/longzheng/open-dynamic-export) (**MIT**, 57 ★) —
+   control dinámico de exportación y curtailment de inversores bajo **CSIP-AUS / SEP2 / IEEE 2030.5**.
+   Es la pieza que habla el protocolo que el regulador exige.
+2. [`ethanndickson/sep2_client`](https://github.com/ethanndickson/sep2_client) (**Apache-2.0**, 24 ★)
+   y `sep2_common` (**Apache-2.0**, 14 ★) — cliente IEEE 2030.5 en Rust, si hace falta implementación
+   propia en el borde.
+3. [`FlexMeasures/flexmeasures`](https://github.com/FlexMeasures/flexmeasures) (**Apache-2.0**, 217 ★,
+   ya en la KB) — motor de agregación y programación de la flexibilidad.
+4. [`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron) (**Apache-2.0**, ya en la KB) —
+   ejecución en campo.
+5. [`UNSW-CEEM/NEMSEER`](https://github.com/UNSW-CEEM/NEMSEER) (⚠️ **GPL-3.0**, 39 ★) — pronósticos
+   del **AEMO** para el NEM, **sólo como fuente de datos y validación**.
+6. [`bje-/NEMO`](https://github.com/bje-/NEMO) (⚠️ **GPL-3.0**, 55 ★) — optimizador del NEM, **sólo
+   como referencia de mercado**.
+7. [`pvlib/pvlib-python`](https://github.com/pvlib/pvlib-python) (**BSD-3**, ya en la KB) — recurso
+   solar para anticipar el techo de exportación.
+
+**Cómo se cablea:** `pvlib` + `open-meteo` estiman generación esperada → `FlexMeasures` programa la
+flexibilidad del portafolio → `open-dynamic-export` traduce la instrucción al protocolo **CSIP-AUS**
+y la aplica al inversor, respetando el límite dinámico que publica la DNSP → `volttron` ejecuta en el
+borde → `NEMSEER` aporta el pronóstico del AEMO como contexto de mercado y como validación posterior.
+
+**Entregable que se vende:** un agregador de DER **conforme al régimen de conexión australiano**, con
+el cumplimiento del protocolo demostrado, no afirmado.
+
+⚠️ **Límite de licencia que define la arquitectura:** `NEMSEER` y `NEMO` son **GPL-3.0**. Pueden
+usarse como herramienta interna de análisis y validación, pero **no pueden integrarse en el producto
+entregado al cliente** si éste es cerrado. La frontera hay que dibujarla en el diseño, no descubrirla
+en la auditoría: el producto se construye sobre `open-dynamic-export` (MIT) y `FlexMeasures`
+(Apache-2.0), y los dos GPL quedan del lado del estudio.
+
+---
+
+### Receta 29 — Programa de cumplimiento NERC para carga de datacenter (North America, contra el plazo del 31 de diciembre de 2026)
+
+**Disparador comercial concreto, con fecha:** en julio de 2026 la FERC ordenó a la **NERC** crear
+estándares de fiabilidad **exigibles** para datacenters con plazo al **31 de diciembre de 2026**, tras
+una **alerta de Nivel 3** de la NERC en mayo de 2026 — la tercera en 58 años. Un estándar exigible con
+fecha es un presupuesto de cumplimiento aprobado.
+
+**Stack, todo ya catalogado en esta KB:**
+
+1. [`gridstatus/gridstatus`](https://github.com/gridstatus/gridstatus) (**BSD-3**, 456 ★) — estado y
+   precios de los siete ISO/RTO.
+2. [`NatLabRockies/PowerGridworld`](https://github.com/NatLabRockies/PowerGridworld) (**BSD-3**) y
+   [`dos-group/vessim`](https://github.com/dos-group/vessim) (**MIT**, 103 ★) — el datacenter como
+   **activo de red simulable**: `vessim` modela específicamente sistemas energéticos de datacenter.
+3. [`e2nIEE/pandapower`](https://github.com/e2nIEE/pandapower) (**BSD-3**) — estudio de la conexión y
+   del curtailment bajo contingencia.
+4. [`GridProtectionAlliance/openPDC`](https://github.com/GridProtectionAlliance/openPDC) (**MIT**,
+   159 ★) y [`GridProtectionAlliance/gsf`](https://github.com/GridProtectionAlliance/gsf) (**MIT**,
+   179 ★) — medida sincrofasorial: la evidencia de comportamiento que un estándar exigible va a pedir.
+5. [`opfab/operatorfabric-core`](https://github.com/opfab/operatorfabric-core) (**MPL-2.0**) — registro
+   trazable de aceptación humana, alineado con la guía **CISA/NSA** de mínimo privilegio.
+6. [`mitre/caldera-ot`](https://github.com/mitre/caldera-ot) (**Apache-2.0**, 265 ★) — validación de
+   la postura de seguridad OT que la misma guía exige.
+7. [`lf-energy/lfe-oss-benefit-cost-framework`](https://github.com/lf-energy/lfe-oss-benefit-cost-framework)
+   (**Apache-2.0**) — el anexo que justifica ante el regulador por qué el stack es open source.
+
+**Cómo se cablea:** `vessim` + `PowerGridworld` modelan el perfil de carga flexible del datacenter →
+`pandapower` evalúa su efecto en el alimentador y las condiciones de curtailment → `openPDC`/`gsf`
+instrumentan la medida real una vez conectado → `operatorfabric-core` registra cada maniobra aceptada
+→ `caldera-ot` valida la segmentación OT → el marco de LF Energy acompaña el expediente económico.
+
+**Entregable que se vende:** un **expediente de cumplimiento** con modelo, instrumentación, registro
+de decisiones y postura de seguridad, listo para el estándar que la NERC publique. Quien empieza en
+diciembre llega tarde.
+
+⚠️ **Límite jurisdiccional, el mismo de la Receta 21:** las órdenes de la FERC **no cubren ERCOT**.
+Para un cliente en Texas este expediente hay que reconstruirlo sobre las reglas de ERCOT, y el
+argumento comercial es distinto. Y los plazos citados provienen de **fuentes secundarias** que
+discrepan entre sí: no comprometer fechas contractuales sin leer la orden en el expediente de la FERC.
+
+---
+
 ## Qué **no** proponer (gaps medidos, actualizado en el tercer pase del 2026-11-20)
 
 Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
@@ -870,6 +1093,62 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
   en ninguna rama. Es el caso `GEM` otra vez: gap de permiso, no de oferta.
 - **Nada basado en `resstock` para un cliente académico o sin ánimo de lucro** sin revisión legal
   previa. Ver la tabla de trampas.
+
+### Actualización del séptimo pase (2026-11-20)
+
+**Gaps que este pase CERRÓ:**
+
+- ~~No existe agente energético proponible~~ → existe **para forecasting**
+  (`timecopilot` MIT + `chronos` Apache-2.0 + `open-predico` Apache-2.0). Sigue sin existir para
+  **operación de red**, y ahora con medición externa: IEA, **23 %** de operadores en tiempo real.
+- ~~APAC es un gap de oferta~~ → cuatro repos australianos verificados
+  (`open-dynamic-export` **MIT**, `sep2_client` Apache-2.0, `NEMSEER` y `NEMO` GPL-3.0). Era un gap
+  de **vocabulario**: el término es el nombre de la norma de conexión (**CSIP-AUS**), no "APAC".
+- ~~Carga de EV catalogada a medias~~ → once repos nuevos, nueve permisivos, stack completo y probable
+  sin hardware (Receta 26).
+- ~~Falta la tubería CGMES~~ → once repos, nueve permisivos (Receta 27).
+- ~~Hidrógeno y electroquímica delgados~~ → `openFuelCell2`, `BattMo` (ambos GPL-3.0),
+  `MacroEnergy.jl` (**MIT**), `openTEPES` (AGPL-3.0), `FINE` (NOASSERTION). El "gap" anterior era en
+  parte un **artefacto de sintaxis de búsqueda** (ver T35).
+- ~~No hay forma de justificar open source ante una utility regulada~~ →
+  `lf-energy/lfe-oss-benefit-cost-framework` (Apache-2.0, creado 2026-09-08).
+- ~~Falta predicción de intensidad de carbono~~ → `CarbonCast` (Apache-2.0).
+
+**Gaps que SIGUEN abiertos, declarados sin adornos:**
+
+- **Agente de operación de red en lazo cerrado: no existe, y no debe proponerse.** Cuarto pase
+  consecutivo sin candidato. Confirmado por la IEA (23 %), por la posición escrita de la NERC (la IA
+  asiste, no decide) y por la guía CISA/NSA de mayo de 2026 (mínimo privilegio).
+- **Detalle regulatorio de China, India y Japón sobre IA en energía: ausente.** Hay cifras de
+  inversión y casos de despliegue (State Grid, TEPCO, Chubu), pero **no** el equivalente de la orden
+  de la FERC o de COM/2026/501. No se puede construir un argumento de cumplimiento para esos tres
+  mercados con lo que hay hoy en esta KB.
+- **Registro primario de la UE: inaccesible, séptimo pase consecutivo.** `eur-lex.europa.eu` no
+  resuelve (`ENOTFOUND`); `data.consilium.europa.eu` tampoco en los pases 1-6. Todas las cifras de
+  COM/2026/501 son de cobertura secundaria. Para cerrarlo haría falta habilitar el dominio en la
+  política de red de la sesión.
+- **Pesos de modelo sin licencia verificada:** `huggingface.co` no resuelve desde este entorno. No se
+  puede afirmar la licencia de los pesos de ningún foundation model de red.
+- **Nuclear y geotermia: sin reconsultar correctamente.** Las búsquedas de este pase volvieron a
+  usar sintaxis sospechosa para nuclear (cero filas). Dado T35, **no declarar estos dos como gaps
+  reales** hasta reconsultarlos sin paréntesis. Lo catalogado sigue siendo `openmc`, `moose` y
+  `GEOPHIRES-X`.
+- **Tamaño de mercado: no citable.** Dispersión de **5,3×** en el mismo año para el mismo objeto.
+  Citar adopción y capex, nunca tamaño.
+
+**Lo que el próximo pase debería hacer primero**, en orden:
+
+1. Reconsultar nuclear y geotermia **sin paréntesis** en la consulta (T35) — puede haber una categoría
+   entera oculta tras un error de sintaxis.
+2. Buscar por norma de conexión en los mercados aún cerrados: **CEI 0-21** (Italia),
+   **VDE-AR-N 4105** (Alemania), **G99** (Reino Unido), **PRODIST** (Brasil), **NOM-001-SEDE**
+   (México), **GB/T 19964** (China). Es el método que abrió LATAM en el pase 6 y APAC en el 7.
+3. Recorrer [`juherr/awesome-ev-charging`](https://github.com/juherr/awesome-ev-charging) (CC0-1.0) y
+   [`lf-energy/lfenergy-landscape`](https://github.com/lf-energy/lfenergy-landscape) (Apache-2.0)
+   como índices de descubrimiento: ambos son mapas vivos de categorías que esta KB ya sabe que son
+   ricas.
+4. Pedir que se habilite `eur-lex.europa.eu` y `huggingface.co` en la política de red, que son los dos
+   techos de verificación que quedan.
 
 ### Actualización del sexto pase (2026-11-20)
 

@@ -27,6 +27,76 @@ Es el punto de partida más fuerte que existe hoy para agentes de sistemas de po
 | [Power-Agent/PowerAgentBench](https://github.com/Power-Agent/PowerAgentBench) | MIT | Benchmark para evaluar agentes de sistemas de potencia | 50 | — | 2026-11-02 | North America |
 | [Power-Agent/PowerWF](https://github.com/Power-Agent/PowerWF) | MIT | Workflows agénticos para sistemas de potencia | 44 | — | 2026-11-12 | North America |
 
+## Forecasting agéntico: la categoría que los pases 4-6 declararon ausente y el séptimo encontró (2026-11-20)
+
+Durante cuatro pases esta KB registró que no existía un agente energético proponible fuera de lo
+institucional. La corrección del séptimo pase es precisa: **no existe para operación de red, y sí
+existe para forecasting.** La diferencia importa porque el forecasting es donde la IEA mide la
+adopción real (≈70 % de operadores en mantenimiento y planificación, **23 % en tiempo real**).
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [TimeCopilot/timecopilot](https://github.com/TimeCopilot/timecopilot) | MIT | Framework de **forecasting agéntico**: el LLM selecciona y combina modelos de series temporales y foundation models, y explica el pronóstico. No es energético por diseño; carga y precio son su caso canónico | 643 | 89 | 2026-11-18 | North America |
+| [amazon-science/chronos-forecasting](https://github.com/amazon-science/chronos-forecasting) | Apache-2.0 | Foundation models pre-entrenados de series temporales (Chronos). Sustrato zero-shot sobre el que corre lo anterior | 6328 | 774 | 2026-10-05 | North America |
+| [arnaud-vs/open-predico](https://github.com/arnaud-vs/open-predico) | Apache-2.0 | Forecasting **energético** con time-series foundation models. Pequeño, pero es el puente explícito TSFM→energía | 54 | 4 | 2026-11-15 | EMEA |
+| [williamhobbs/hefty](https://github.com/williamhobbs/hefty) | BSD-3-Clause | Herramientas ligeras de forecasting de corto plazo para solar, viento y carga. El *baseline* honesto contra el que medir todo lo anterior | 85 | 13 | 2026-11-13 | North America |
+| [statnett/Talk2PowerSystem](https://github.com/statnett/Talk2PowerSystem) | Apache-2.0 | LLM sobre grafo de conocimiento CIM del sistema eléctrico. **Escrito por Statnett**, el TSO noruego: primer agente de red de autoría de un operador que esta KB registra | 17 | 3 | 2026-05-15 | EMEA |
+
+⚠️ **Cómo proponer esta fila sin exagerarla.** `timecopilot` y `chronos` son de propósito general:
+lo verificable es que **la cadena existe y es permisiva**, no que esté validada en despacho. La única
+pieza con operación real en una utility sigue siendo [`OpenSTEF/openstef`](https://github.com/OpenSTEF/openstef)
+(MPL-2.0, 184 ★, Alliander + RTE). `Talk2PowerSystem` tiene 17 ★ y último push en mayo de 2026: vale
+como **precedente citable de que un TSO quiere este patrón**, no como dependencia de producto.
+
+## Hallazgos de verificación del séptimo pase (2026-11-20)
+
+### 1. El endpoint de verificación de esta sesión es `search/repositories`, y `repos/{owner}/{repo}` devuelve 403
+
+El pase 6 concluyó que "el método de verificación de URLs prescrito no verifica nada". El séptimo
+pase cierra la cuestión nombrando qué canal funciona y qué canal no, con el código exacto:
+
+| Canal | Resultado | Nota |
+|-------|-----------|------|
+| `gh api -X GET search/repositories -f q='repo:owner/name'` | ✅ **funciona** | Es la REST API: `license.spdx_id`, `stargazers_count`, `forks_count`, `pushed_at`, `archived` son campos de primera mano |
+| `gh api repos/{owner}/{repo}` | ❌ **HTTP 403** | *"GitHub access to this repository is not enabled for this session"* — el endpoint directo está limitado a los repos adjuntos a la sesión |
+| `curl https://github.com/...` y `curl https://api.github.com/...` | ❌ HTTP 403 | Política del host, registrado desde el pase 5 |
+| `curl https://raw.githubusercontent.com/...` | ✅ 200 | Sigue siendo la vía para leer el `LICENSE` crudo |
+
+**Consecuencia operativa para el próximo pase:** verificar con `search/repositories` y una consulta
+`repo:` por repo, con `sleep 3` entre llamadas. **51 de 51 repos nuevos resolvieron**, ninguno
+archivado. No intentar `gh api repos/...`: falla siempre y parece un 404 del repo cuando es un 403 de
+la sesión.
+
+### 2. Un cero de la API de GitHub puede ser un error de sintaxis, no un gap del sector
+
+La consulta `(electrolyzer OR hydrogen OR geothermal OR "small modular reactor") in:name,description`
+devolvió **cero filas sin error**. La misma búsqueda reescrita sin paréntesis
+(`hydrogen electrolyzer in:name,description,readme`) devolvió dieciséis resultados, entre ellos
+`openFuelCell2`, `BattMo`, `MacroEnergy.jl`, `openTEPES` y `FINE`.
+
+**Regla para el próximo pase:** los paréntesis agrupando `OR` dentro de un calificador `in:` hacen
+que la búsqueda falle en silencio. Antes de declarar un gap, reescribir la consulta sin paréntesis.
+Los "gaps" de hidrógeno, geotermia y nuclear registrados en pases anteriores deben considerarse
+**sospechosos de ser artefactos de sintaxis** hasta que se reconsulten así.
+
+### 3. Buscar el instrumento regulatorio local abre las regiones que "no tienen repos"
+
+APAC estaba registrado como delgado. No lo era: faltaba el término. `CSIP-AUS`, `IEEE 2030.5` y `NEM`
+devuelven repos australianos reales y permisivos (`open-dynamic-export` MIT, `sep2_client` Apache-2.0,
+`NEMSEER` y `NEMO` GPL-3.0). Es la misma lección que el pase 6 aprendió en LATAM, generalizada:
+**el término que abre una región es el nombre de su norma de conexión o de su mercado, no el nombre de
+la región.** Candidatos sin explorar para el próximo pase: `CEI 0-21` (Italia), `VDE-AR-N 4105`
+(Alemania), `G99` (Reino Unido), `PRODIST` (Brasil), `NOM-001-SEDE` (México).
+
+### 4. Cuarto pase consecutivo sin agente de operación de red, ahora con medición externa
+
+`energy agent LLM in:name,description created:>2026-09-01` y `grid OR substation OR utility agentic
+... created:>2026-08-01` devuelven ruido puro (extensiones de navegador, bots de pentest, asistentes
+de voz). Lo que cambia es que el hueco ya no se apoya sólo en el conteo de repos de esta KB: la
+**encuesta de la IEA a operadores de red de 13 países** reporta **23 %** de uso de IA en operación en
+tiempo real frente a **~70 %** en mantenimiento de activos y planificación. Dos métodos
+independientes miden el mismo hueco.
+
 ## Entornos RL / simulación para entrenar y evaluar agentes
 
 | Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |

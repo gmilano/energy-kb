@@ -288,6 +288,66 @@ mini-red y acceso a la energía, `micropowermanager` es la excepción que sí cu
 con MIT — y su relación de 136 issues sobre 30 ★ con push de esta semana es, por la regla del quinto
 pase, señal de equipo activo.
 
+## Séptimo pase (2026-11-20): el vertical de carga de EV sí tiene su "Odoo", y se llama EVerest + CitrineOS
+
+Los pases 4 y 6 concluyeron que **no existe un "Odoo de la energía"** — una plataforma vertical única,
+customizable, que cubra el negocio entero de una utility. Esa conclusión se mantiene para la utility.
+**Para el subsector de carga de vehículo eléctrico, en cambio, la respuesta es que sí existe**, y este
+pase la nombra: dos plataformas permisivas, complementarias, con gobernanza de fundación una y
+comunidad amplia la otra.
+
+| Plataforma | Licencia | ★ / forks | Qué es | Papel en una propuesta |
+|-----------|----------|-----------|--------|------------------------|
+| [EVerest/EVerest](https://github.com/EVerest/EVerest) | Apache-2.0 | 298 / 215 | Stack de software de carga completo, **proyecto LF Energy** | La base cuando el cliente **fabrica o opera** la estación |
+| [citrineos/citrineos-core](https://github.com/citrineos/citrineos-core) | Apache-2.0 | 309 / 175 | **CSMS** (Charging Station Management System) OCPP 2.0.1 | La base cuando el cliente **gestiona una red** de estaciones de terceros |
+
+**Por qué esto es una plataforma vertical y no una librería.** Un CSMS es el equivalente funcional de
+un ERP para un operador de carga: gestiona activos (estaciones), transacciones (sesiones de carga),
+tarifas, autorización de usuarios, y se integra con roaming y facturación. `citrineos-core` es
+Apache-2.0 y habla **OCPP 2.0.1**, la versión que las licitaciones europeas ya exigen. La alternativa
+histórica que esta KB tenía catalogada, [`steve-community/steve`](https://github.com/steve-community/steve)
+(1151 ★), es **GPL-3.0** y OCPP 1.6: excelente como referencia, bloqueante como base de producto
+cerrado. Ese es exactamente el tipo de decisión que este archivo existe para informar.
+
+### El stack de prueba, que es lo que hace el proyecto vendible
+
+La razón por la que este vertical es proponible con bajo riesgo es que **se puede probar entero sin
+una sola estación física** — el mismo argumento que el pase 4 estableció para protocolos de
+subestación, ahora disponible para carga:
+
+| Capa | Repo | Licencia | Para qué |
+|------|------|----------|----------|
+| Carga sintética a escala | [SAP/e-mobility-charging-stations-simulator](https://github.com/SAP/e-mobility-charging-stations-simulator) | Apache-2.0 | Miles de estaciones OCPP-J simuladas contra el CSMS |
+| Emulador de escritorio | [monta-app/ocpp-emulator](https://github.com/monta-app/ocpp-emulator) | Apache-2.0 | Demo ejecutable en una laptop, para la reunión |
+| Simulador para agentes | [shiv3/ocpp-cp-simulator](https://github.com/shiv3/ocpp-cp-simulator) | Apache-2.0 | Se declara explícitamente *for AI agent testing* |
+| Protocolo, incl. **OCPP 2.1** | [tommymalmqvist/rust-ocpp](https://github.com/tommymalmqvist/rust-ocpp) | Apache-2.0 | La única librería del conjunto que ya cubre 2.1 |
+| Firmware de estación | [ChargeLab/OpenOCPP](https://github.com/ChargeLab/OpenOCPP) | Apache-2.0 | Lado embarcado, si el cliente fabrica hardware |
+| Piloto residencial | [lbbrhzn/ocpp](https://github.com/lbbrhzn/ocpp) | MIT | Prueba en casa vía Home Assistant, coste cero |
+| Roaming entre operadores | [ocpi/ocpi](https://github.com/ocpi/ocpi) | ⚠️ **NOASSERTION** | Especificación OCPI — **leer licencia antes de incorporar** |
+
+⚠️ La única pieza con riesgo de licencia del stack es `ocpi/ocpi` (602 ★, licencia no resuelta por la
+API de GitHub). Hay alternativa permisiva para el roaming:
+[`IZIVIA/ocpi-toolkit`](https://github.com/IZIVIA/ocpi-toolkit) (MIT, 39 ★), más pequeño pero con
+licencia clara.
+
+## Gemelo digital y conectividad de campo como plataforma (séptimo pase)
+
+Ninguna de estas es energética por diseño; las tres se usan en el sector y las tres son customizables
+con IA encima, que es el criterio de este archivo.
+
+| Plataforma | Licencia | ★ / forks | Qué es | Dónde encaja en energía |
+|-----------|----------|-----------|--------|--------------------------|
+| [thingsboard/thingsboard-gateway](https://github.com/thingsboard/thingsboard-gateway) | Apache-2.0 | 2204 / 1008 | Gateway IoT multiprotocolo hacia la plataforma ThingsBoard | Ingesta de medidores, inversores y PLC sin escribir drivers |
+| [eclipse-ditto/ditto](https://github.com/eclipse-ditto/ditto) | EPL-2.0 | 953 / 297 | Framework de gemelo digital de Eclipse IoT | Estado de activo consultable: la capa que un agente necesita para "saber" |
+| [syzygyhack/open-foundry](https://github.com/syzygyhack/open-foundry) | Apache-2.0 | 137 / 40 | Plataforma de ontología para gemelos operativos | Modelo semántico de planta/subestación sobre el que razona el LLM |
+
+**La decisión real entre ellas.** `thingsboard-gateway` resuelve *adquisición* (hablar 30+
+protocolos); `ditto` resuelve *representación* (un gemelo consultable por API); `open-foundry` resuelve
+*semántica* (qué significa cada señal). En un proyecto de agentes energéticos se necesitan las tres
+capas, y el error frecuente es comprar una creyendo que cubre las otras dos. ⚠️ `ditto` es **EPL-2.0**:
+copyleft débil, compatible con producto comercial pero con obligación de publicar modificaciones del
+propio Ditto.
+
 ## Cómo customizar con AI
 
 1. Desplegar la plataforma base sin tocar su código (contenedor, su propia licencia, su propia API).

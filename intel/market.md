@@ -233,6 +233,43 @@ planear; no para firmar un compromiso de cumplimiento con fecha.
   de dominio en los flujos de IA. **Ese es exactamente el trabajo que se vende**: no el modelo, la
   ingeniería de contexto de dominio a su alrededor.
 
+#### Actualización del séptimo pase (2026-11-20): la regulación puso fecha, y eso crea una ventana con vencimiento
+
+Lo que cambia respecto al sexto pase es que las obligaciones dejaron de ser orientaciones y pasaron a
+tener **plazo**. Eso convierte el trabajo de cumplimiento en demanda datable.
+
+| Hecho | Fecha | Por qué es oportunidad |
+|-------|-------|------------------------|
+| La **FERC** emitió órdenes de *show cause* bajo la sección 206 de la Federal Power Act a los seis operadores regionales (PJM, MISO, SPP, CAISO, ISO-NE, NYISO) | **18 jun 2026** | Cada RTO debe justificar o reformar **cómo se conectan las cargas grandes**. Seis procesos regulatorios simultáneos, cada uno con necesidad de estudio técnico |
+| La FERC ordenó a la **NERC** crear estándares de fiabilidad **exigibles** para datacenters | plazo **31 dic 2026** | Un estándar exigible con fecha es un programa de cumplimiento con presupuesto |
+| La NERC emitió una **alerta de Nivel 3** — la tercera en sus 58 años de historia | **may 2026** | Señal de severidad: la fiabilidad dejó de ser un tema de planificación |
+| Guía **CISA / NSA** para infraestructura crítica: zero trust, defensa en profundidad, **mínimo privilegio** | **may 2026** | Es la base normativa del patrón *el agente propone, el humano acepta* |
+| **DOE** seleccionó 31 proyectos en 26 estados vía el programa **SPARK** | **sep 2026** | Financiación pública ya asignada, con socios ejecutores por definir |
+
+**El número que dimensiona el mercado, y que no es de una consultora:** las *investor-owned utilities*
+tienen **capex planificado de al menos 1,4 billones de USD hasta 2030** (reporte de abril de 2026),
+más de **21 % por encima** del plan del año anterior, y **más de 30** de esas utilities citan
+datacenters como principal motor de crecimiento. En PJM —que incluye el corredor de datacenters del
+norte de Virginia— hay **95 solicitudes de ajuste de carga grande por ~54 GW** acumuladas hasta
+noviembre de 2025.
+
+**Dónde está el trabajo proponible, en orden de cercanía al dinero:**
+
+1. **Analítica de cola de interconexión y cargas grandes.** Ya es la *Receta 21*. Las órdenes de la
+   FERC la convierten en obligación de seis operadores a la vez. Precedente citable: **AWS con Duke
+   Energy** lanzó *Agentic Grid Planning*, con agentes que reducen la preparación de datos de los
+   estudios de interconexión **de semanas a horas**, con los ingenieros tomando la decisión final.
+   Ese es exactamente el patrón *asiste, no decide* — y lo validó un hiperescalador con una utility.
+2. **Programa de cumplimiento NERC para datacenters**, contra el plazo del 31 de diciembre de 2026.
+3. **Curtailment y flexibilidad de carga como producto de red** (*Receta 4*): las órdenes de la FERC
+   mencionan explícitamente cómo se curtailan las cargas grandes cuando la red está estresada y que
+   los datacenters paguen el **100 %** de las mejoras de red que causan.
+
+⚠️ **Límite jurisdiccional que cambia la propuesta:** las órdenes de la FERC **no cubren ERCOT**, la
+red principal de Texas, que está en gran medida fuera de su jurisdicción. Una propuesta para un
+cliente tejano no puede apoyarse en este argumento regulatorio; hay que reconstruirlo sobre las reglas
+de ERCOT. No proponer lo mismo en Houston que en Richmond.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -437,6 +474,48 @@ verificación al final).
   `conventuslaw.com`). **La verificación primaria del registro de la UE sigue siendo la restricción
   vinculante de esta KB.** Orientar estrategia con esto: sí. Citar un artículo o una fecha en un
   entregable contractual sin abrir el documento oficial: no.
+
+#### Actualización del séptimo pase (2026-11-20): la Comisión puso cifras y fechas, y financia exactamente la capa que esta KB cataloga
+
+El sexto pase registró la hoja de ruta de la Comisión Europea del 3 de junio de 2026 con sus tres
+pilares y advirtió que no se pudo abrir el registro primario. El séptimo pase añade **el presupuesto y
+el calendario**, que es lo que convierte una comunicación política en una oportunidad fechada. El
+documento es **COM/2026/501**, presentado el **3 de junio de 2026** como parte del paquete de
+soberanía tecnológica, con tres pilares: integrar los datacenters en el sistema energético, usar
+digitalización e IA para optimizar la infraestructura, y mejorar el intercambio y disponibilidad de
+datos energéticos europeos.
+
+| Partida / hito | Cifra o fecha | Lectura para Globant |
+|----------------|---------------|----------------------|
+| Horizon Europe 2026-2027, soluciones avanzadas de red inteligente | **~100 M€** | Convocatorias con socio industrial requerido |
+| Horizon Europe, aplicaciones de **IA en energía** | **~75 M€** | El encaje directo de esta KB |
+| Dentro de esa partida: **foundation models para gestión y planificación de red** | **30 M€ (2026) + 20 M€ (2027)** | Financia la categoría que el pase 4 añadió (`gridfm`, `GridSFM`) |
+| Soluciones digitales para renovables, edificios inteligentes y eficiencia | **~190 M€** | Encaje de las recetas de edificios y eficiencia |
+| Comunidad de práctica **AI.grids** para modelos de IA de red | en lanzamiento | Foro donde hay que estar presente |
+| Modelos de IA en **prueba de concepto** | **Q1 2027** | La ventana de preparación es **ahora** |
+| Primeros modelos **operativos** | **fin de 2027** | Horizonte de proyecto plurianual |
+| Contrato modelo para conexión de datacenters a la red | desde **mediados de 2026** | Instrumento contractual nuevo que alguien tiene que aplicar |
+| **Foro anual de Digitalización Energética** | desde **2026** | Canal de posicionamiento |
+| Declaración de intención inicial | **14 actores**, incl. **ENTSO-E**, **E.DSO** y **WindEurope** | Los decisores están identificados y son pocos |
+
+**La cifra que la Comisión usa para justificar el gasto:** optimización de operación y mantenimiento
+basada en IA podría ahorrar **hasta 94 000 M€ anuales para 2035** (≈110 000 M USD). ⚠️ Es una
+**proyección de la Comisión**, no un resultado medido: citarla como lo que es.
+
+**La consecuencia técnica que une esto con `repos/foundations.md`:** si la UE financia foundation
+models de red con 50 M€ entre 2026 y 2027, esos modelos consumirán **CGMES** — el modelo de datos de
+la red europea. El séptimo pase añadió once repos de la tubería CIM/CGMES, nueve de ellos permisivos
+(Apache-2.0, BSD-3, MPL-2.0), con autoría de **Elia Group, Alliander, Statnett, PNNL y SOPTIM**.
+**Quien controla la tubería de datos CGMES entra en estos proyectos; quien sólo tiene el modelo, no.**
+Es la oportunidad EMEA más concreta de este pase.
+
+⚠️ **Limitación de verificación, séptimo pase consecutivo:** el registro primario de la UE sigue
+inaccesible desde este entorno. `eur-lex.europa.eu` **no resuelve** (`ENOTFOUND`), igual que
+`data.consilium.europa.eu` en los pases 1-6. Todas las cifras de esta tabla provienen de **cobertura
+secundaria** del mismo documento COM/2026/501 (despachos jurídicos y prensa sectorial). **No citar una
+cifra presupuestaria ni una fecha de artículo en una propuesta sin abrir antes el documento oficial.**
+Para que el próximo pase pueda cerrar esto, haría falta habilitar `eur-lex.europa.eu` en la política de
+red de la sesión.
 
 ### APAC
 
@@ -649,6 +728,64 @@ consecutivo). **No afirmar cobertura local en una propuesta APAC.**
   LATAM se cerró buscando por **nombre de framework + país** (`pypsa-` + país), la acción concreta
   para el próximo pase es aplicar la misma receta aquí: `pypsa-india`, `pypsa-vietnam`,
   `pypsa-indonesia`, `pypsa-korea`, `calliope-` y `osemosys-` con sufijo de país asiático.
+
+#### Actualización del séptimo pase (2026-11-20): APAC dejó de ser un gap de oferta, y el dato de adopción más útil de toda la KB es de aquí
+
+**Primera corrección: APAC no carecía de repos, esta KB carecía del término de búsqueda.** Los pases
+anteriores registraron la región como delgada. Buscando por el **instrumento regulatorio local** en
+lugar de por el nombre de la región aparecen cuatro repos australianos reales y verificados:
+
+| Repo | Licencia | ★ | Qué resuelve |
+|------|----------|---|--------------|
+| [longzheng/open-dynamic-export](https://github.com/longzheng/open-dynamic-export) | **MIT** | 57 | Control dinámico de exportación y curtailment de inversores bajo **CSIP-AUS / SEP2 / IEEE 2030.5** |
+| [bje-/NEMO](https://github.com/bje-/NEMO) | ⚠️ GPL-3.0 | 55 | Optimizador del **National Electricity Market** |
+| [UNSW-CEEM/NEMSEER](https://github.com/UNSW-CEEM/NEMSEER) | ⚠️ GPL-3.0 | 39 | Pronósticos del **AEMO** para el NEM (UNSW) |
+| [ethanndickson/sep2_client](https://github.com/ethanndickson/sep2_client) | Apache-2.0 | 24 | Cliente IEEE 2030.5 en Rust |
+
+`open-dynamic-export` es el accionable: **MIT**, mantenido, y atado al régimen de conexión
+**obligatorio** en Australia. Una propuesta de agregación de DER en Australia ya no empieza de cero.
+
+**Segunda, y el dato más valioso que este pase aporta a toda la KB: la IEA midió el hueco agéntico.**
+Una encuesta de la **IEA a operadores de red de 13 países** —China y Japón incluidos— encuentra:
+
+- **23 %** usa IA para **operación en tiempo real**
+- **~70 %** la usa para **mantenimiento de activos y planificación de la operación**
+
+Esto coincide exactamente con lo que esta KB medía contando repos: no hay agente de operación de red
+proponible, y sí hay una capa madura de mantenimiento, forecasting y planificación. **El trabajo
+vendible hoy está en el 70 %, no en el 23 %.** Usar este dato para reencuadrar cualquier conversación
+en la que el cliente pida "autonomía": la industria entera está en el otro lado.
+
+**Dimensión de la demanda:**
+
+| Hecho | Cifra | Fuente |
+|-------|-------|--------|
+| Inversión anual en red de **China e India** | **> 300 000 M USD para 2030** | Bloomberg, vía DWS APAC CIO View |
+| Crecimiento de demanda por datacenters en Asia-Pacífico | **790 TWh** | Wood Mackenzie, perspectiva 2026 |
+| Participación de **India** en el crecimiento fuera de China | **~la mitad** | Wood Mackenzie |
+| Datacenters en **Japón** | revierten **una década** de caída de demanda eléctrica | Wood Mackenzie |
+| Plan de **Adani** (India) | **100 000 M USD**, hub de IA anclado en renovables | cobertura sectorial |
+
+**Players con despliegue real, que son el precedente citable de la región:**
+
+- **State Grid Corporation of China** construyó una plataforma de IA a escala de ciudad que integra
+  **forecasting, trading, regulación y liquidación**, y usa IA para gestión de red en tiempo real. Es
+  el despliegue más ambicioso del mundo en esta categoría.
+- **TEPCO Power Grid** (Japón) desarrolla drones que recogen datos 3D de equipamiento.
+- **Chubu Electric** (Japón) entrenó un modelo de red neuronal sobre datos de red de **30 segundos**.
+
+**Oportunidad, y el límite que hay que decir en voz alta.** Las licitaciones nuevas de la región
+exigen cada vez más **almacenamiento y flexibilidad de red** (Wood Mackenzie 2026) — ese es el encaje
+de las recetas de BESS y flexibilidad. ⚠️ Pero expertos advierten que la **flexibilidad limitada de la
+red china** podría anular las ganancias de eficiencia que la IA prometa: en China el cuello de botella
+es físico, no algorítmico. Proponer optimización de despacho allí sin verificar la flexibilidad
+disponible es proponer un resultado que la red no puede ejecutar.
+
+⚠️ **Gap de este pase, declarado explícitamente:** las búsquedas no devolvieron **detalle regulatorio
+concreto de China, India ni Japón** sobre IA en energía. Hay cifras de inversión y casos de
+despliegue, pero no el equivalente de la orden de la FERC o de COM/2026/501. No se puede construir un
+argumento de cumplimiento para esos tres países con lo que hay hoy en esta KB. Es un hueco de
+investigación, no una ausencia de regulación.
 
 ### LATAM
 
@@ -919,6 +1056,69 @@ próximo pase: buscar `PyPSA-CL`, `PyPSA-MX` y `PyPSA-BR` por nombre.**
   no cambia: la autoría regional existe y es citable, pero **no hay un proyecto regional al que
   sumarse**. Crearlo sigue siendo una oportunidad de posicionamiento abierta.
 
+#### Actualización del séptimo pase (2026-11-20): LATAM tiene el detalle regulatorio más fino de las cuatro regiones, y el cuello de botella no es la red
+
+El sexto pase cerró el gap de **oferta** (cuatro modelos nacionales, tres MIT). Este pase cierra el de
+**demanda**: hay detalle regulatorio país por país, y apunta todo en la misma dirección.
+
+**Brasil — líder regional y el regulador más activo:**
+
+| Hecho | Cifra / fecha |
+|-------|---------------|
+| Participación de Brasil en la capacidad de cómputo identificada de la región | **~92 %** |
+| Datacenters en operación | **205** |
+| Solicitudes de acceso a la red | **38 GW** |
+| Ley de modernización del marco regulatorio | **Ley 15.269**, nov 2025 |
+| Marco regulatorio de **almacenamiento** | en redacción |
+| Proyección del **ONS**: curtailment por desbalance estructural oferta-demanda para 2029 | **hasta 96 %** |
+
+Ese **96 % de curtailment estructural para 2029** es el dato de venta de la región: no es un problema
+de pronóstico ni de mantenimiento, es un problema de **flexibilidad y colocación de carga**, que es
+exactamente la *Receta 4* (flexibilidad de carga de datacenter como producto de red). ⚠️ Una fuente
+menciona que **REDATA** se promulgó en septiembre de 2026, pero **no se pudo confirmar de forma
+independiente**: no citarlo.
+
+**Chile — el perfil es estabilidad y sostenibilidad, no escala:**
+
+- El Comité de Desafíos del Futuro del **Senado** aprobó **en general** el proyecto de ley de IA por
+  **4-0 el 26 de octubre**, con **4 de diciembre** como plazo de indicaciones. Chile es el país de la
+  región con la regulación de IA más avanzada en trámite.
+- **Decreto 70** introdujo un mecanismo de **pago por capacidad** que da retornos predecibles al
+  inversor en almacenamiento.
+- ⚠️ Su restricción real es el **permisología ambiental**: licencias que han congelado o cancelado
+  proyectos de alto perfil. Un cronograma de proyecto en Chile debe presupuestar permisos, no sólo
+  ingeniería.
+
+**México — el problema es el acceso a la red, y ahora también el agua:**
+
+- El proceso de **interconexión** sigue siendo opaco en **costo y plazo** de los refuerzos de red.
+- El **agua** emergió como restricción: el endurecimiento de las reglas de concesión de agua responde
+  en parte a esta tensión.
+- El almacenamiento se está escribiendo en la ley: requisitos incorporados a la **Ley para el
+  Aprovechamiento de Energías Renovables**.
+
+**El hallazgo transversal que reordena la propuesta regional.** Un análisis del sector lo dice
+directamente: el límite **no es la red ni la economía subyacente** — las barreras son **regulación,
+permisos, estructuras de financiamiento y riesgo de ejecución**. La región tiene **más de 10 GW de
+capacidad renovable lista para red** que podría ponerse a disposición de cargas grandes en los
+próximos dos o tres años. ⚠️ Esa cifra proviene del análisis de **un solo desarrollador**: tratarla
+como indicativa.
+
+**Lo que eso significa para Globant, dicho sin adornos:** en LATAM el trabajo de mayor valor **no es
+optimización algorítmica** sino **ingeniería de viabilidad** — análisis de cola de interconexión,
+expedientes de permisos, modelado de escenarios de curtailment y casos de inversión. Las piezas ya
+están en la KB: los cuatro modelos nacionales MIT del pase 6 (`PyPSA-CL`, `pypsa-chile`,
+`pypsa-mexico_base`, `PyPSA-AR`, `pypsa-meets-brazil`), `gridstatus` y las APIs de XM. La *Receta 24*
+(copiloto de despacho sobre el modelo nacional publicado) y la *Receta 7* (sandbox de mercado para
+decisiones de inversión y política) son las dos que este detalle regulatorio vuelve inmediatamente
+vendibles.
+
+⚠️ **Nota de política pública que conviene conocer antes de una reunión:** un digest regional señala
+que los incentivos propuestos **no exigen** a las empresas reservar capacidad de cómputo para uso
+local ni divulgar consumo de energía y agua. Es un punto de fricción pública creciente, y un cliente
+que anuncie un datacenter sin una respuesta preparada sobre energía y agua tendrá un problema de
+licencia social.
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -1003,6 +1203,27 @@ cuarto pase midió en `gridfm-graphkit` (0,36): no es moda, es un consorcio.
 
 **Reserva:** todas las cifras de este bloque son de consultora o de nota de prensa. Ninguna se ha
 podido confirmar contra fuente primaria desde este entorno.
+
+
+### Actualización del séptimo pase: la dispersión del dato agéntico es de 5,3× en el mismo año
+
+Dos fuentes publicadas en 2026 dimensionan el **mismo** mercado de IA agéntica en energía para el
+**mismo año** así:
+
+| Fuente | Valor 2026 |
+|--------|-----------|
+| Estimación A | **4 800 M USD** |
+| Estimación B | **897 M USD** |
+
+Son **5,3×** de diferencia sobre el mismo objeto y el mismo ejercicio. Confirma por tercer pase
+consecutivo la regla del trend T8: **en este sector se cita el dato de adopción, nunca el de tamaño.**
+Los números citables de este pase son todos de adopción o de capex comprometido, no de tamaño de
+mercado: 1,4 billones USD de capex de IOU hasta 2030 (+21 % interanual), 95 solicitudes por ~54 GW en
+PJM, IEA 23 % / ~70 %, Grant Thornton 38 % en piloto y 32 % estancado tras aprobarlo, 73 % que pone
+fiabilidad entre sus tres prioridades frente a 43 % en 2025 (National Grid Partners 2026).
+
+⚠️ Se omiten deliberadamente los nombres de las dos firmas de investigación: ninguna de las dos cifras
+es verificable desde este entorno y nombrarlas daría una falsa sensación de procedencia.
 
 ## Nota de método sobre las fuentes de este documento
 

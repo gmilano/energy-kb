@@ -9,6 +9,60 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 7 (aparece el agente que faltaba, y no es un agente de red: es de forecasting)
+
+**Titular del pase: por primera vez en cuatro pases la capa agéntica energética tiene una novedad
+proponible, y llega por el lado del forecasting, no por el de la operación de red.**
+[`TimeCopilot/timecopilot`](https://github.com/TimeCopilot/timecopilot) (MIT, 643 ★, 89 forks,
+push 2026-11-18) se describe como *"the Agentic Forecasting Framework. Built on LLMs and Time Series
+Foundation Models"*. Es la primera pieza que combina las dos capas que esta KB tenía separadas —
+razonamiento LLM (pases 1-3) y foundation models (pase 4) — en un solo framework permisivo con
+tracción real. No es energético por diseño, pero el forecasting de carga y precio es su caso de uso
+canónico, y es la respuesta concreta al gap que los pases 4, 5 y 6 declararon.
+
+**La cadena de forecasting agéntico, toda verificada este pase y toda permisiva:**
+
+| Capa | Repo | Licencia | ★ | Rol |
+|------|------|----------|---|-----|
+| Orquestación agéntica | [TimeCopilot/timecopilot](https://github.com/TimeCopilot/timecopilot) | MIT | 643 | LLM elige modelo, explica el pronóstico |
+| Modelo fundacional de series | [amazon-science/chronos-forecasting](https://github.com/amazon-science/chronos-forecasting) | Apache-2.0 | 6328 | Pre-entrenado, zero-shot |
+| Forecasting energético con TSFM | [arnaud-vs/open-predico](https://github.com/arnaud-vs/open-predico) | Apache-2.0 | 54 | Aplica TSFM a energía |
+| Línea base corta solar/viento/carga | [williamhobbs/hefty](https://github.com/williamhobbs/hefty) | BSD-3-Clause | 85 | El baseline honesto a batir |
+| Pipeline de producción de utility | [OpenSTEF/openstef](https://github.com/OpenSTEF/openstef) | MPL-2.0 | 184 | Ya catalogado; sigue siendo el de operación |
+
+⚠️ **Cómo proponerlo sin exagerar:** `timecopilot` y `chronos` son de propósito general. Lo que esta
+KB puede afirmar es que **existe la cadena**, no que esté validada en despacho. `openstef` sigue
+siendo la única pieza con operación real en una utility (Alliander, RTE). La receta nueva —
+*Receta 25* en `compose/patterns.md` — pone `timecopilot` en la vía de **evaluación**, con `openstef`
+como control, y no en la vía de producción.
+
+**Segunda novedad, institucional y pequeña: un TSO escribió un agente sobre su propio modelo de red.**
+[`statnett/Talk2PowerSystem`](https://github.com/statnett/Talk2PowerSystem) (Apache-2.0, 17 ★, push
+2026-05-15) es de Statnett, el operador de transmisión noruego: *"Talk to the Power System"*, LLM
+sobre grafo de conocimiento CIM. Es la primera vez que esta KB registra un **agente de red escrito por
+el operador**, no por un laboratorio ni por un consorcio. Son 17 ★ y el último push es de mayo: no es
+una base de producto, **es la prueba de que el patrón es el que los TSO quieren**. Para una propuesta
+vale más como precedente citable que como dependencia.
+
+**Lo que sigue sin existir, y ahora con medición de industria, no sólo de repos.** Las búsquedas de
+agentes energéticos creados después de 2026-08-01 (`energy agent LLM`, `grid OR substation OR utility
+agentic`, ambas con `created:>`) devuelven **ruido puro**: extensiones de Chrome, bots de pentest,
+asistentes de voz domésticos. Cuarto pase consecutivo sin un agente de operación de red proponible.
+La novedad es que ahora hay un número externo que dice lo mismo: una **encuesta de la IEA a operadores
+de red de 13 países** encuentra que sólo el **23 % usa IA para operación en tiempo real**, frente a
+**~70 % que la usa para mantenimiento de activos y planificación**. El hueco que esta KB medía
+contando repos es el mismo que la IEA mide contando operadores. Eso convierte el gap en **argumento de
+venta**: el trabajo proponible hoy está en el 70 %, no en el 23 %.
+
+**Confirmación regulatoria que refuerza la tesis human-in-the-loop del pase 3 y 6:** la encuesta de
+Grant Thornton 2026 del sector energético reporta que para el **54 %** la incertidumbre regulatoria y
+de cumplimiento es la principal preocupación al desplegar IA agéntica, con **38 % en piloto o prueba
+de valor** y **32 % que se estanca después de haber sido declarado listo para escalar**. Ese 32 % es
+el mercado de Globant: no es un problema de modelo, es de operacionalización y gobernanza.
+Guía **CISA/NSA de mayo de 2026** para infraestructura crítica: zero trust, defensa en profundidad y
+**mínimo privilegio** — es decir, la arquitectura donde el agente propone y
+[`opfab/operatorfabric-core`](https://github.com/opfab/operatorfabric-core) acepta.
+
 ## 2026-11-20 — pase 6 (ninguna novedad agéntica pasa la barra, y una confirmación regulatoria que vale más)
 
 **Titular del pase, dicho como corresponde: en la capa de agentes energéticos no hay novedad

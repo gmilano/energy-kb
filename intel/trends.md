@@ -543,6 +543,115 @@ proyecto es multi-licencia **por tipo de archivo** y ningún `grep` de un solo a
 código es **MIT**. Dos pases distintos de esta KB han escrito ya tres lecturas diferentes de la
 licencia de ese repo; la correcta está en `doc/licenses.md`.
 
+## T30 — La IEA le puso número al hueco agéntico, y coincide con lo que esta KB medía contando repos
+
+Durante cuatro pases esta KB sostuvo, contando repositorios, que **no existe un agente de operación de
+red open source proponible**, mientras sí existe una capa madura de forecasting, mantenimiento y
+planificación. Ese era un argumento de inventario, y un cliente podía descartarlo como sesgo de
+muestra. Ya no: una **encuesta de la IEA a operadores de red de 13 países** (China y Japón incluidos)
+encuentra que **23 % usa IA para operación en tiempo real** y **~70 % para mantenimiento de activos y
+planificación de la operación**.
+
+Dos métodos independientes —conteo de repos permisivos y encuesta a operadores— miden el mismo hueco
+en el mismo lugar. Eso deja de ser una observación y pasa a ser **una tesis de posicionamiento**: el
+trabajo vendible hoy vive en el 70 %. Cuando un cliente pide autonomía en el lazo de control, la
+respuesta no es "no se puede", es **"la industria entera está en el otro lado, y aquí está el número"**.
+
+## T31 — La categoría más grande del open source energético es la carga de vehículo eléctrico, y es permisiva
+
+El trend T7 afirmaba desde el pase 2 que la movilidad eléctrica concentra la masa crítica real de la
+comunidad. El séptimo pase cuantifica cuánto se subestimaba: la KB tenía **cuatro** repos de la
+categoría, y buscando por protocolo (`OCPP`, `OCPI`) aparecen **once más**, de 48 a 602 ★, **nueve de
+ellos permisivos** y todos con push de noviembre de 2026.
+
+Lo relevante no es el conteo sino la **completitud**: CSMS (`citrineos-core`, Apache-2.0), stack
+integral (`EVerest`, Apache-2.0, LF Energy), protocolo incluyendo **OCPP 2.1** (`rust-ocpp`,
+Apache-2.0), firmware embarcado (`ChargeLab/OpenOCPP`), simulación a escala (`SAP/...simulator`),
+emulación de escritorio (`monta-app/ocpp-emulator`) y un simulador que se declara **para pruebas de
+agentes** (`shiv3/ocpp-cp-simulator`). Es el **único subsector energético donde existe de verdad algo
+equivalente a "el Odoo de", y existe dos veces**.
+
+Consecuencia práctica: es el vertical donde una demo se construye sin hardware, en días, con licencia
+limpia. Es el camino de menor resistencia para entrar en una cuenta de utility o de operador de
+movilidad.
+
+## T32 — El término que abre una región es el nombre de su norma de conexión, no el nombre de la región
+
+El pase 6 cerró el gap de LATAM buscando modelos nacionales por país. El séptimo lo generaliza y lo
+convierte en método: **APAC no carecía de repos, esta KB carecía del vocabulario regulatorio local.**
+Buscar `CSIP-AUS`, `IEEE 2030.5` y `NEM` devuelve cuatro repos australianos verificados
+(`open-dynamic-export` MIT, `sep2_client` Apache-2.0, `NEMSEER` y `NEMO` GPL-3.0) donde buscar "APAC"
+devolvía nada.
+
+Es la misma lección que el automotive-KB aprendió en otro dominio: **buscar el estándar, no el
+buzzword** — aquí especializada a geografía. Candidatos sin explorar para el próximo pase, uno por
+mercado: **CEI 0-21** (Italia), **VDE-AR-N 4105** (Alemania), **G99** (Reino Unido), **PRODIST**
+(Brasil), **NOM-001-SEDE** (México), **GB/T 19964** (China).
+
+El corolario incómodo: cada vez que esta KB declaró un "gap regional" en siete pases, al menos dos
+veces era un gap de vocabulario. Un gap regional no debe declararse sin haber buscado primero el
+nombre de la norma de conexión del mercado.
+
+## T33 — La UE financia foundation models de red, y su formato de entrada es CGMES
+
+La hoja de ruta **COM/2026/501** (3 de junio de 2026) asigna **30 M€ en 2026 y 20 M€ en 2027**
+específicamente a **foundation models para gestión y planificación de red**, dentro de ~75 M€ para
+aplicaciones de IA en energía y ~100 M€ para red inteligente, con prueba de concepto en **Q1 2027** y
+primeros modelos operativos a **fin de 2027**.
+
+El eslabón que esto ilumina es de ingeniería, no de política: esos modelos consumirán **CGMES**, el
+modelo de datos de la red europea. El séptimo pase añadió once repos de esa tubería —`pypowsybl`,
+`powsybl-diagram`, `ToOp`, `libcimpp`, `cimgen`, `pycgmes`, `CIM-Graph`, `OpenCGMES`, `RDFArchitect`,
+`powerio`, `Sparlectra.jl`— y **nueve son Apache-2.0, BSD-3 o MPL-2.0**.
+
+La tesis: **en EMEA el activo diferencial no es el modelo, es la tubería de datos que lo alimenta.**
+Hay muchos equipos capaces de entrenar un GNN de red; hay pocos que sepan ingerir, validar con SHACL y
+versionar CGMES de un TSO. Ese es el cuello por el que se entra a los 50 M€.
+
+Nótese además la autoría del bloque: **Elia Group, Alliander, Statnett, PNNL, SOPTIM**. El trend T2
+("los operadores de red se volvieron proveedores de open source") suma cinco autores institucionales
+nuevos y queda confirmado por séptimo pase consecutivo.
+
+## T34 — El proyecto energético de IA ya no muere en el piloto: muere después de aprobar el piloto
+
+El dato más accionable de la encuesta sectorial de **Grant Thornton 2026**: **38 %** está en piloto o
+prueba de valor, y **32 % se estanca después de haber sido declarado listo para escalar**. Ese segundo
+número es distinto del primero y más importante. Un piloto que fracasa es un problema de modelo; un
+piloto aprobado que no escala es un problema de **operacionalización, integración y gobernanza** — y
+eso es exactamente el servicio de un integrador, no de un proveedor de modelos.
+
+En la misma encuesta, **54 %** señala la **incertidumbre regulatoria y de cumplimiento** como su
+principal preocupación al desplegar IA agéntica. Súmese la guía **CISA/NSA de mayo de 2026** (zero
+trust, defensa en profundidad, **mínimo privilegio** para infraestructura crítica) y la posición
+escrita de la NERC de que la IA debe **asistir** la decisión, no actuar de forma autónoma.
+
+Las tres cosas apuntan al mismo entregable: la capa de **aceptación humana trazable**
+([`opfab/operatorfabric-core`](https://github.com/opfab/operatorfabric-core), MPL-2.0) no es un extra
+de arquitectura, es el requisito que desbloquea el 32 %. Vender gobernanza no es vender menos: es
+vender lo que está bloqueando el gasto.
+
+## T35 — Un cero de la API de GitHub no es un gap del sector hasta haber reescrito la consulta
+
+Hallazgo de método del séptimo pase, con consecuencia retroactiva. La consulta
+`(electrolyzer OR hydrogen OR geothermal OR "small modular reactor") in:name,description` devolvió
+**cero filas, sin mensaje de error**. La misma búsqueda sin paréntesis devolvió **dieciséis**
+resultados, entre ellos `openFuelCell2`, `BattMo`, `MacroEnergy.jl`, `openTEPES` y `FINE`.
+
+Los paréntesis agrupando `OR` dentro de un calificador `in:` hacen que la búsqueda **falle en
+silencio**, lo que es peor que fallar con error: produce un cero que parece un dato.
+
+Consecuencia retroactiva: los gaps de **hidrógeno, geotermia y nuclear** registrados en pases
+anteriores deben considerarse **sospechosos de ser artefactos de sintaxis** hasta reconsultarlos sin
+paréntesis. El séptimo pase ya recuperó hidrógeno y electroquímica por esta vía. Esto se suma a T29
+("el techo de verificación es que el comando de verificación devuelve éxito"): aquí el comando devolvió
+éxito **y cero filas**, que es la variante más engañosa.
+
+Canal de verificación que sí funciona en este entorno, para que el próximo pase no lo re-descubra:
+`gh api -X GET search/repositories -f q='repo:owner/name'` (✅, es la REST API y sus campos son de
+primera mano) — mientras `gh api repos/{owner}/{repo}` devuelve **403** por alcance de sesión y
+`curl github.com` / `api.github.com` devuelven **403** por política del host. **51 de 51** repos nuevos
+de este pase resolvieron por el primer canal.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
