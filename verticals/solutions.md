@@ -251,6 +251,43 @@ Este vertical está dominado por **copyleft**, a diferencia de la capa de agente
 capa agéntica —que es MIT— como servicio separado. Ese límite de proceso es lo que mantiene limpio
 el código propietario del cliente.
 
+## Sexto pase (2026-11-20): se volvió a buscar el "Odoo de la energía" y la respuesta del cuarto pase se confirma
+
+Este pase repitió la búsqueda a propósito, con la consulta más amplia posible —plataforma de utility
+que cubra ERP + CRM + **gestión de datos de medición (MDM)**, con licencia MIT o Apache— para
+comprobar si la conclusión del cuarto pase seguía en pie. **Sigue en pie, y conviene dejar constancia
+de qué se encontró en su lugar, para que nadie vuelva a gastar el tiempo.**
+
+**Lo que devuelve la búsqueda son productos comerciales, no open source.** Ninguno de estos declara
+licencia abierta y todos aparecen en lo alto de los resultados de "plataforma energía utility ERP CRM
+MDM":
+
+| Candidato | Qué es en realidad | Veredicto |
+|-----------|--------------------|-----------|
+| **Neta Open Suite** (Eng) | Suite de utility con CRM, ERP, gestión de pagos y un módulo de MDM. El "Open" del nombre **no indica licencia abierta** | ❌ comercial |
+| **energy.platform** (Cloudflight) | Conecta CRM/ERP/sistemas operativos existentes y ofrece **API REST abierta** a datos de medición | ❌ comercial, API abierta ≠ código abierto |
+| **MECOMS** | Meter Data Management comercial | ❌ comercial |
+| **Jmix** | Plataforma de **desarrollo** con casos de uso de monitorización energética, mantenimiento de activos y flujos de datos de medición | ⚠️ es un framework de desarrollo, no un vertical energético |
+
+**El falso positivo que más confunde, y hay que nombrarlo**: un nombre con la palabra *"Open"* no es
+una licencia. **Neta Open Suite** es el caso exacto. Mismo fenómeno que esta KB ya catalogó con los
+términos de búsqueda inutilizables: la palabra está, el significado no.
+
+**Lo que sí es open source y ya estaba catalogado** (sin cambios en el veredicto): `opentaps/opentaps_seas`
+(**LGPL-3.0**, 88 ★, 47 forks, ⚠️ **sin push desde 2024-02-07** — el proyecto pasó de ERP a *smart
+energy* en 2019 y su suite ERP/CRM original está archivada como `opentaps-1`, `NOASSERTION`, último
+push 2019); `EnAccess/micropowermanager` (**MIT**, 30 ★, 30 forks, **136 issues abiertas**, push
+2026-11-19 — vivo y la única opción permisiva real para utility descentralizada o mini-red, con CRM y
+*ticketing* incluidos); y la vía compuesta del cuarto pase: `apache/ofbiz-framework` (Apache-2.0) +
+`killbill` (Apache-2.0) + `openmeter` (Apache-2.0).
+
+**La conclusión operativa no cambia y se refuerza con dos pases de evidencia**: **no existe un ERP/CRM
+open source específico de energía con licencia permisiva.** Lo que existe es un conjunto de piezas
+permisivas más integración, y la lógica tarifaria regulada es **siempre desarrollo propio**. Para
+mini-red y acceso a la energía, `micropowermanager` es la excepción que sí cubre el vertical completo
+con MIT — y su relación de 136 issues sobre 30 ★ con push de esta semana es, por la regla del quinto
+pase, señal de equipo activo.
+
 ## Cómo customizar con AI
 
 1. Desplegar la plataforma base sin tocar su código (contenedor, su propia licencia, su propia API).

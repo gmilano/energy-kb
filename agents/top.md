@@ -218,6 +218,72 @@ sigue siendo lo institucional que ya está arriba (`PowerMCP`, `EnergyPlus-MCP`,
 y `hydrogen-music/hydrogen` (caja de ritmos, 1.357 ★): **ni un resultado energético en quince**.
 Lo que funciona es `electrolyzer`, `fuel cell`, `PEMFC` y la búsqueda por organización.
 
+## Hallazgos de verificación del sexto pase (2026-11-20)
+
+### 1. El método de verificación de URLs que esta KB tenía prescrito no verifica nada
+
+La instrucción de ingesta dice *"verificar toda URL antes de escribirla (`curl -sI`)"*. **En este
+entorno esa comprobación siempre pasa, incluso cuando el archivo no existe.** El proxy responde al
+`CONNECT` con `HTTP/1.1 200 Connection Established` y `curl -sI` imprime esa línea como si fuera el
+estado del recurso.
+
+Comprobación directa, con un path inventado a propósito:
+
+| URL | Lo que imprime `curl -sI` | Código real (`-o /dev/null -w "%{http_code}"`) |
+|-----|---------------------------|------------------------------------------------|
+| `raw.githubusercontent.com/PyPSA/pypsa-eur/master/LICENSE` | `200 Connection Established` | **404** |
+| `raw.githubusercontent.com/PyPSA/pypsa-eur/master/LICENSES/MIT.txt` | `200 Connection Established` | 200 |
+| `raw.githubusercontent.com/PyPSA/pypsa-eur/master/NONEXISTENT-FILE-XYZ` | `200 Connection Established` | **404** |
+
+**Un 404 pasa la verificación.** Cualquier fila de cualquier pase anterior "verificada con `curl -sI`"
+está verificada sólo en apariencia.
+
+**Recetas correctas, y son dos distintas según el host:**
+
+- Archivos en `raw.githubusercontent.com`: `curl -s -o /dev/null -w "%{http_code}" <url>`.
+- **URLs de repo en `github.com`: no se pueden verificar con `curl` desde aquí.** El host devuelve
+  **403** a todo por política de red, con o sin `-I`, para repos que existen. La verificación válida
+  es `gh api -X GET search/repositories -f q="repo:owner/name"`, que es la API REST de GitHub y
+  devuelve `license.spdx_id`, `stargazers_count`, `forks_count` y `pushed_at` de primera mano.
+
+Esto refina el hallazgo del pase 5 (`curl github.com` = 403): el problema no es sólo que GitHub esté
+bloqueado, es que **el comando devuelve éxito igualmente** y eso es peor que un fallo limpio.
+
+### 2. `pypsa-eur` no tiene una licencia: tiene cuatro, y el `grep` de SPDX elige la equivocada
+
+El pase 2 estableció la escalera de resolución de licencias (archivo crudo → SPDX en
+`pyproject.toml`/`README` → irresuelto) y el pase 4 le añadió un cuarto sitio (`legal.html` dentro del
+paquete). **`PyPSA/pypsa-eur` necesita un quinto sitio donde mirar.** El pase 5 ya había anotado este
+repo como "MIT+CC-BY-4.0" en `compose/patterns.md`: la intuición era correcta y la lectura incompleta
+—son **cuatro** licencias por tipo de archivo, declaradas vía REUSE— y el `README`, que es donde un
+verificador miraría, da la respuesta equivocada.
+
+| Qué se preguntó | Respuesta |
+|-----------------|-----------|
+| API de GitHub (`license.spdx_id`) | `null` |
+| `LICENSE` en la raíz | **404** (no existe) |
+| `grep SPDX` en el `README` | **`CC-BY-4.0`** ← *la licencia del propio README, no del proyecto* |
+| `doc/licenses.md` + `REUSE.toml` (REUSE de la FSFE) | **código MIT**, documentación CC-BY-4.0, configuración CC0-1.0, datos CC-BY-4.0 |
+
+**Por qué es la trampa más cara de este pase**: `pypsa-eur` es el modelo sectorial europeo más usado
+de esta KB (640 ★, 494 forks). Un gate automático que leyera el SPDX del `README` lo clasificaría como
+**CC-BY-4.0** —una licencia de contenido con obligación de atribución— en lugar de **MIT**. El error
+va en la dirección conservadora (bloquearía un repo usable), al revés que el falso positivo de AGPL
+del pase 5, pero el resultado es el mismo: una decisión de arquitectura tomada sobre un dato falso.
+
+**Regla que se añade a la escalera**: si el repo contiene un directorio `LICENSES/` o un `REUSE.toml`,
+**el proyecto es multi-licencia por tipo de archivo** y hay que leer `REUSE.toml` o `doc/licenses.md`.
+Ningún `grep` de un solo archivo da la respuesta correcta en un repo REUSE. Nota práctica: el código
+es MIT, así que el veredicto operativo de `pypsa-eur` **no cambia** — lo que cambia es que ahora está
+justificado.
+
+### 3. La rama por defecto no siempre es `main`, y eso produce falsos "sin licencia"
+
+`BrandolRuizOlmeda/pypsa-mexico_base` no tiene `LICENSE` en `main` (**404**) y **sí** lo tiene en
+`master` (200, MIT). Un verificador que consulte sólo `main` lo habría registrado como repo sin
+licencia y lo habría descartado — el mismo veredicto que `pypsa-meets-brazil`, que sí está sin
+licencia en las dos ramas. **Regla: antes de declarar "sin licencia", probar `main` y `master`.**
+
 ## Notas de licencia que cambian decisiones
 
 - **`LBNL-ETA/EnergyPlus-MCP`**: la API devuelve `NOASSERTION` y **no hay archivo `LICENSE`**; el

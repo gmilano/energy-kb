@@ -462,6 +462,87 @@ LATAM: buscar `CENACE` o `coordinador electrico` devuelve contenedores de Electr
 cargadores. Lo que funcionó para encontrar Argentina fue buscar por **nombre de modelo**
 (`pypsa`), no por institución.
 
+## T27 — Los gaps regionales de esta KB eran gaps de vocabulario, y ahora hay una receta que los cierra
+
+Es la generalización del hallazgo más importante del sexto pase, y vale para cualquier industria de
+esta rotación, no sólo para energy.
+
+Cinco pases midieron **cero repos de origen LATAM** en energía buscando por **dominio**
+(`eléctrico`, `energia`), por **institución** (`CENACE`, `coordinador electrico`, `XM`) y por
+**país**. Todas esas consultas devuelven ruido: `electrico` resuelve a un contenedor de apps Electron
+de 809 ★, a patinetes y a cargadores. El pase 5 sospechó el patrón y dejó escrita la consulta
+correcta. El pase 6 la ejecutó y encontró **cuatro modelos nacionales, tres MIT**.
+
+**La receta, en una línea: buscar el nombre del *framework* más el sufijo de país.** No el dominio, no
+la institución, no el idioma. `pypsa-cl`, `pypsa-chile`, `pypsa-mexico`, `pypsa-brazil`.
+
+Por qué funciona: quien publica un modelo de red nacional no nombra el repo con el dominio ni con el
+regulador — lo nombra con **la herramienta que usó**, porque su público son los demás usuarios de esa
+herramienta. El vocabulario del autor es el del framework, no el del sector.
+
+**Consecuencia inmediata y comprobable**: el gap APAC sigue abierto y el próximo pase tiene la
+consulta exacta que hay que probar — `pypsa-india`, `pypsa-vietnam`, `pypsa-indonesia`,
+`pypsa-korea`, y lo mismo con `calliope-` y `osemosys-`. Si T27 es correcto, ese gap se cierra igual.
+Si no se cierra con esa consulta, entonces **sí** es un gap de oferta y puede afirmarse como tal.
+
+Esto acota T10 ("los gaps eran gaps de vocabulario") con algo accionable: ya no es sólo "buscar el
+estándar o el protocolo, nunca el sustantivo del dominio" — para repos **de origen regional**, la
+clave es el **nombre del framework**.
+
+## T28 — Las tres regiones convergieron en la misma frase: la IA asiste, no decide
+
+Durante cinco pases esta KB sostuvo que `operatorfabric-core` —la capa de aceptación humana— era la
+pieza sin la cual una demo agéntica de red no es desplegable. Era un argumento de ingeniería. En este
+pase pasó a tener respaldo normativo **en las tres regiones a la vez y por tres vías distintas**:
+
+| Región | De dónde viene la obligación | Qué dice |
+|--------|------------------------------|----------|
+| North America | **Guía de la NERC** | La IA debe **apoyar la decisión**, no actuar de forma autónoma |
+| EMEA | **Guías de la Comisión sobre el artículo 6 del AI Act** (redactadas) | Clasificación de alto riesgo; si un copiloto de red entra, la supervisión humana es exigible |
+| APAC | **IEA**, recogido por el ADB | La adopción sigue **limitada en la operación de red crítica para el sistema** |
+| LATAM | **Stimson Center / CAF con Microsoft** | Exige **gobernanza transparente** y planificación a largo plazo |
+
+**Lo que esto cambia en la práctica comercial**: la capa *human-in-the-loop* deja de ser una decisión
+de arquitectura que un cliente puede recortar del alcance para ahorrar, y pasa a ser la parte del
+alcance que **justifica** el resto. Un copiloto de operación sin trazabilidad de aceptación no es una
+versión más barata del producto: es un producto que no se puede poner en una sala de control.
+
+Corolario de posicionamiento: esto favorece a un integrador frente a un proveedor de modelo. El valor
+no está en el agente, está en el **circuito de aceptación auditable** alrededor del agente — que es
+trabajo de integración, es facturable, y tiene ahora cuatro fuentes regulatorias que lo exigen.
+
+## T29 — El techo de verificación ya no es la red: es que el comando de verificación devuelve éxito
+
+T12 estableció que el límite de esta KB había pasado de la API a la red. Este pase lo corrige hacia
+algo peor y más específico: **la comprobación prescrita para validar URLs pasa siempre, incluso sobre
+archivos que no existen.**
+
+`curl -sI` a través del proxy de este entorno imprime `HTTP/1.1 200 Connection Established` —la
+respuesta del `CONNECT`, no la del recurso— para cualquier URL. Comprobado contra un path inventado:
+`curl -sI` dice 200; el código real es **404**. Y `github.com` responde **403** a todo desde aquí,
+para repos que existen.
+
+**Un fallo silencioso que devuelve éxito es peor que un bloqueo.** Un 403 limpio (como el de
+`eur-lex.europa.eu`) se registra como gap y se dice al cliente. Un 200 falso **se escribe como dato
+verificado**. La diferencia entre T12 y T29 es la diferencia entre saber que no se sabe y creer que se
+sabe.
+
+**Las tres recetas que sí verifican, y hay que usar la correcta según el host:**
+
+1. **Archivos** (`raw.githubusercontent.com`): `curl -s -o /dev/null -w "%{http_code}"`.
+2. **Repos y metadatos** (`github.com` bloqueado): `gh api -X GET search/repositories -f q="repo:owner/name"`
+   — es la API REST, y `license.spdx_id`, `stargazers_count`, `forks_count` y `pushed_at` son de
+   primera mano.
+3. **Antes de declarar "sin licencia"**: probar `main` **y** `master`.
+   `BrandolRuizOlmeda/pypsa-mexico_base` da 404 en `main` y MIT en `master`; un verificador de una
+   sola rama lo habría descartado por error.
+
+Y el corolario sobre repos multi-licencia: si hay un directorio `LICENSES/` o un `REUSE.toml`, el
+proyecto es multi-licencia **por tipo de archivo** y ningún `grep` de un solo archivo acierta. En
+`pypsa-eur`, el SPDX del `README` dice `CC-BY-4.0` —que es la licencia *del README*— mientras el
+código es **MIT**. Dos pases distintos de esta KB han escrito ya tres lecturas diferentes de la
+licencia de ese repo; la correcta está en `doc/licenses.md`.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
@@ -619,5 +700,5 @@ existe es tan dañino como uno que no se declara.
   firmar**.
 
 ---
-*Investigado 2026-11-20 en cinco pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en seis pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

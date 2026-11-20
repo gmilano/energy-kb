@@ -9,6 +9,56 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 6 (LATAM deja de ser un gap de oferta: cuatro modelos nacionales, tres MIT)
+
+**Titular del pase: la recomendación con la que cerró el pase 5 era correcta y se cobró.** Ese pase
+terminó pidiendo *"buscar `PyPSA-CL`, `PyPSA-MX` y `PyPSA-BR` por nombre"*. Hecho: **existen cuatro
+modelos de sistema eléctrico nacional latinoamericano sobre PyPSA, y tres son MIT**. Cinco pases
+midieron "cero repos LATAM" buscando por dominio e institución; la consulta que funcionó fue el
+nombre del framework más el país.
+
+**Nuevo — cohorte de modelos nacionales LATAM, verificada contra la API REST de GitHub:**
+
+| Repo | Licencia | ★ | Forks | Push | Creado | Qué modela | Región |
+|------|----------|---|-------|------|--------|-----------|--------|
+| [paredes-vergara/PyPSA-CL](https://github.com/paredes-vergara/PyPSA-CL) | **MIT** | 15 | 2 | 2026-07-27 | — | SEN de **Chile**: inversión a largo plazo + *unit commitment* + despacho económico, con datos del Coordinador Eléctrico Nacional, CNE y Ministerio de Energía | LATAM |
+| [sanjaygrr/pypsa-chile](https://github.com/sanjaygrr/pypsa-chile) | **MIT** | 0 | 1 | 2026-11-16 | — | Despacho del **SEN chileno** con datos públicos. Push de esta semana | LATAM |
+| [BrandolRuizOlmeda/pypsa-mexico_base](https://github.com/BrandolRuizOlmeda/pypsa-mexico_base) | **MIT** (en `master`) | 0 | 0 | 2026-04-07 | — | **Mercado Eléctrico Mayorista** de México | LATAM |
+| [leonardovbonatto/pypsa-meets-brazil](https://github.com/leonardovbonatto/pypsa-meets-brazil) | ❌ **sin licencia** | 0 | 0 | 2026-11-06 | — | **SIN brasileño** nodal con física de hidráulica y valores de agua estocásticos | LATAM |
+
+**La lectura honesta de la tracción: 0–15 ★, 0–2 forks.** No hay comunidad y no debe venderse como
+tal. Lo que hay es **topología y datos de operador nacional ya mapeados** a un formato que `linopy`
+resuelve — el trabajo caro de las primeras semanas de un encargo de planificación, hecho y público.
+
+**El de Brasil es el bueno y es el inutilizable.** Modela lo específicamente difícil del SIN —el agua
+embalsada como batería del sistema, con valores estocásticos— y no tiene `LICENSE` en `main` ni en
+`master`. Copyright exclusivo del autor: no empotrable. Mismo final que `douyimin/GEM` en el pase 4.
+
+**Dos correcciones de verificación que afectan a toda la KB, no sólo a estas filas:**
+
+1. **`curl -sI` no verifica nada en este entorno, y hasta hoy era el método prescrito.** A través del
+   proxy devuelve `HTTP/1.1 200 Connection Established` —la respuesta del `CONNECT`, no la del
+   archivo— para **cualquier** URL, incluidas las que son 404. Comprobado contra un path inventado:
+   `curl -sI` dice 200, el código real es 404. La forma correcta es
+   `curl -s -o /dev/null -w "%{http_code}"`. Y además `github.com` responde **403** a todo desde
+   aquí por política de host, así que la URL de un repo **no se puede** verificar con `curl`: se
+   verifica con `gh api search/repositories -f q="repo:owner/name"` y los archivos con
+   `raw.githubusercontent.com`.
+2. **`PyPSA/pypsa-eur` no tiene una licencia, tiene cuatro.** La API devuelve `null`, no hay `LICENSE`
+   en la raíz (404 real), y el repo usa **REUSE de la FSFE**: código **MIT**, documentación
+   **CC-BY-4.0**, configuración **CC0-1.0**, datos **CC-BY-4.0**, declarado en `doc/licenses.md` y
+   `REUSE.toml`. Un `grep` de SPDX sobre el `README` devuelve **CC-BY-4.0**, que es la licencia *del
+   propio README* — y clasificaría el modelo de red europeo más usado de esta KB como material de
+   atribución en lugar de código MIT.
+
+**Buscado y no encontrado, para que el próximo pase no lo repita**: la categoría de **cola de
+interconexión y siting de datacenter** que el pase 5 marcó como "a vigilar" sigue sin nada proponible.
+`interconnection queue in:name,description` y `data center power siting` devuelven, en lo alto del
+ranking, simuladores de redes de paquetes y pipelines de datos de Steam; lo único temáticamente
+correcto es `selormdzakpasu/gen_interconnection_queues` (compilación de las colas de los siete ISO) con
+**1 ★ y sin licencia**. Sigue siendo el patrón de `dchub-mcp-server`: demanda alta, oferta open source
+inexistente. Es trabajo a medida, y por eso es facturable.
+
 ## 2026-11-20 — pase 5 (la capa de acceso a datos de mercado: lo primero que hace falta y lo último que esta KB tenía)
 
 **Titular del pase: esta KB sabía simular siete mercados eléctricos y no sabía leer ninguno.** Cuatro

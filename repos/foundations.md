@@ -365,6 +365,43 @@ se vuelva a buscar:
 - `ICWallis/geothermal-cookbook` — Apache-2.0, 27 ★, sin push desde 2022-10-25.
 - `SmartTensors/GeoThermalCloud.jl` — **GPL-3.0**, 36 ★.
 
+## Modelos de sistema eléctrico de origen LATAM: el gap que el quinto pase mandó cerrar, cerrado (sexto pase, 2026-11-20)
+
+El quinto pase terminó `intel/market.md` con una instrucción concreta: *"buscar `PyPSA-CL`, `PyPSA-MX`
+y `PyPSA-BR` por nombre"*. **Se hizo, y existen.** Hay cuatro modelos nacionales de sistema eléctrico
+latinoamericano construidos sobre PyPSA, y **tres son MIT**.
+
+Esto cambia el enunciado que cinco pases arrastraron. La afirmación correcta a partir de hoy no es
+"LATAM no produce repos energéticos", ni la versión matizada "sólo Brasil, y de un solo
+desarrollador". Es: **existen modelos de despacho y planificación de Chile y México, con licencia
+permisiva, construidos sobre datos públicos de los operadores nacionales.**
+
+| Repo | Licencia | Descripción | ★ | Forks | Último push | Región |
+|------|----------|-------------|---|-------|-------------|--------|
+| [paredes-vergara/PyPSA-CL](https://github.com/paredes-vergara/PyPSA-CL) | **MIT** | Planificación de inversión a largo plazo, *unit commitment* y despacho económico del **Sistema Eléctrico Nacional de Chile**. Datos públicos del Coordinador Eléctrico Nacional, la CNE y el Ministerio de Energía | 15 | 2 | 2026-07-27 | LATAM |
+| [sanjaygrr/pypsa-chile](https://github.com/sanjaygrr/pypsa-chile) | **MIT** | Modelo abierto de despacho del **SEN chileno** con datos públicos. Recién activo: push 2026-11-16 | 0 | 1 | 2026-11-16 | LATAM |
+| [BrandolRuizOlmeda/pypsa-mexico_base](https://github.com/BrandolRuizOlmeda/pypsa-mexico_base) | **MIT** | PyPSA aplicado al **Mercado Eléctrico Mayorista** de México. ⚠️ la licencia está en la rama `master`, no en `main` | 0 | 0 | 2026-04-07 | LATAM |
+| [leonardovbonatto/pypsa-meets-brazil](https://github.com/leonardovbonatto/pypsa-meets-brazil) | ❌ **sin licencia** | Modelo nodal abierto del **SIN brasileño** con física de hidráulica y valores de agua estocásticos. Técnicamente el más interesante de los cuatro, y **no se puede usar** | 0 | 0 | 2026-11-06 | LATAM |
+
+**Cómo hay que presentarlo, sin inflarlo.** Entre 0 y 15 ★. No son productos ni comunidades: son
+**modelos de red nacional ya parametrizados con datos del operador**, que es exactamente el trabajo
+caro de las primeras semanas de un encargo de planificación. El valor no es el código: es que la
+topología, las centrales y las series del Coordinador chileno o del MEM mexicano ya están mapeadas a
+un formato que `linopy` resuelve y que esta KB ya sabe conectar a una capa agéntica.
+
+**El caso brasileño repite el patrón más caro de esta KB.** `pypsa-meets-brazil` modela el SIN con
+física de hidráulica —el problema difícil y específico de Brasil, donde el agua embalsada es la
+batería del sistema— y **no tiene archivo de licencia en `main` ni en `master`**. Sin concesión
+expresa es copyright exclusivo del autor: no empotrable en un entregable. Es el mismo final que
+`douyimin/GEM` en el cuarto pase. Acción barata y concreta: abrir issue pidiendo licencia explícita.
+
+**Consecuencia de método, y es la lección general del pase.** Los cinco pases anteriores buscaron
+LATAM por **dominio** (`eléctrico`, `CENACE`, `coordinador electrico`, `XM`, `energia`) y por
+**institución**, y midieron cero. La consulta que funcionó fue el **nombre del framework** —`pypsa` —
+con el sufijo de país. El gap no era de oferta: era del vocabulario de búsqueda, otra vez. Para el
+próximo pase, la generalización vale la pena probarla en el resto: `calliope-`, `temoa-`, `osemosys-`
+y `pypsa-` + país, en las cuatro regiones.
+
 ## Notas de licencia que cambian decisiones
 
 - **`NatLabRockies/EnergyPlus` no es BSD-3 plano.** El `LICENSE.txt` crudo añade una **cláusula (4)

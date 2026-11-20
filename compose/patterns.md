@@ -703,6 +703,66 @@ motor modificado, no.
 
 ---
 
+### Receta 24 — Copiloto de despacho sobre el modelo nacional ya publicado (LATAM: Chile primero, México después)
+
+**Por qué esta receta existe y por qué ahora.** Hasta este pase, cualquier propuesta de planificación
+o despacho en LATAM empezaba por construir el modelo de red del país: semanas de trabajo caro, no
+facturable como innovación y con riesgo de datos. **Eso ya está hecho y publicado con licencia MIT
+para Chile y México.** Esta receta es la cadena completa desde ese punto de partida.
+
+**Cliente típico**: coordinador/operador, generador con portafolio renovable, o un gran consumidor
+—incluido un datacenter— que necesita demostrar al regulador el impacto de su carga en el sistema.
+
+**Piezas, todas verificadas en este pase:**
+
+| Papel | Repo | Licencia | Nota |
+|------|------|----------|------|
+| Modelo del sistema chileno (SEN) | [paredes-vergara/PyPSA-CL](https://github.com/paredes-vergara/PyPSA-CL) | **MIT** | Inversión a largo plazo + *unit commitment* + despacho económico; datos del Coordinador Eléctrico Nacional, CNE y Ministerio de Energía. 15 ★ |
+| Segundo modelo chileno, para contraste | [sanjaygrr/pypsa-chile](https://github.com/sanjaygrr/pypsa-chile) | **MIT** | Despacho del SEN. Push 2026-11-16 |
+| Modelo del mercado mexicano (MEM) | [BrandolRuizOlmeda/pypsa-mexico_base](https://github.com/BrandolRuizOlmeda/pypsa-mexico_base) | **MIT** (rama `master`) | Fase 2 de la receta |
+| Motor de optimización | [PyPSA/linopy](https://github.com/PyPSA/linopy) | **MIT** | Backend del ecosistema PyPSA |
+| Núcleo PyPSA | [PyPSA/PyPSA](https://github.com/PyPSA/PyPSA) | **MIT** | — |
+| Capa agéntica sobre el modelo | [open-energy-transition/pypsa-mcp](https://github.com/open-energy-transition/pypsa-mcp) | **MIT** | Expone PyPSA a un LLM: escenarios conversacionales |
+| Aceptación humana trazable | [opfab/operatorfabric-core](https://github.com/opfab/operatorfabric-core) | **MPL-2.0** | Obligatoria, no opcional (ver T28) |
+
+**Cómo se conecta, en orden:**
+
+1. **Reproducir el caso base y declarar la discrepancia.** Correr `PyPSA-CL` tal cual y comparar su
+   despacho con el publicado por el Coordinador para un período histórico. El entregable de la
+   semana 1 **no** es un agente: es un informe de ajuste del modelo contra la realidad del operador.
+   Sin ese número, nada de lo que sigue es defendible.
+2. **Cruzar los dos modelos chilenos.** Hay dos modelos MIT independientes del mismo sistema. Correr
+   ambos sobre el mismo período y comparar es validación cruzada **gratis** — y el tipo de rigor que
+   un coordinador exige antes de escuchar una propuesta de IA.
+3. **Parametrizar los escenarios con `linopy`**, no a mano: la gran carga nueva (datacenter), el
+   retiro de una térmica, la entrada de un bloque solar con su perfil de irradiancia.
+4. **Poner `pypsa-mcp` delante.** Aquí es donde el encargo deja de ser un estudio y pasa a ser
+   producto: el planificador pregunta *"¿qué pasa si entran 300 MW de carga firme en esta barra en
+   2028?"* y el agente arma el escenario, lo resuelve y devuelve el diferencial de costo marginal y de
+   congestión. El modelo nacional es el que da credibilidad a la respuesta.
+5. **Depositar la recomendación en `operatorfabric-core`**, nunca en el actuador. En Chile el caso de
+   uso de pronóstico renovable para despacho ya está en producción: la recomendación entra en un
+   proceso que una persona acepta. Ver T28 — en las cuatro regiones hay ahora una fuente normativa que
+   lo exige.
+6. **Replicar en México** reapuntando los pasos 1–5 a `pypsa-mexico_base`. La arquitectura no cambia;
+   cambian el modelo y el regulador.
+
+**Lo que hay que decir al cliente, sin adornos.** Estos repos tienen entre **0 y 15 ★** y entre 0 y 2
+forks. **No son software mantenido por una comunidad y no deben presentarse como tal.** Lo que se
+compra es que la topología, el parque generador y las series del operador nacional ya están mapeadas a
+un formato resoluble. Presupuestar explícitamente: validación del modelo contra datos del operador,
+actualización del parque generador, y mantenimiento propio del *fork*. El ahorro es de semanas de
+arranque, no del ciclo de vida.
+
+⚠️ **Brasil queda fuera de esta receta, y conviene explicar por qué.**
+`leonardovbonatto/pypsa-meets-brazil` modela el SIN con física de hidráulica y valores de agua
+estocásticos —exactamente el problema difícil brasileño— y **no tiene archivo de licencia en `main` ni
+en `master`**. Sin concesión expresa es copyright exclusivo del autor: **no empotrable en un
+entregable**. Para Brasil, la vía sigue siendo `{json:scada}` / `OSHMI` en la capa de control (GPL-3.0,
+con sus consecuencias) o construir el modelo de sistema desde `pypsa-earth` asumiendo
+**AGPL-3.0-or-later**. Acción barata: abrir issue pidiendo licencia explícita al autor; si responde,
+la receta cubre los tres mercados grandes de la región en el próximo pase.
+
 ## Qué **no** proponer (gaps medidos, actualizado en el tercer pase del 2026-11-20)
 
 Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
@@ -811,6 +871,36 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
 - **Nada basado en `resstock` para un cliente académico o sin ánimo de lucro** sin revisión legal
   previa. Ver la tabla de trampas.
 
+### Actualización del sexto pase (2026-11-20)
+
+**Un gap se cierra y hay que retirarlo de la lista.** "No hay modelos de sistema eléctrico de origen
+LATAM" **es falso desde este pase**: existen `PyPSA-CL` y `pypsa-chile` (Chile) y `pypsa-mexico_base`
+(México), los tres **MIT**. La Receta 24 es la cadena que los usa. Lo que queda de ese gap es
+específico y menor: **Brasil** sigue sin modelo de sistema usable (el que existe no tiene licencia).
+
+**Gaps que siguen abiertos, medidos otra vez en este pase:**
+
+- **Cola de interconexión y *siting* de datacenter**: el pase 5 lo marcó "a vigilar"; se buscó y sigue
+  vacío. `interconnection queue in:name,description` devuelve simuladores de redes de paquetes y
+  pipelines de datos de Steam; lo único temáticamente correcto es
+  `selormdzakpasu/gen_interconnection_queues` (las colas de los siete ISO) con **1 ★ y sin licencia**.
+  **No proponer producto; proponer desarrollo a medida** — la demanda es alta y la oferta open source
+  no existe, que es justamente por lo que es facturable.
+- **Agente energético open source de propósito general**: tercer pase consecutivo sin nada. La
+  búsqueda global de agentes 2026 devuelve `OpenClaw`, `OpenHands`, `CrewAI`, `LangGraph` — ninguno
+  energético. Lo proponible sigue siendo lo institucional (`PowerMCP`, `EnergyPlus-MCP`, `pypsa-mcp`).
+- **Repos de origen APAC**: sin novedad. Pero ahora hay una consulta concreta que probar (T27):
+  `pypsa-india`, `pypsa-vietnam`, `pypsa-indonesia`, `pypsa-korea`, `calliope-*`, `osemosys-*`.
+- **ERP/CRM/MDM energético permisivo**: confirmado inexistente por segundo pase. Los resultados de
+  búsqueda son productos comerciales; **"Open" en un nombre de producto no es una licencia** (*Neta
+  Open Suite*). La excepción real sigue siendo `EnAccess/micropowermanager` (MIT) para mini-red.
+- **Ejecución de trading mayorista**: sin cambios, no hay base open source en ninguna región (T25).
+- **Verificación primaria regulatoria**: **sigue siendo la restricción vinculante.** Este pase añadió
+  mucha superficie regulatoria (hoja de ruta de la CE del 3 de junio de 2026, modificación del EMR del
+  17 de julio, guías del artículo 6 del AI Act, guía de la NERC, plan nacional chino, tarifa vietnamita
+  de almacenamiento) y **todo es secundario**. `data.consilium.europa.eu` no resuelve desde este
+  entorno, igual que `eur-lex.europa.eu` devuelve 403. Sirve para orientar; **no para firmar**.
+
 ### Trampas de licencia añadidas en el quinto pase
 
 | Repo | Parece | Es | Consecuencia si se asume mal |
@@ -834,5 +924,5 @@ Mismo ecosistema, **cinco resultados distintos**. Nunca inferir la licencia de u
 familia: hay que leer cada uno.
 
 ---
-*Verificado 2026-11-20 en cinco pases (23 recetas). Re-verificar licencias y stars antes de
+*Verificado 2026-11-20 en seis pases (24 recetas). Re-verificar licencias y stars antes de
 comprometer alcance.*

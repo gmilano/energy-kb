@@ -9,6 +9,44 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 6 (ninguna novedad agéntica pasa la barra, y una confirmación regulatoria que vale más)
+
+**Titular del pase, dicho como corresponde: en la capa de agentes energéticos no hay novedad
+proponible esta semana.** La búsqueda global de "mejores agentes AI open source 2026" devuelve
+`OpenClaw`, `Hermes`, `OpenHands`, `Browser Use`, `CrewAI` y `LangGraph` — agentes y frameworks de
+propósito general, **ninguno energético**. Esto confirma por tercer pase consecutivo el hallazgo del
+pase 5: **no existe un "agente energético" open source de propósito general con tracción**, y lo
+creíble sigue siendo lo institucional ya catalogado (`PowerMCP`, `PowerSkills`, `EnergyPlus-MCP`,
+`idfkit-mcp`, `pypsa-mcp`, la familia `energnn`). Se registra como hueco medido, no como silencio.
+
+**Lo que sí es nuevo y cambia el argumento de venta de la capa agéntica: la NERC dice por escrito que
+la IA debe asistir la decisión, no actuar de forma autónoma.** Hasta ahora la tesis
+*human-in-the-loop* de esta KB —que `operatorfabric-core` es la pieza sin la cual una demo de red no
+es desplegable, establecida en el pase 3— se sostenía en razonamiento de ingeniería. Ahora tiene
+respaldo del organismo que fija los estándares de fiabilidad de la red norteamericana. Deja de ser
+una opinión de arquitectura y pasa a ser **cumplimiento**: en un encargo con una utility de EE. UU.,
+la capa de aceptación humana no es un extra que se negocia, es el requisito.
+
+**Dónde encaja cada pieza, ahora que la obligación es explícita:**
+
+| Capa | Repo | Licencia | Rol bajo la guía de la NERC |
+|------|------|----------|------------------------------|
+| Razonamiento sobre herramientas | [Power-Agent/PowerMCP](https://github.com/Power-Agent/PowerMCP) | MIT | Propone; **no ejecuta** |
+| Recomendación de maniobra | [ainetus/ExpertOp4Grid](https://github.com/ainetus/ExpertOp4Grid) | MPL-2.0 | Propone topología |
+| **Aceptación humana trazable** | [opfab/operatorfabric-core](https://github.com/opfab/operatorfabric-core) | MPL-2.0 | **La pieza que satisface el requisito** |
+| Ejecución en campo | [VOLTTRON/volttron](https://github.com/VOLTTRON/volttron) | Apache-2.0 | Actúa sólo tras aceptación |
+
+**Novedad regional de contexto, no de repo (ver `intel/market.md` para el detalle):** la Comisión
+Europea publicó el **3 de junio de 2026** una *Strategic Roadmap for Digitalisation and AI in the
+Energy Sector* con tres pilares, y el **17 de julio de 2026** una propuesta de modificación del
+Reglamento del Mercado Eléctrico. Para la capa agéntica importa una línea concreta: la Comisión
+**redactó guías de clasificación de sistemas de IA de alto riesgo según el artículo 6 del AI Act**. Si
+un copiloto de operación de red cae en esa clasificación, el *human-in-the-loop* de arriba es
+obligatorio también en EMEA, por la misma razón que en North America pero con otra base legal.
+⚠️ Todo esto proviene de **fuentes secundarias**: el registro primario de la UE
+(`data.consilium.europa.eu`) **no resuelve desde este entorno**, sexto pase consecutivo con esa
+limitación. No citar fechas de artículo en una propuesta sin abrir el documento oficial.
+
 ## 2026-11-20 — pase 5 (la cohorte LF Energy de septiembre, y una trampa de verificación propia)
 
 **Titular del pase: los cuatro proyectos que LF Energy anunció el 15 de septiembre de 2026 existen,

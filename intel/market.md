@@ -194,6 +194,45 @@ especializada, blogs jurídicos y notas de análisis). Las órdenes de la FERC y
 NERC son las referencias autoritativas y **no se han podido abrir desde este entorno**. Sirve para
 planear; no para firmar un compromiso de cumplimiento con fecha.
 
+**Actualización del sexto pase (2026-11-20) — la postura regulatoria norteamericana ya tiene una frase operativa**
+
+- **La NERC dice que la IA debe asistir la decisión, no actuar de forma autónoma.** Es el hallazgo
+  regulatorio más accionable de este pase para North America. Convierte la tesis *human-in-the-loop*
+  de esta KB (pase 3: sin `operatorfabric-core` una demo agéntica de red no es desplegable) en un
+  **requisito de cumplimiento** y no en una preferencia de arquitectura. En una propuesta a una
+  utility de EE. UU., la capa de aceptación humana trazable no se negocia: se presupuesta.
+- **Reparto de competencias, para saber a quién se le responde**: FERC y NERC fijan los estándares de
+  fiabilidad y podrían extender ese papel a activos de red habilitados por IA; el DOE lleva la
+  iniciativa en IA del sector energético; el NIST aporta el marco. Deloitte añade recomendaciones de
+  gobernanza, ciberseguridad y **recuperación de costes** con supervisión humana — ese último punto
+  es el que decide si un proyecto de IA entra en la base tarifaria.
+- **Legislación estatal: existe una serie documental para citarla.** El NCSL publica *AI in Energy*
+  en partes (Parte 2: *Challenges*; Parte 3: *Legislative Landscape*). Los pases anteriores
+  registraron "al menos cinco estados con legislación pendiente" sin fuente localizable; ahora la
+  serie del NCSL es el sitio donde verificarlo antes de afirmarlo ante un cliente.
+- **Tensión federal-estatal, y es un riesgo de proyecto real**: borradores iniciales de la OBBBA
+  incluían una **moratoria federal sobre normas estatales de IA** de al menos diez años; su estado
+  lo recoge el informe del NCSL. En paralelo, un *Ratepayer Protection Pledge* de la Casa Blanca
+  (marzo de 2026) y las reglas estatales de utilities inciden ambos sobre **quién paga la red que
+  consume el datacenter**. Para un encargo plurianual, la jurisdicción aplicable puede cambiar a
+  mitad del contrato: conviene cláusula de revisión regulatoria.
+- **Consolidación del lado del cliente**: la fusión **NextEra–Dominion por 67.000 M USD** estaba bajo
+  revisión regulatoria de 180 días en Virginia, Carolina del Norte y Carolina del Sur. Una fusión de
+  ese tamaño congela decisiones de compra de software durante la revisión y las libera en bloque
+  después: es calendario comercial, no sólo noticia sectorial.
+- **El dinero que mueve la demanda**: Microsoft, Amazon, Alphabet y Meta planeaban más de
+  **600.000 M USD** de inversión en IA en 2026. Deloitte proyecta que las empresas de petróleo y gas
+  dedicarán **la mitad de su gasto en TI a IA y IA generativa para 2029**.
+- **Programa federal nuevo para esta KB**: la propia hoja de ruta europea cita la **"Genesis mission"**
+  de EE. UU. como el esfuerzo estatal comparable al chino. No aparecía en ningún pase anterior; queda
+  anotada para verificación primaria en el próximo.
+- ⚠️ **Lo que la adopción real dice, y matiza todo lo anterior**: las encuestas describen un uso
+  desigual — los casos **analíticos** se adoptan, la **automatización en campo** no, y las utilities
+  se declaran cautelosas con los usos operativos avanzados hasta estabilizar sus cimientos de datos.
+  S&P Global reporta inversión agresiva **con retornos mixtos** y dificultad para incrustar contexto
+  de dominio en los flujos de IA. **Ese es exactamente el trabajo que se vende**: no el modelo, la
+  ingeniería de contexto de dominio a su alrededor.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -353,6 +392,51 @@ en cinco pases**. La alternativa "GridStatus europeo", `jo20ow/Obsyd` (37 zonas 
 
 **Lo que sigue sin equivalente abierto en EMEA:** emisiones horarias de red. `open-grid-emissions`
 (MIT) sólo cubre EE. UU. Gap medido, no omisión.
+
+**Actualización del sexto pase (2026-11-20) — la UE pasó de principios a hoja de ruta sectorial, con fechas**
+
+Este es el bloque regulatorio que más se mueve y el que más cuidado exige al citarlo (ver la nota de
+verificación al final).
+
+- **`Strategic Roadmap for Digitalisation and AI in the Energy Sector`, publicada el 3 de junio de
+  2026.** Es una **comunicación de política, no legislación vinculante**, y esa distinción hay que
+  decirla en la primera reunión. Señala cambio regulatorio significativo **hacia 2030** y se organiza
+  en **tres pilares**:
+  1. *Energy for AI* — cómo se alimenta la demanda de la IA.
+  2. *Digitalisation and AI for the Energy System* — la IA aplicada a la operación del sistema.
+  3. *Data for AI and the Energy System* — el acceso a datos, que es el cuello de botella real.
+- **Encaje con el resto del aparato europeo**: se apoya en el *AI Continent Action Plan* y la *Apply
+  AI Strategy*, y complementa el *Cloud and AI Development Act*.
+- **Seguimiento legislativo con fecha**: el **17 de julio de 2026** se publicó una propuesta de
+  **modificación del Reglamento del Mercado Eléctrico**. Aquí deja de ser declarativo: una
+  modificación del EMR toca las reglas con las que opera un cliente TSO o DSO.
+- **La línea que decide la arquitectura de un copiloto de red**: la Comisión **redactó guías de
+  clasificación de sistemas de IA de alto riesgo conforme al artículo 6 del AI Act**. Si un asistente
+  de operación de red entra en esa categoría, el *human-in-the-loop* deja de ser diseño y pasa a ser
+  obligación — la misma conclusión que la guía de la NERC en North America, por vía legal distinta.
+- **Financiación, con su tamaño real**: se reportan unos **75 M EUR** asignados a IA en energía, con
+  apoyo de Horizon Europe. Es una cifra de programa, no de mercado: útil para encontrar consorcios y
+  convocatorias, no para dimensionar un negocio.
+- **Movimiento industrial organizado**: **catorce asociaciones industriales europeas** firmaron una
+  declaración de intenciones, con un **acuerdo modelo previsto para la segunda mitad de 2026**. En
+  paralelo, utilities y una empresa tecnológica lanzaron (junio de 2026) una **alianza de IA para
+  descarbonizar los datacenters de la UE**. Son las puertas de entrada institucionales a un encargo
+  europeo.
+- **Por qué la adopción europea va lenta, en palabras de la propia Comisión**: la adopción sigue
+  **desigual** por los **requisitos estrictos de seguridad de la infraestructura energética crítica**,
+  la **gobernanza fragmentada** y el **acceso limitado a datos**. Las tres son restricciones de
+  integración, no de modelo — es decir, son servicio.
+- **El contrapunto que ya no es sólo técnico**: análisis de abril de 2026 advierten que la demanda de
+  los datacenters amenaza los objetivos de descarbonización europeos. Y en versión de proveedor (hay
+  que etiquetarla como tal): el CTO de Lenovo pronostica que **la energía superará al cómputo como
+  restricción primaria de diseño** de la infraestructura de IA en EMEA en 2026.
+- ⚠️ **Nota de verificación, sexto pase consecutivo con la misma limitación.** Todo lo anterior
+  proviene de **fuentes secundarias** (análisis jurídicos, prensa sectorial, páginas vinculadas a la
+  Comisión). El documento del Consejo **ST-10101-2026** existe y está referenciado, pero
+  `data.consilium.europa.eu` **no resuelve desde este entorno** (igual que el intento previo a
+  `conventuslaw.com`). **La verificación primaria del registro de la UE sigue siendo la restricción
+  vinculante de esta KB.** Orientar estrategia con esto: sí. Citar un artículo o una fecha en un
+  entregable contractual sin abrir el documento oficial: no.
 
 ### APAC
 
@@ -525,6 +609,46 @@ alcance APAC.
 modelo **de** China, no necesariamente un repo **de origen** chino. La hipótesis de que el ecosistema
 local está en Gitee **sigue sin ser testeable** desde este entorno (`gitee.com` → 403, octavo pase
 consecutivo). **No afirmar cobertura local en una propuesta APAC.**
+
+**Actualización del sexto pase (2026-11-20) — aparece el programa estatal chino, y una cifra de adopción que sirve de ancla**
+
+- **China tiene un `National Plan for AI-Energy Integration`.** Lo cita la hoja de ruta de la Comisión
+  Europea al enumerar los esfuerzos estatales comparables (junto a la *Genesis mission* de EE. UU.).
+  Es la primera vez que esta KB registra un **programa nacional chino específico de integración
+  IA-energía**, y encaja con lo que los pases anteriores ya habían anotado sobre China usando IA para
+  mejorar la eficiencia renovable. Queda pendiente de verificación primaria.
+- **La cifra de adopción que conviene llevar, porque es sobria**: un documento del **ADB** (*Enabling
+  AI Implementation in the Energy Sector*, junio de 2026) cita una tasa de adopción de IA del **33 %**
+  en el sector energético (atribuida a datos de la IEA de 2025), y señala como causas del resto
+  **política, gobernanza y estándares débiles**. En el otro extremo del mismo sector, ABB reporta que
+  el **71 %** de los líderes energéticos de Asia-Pacífico ven la IA y la automatización como
+  habilitadores clave de la transición. La distancia entre 71 % de intención y 33 % de adopción es el
+  mercado direccionable, y es un argumento mejor que cualquier proyección de tamaño.
+- **Dónde no se adopta, y coincide con las otras dos regiones**: la IEA sostiene que la adopción sigue
+  **limitada en la operación de red crítica para el sistema**. Un análisis de Temasek añade el motivo
+  concreto: incrustar IA en sistemas físicos exige **datos específicos de dominio e integración con
+  legado**. Tercera región consecutiva en la que la barrera es integración, no modelo.
+- **El desfase temporal, en su versión APAC y descrito como agudo**: la infraestructura de IA se
+  construye en **1–2 años** y la ampliación de red tarda **5–10**. Es la misma tesis central de esta
+  KB, y la lectura regional es que en APAC la brecha es más pronunciada.
+- **Capacidad anunciada, con fuente nombrada**: modelización de ArkTerra Partners cuenta **24,2 GW**
+  de capacidad de datacenter anunciada en **nueve mercados APAC** para 2025–2030. El Singapore Green
+  Finance Centre, con Standard Chartered y Temasek, estima **9–15 GW** de demanda en el Sudeste
+  Asiático para 2030. Son dos recortes distintos (capacidad anunciada vs. demanda estimada): no
+  sumarlos ni presentarlos como la misma magnitud.
+- **Regulación concreta y accionable**: **Vietnam** introdujo en **enero de 2026** una **tarifa de dos
+  partes para almacenamiento en baterías**. Es el elemento de política más específico del pase para
+  APAC y afecta directamente al caso de negocio de un BESS (ver la Receta 13). Los analistas añaden
+  que en almacenamiento APAC la **certeza de política pesa ya más que el coste** en la decisión de
+  inversión, y un informe de ERM observa que los reguladores están saliendo del molde tradicional de
+  EHS.
+- **Competencia instalada que hay que asumir en una propuesta**: Siemens, GE, Schneider, ABB, IBM,
+  Microsoft y Enel aparecen listados como los proveedores principales de IA aplicada en energía en la
+  región; el ADB, Microsoft, KPMG y Banpu NEXT son además activos institucionalmente.
+- ⚠️ **El gap de repos de origen APAC sigue abierto.** Este pase no encontró ninguno nuevo. Dado que
+  LATAM se cerró buscando por **nombre de framework + país** (`pypsa-` + país), la acción concreta
+  para el próximo pase es aplicar la misma receta aquí: `pypsa-india`, `pypsa-vietnam`,
+  `pypsa-indonesia`, `pypsa-korea`, `calliope-` y `osemosys-` con sufijo de país asiático.
 
 ### LATAM
 
@@ -747,6 +871,53 @@ devuelve un contenedor de apps Electron (`electrico`, 809 ★), patinetes eléct
 trabajos de curso. Es el mismo fenómeno que `hydrogen`. Lo que **sí** funcionó para Argentina fue
 buscar por **nombre de modelo** (`pypsa`), no por institución ni por dominio. **Recomendación para el
 próximo pase: buscar `PyPSA-CL`, `PyPSA-MX` y `PyPSA-BR` por nombre.**
+
+**Actualización del sexto pase (2026-11-20) — el gap de oferta LATAM está cerrado, y el cuello de botella regional ya tiene cifra**
+
+- **Cerrado: existen modelos de sistema eléctrico nacional de Chile y México con licencia MIT.** La
+  recomendación con la que cerró el quinto pase —*buscar `PyPSA-CL`, `PyPSA-MX` y `PyPSA-BR` por
+  nombre*— era correcta. Se encontraron **cuatro** modelos nacionales sobre PyPSA, **tres MIT**
+  (`paredes-vergara/PyPSA-CL` 15 ★, `sanjaygrr/pypsa-chile`, `BrandolRuizOlmeda/pypsa-mexico_base`) y
+  uno **sin licencia** (`leonardovbonatto/pypsa-meets-brazil`, SIN brasileño con física de hidráulica
+  — el técnicamente más valioso y el inutilizable). Detalle completo en `repos/foundations.md`.
+  **La frase "LATAM no produce repos energéticos" queda retirada de esta KB**: era un gap de
+  vocabulario de búsqueda, sostenido durante cinco pases.
+- **Lo que esto vale en una propuesta chilena o mexicana**: la topología, el parque generador y las
+  series del **Coordinador Eléctrico Nacional**, la CNE y el Ministerio de Energía de Chile, y del
+  **Mercado Eléctrico Mayorista** mexicano, ya están mapeados a un formato que `linopy` resuelve.
+  Es el trabajo caro de las primeras semanas, hecho y público. No es comunidad (0–15 ★) y no debe
+  venderse como tal: es **punto de partida verificable**.
+- **La restricción regional, ahora con número**: Moody's sitúa la capacidad instalada de datacenter
+  de la región en unos **2.340 MW a principios de 2026**, creciendo **15–20 % anual**, y —el punto
+  importante— sostiene que la expansión de la IA en América Latina estará limitada **menos por la
+  demanda, que es alta, y más por la capacidad de suministrar energía**. Es la tesis central de esta
+  KB en su forma más nítida: en LATAM el cuello de botella es físico, no comercial.
+- **Brasil, el dato que mejor explica el apetito**: los datacenters representaron **un tercio de los
+  PPA bilaterales** del país en 2024. Corrobora lo que los pases anteriores ya registraron
+  (85 % renovable, Eletrobras con C3.ai monitorizando fallos de red en tiempo real, 3,6 M de
+  medidores inteligentes).
+- **Chile, el caso de uso ya en producción**: integra **pronóstico renovable basado en IA** para
+  optimizar el uso de energía limpia, con previsión de **irradiancia solar** aplicada al despacho.
+  Brasil, Uruguay y México aplican IA a modernización de red y planificación de infraestructura.
+  **Nótese la coincidencia**: el país con el caso de uso de despacho más maduro es el que acaba de
+  aparecer con **dos modelos MIT de su propio sistema**. Chile es, por tanto, el mejor candidato de
+  la región para un piloto agéntico de despacho con base open source verificable.
+- **Gobernanza, y es una puerta de entrada**: un informe del **Stimson Center con CAF**, elaborado con
+  Microsoft, define el despliegue responsable de IA en energía y sostiene que exige **gobernanza
+  transparente, colaboración transfronteriza y planificación de infraestructura a largo plazo**.
+  **OLADE** trata el tema en su semana de la energía ("de los datos a los megavatios") y enumera los
+  huecos regionales: red, regulación, talento especializado, conectividad y sostenibilidad. CAF,
+  OLADE, CENIA y Stimson son interlocutores institucionales reales para un encargo regional.
+- **Las barreras, según quien pone el capital**: regulación, permisos, financiación y riesgo de
+  ejecución; con una petición explícita de **regulación clara que garantice capacidad de potencia a
+  las grandes cargas**. Ese es el expediente donde un estudio de IA puede aportar
+  —modelado de impacto de una gran carga en el sistema— y los modelos MIT de arriba son precisamente
+  la herramienta para hacerlo.
+- ⚠️ **Lo que sigue sin existir en LATAM**: ningún repo institucional de utility u operador con
+  tracción, en español o portugués. Lo que hay es **obra de individuos** (Ricardo L. Olsen en Brasil;
+  los autores de los modelos PyPSA de Chile y México) y de **la academia**. La consecuencia práctica
+  no cambia: la autoría regional existe y es citable, pero **no hay un proyecto regional al que
+  sumarse**. Crearlo sigue siendo una oportunidad de posicionamiento abierta.
 
 ## Posicionamiento Globant
 
