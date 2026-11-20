@@ -9,7 +9,159 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
-## 2026-11-20
+## 2026-11-20 — pase 2 (barrido de huecos declarados)
+
+**Titular del pase: tres de los gaps que esta KB declaró vacíos hace una hora no estaban vacíos —
+estaban mal consultados. Y apareció un subsector entero que la KB nunca había mirado: upstream de
+petróleo y gas, con el perfil de licencia exactamente invertido.**
+
+Todas las filas re-consultadas hoy con `gh api search/repositories` por `repo:owner/name` exacto.
+
+### Re-verificación completa de enlaces de este archivo y del resto de la KB
+
+Se extrajeron **las 80 URLs de GitHub distintas** presentes en los ocho archivos de esta KB y se
+consultó cada una por `repo:owner/name` exacto:
+
+- **78 de 80 resuelven.**
+- **2 no resuelven**: `Hartblack356/mtd` y
+  `Legalagecolouring820/Random-Forest-Model-EMS-system-data-machine-learning-early-warning`. Ambas
+  están **sólo** en la sección histórica del **2026-07-02**, ya marcada como pipeline sin verificar.
+  Se conservan por la regla append-only; no hay ninguna URL muerta en contenido curado.
+- **Deriva de stars**: dos filas de secciones vivas quedaron a **±1 ★** del valor de la API en el
+  mismo día (`PyPSA/atlite` 412→413, `OpenEMS/openems` 1631→1632). No se editan: ambos valores fueron
+  ciertos a distinta hora, y reescribir una sección fechada rompería el append-only. La magnitud
+  importa: **±1 ★ en horas** es ruido; los **−2,6×** que corrigió el pase anterior eran cifras
+  arrastradas sin consultar.
+
+---
+
+### Gap 1 — "Mercados eléctricos y trading: cero repos" → **roto**
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [JaccoR/hass-entso-e](https://github.com/JaccoR/hass-entso-e) | Apache-2.0 | Precios day-ahead de ENTSO-E para Home Assistant: la vía más corta a precio horario europeo real | 280 | 65 | 2026-06-22 | EMEA |
+| [assume-framework/assume](https://github.com/assume-framework/assume) | MIT | **ASSUME**: simulación basada en agentes de la evolución de mercados eléctricos (Fraunhofer IEE / INATECH / TU Dresden) | 128 | 53 | 2026-11-19 | EMEA |
+| [alexanderkell/elecsim](https://github.com/alexanderkell/elecsim) | MIT | Modelo de agentes de mercado eléctrico a largo plazo: efecto de política pública sobre decisiones de inversión. **Último push 2025-12-03 — está quieto** | 61 | 13 | 2025-12-03 | EMEA |
+| [acruzgarcia/OMIEData](https://github.com/acruzgarcia/OMIEData) | MIT | Importador de datos de OMIE (operador del mercado ibérico). **Quieto desde 2025-08** | 38 | 15 | 2025-08-10 | EMEA |
+
+**Matiz que hay que decir en una propuesta**: esto **no** es "agentes de trading". Es simulación de
+mercado y acceso a datos de mercado. Un bot que coloque ofertas en un mercado mayorista real sigue
+sin tener equivalente open source — ese gap **sigue abierto**, y ahora está delimitado con precisión:
+falta la capa de *ejecución*, no la de *modelado*.
+
+### Gap 2 — "O&M de activos renovables: sólo un repo" → **roto**
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [sltzgs/OpenWindSCADA](https://github.com/sltzgs/OpenWindSCADA) | GPL-3.0 | Lista curada de datasets abiertos de SCADA de aerogeneradores + código | 259 | 48 | 2026-11-19 | EMEA |
+| [NatLabRockies/OpenOA](https://github.com/NatLabRockies/OpenOA) | BSD-3-Clause | **Framework de evaluación de performance de parques eólicos** (metodologías de Operational Assessment). Es el motor que faltaba junto a los datasets | 259 | 113 | 2026-11-19 | North America |
+| [NatLabRockies/rdtools](https://github.com/NatLabRockies/rdtools) | MIT | Análisis de degradación y suciedad en plantas fotovoltaicas: pérdida de performance medida en serie temporal real | 190 | 84 | 2026-10-20 | North America |
+| [pvlib/pvanalytics](https://github.com/pvlib/pvanalytics) | MIT | Control de calidad, filtrado y etiquetado de features sobre datos de plantas PV | 145 | 44 | 2026-07-08 | North America |
+
+**Por qué el pase anterior no los vio**: buscó `wind turbine SCADA machine learning` y
+`mantenimiento predictivo`. El vocabulario real del dominio es **"operational assessment"**,
+**"performance loss"** y **"degradation"** — nunca "mantenimiento predictivo", que es vocabulario de
+vendor. La consulta que rinde es por **organización** (`NatLabRockies`, `pvlib`) y por **método**.
+
+### Gap 3 — "Gemelo digital de distribución: sólo piezas" → **más piezas, y una trampa de licencia**
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [VOLTTRON/volttron](https://github.com/VOLTTRON/volttron) | **Apache-2.0** (resuelta; API dice `NOASSERTION`) | Plataforma de control distribuido de PNNL/Battelle: bus de mensajes + agentes en el borde | 504 | 284 | 2026-11-03 | North America |
+| [gridlab-d/gridlab-d](https://github.com/gridlab-d/gridlab-d) | ⚠️ **licencia propia "GridLAB-D License v5.3"** (no OSI) | Simulador de distribución del DOE/PNNL: acopla red, edificios, mercados y DER | 221 | 136 | 2026-10-29 | North America |
+| [dss-extensions/OpenDSSDirect.py](https://github.com/dss-extensions/OpenDSSDirect.py) | **BSD-3 + derechos del gobierno de EE. UU.** (API decía `NOASSERTION`) | Interfaz Python directa a OpenDSS (motor de distribución de EPRI) | 119 | 25 | 2026-02-26 | Global |
+| [dss-extensions/DSS-Python](https://github.com/dss-extensions/DSS-Python) | BSD-3-Clause | Bindings nativos de Python para una implementación alternativa de OpenDSS | 80 | 8 | 2026-02-26 | Global |
+| [dss-extensions/dss_capi](https://github.com/dss-extensions/dss_capi) | BSD-3-Clause | Librería C-API multiplataforma de OpenDSS | 42 | 20 | 2026-07-28 | Global |
+| [e2nIEE/pandapipes](https://github.com/e2nIEE/pandapipes) | **BSD-3-Clause** (resuelta; API decía `NOASSERTION`) | Cálculo de flujo en tuberías: **gas, hidrógeno y calor**. Complementa `pandapower` para redes multi-energía | 247 | 91 | 2026-11-17 | EMEA |
+
+**La trampa**: `GridLAB-D` **no es BSD**. Tiene una licencia escrita a medida por Battelle
+("GridLAB-D License Version 5.3, October 2024"). El *permiso* es amplio —usar, copiar, modificar,
+fusionar, publicar, distribuir, sublicenciar y vender— pero:
+
+1. **Cláusula de nombre**: *"neither the name Battelle Memorial Institute or Battelle may be used in
+   any form whatsoever without the express written consent of Battelle"*. Más estricta que la
+   cláusula 3 de BSD: no se limita a promoción.
+2. **Derechos del gobierno de EE. UU.** bajo contrato DE-AC05-76RL01830, con el término exacto
+   "identificable mediante consulta a Battelle o al DOE" — es decir, **no está escrito en el
+   archivo**.
+3. **No está en la lista OSI ni en SPDX.** Un gate automático de compliance lo marcará como
+   "licencia desconocida" aunque el permiso sea permisivo. Hay que resolverlo con legal **antes**,
+   no en la auditoría.
+
+### Subsector nuevo: upstream de petróleo y gas (la KB sólo había mirado electricidad)
+
+"Energy" no es sólo red eléctrica. El upstream existe en open source, está activo, y su perfil de
+licencia es **el inverso** del de la capa agéntica eléctrica:
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [OPM/opm-simulators](https://github.com/OPM/opm-simulators) | **GPL-3.0** | **OPM Flow**: simulador de yacimientos (reservoir) de referencia en open source | 182 | 163 | 2026-11-18 | EMEA |
+| [equinor/ert](https://github.com/equinor/ert) | **GPL-3.0** | **ERT**: ensemble-based reservoir tool, para correr ensembles de modelos dinámicos y asimilación de datos (Equinor, Noruega) | 167 | 154 | 2026-11-19 | EMEA |
+| [equinor/webviz-subsurface](https://github.com/equinor/webviz-subsurface) | **GPL-3.0** | Plugins de visualización de datos de subsuelo | 62 | 62 | 2026-11-19 | EMEA |
+
+**Hallazgo de perfil de licencia** — y es el dato accionable de este bloque:
+
+| Capa | Licencia típica | Implicación |
+|------|-----------------|-------------|
+| Agentes / MCP eléctricos (`Power-Agent/*`, `pypsa-mcp`) | **MIT** | Empotrable en producto de cliente |
+| Modelado eléctrico (`PyPSA`, `pandapower`, `pvlib`) | **MIT / BSD-3** | Empotrable |
+| Plataformas EMS/SCADA (`OpenEMS`, `openremote`, `json-scada`) | **AGPL / GPL** | Aislar detrás de API |
+| **Upstream O&G (`OPM`, `equinor/*`)** | **GPL-3.0, sin excepción encontrada** | **Mismo tratamiento que SCADA: proceso aparte** |
+
+No se encontró **ni un** repo upstream permisivo con tracción. Para un engagement de O&G, el límite
+de proceso no es una buena práctica: es la condición para que exista el entregable.
+
+### Hallazgo LATAM: el operador del sistema colombiano publica código MIT
+
+El pase anterior declaró: *"no se encontró ningún repo energético de origen argentino, chileno,
+colombiano o mexicano con tracción"*, y notó que el hallazgo brasileño (`json-scada`, `OSHMI`) es de
+**un solo autor**. Ambas cosas acaban de cambiar en el lado colombiano:
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [EquipoAnaliticaXM/API_XM](https://github.com/EquipoAnaliticaXM/API_XM) | **MIT** — `Copyright (c) 2020 XM S.A. E.S.P.` | Cliente de consulta de la API de datos del **mercado eléctrico colombiano**: generación, demanda, precios, emisiones | 75 | 38 | 2026-11-10 | **LATAM** |
+| [EquipoAnaliticaXM/datasets](https://github.com/EquipoAnaliticaXM/datasets) | sin licencia declarada | Archivos históricos de variables del sistema colombiano. Actualizado **2026-11-19** | 5 | 1 | 2026-11-19 | **LATAM** |
+
+**Por qué importa más que los stars**: `XM S.A. E.S.P.` es el **operador del Sistema
+Interconectado Nacional y administrador del mercado** de Colombia. No es un entusiasta: es la
+institución, publicando bajo MIT, con el copyright corporativo en el `LICENSE`. El org tiene además
+`Chatbot_XM` (MIT, 1 ★) y `documentacion_emisionesCO2` (MIT, 1 ★) — pequeños, pero muestran que la
+publicación es **política del equipo de analítica**, no un accidente.
+
+**Y hay ecosistema aguas abajo** (0–1 ★, no son hallazgos curados, son señal de demanda):
+`Cdhernandezr/energyagent-colombia` (agente de IA sobre el mercado eléctrico colombiano, LangGraph +
+FastAPI, **sin licencia**) y `CAINavy/tablero-xm` (tablero sobre datos de XM, push **2026-11-20**).
+Es decir: ya hay gente construyendo agentes sobre esta API **hoy**, sin licencia ni soporte. Ese es
+el hueco de mercado exacto.
+
+**Precisión necesaria**: el gap LATAM se cierra para **Colombia y Brasil**. Para **Argentina
+(CAMMESA), Chile (Coordinador Eléctrico Nacional) y México (CENACE)** se buscó por nombre de
+institución y por término de dominio en español y portugués: **cero repos institucionales con
+tracción**. Lo que aparece son dashboards personales de 0 ★. El gap sigue abierto ahí, ahora medido
+por país y no por región.
+
+### Planificación y expansión de capacidad: la categoría que la KB no tenía
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [oemof/oemof-solph](https://github.com/oemof/oemof-solph) | **MIT** (SPDX en `pyproject.toml`; API decía `null`) | Generador de modelos de sistemas energéticos LP/MILP; base de buena parte del modelado alemán | 430 | 158 | 2026-11-19 | EMEA |
+| [pypsa-meets-earth/pypsa-earth](https://github.com/pypsa-meets-earth/pypsa-earth) | ⚠️ **AGPL-3.0-or-later** (SPDX en `README`; API decía `null`) | **PyPSA-Earth**: modelo de sistema energético para *cualquier* país — el único camino directo a LATAM/África/Asia | 384 | 383 | 2026-11-16 | Global |
+| [calliope-project/calliope](https://github.com/calliope-project/calliope) | Apache-2.0 | Framework multi-escala de modelado de sistemas energéticos | 380 | 117 | 2026-10-20 | EMEA |
+| [PowerGenome/PowerGenome](https://github.com/PowerGenome/PowerGenome) | MIT | Construcción de inputs para modelos de sistemas de potencia (foco EE. UU.) | 235 | 78 | 2026-11-19 | North America |
+| [etsap-TIMES/TIMES_model](https://github.com/etsap-TIMES/TIMES_model) | GPL-3.0 | TIMES (MARKAL-EFOM): modelo bottom-up de energía-ambiente del ETSAP/IEA | 151 | 56 | 2026-11-05 | Global |
+| [TemoaProject/temoa](https://github.com/TemoaProject/temoa) | MIT | Tools for Energy Model Optimization and Analysis | 116 | 77 | 2026-11-19 | North America |
+| [rebase-energy/energydatamodel](https://github.com/rebase-energy/energydatamodel) | MIT | Representación de sistemas energéticos como data classes de Python: capa de modelo de dominio reutilizable | 99 | 10 | 2026-08-28 | EMEA |
+
+**El dato que cambia una propuesta regional**: `PyPSA` (núcleo) es **MIT**, pero **`pypsa-eur` no
+tiene licencia** y **`pypsa-earth` es AGPL-3.0-or-later**. O sea: el modelo europeo no se puede usar
+y el modelo global —el único que cubre LATAM y APAC de fábrica— **obliga a liberar el servicio**
+si se expone por red. Para un cliente que quiera un estudio de expansión como SaaS, la alternativa
+permisiva es `calliope` (Apache-2.0), `oemof-solph` (MIT) o `temoa` (MIT), asumiendo el trabajo de
+construir los datos del país. Ese trabajo de datos **es** el presupuesto.
+
+---
+
+## 2026-11-20 — pase 1 (renombres de org y correcciones de licencia)
 
 **Titular del pase: dos renombres de organización rompieron URLs que esta KB daba por buenas, y se
 confirmó el primer repo de origen LATAM con tracción real en toda la rotación.**

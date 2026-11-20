@@ -32,7 +32,83 @@ updated: 2026-11-20
 | [PyPSA/atlite](https://github.com/PyPSA/atlite) | MIT | Cálculo de potenciales renovables y series temporales a partir de datos meteorológicos | 412 | 134 | 2026-11-19 | EMEA |
 | [OpenSTEF/openstef](https://github.com/OpenSTEF/openstef) | **MPL-2.0** | Pipeline de forecasting energético de corto plazo en producción (LF Energy; origen Alliander + RTE) | 183 | 67 | 2026-11-19 | EMEA |
 
-**13 repos fundacionales reales.**
+## Planificación y expansión de capacidad
+
+Categoría ausente en pases anteriores de esta KB. Es la base de cualquier estudio de transición
+energética, mix de generación o plan de expansión de red que un cliente encargue:
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [oemof/oemof-solph](https://github.com/oemof/oemof-solph) | **MIT** (SPDX en `pyproject.toml`) | Generador de modelos LP/MILP de sistemas energéticos; núcleo del ecosistema oemof | 430 | 158 | 2026-11-19 | EMEA |
+| [pypsa-meets-earth/pypsa-earth](https://github.com/pypsa-meets-earth/pypsa-earth) | ⚠️ **AGPL-3.0-or-later** (SPDX en `README`) | **PyPSA-Earth**: modelo de sistema energético para cualquier país del mundo. El único con cobertura LATAM/APAC de fábrica | 384 | 383 | 2026-11-16 | Global |
+| [calliope-project/calliope](https://github.com/calliope-project/calliope) | Apache-2.0 | Framework multi-escala de modelado de sistemas energéticos | 380 | 117 | 2026-10-20 | EMEA |
+| [PowerGenome/PowerGenome](https://github.com/PowerGenome/PowerGenome) | MIT | Construye los inputs de modelos de sistemas de potencia (foco EE. UU.): la parte tediosa y reutilizable | 235 | 78 | 2026-11-19 | North America |
+| [etsap-TIMES/TIMES_model](https://github.com/etsap-TIMES/TIMES_model) | GPL-3.0 | TIMES (MARKAL-EFOM) del ETSAP/IEA: modelo bottom-up energía-ambiente usado por ministerios | 151 | 56 | 2026-11-05 | Global |
+| [TemoaProject/temoa](https://github.com/TemoaProject/temoa) | MIT | Tools for Energy Model Optimization and Analysis | 116 | 77 | 2026-11-19 | North America |
+| [rebase-energy/energydatamodel](https://github.com/rebase-energy/energydatamodel) | MIT | Sistemas energéticos como data classes de Python: modelo de dominio reutilizable entre proyectos | 99 | 10 | 2026-08-28 | EMEA |
+
+**Decisión de licencia de esta categoría**: `PyPSA` (núcleo) es MIT, pero sus dos modelos derivados
+más citados **no son usables tal cual** — `pypsa-eur` **sin licencia declarada** y `pypsa-earth`
+**AGPL-3.0-or-later**. Para un estudio entregado como servicio, la ruta permisiva es `calliope`
+(Apache-2.0), `oemof-solph` (MIT) o `temoa` (MIT), **con el coste de construir los datos del país**.
+Ese coste de datos es el presupuesto real del proyecto, no la licencia.
+
+## Operación y mantenimiento de activos renovables
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [NatLabRockies/OpenOA](https://github.com/NatLabRockies/OpenOA) | BSD-3-Clause | Framework de **operational assessment** de parques eólicos: AEP, pérdidas, disponibilidad, incertidumbre | 259 | 113 | 2026-11-19 | North America |
+| [sltzgs/OpenWindSCADA](https://github.com/sltzgs/OpenWindSCADA) | GPL-3.0 | Lista curada de **datasets abiertos** de SCADA de aerogeneradores + código asociado | 259 | 48 | 2026-11-19 | EMEA |
+| [NatLabRockies/rdtools](https://github.com/NatLabRockies/rdtools) | MIT | Degradación y suciedad en plantas PV: tasa de pérdida de performance sobre serie temporal real | 190 | 84 | 2026-10-20 | North America |
+| [pvlib/pvanalytics](https://github.com/pvlib/pvanalytics) | MIT | Control de calidad y etiquetado de datos de plantas PV: el paso previo a cualquier modelo | 145 | 44 | 2026-07-08 | North America |
+
+**Lección de vocabulario** (vale para el próximo pase): este dominio **no** se llama "mantenimiento
+predictivo" —ése es término de vendor— sino **operational assessment**, **performance loss** y
+**degradation**. Buscar por el término de vendor devuelve cero; buscar por el término del dominio, o
+por organización (`NatLabRockies`, `pvlib`), devuelve cuatro repos mantenidos.
+
+## Redes de distribución y multi-energía
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [e2nIEE/pandapipes](https://github.com/e2nIEE/pandapipes) | **BSD-3-Clause** (Fraunhofer IEE) | Flujo en tuberías para **gas, hidrógeno y calor**: el complemento de `pandapower` para acoplamiento sectorial | 247 | 91 | 2026-11-17 | EMEA |
+| [gridlab-d/gridlab-d](https://github.com/gridlab-d/gridlab-d) | ⚠️ **licencia propia Battelle v5.3** (no OSI) | Simulador de distribución del DOE/PNNL: acopla red, edificios, mercados y DER en un solo motor | 221 | 136 | 2026-10-29 | North America |
+| [dss-extensions/OpenDSSDirect.py](https://github.com/dss-extensions/OpenDSSDirect.py) | **BSD-3 + derechos del gobierno de EE. UU.** | Interfaz Python directa al motor de distribución OpenDSS (EPRI) | 119 | 25 | 2026-02-26 | Global |
+| [dss-extensions/DSS-Python](https://github.com/dss-extensions/DSS-Python) | BSD-3-Clause | Bindings nativos de Python de una implementación alternativa de OpenDSS | 80 | 8 | 2026-02-26 | Global |
+| [dss-extensions/dss_capi](https://github.com/dss-extensions/dss_capi) | BSD-3-Clause | Librería C-API multiplataforma de OpenDSS: el nivel al que se integra desde otro lenguaje | 42 | 20 | 2026-07-28 | Global |
+
+## Mercados eléctricos
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [assume-framework/assume](https://github.com/assume-framework/assume) | MIT | **ASSUME**: simulación basada en agentes de la evolución de mercados eléctricos (Fraunhofer IEE / INATECH / TU Dresden) | 128 | 53 | 2026-11-19 | EMEA |
+
+## Upstream de petróleo y gas (subsector nuevo en esta KB)
+
+"Energy" no es sólo red eléctrica, y el upstream tiene ecosistema propio, activo y **enteramente
+GPL-3.0**:
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [OPM/opm-simulators](https://github.com/OPM/opm-simulators) | **GPL-3.0** | **OPM Flow**: el simulador de yacimientos de referencia en open source (Open Porous Media) | 182 | 163 | 2026-11-18 | EMEA |
+| [equinor/ert](https://github.com/equinor/ert) | **GPL-3.0** | **ERT**: ensembles de modelos dinámicos de yacimiento y asimilación de datos (Equinor, Noruega) | 167 | 154 | 2026-11-19 | EMEA |
+| [equinor/webviz-subsurface](https://github.com/equinor/webviz-subsurface) | **GPL-3.0** | Visualización de datos de subsuelo sobre `webviz-config` | 62 | 62 | 2026-11-19 | EMEA |
+
+**No se encontró ningún repo upstream permisivo con tracción.** Para un engagement de O&G el límite
+de proceso (ejecutar el simulador aparte y hablarle por API/archivos) no es buena práctica: es la
+condición para que el entregable del cliente pueda ser propietario.
+
+## Datos de mercado de origen institucional (LATAM)
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [EquipoAnaliticaXM/API_XM](https://github.com/EquipoAnaliticaXM/API_XM) | **MIT** — `Copyright (c) 2020 XM S.A. E.S.P.` | Cliente de la API de datos del mercado eléctrico colombiano (generación, demanda, precios, emisiones), publicado por el **operador del sistema** | 75 | 38 | 2026-11-10 | **LATAM** |
+
+Equivalente funcional de lo que `hass-entso-e` (Apache-2.0, 280 ★) es para Europa, pero publicado
+por la institución misma. Es el **sustrato de datos** sobre el que se puede construir un agente de
+mercado para Colombia sin negociar acceso.
+
+**34 repos fundacionales reales** (13 del primer pase + 21 añadidos en el segundo).
 
 ## Notas de licencia que cambian decisiones
 

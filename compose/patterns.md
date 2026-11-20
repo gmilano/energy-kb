@@ -166,20 +166,224 @@ crítica de comunidad** de todo el ecosistema energético open source.
 
 ---
 
-## Qué **no** proponer (gaps medidos este pase)
+### Receta 7 — Sandbox de mercado eléctrico para decisiones de inversión y política (EMEA / LATAM)
 
-Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base:
+**Para**: generadores, retailers de energía, reguladores y fondos de infraestructura que necesitan
+responder "¿qué pasa con mi margen si cambia la regla / entra 2 GW de solar / sube el CO₂?".
+Reemplaza al consultor que entrega un Excel que nadie puede re-correr.
 
-- **Trading energético / mercados mayoristas con agentes**: **cero** repos open source relevantes en
-  11 consultas. Dominio enteramente propietario. No hay punto de partida.
-- **Mantenimiento predictivo de parques renovables**: sólo `sltzgs/OpenWindSCADA` (GPL-3.0, 259 ★,
-  datasets). No existe equivalente open source maduro a los productos comerciales.
-- **Gemelo digital de distribución end-to-end**: existen piezas (`power-grid-model`, `pandapower`,
-  `dpsim`) pero **ninguna plataforma integrada**. Proponerlo es trabajo de integración, no de
-  configuración — presupuestar en consecuencia.
-- **Modelos de foundation energéticos con licencia de pesos verificada**: `huggingface.co` **no
-  resuelve** desde este entorno (sexto pase consecutivo). `Power-Agent/PowerFM` (MIT, 59 ★) es el
-  único punto de entrada verificable, y es incipiente. No prometer pesos preentrenados.
+- **Motor de mercado**: [`assume-framework/assume`](https://github.com/assume-framework/assume)
+  (**MIT**, 128 ★, push 2026-11-19) — agentes que representan actores de mercado con sus propias
+  estrategias de oferta. Fraunhofer IEE / INATECH / TU Dresden.
+- **Red detrás del mercado**: [`PyPSA/PyPSA`](https://github.com/PyPSA/PyPSA) (MIT, 2248 ★) para la
+  restricción física, y [`e2nIEE/pandapower`](https://github.com/e2nIEE/pandapower) (BSD-3, 1331 ★)
+  si el estudio baja a nivel de red real.
+- **Datos de precio reales como condición de contorno**: Europa con
+  [`JaccoR/hass-entso-e`](https://github.com/JaccoR/hass-entso-e) (Apache-2.0, 280 ★) o
+  [`acruzgarcia/OMIEData`](https://github.com/acruzgarcia/OMIEData) (MIT, 38 ★, mercado ibérico);
+  Colombia con [`EquipoAnaliticaXM/API_XM`](https://github.com/EquipoAnaliticaXM/API_XM) (MIT, 75 ★).
+- **Baseline obligatorio antes de cualquier modelo**:
+  [`Nixtla/statsforecast`](https://github.com/Nixtla/statsforecast) (Apache-2.0, 4980 ★).
+- **Cableado**: `API_XM`/`entso-e` cargan el histórico de precio y demanda → `assume` corre los
+  escenarios de oferta → `PyPSA` valida factibilidad física → el agente LLM **redacta el informe de
+  escenarios y explica la sensibilidad**, con los números saliendo del simulador y nunca del modelo.
+- ⚠️ **Límite que hay que escribir en la propuesta**: esto **simula**, no opera. Ningún componente
+  coloca ofertas en un mercado real, y no existe open source que lo haga. Si el cliente pide un bot
+  de trading, el proyecto es otro y la base no es ésta.
+- **Licencias**: todo **MIT / Apache-2.0 / BSD-3** → empotrable en producto de cliente.
+- **Tiempo estimado**: 8–12 semanas para el primer escenario reproducible.
 
 ---
-*Verificado 2026-11-20. Re-verificar licencias y stars antes de comprometer alcance.*
+
+### Receta 8 — Analítica de flota de activos renovables (aplica en las cuatro regiones)
+
+**Para**: operadores de parques eólicos y solares, fondos que los tienen en cartera, y aseguradoras.
+Pregunta real del cliente: *"¿este parque rinde menos por el recurso, por suciedad, por degradación
+o porque algo está roto?"* — cuatro causas con cuatro respuestas comerciales distintas.
+
+- **Eólico**: [`NatLabRockies/OpenOA`](https://github.com/NatLabRockies/OpenOA) (**BSD-3**, 259 ★) —
+  metodologías de *operational assessment*: AEP, pérdidas, disponibilidad e incertidumbre. Es el
+  estándar que una due diligence reconoce.
+- **Datos eólicos para calibrar y entrenar**:
+  [`sltzgs/OpenWindSCADA`](https://github.com/sltzgs/OpenWindSCADA) (GPL-3.0, 259 ★) — datasets
+  abiertos de SCADA. ⚠️ **GPL-3.0**: usar los *datos* y el método; no empotrar su código.
+- **Fotovoltaico**: [`NatLabRockies/rdtools`](https://github.com/NatLabRockies/rdtools) (MIT, 190 ★)
+  para tasa de degradación y suciedad, y [`pvlib/pvanalytics`](https://github.com/pvlib/pvanalytics)
+  (MIT, 145 ★) para control de calidad previo — sin este paso, la degradación medida es ruido.
+- **Modelo de referencia de lo que *debería* producir**:
+  [`pvlib/pvlib-python`](https://github.com/pvlib/pvlib-python) (BSD-3, 1730 ★).
+- **Cableado**: `pvanalytics` limpia y etiqueta → `pvlib` genera el esperado → `rdtools`/`OpenOA`
+  separan recurso de pérdida real → el agente **escribe el informe por activo y prioriza
+  intervenciones**, citando siempre la métrica y el método que la produjo. El agente no recalcula
+  performance: la lee.
+- **Por qué funciona comercialmente**: el output es un número que la industria ya acepta
+  (*operational assessment*, *performance loss rate*), no un score propietario que haya que
+  defender. Eso acorta la discusión técnica con el cliente a la mitad.
+- **Licencias**: BSD-3 + MIT en el código; GPL-3.0 sólo en datasets.
+- **Tiempo estimado**: 6–10 semanas por tecnología (eólico o PV), no por parque.
+
+---
+
+### Receta 9 — Estudio de alimentador de distribución con DER (North America primero)
+
+**Para**: DSOs y cooperativas eléctricas que reciben solicitudes de conexión de solar en techo,
+baterías y cargadores y necesitan responder *"¿entra en este alimentador?"* en días, no en meses.
+
+- **Motor de distribución**:
+  [`dss-extensions/OpenDSSDirect.py`](https://github.com/dss-extensions/OpenDSSDirect.py)
+  (**BSD-3 + derechos del gobierno de EE. UU.**, 119 ★) sobre el motor OpenDSS de EPRI, que es el
+  que el regulador y la ingeniería del cliente ya reconocen.
+- **Alternativa / contraste de resultados**:
+  [`e2nIEE/pandapower`](https://github.com/e2nIEE/pandapower) (BSD-3, 1331 ★) y
+  [`PowerGridModel/power-grid-model`](https://github.com/PowerGridModel/power-grid-model) (MPL-2.0,
+  262 ★, Alliander). Correr dos motores y comparar **es** el entregable de calidad.
+- **Acoplamiento con edificios y mercado** (si el estudio lo pide):
+  [`gridlab-d/gridlab-d`](https://github.com/gridlab-d/gridlab-d) (221 ★) — ⚠️ **licencia propia
+  Battelle v5.3, no OSI ni SPDX**: resolver con legal **antes** de incluirlo, porque un gate
+  automático de compliance la marcará como desconocida.
+- **Ejecución en el borde si el proyecto llega a control**:
+  [`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron) (**Apache-2.0**, 504 ★) — aloja agentes
+  junto al equipo sin cláusula de red.
+- **Cableado**: el agente recibe la solicitud de interconexión → arma el caso en `OpenDSSDirect.py`
+  → corre el escenario (tensión, desbalance, sobrecarga, flujo inverso) → **un segundo motor valida**
+  → el agente redacta el informe con el diagnóstico y las mitigaciones. Toda decisión de aprobar o
+  rechazar queda con firma humana.
+- **Por qué funciona comercialmente**: el cuello de botella de los DSOs es volumen de estudios
+  repetitivos con criterio estable — exactamente lo que se automatiza bien y lo que es defendible
+  ante un regulador porque el motor es el estándar de la industria.
+- **Tiempo estimado**: 10–14 semanas; la calibración del modelo del alimentador es el riesgo, no el
+  software.
+
+---
+
+### Receta 10 — Agente de inteligencia de mercado sobre datos del operador (LATAM, Colombia primero)
+
+**Para**: generadores, comercializadores y grandes consumidores en Colombia; replicable en Brasil con
+las fuentes del ONS. Es la receta con la **oferta más corta y la demanda ya visible**.
+
+- **Sustrato de datos, publicado por la institución**:
+  [`EquipoAnaliticaXM/API_XM`](https://github.com/EquipoAnaliticaXM/API_XM) — **MIT**,
+  `Copyright (c) 2020 XM S.A. E.S.P.`, 75 ★, push 2026-11-10. XM es el **operador del Sistema
+  Interconectado Nacional y administrador del mercado**. Más el org `datasets` (histórico, push
+  2026-11-19).
+- **Modelo de dominio reutilizable**:
+  [`rebase-energy/energydatamodel`](https://github.com/rebase-energy/energydatamodel) (MIT, 99 ★)
+  para no reinventar las estructuras de activo/serie/mercado en cada proyecto.
+- **Forecast con baseline honesto**:
+  [`Nixtla/statsforecast`](https://github.com/Nixtla/statsforecast) (Apache-2.0, 4980 ★); el modelo
+  pesado sólo si gana al baseline, y se reporta por cuánto.
+- **Escenarios de sistema**: [`calliope-project/calliope`](https://github.com/calliope-project/calliope)
+  (Apache-2.0, 380 ★) o [`TemoaProject/temoa`](https://github.com/TemoaProject/temoa) (MIT, 116 ★).
+  ⚠️ **No usar `pypsa-earth` para esto**: es **AGPL-3.0-or-later** y obliga a liberar el servicio si
+  se expone por red. Es el error más caro disponible en esta categoría.
+- **Capa agéntica**: agente que responde en lenguaje natural sobre precio de bolsa, demanda,
+  generación por tecnología y emisiones; cita **siempre** la consulta a la API que produjo el número
+  y el timestamp; nunca interpola ni redondea.
+- **Cableado**: `API_XM` → almacenamiento de series → `energydatamodel` como esquema →
+  `statsforecast` para proyección → agente para consulta y reporte, con la cita de la fuente en cada
+  respuesta.
+- **Por qué funciona comercialmente, y es el argumento fuerte**: ya existen proyectos personales
+  haciendo esto **sin licencia y sin soporte** (`energyagent-colombia`, `tablero-xm` con push del
+  2026-11-20). Hay demanda demostrada y ninguna oferta profesional. Y la procedencia es inatacable:
+  *el operador del sistema publica el cliente bajo MIT*.
+- **Licencias**: MIT + Apache-2.0 en todo el stack. Sin copyleft.
+- **Tiempo estimado**: 6–8 semanas al primer agente con citación de fuente.
+
+---
+
+### Receta 11 — Red de gas / hidrógeno acoplada a la red eléctrica (EMEA)
+
+**Para**: operadores de red de gas, utilities multi-energía y proyectos de hidrógeno industrial que
+necesitan evaluar conversión o mezcla sin comprar una suite propietaria.
+
+- **Flujo en tuberías**: [`e2nIEE/pandapipes`](https://github.com/e2nIEE/pandapipes)
+  (**BSD-3-Clause** resuelta en el `LICENSE` crudo, 247 ★, Fraunhofer IEE) — gas, **hidrógeno** y
+  calor, con el mismo diseño de API que `pandapower`.
+- **Lado eléctrico**: [`e2nIEE/pandapower`](https://github.com/e2nIEE/pandapower) (BSD-3, 1331 ★).
+  Misma casa, misma convención: el acoplamiento sectorial no requiere pegamento ad hoc.
+- **Planificación por encima**: [`oemof/oemof-solph`](https://github.com/oemof/oemof-solph)
+  (**MIT**, resuelta vía SPDX en `pyproject.toml`, 430 ★) para el despacho LP/MILP del sistema
+  acoplado.
+- **Cableado**: `oemof-solph` decide el despacho entre vectores → `pandapipes` verifica factibilidad
+  hidráulica → `pandapower` verifica la eléctrica → el agente **documenta el caso y las
+  violaciones**, no las resuelve.
+- **Por qué este trío y no otro**: las tres licencias son permisivas y dos de las tres salen del
+  mismo instituto, así que el modelo de datos ya es compatible. Es la combinación con menos
+  integración inventada de toda esta página.
+- **Tiempo estimado**: 8–12 semanas.
+
+---
+
+### Receta 12 — Modelo de yacimiento asistido por agentes (O&G, EMEA/LATAM)
+
+**Para**: operadoras de upstream con simulación de yacimientos interna. Subsector que esta KB no
+había cubierto, y el patrón de integración es **distinto a todo lo anterior**.
+
+- **Simulador**: [`OPM/opm-simulators`](https://github.com/OPM/opm-simulators) (**GPL-3.0**, 182 ★) —
+  OPM Flow, la referencia open source de simulación de yacimientos.
+- **Orquestación de ensembles y asimilación de datos**:
+  [`equinor/ert`](https://github.com/equinor/ert) (**GPL-3.0**, 167 ★) — herramienta de producción de
+  Equinor para correr ensembles de modelos dinámicos.
+- **Visualización**: [`equinor/webviz-subsurface`](https://github.com/equinor/webviz-subsurface)
+  (**GPL-3.0**, 62 ★).
+- ⚠️ **La restricción define la arquitectura, y no hay alternativa**: los tres son **GPL-3.0** y **no
+  se encontró ningún equivalente permisivo con tracción** en upstream. El entregable propietario del
+  cliente sólo existe si el simulador queda como **sistema de registro en contenedor aparte**, con
+  intercambio por archivos o API. Enlazarlo en el binario del cliente deriva obra.
+- **Cableado**: el agente prepara casos y perturbaciones → `ert` corre el ensemble invocando
+  `OPM Flow` **como proceso externo** → el agente lee resultados y **redacta el informe de
+  incertidumbre**, sin tocar la física ni ajustar parámetros por su cuenta.
+- **Por qué funciona comercialmente**: el trabajo tedioso del ingeniero de yacimientos es preparar y
+  comparar cientos de corridas. Eso se automatiza sin pedirle al agente ninguna decisión técnica.
+- **Tiempo estimado**: 12–16 semanas; **incluir revisión legal de GPL en la semana 1**, no en la
+  última.
+
+---
+
+## Qué **no** proponer (gaps medidos, actualizado en el segundo pase del 2026-11-20)
+
+Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
+esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren:
+
+| Lo que decía el primer pase | Estado al cierre del día |
+|-----------------------------|--------------------------|
+| "Trading / mercados: cero repos. **No hay punto de partida**" | 🟡 **Hay punto de partida para simular** (`assume` MIT 128 ★, `elecsim` MIT 61 ★, datos vía `hass-entso-e` y `API_XM`). **Sigue sin haberlo para ejecutar**: ningún repo coloca ofertas reales |
+| "Mantenimiento predictivo renovable: sólo datasets" | ✅ **Cerrado** (`OpenOA` BSD-3 259 ★, `rdtools` MIT 190 ★, `pvanalytics` MIT 145 ★) → Receta 8 |
+| "Gemelo digital de distribución: sólo piezas" | 🟡 **Cinco piezas**, aún sin plataforma integrada → Receta 9, presupuestada como integración |
+
+**Lo que sigue sin base y no se debe proponer:**
+
+- **Bot de trading mayorista.** Existe la simulación, **no la ejecución**. Si el cliente pide colocar
+  ofertas, no hay base open source: es desarrollo desde cero más integración con el operador de
+  mercado.
+- **Plataforma de gemelo digital de distribución "lista".** Hay motores (`OpenDSS`, `pandapower`,
+  `power-grid-model`, `gridlab-d`, `dpsim`) y **ninguna plataforma end-to-end**. Proponerlo es
+  trabajo de integración y de calibración del modelo de red. Presupuestar en consecuencia.
+- **Modelos de foundation energéticos con licencia de pesos verificada.** `huggingface.co` devuelve
+  **403 del proxy** (séptimo pase consecutivo). `Power-Agent/PowerFM` (MIT, 59 ★) es el único punto
+  de entrada verificable y es incipiente. **No prometer pesos preentrenados.**
+- **"Base open source local" en APAC.** Verificado: `MyEMS` (MIT, 763 ★) y `price_forecast`
+  (MIT, 25 ★). La hipótesis de que el resto está en Gitee **no es testeable** desde este entorno
+  (`gitee.com` → 403). No afirmar cobertura local en una propuesta APAC.
+- **Credencial regional en Argentina, Chile o México.** Buscado por institución (CAMMESA,
+  Coordinador Eléctrico Nacional, CENACE) y por término de dominio: **cero repos institucionales con
+  tracción**. La credencial LATAM verificable es **Brasil** (`json-scada`, `OSHMI`, autor individual)
+  y **Colombia** (`API_XM`, institucional).
+- **Upstream de O&G empotrado en producto propietario.** Todo lo encontrado es **GPL-3.0** sin
+  alternativa permisiva. El límite de proceso es la condición del entregable, no una recomendación.
+- **Compromisos de cumplimiento con fecha firmada del AI Act.** La fecha (2-dic-2027, Reglamento (UE)
+  2026/1744) tiene concordancia de **nueve fuentes secundarias** y **cero** confirmación primaria:
+  `eur-lex.europa.eu` devuelve 403 desde este entorno. Sirve para planear; **no** para firmar.
+
+### Trampas de licencia que ya costarían dinero hoy
+
+| Repo | Parece | Es | Consecuencia si se asume mal |
+|------|--------|----|------------------------------|
+| `pypsa-earth` (384 ★) | sin licencia (API dice `null`) | **AGPL-3.0-or-later** (SPDX en `README`) | Obligación de liberar el servicio en un SaaS de cliente |
+| `gridlab-d` (221 ★) | BSD | **licencia propia Battelle v5.3, no OSI/SPDX** | Gate de compliance la marca como desconocida; cláusula de nombre y derechos gov. |
+| `oemof-solph` (430 ★) | sin licencia (API dice `null`) | **MIT** (SPDX en `pyproject.toml`) | Se descarta un repo perfectamente usable |
+| `u9n/dlms-cosem` (124 ★) | open source | **Business Source License 1.1** | No es permisiva; pasa por open source en una revisión superficial |
+| `EnergyPlus` | BSD-3 | **BSD-3 + cláusula (4) de marca del DOE** | Prohibido usar "EnergyPlus"/"E+" en nombre de producto o promoción |
+
+---
+*Verificado 2026-11-20 en dos pases. Re-verificar licencias y stars antes de comprometer alcance.*

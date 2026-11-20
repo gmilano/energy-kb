@@ -9,7 +9,67 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
-## 2026-11-20
+## 2026-11-20 — pase 2 (barrido de huecos declarados)
+
+**Titular del pase: la categoría agéntica energética no se agota en `Power-Agent`. Apareció una
+plataforma de control distribuido con 504 ★ cuya licencia esta KB nunca había resuelto, y un
+segundo servidor MCP de EnergyPlus que sí es MIT.**
+
+Este pase no buscó novedades por buzzword: atacó uno por uno los **gaps declarados** del pase
+anterior de hoy. Tres de ellos ya no son gaps.
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [VOLTTRON/volttron](https://github.com/VOLTTRON/volttron) | **Apache-2.0** (resuelta; la API dice `NOASSERTION`) | Plataforma de control distribuido de PNNL/Battelle: bus de mensajes + agentes desplegables en edificios y equipos de red. Es **infraestructura de agentes**, anterior a los LLM y ya desplegada en campo | 504 | 284 | 2026-11-03 | North America |
+| [eclipse-volttron/volttron](https://github.com/eclipse-volttron/volttron) | Apache-2.0 | **Nuevo hogar en la Eclipse Foundation.** Hoy tiene 0 ★ y un último push del 2026-07-21: la migración está empezada, no terminada | 0 | 1 | 2026-07-21 | North America |
+| [idfkit/idfkit-mcp](https://github.com/idfkit/idfkit-mcp) | **MIT** (verificada en `LICENSE` crudo) | Segundo servidor MCP para EnergyPlus. **Licencia limpia**, al contrario que el de LBNL | 14 | 2 | 2026-11-16 | North America |
+| [assume-framework/assume](https://github.com/assume-framework/assume) | MIT | Simulación **basada en agentes de mercados eléctricos** (Fraunhofer IEE / INATECH / TU Dresden). Rompe el gap "cero repos de mercados" | 128 | 53 | 2026-11-19 | EMEA |
+
+### Lo que esto cambia en una decisión concreta
+
+- **`EnergyPlus-MCP` (LBNL, 130 ★) ya no es la única puerta a EnergyPlus por MCP.** El pase anterior
+  advirtió —con razón— que su licencia es una BSD modificada sin archivo `LICENSE`, con derechos del
+  gobierno de EE. UU. y contacto de IP en LBNL. `idfkit-mcp` es **MIT verificada**, con el coste de
+  ser mucho más joven (14 ★, v. inicial). Para un entregable de marca blanca con revisión legal
+  corta, `idfkit-mcp` es el camino; para cobertura funcional (35 tools), el de LBNL.
+- **`VOLTTRON` es Apache-2.0 y lleva años en edificios reales.** Es la pieza que faltaba entre "la
+  plataforma copyleft de registro" y "la capa agéntica MIT": permite ejecutar agentes **en el borde**,
+  junto al equipo, sin AGPL. Que esté migrando a Eclipse es una señal de gobernanza, pero
+  **la org nueva todavía no es la fuente de verdad** — hoy el código vivo está en `VOLTTRON/volttron`.
+
+### Advertencia de método que cambió este pase
+
+El pase anterior fijó la regla "`NOASSERTION` ≠ sin licencia: leer el `LICENSE` crudo". Esa regla es
+necesaria pero **insuficiente**: `oemof/oemof-solph` (430 ★) y `pypsa-meets-earth/pypsa-earth`
+(384 ★) **no tienen archivo `LICENSE` en ninguna rama** y sin embargo sí declaran licencia, en un
+identificador **SPDX dentro de `pyproject.toml` / `README`** (estándar REUSE):
+
+- `oemof-solph` → `SPDX-License-Identifier: MIT` en `pyproject.toml` (+ `LICENSES/MIT.txt`).
+- `pypsa-earth` → `SPDX-License-Identifier: AGPL-3.0-or-later` en el `README`.
+
+Regla nueva, en orden: **(1) `LICENSE` crudo → (2) SPDX en `pyproject.toml`/`README` → (3) sólo
+entonces declararlo irresuelto.** Saltarse el paso 2 habría costado descartar un repo MIT de 430 ★ y,
+peor, **haber tratado como permisivo un AGPL de 384 ★**.
+
+### Canales de verificación de este pase (cambiaron respecto del anterior)
+
+| Canal | Pase anterior | Hoy |
+|-------|---------------|-----|
+| `api.github.com` / `github.com` vía curl | HTTP 403 (política de host) | **HTTP 200** |
+| `gh api search/repositories` con `q=repo:owner/name` | funciona | funciona (único camino fiable) |
+| `gh api repos/{owner}/{repo}` | no registrado | **403**: la sesión sólo alcanza sus repos configurados |
+| `raw.githubusercontent.com` | 200 | 200 |
+| `huggingface.co` | "no resuelve" | **403 del proxy** — es política de red, no DNS |
+| `gitee.com` | no probado | **403 del proxy** → la hipótesis "los repos chinos están en Gitee" **no se puede testear desde aquí** |
+| `eur-lex.europa.eu` | no probado | **403 del proxy** → la verificación del AI Act contra el Diario Oficial que pidió el pase anterior **es imposible en este entorno** |
+| Fetch directo de páginas (arxiv.org, oati.com, twobirds.com) | no registrado | **falla DNS/allowlist** → todo dato de prensa de este pase es de **snippet de búsqueda, no de fuente primaria** |
+
+**Consecuencia honesta**: en esta KB, sólo lo verificado contra GitHub es dato de primera mano.
+Todo lo regulatorio y de mercado es secundario, y está marcado como tal.
+
+---
+
+## 2026-11-20 — pase 1 (verificación del stack agéntico)
 
 **Titular del pase: apareció un stack agéntico energético completo, todo MIT, y un servidor MCP de
 laboratorio nacional.** Verificado contra la GitHub REST API.

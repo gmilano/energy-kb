@@ -36,7 +36,35 @@ Es el punto de partida más fuerte que existe hoy para agentes de sistemas de po
 | [ugr-sail/sinergym](https://github.com/ugr-sail/sinergym) | MIT | Entorno Gym para simulación y control de edificios sobre EnergyPlus (Univ. de Granada) | 242 | 57 | 2026-11-17 | EMEA |
 | [NatLabRockies/PowerGridworld](https://github.com/NatLabRockies/PowerGridworld) | BSD-3-Clause | Framework liviano y modular para RL multi-agente en redes (Alliance for Sustainable Energy / NREL) | 188 | 49 | 2026-11-15 | North America |
 
-**11 agentes/entornos reales.** Ninguna fila es ejemplo ni plantilla.
+## Plataformas de agentes en el borde (hallazgo del segundo pase del 2026-11-20)
+
+La capa agéntica no empieza con los LLM. Existe infraestructura de agentes **ya desplegada en campo**,
+con licencia permisiva, que resuelve el problema de "dónde corre el agente cuando está al lado del
+equipo y no en la nube":
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [VOLTTRON/volttron](https://github.com/VOLTTRON/volttron) | **Apache-2.0** | Plataforma de control distribuido de PNNL/Battelle: bus de mensajes, aislamiento de agentes y drivers de campo. Despliegue probado en edificios y equipos de red | 504 | 284 | 2026-11-03 | North America |
+| [eclipse-volttron/volttron](https://github.com/eclipse-volttron/volttron) | Apache-2.0 | Nuevo hogar del proyecto en la Eclipse Foundation. **Migración en curso, no terminada**: 0 ★ y último push 2026-07-21 | 0 | 1 | 2026-07-21 | North America |
+| [idfkit/idfkit-mcp](https://github.com/idfkit/idfkit-mcp) | **MIT** | Servidor MCP para EnergyPlus con **licencia limpia**: la alternativa al de LBNL cuando la revisión legal tiene que ser corta. Joven (14 ★) | 14 | 2 | 2026-11-16 | North America |
+
+**Cómo encaja con `Power-Agent`**: `PowerMCP` y `PowerSkills` dan el *razonamiento* sobre
+herramientas de ingeniería; `VOLTTRON` da el *lugar de ejecución* en el borde, con Apache-2.0 y sin
+cláusula de red. Es el puente entre la plataforma copyleft de registro y la capa agéntica MIT.
+
+## Simulación de mercados basada en agentes
+
+Categoría que pases anteriores declararon vacía. No lo está — pero es **modelado**, no ejecución:
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [assume-framework/assume](https://github.com/assume-framework/assume) | MIT | **ASSUME**: agentes que representan actores de mercado eléctrico para estudiar su evolución (Fraunhofer IEE / INATECH / TU Dresden). Activo: push 2026-11-19 | 128 | 53 | 2026-11-19 | EMEA |
+| [alexanderkell/elecsim](https://github.com/alexanderkell/elecsim) | MIT | Modelo de agentes de mercado a largo plazo: efecto de la política pública sobre decisiones de inversión. ⚠️ **sin actividad desde 2025-12-03** | 61 | 13 | 2025-12-03 | EMEA |
+
+⚠️ **Límite que hay que declarar**: ninguno de los dos coloca ofertas en un mercado real. Son
+simuladores. Un agente de *ejecución* de trading mayorista sigue sin equivalente open source.
+
+**16 agentes/entornos reales.** Ninguna fila es ejemplo ni plantilla.
 
 ## Notas de licencia que cambian decisiones
 
@@ -70,6 +98,36 @@ Medido de nuevo contra la API el 2026-11-20:
 
 Causa probable: cifras arrastradas entre pases sin re-consultar la API. Esta tabla existe para que
 el próximo pase no las vuelva a propagar.
+
+## Resoluciones de licencia del segundo pase (2026-11-20)
+
+La regla del pase anterior —*"`NOASSERTION` no significa sin licencia: leer el `LICENSE` crudo"*— es
+correcta pero incompleta. Hay repos **sin archivo `LICENSE` en ninguna rama** que sí declaran
+licencia, mediante un identificador **SPDX** en `pyproject.toml` o en el `README` (estándar REUSE).
+
+**Orden de verificación que esta KB adopta desde hoy:**
+
+1. `LICENSE` / `LICENSE.txt` / `License.txt` / `COPYING` crudo en `raw.githubusercontent.com`.
+2. `SPDX-License-Identifier:` en `pyproject.toml`, `setup.py`, `README`.
+3. Sólo entonces: declararlo **irresuelto** (y no construir sobre él).
+
+Resueltas así en este pase:
+
+| Repo | API decía | Realidad verificada | Dónde estaba | Veredicto |
+|------|-----------|---------------------|--------------|-----------|
+| `VOLTTRON/volttron` | NOASSERTION | **Apache-2.0** (Battelle Memorial Institute) | `LICENSE` | ✅ rescatado, 504 ★ |
+| `oemof/oemof-solph` | `null` | **MIT** | SPDX en `pyproject.toml` | ✅ rescatado, 430 ★ |
+| `pypsa-meets-earth/pypsa-earth` | `null` | **AGPL-3.0-or-later** | SPDX en `README` | ⚠️ **copyleft de red** |
+| `e2nIEE/pandapipes` | NOASSERTION | **BSD-3-Clause** (Fraunhofer IEE) | `LICENSE` | ✅ rescatado, 247 ★ |
+| `dss-extensions/OpenDSSDirect.py` | NOASSERTION | **BSD-3 + derechos del gobierno de EE. UU.** | `LICENSE` | ⚠️ revisar cláusula gov |
+| `gridlab-d/gridlab-d` | NOASSERTION | **licencia propia de Battelle v5.3 (no OSI, no SPDX)** | `LICENSE` | ⚠️ gate de compliance la marcará |
+| `idfkit/idfkit-mcp` | MIT | **MIT** confirmada | `LICENSE` | ✅ |
+| `u9n/dlms-cosem` | NOASSERTION | **Business Source License 1.1** (re-confirmada) | `LICENSE` | ❌ no permisiva |
+
+**El caso que más caro habría salido**: `pypsa-earth`. Es el único modelo de sistema energético que
+cubre LATAM y APAC de fábrica, la API no declara licencia, y la respuesta —AGPL-3.0-or-later— está
+en una línea del `README`. Tratarlo como permisivo en un SaaS de cliente habría significado
+obligación de liberar el servicio.
 
 ---
 *Verificado contra GitHub REST API el 2026-11-20. Re-verificar antes de citar en una propuesta.*

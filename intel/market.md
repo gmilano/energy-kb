@@ -76,6 +76,31 @@ datacenters pagarían el costo íntegro de las mejoras de red atribuibles a su i
   afirmación que circula en blogs —que FERC exigiría modelos de IA "100 % transparentes"— **no pudo
   verificarse**: no citarla.
 
+
+**Actualización del segundo pase (2026-11-20)** — fuentes secundarias (snippets de prensa; el fetch
+directo de páginas falla en este entorno, ver nota de método al pie):
+
+- **Referencia de producción que se puede citar**: **CAISO**, con **OATI**, tiene una arquitectura
+  multi-agente ("Genie") **en entorno de producción** para **gestión de interrupciones (outage
+  management)**, con **humano en el bucle**. La misma fuente describe la estrategia de CAISO en tres
+  niveles: **Embed → Specialize → Customize**. Fecha aproximada: **agosto de 2026**. Es el caso de
+  North America más cercano a "agentes en operación real de red", y el patrón que replica —humano
+  validando la acción crítica— coincide con la regla de arquitectura de `compose/patterns.md`.
+- **El expediente FERC siguió moviéndose**: hay cobertura del **10 de noviembre de 2026** sobre un
+  "fast track de 60 días" para la conexión de datacenters de IA, continuación de las *show-cause
+  orders* del 18 de junio. Además, FERC habría instruido a **PJM** a crear opciones de servicio de
+  transmisión para **cargas co-localizadas que puedan limitar su retiro de energía de la red** — eso
+  es exactamente el producto de flexibilidad de la Oportunidad 2, pero ahora con forma tarifaria.
+- **Riesgo político nuevo, y es el que puede frenar un proyecto**: un informe de la **Electricity Law
+  Initiative de Harvard** sostiene que los usuarios residenciales están **subsidiando** el costo de
+  energía de los datacenters, y pide más supervisión de los contratos utility-datacenter. En el
+  Congreso, el **Bipartisan American Affordability and Jobs Act of 2026** incluiría protecciones
+  obligatorias al ratepayer; se reporta que FERC **no puede imponerlas** con la ley actual.
+- **Lectura para una propuesta**: el discurso "aceleramos tu interconexión" ya tiene contrapeso
+  político. El encuadre que resiste es **"demostramos que la carga no la pagan los hogares"**:
+  trazabilidad de costo, atribución de refuerzos de red y evidencia auditable. Eso es trabajo de
+  datos, y es facturable.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -104,6 +129,36 @@ julio de 2026**.
   (varias fuentes antiguas decían agosto de 2026). Verificar contra el Diario Oficial antes de
   comprometer un plan de cumplimiento.
 
+
+**Actualización del segundo pase (2026-11-20)** — segunda confirmación independiente, y un límite
+de verificación que hay que dejar de pedir:
+
+- **El AI Act: la fecha queda confirmada por búsqueda independiente** (nueve fuentes secundarias
+  concordantes). El **Digital Omnibus on AI, Reglamento (UE) 2026/1744**, se publicó en el Diario
+  Oficial el **24 de julio de 2026** y entró en vigor el **27 de julio de 2026**. Mueve el alto
+  riesgo **autónomo del Anexo III** del 2 de agosto de 2026 al **2 de diciembre de 2027**, y el
+  **embebido en productos regulados del Anexo I** al **2 de agosto de 2028**. **Difiere la
+  aplicación, no los requisitos.**
+- ⚠️ **La verificación primaria que pidió el pase anterior no es posible desde este entorno**:
+  `eur-lex.europa.eu` devuelve **HTTP 403 del proxy** (política de red), igual que `huggingface.co`
+  y `gitee.com`. No es un fallo transitorio: **dejar de pedirla en cada pase** y marcar la fecha como
+  "concordancia de múltiples fuentes secundarias", que es lo que es. Si un cliente firma un plan de
+  cumplimiento, la cita debe salir del Diario Oficial consultado **fuera** de esta KB.
+- **Dos ventanas con fecha propia, ambas vendibles**: (1) el **modelo de contrato de conexión a red
+  para datacenters** comprometido por la Comisión para el **segundo semestre de 2026**, respaldado
+  por una declaración de intención de **catorce asociaciones industriales europeas**; (2)
+  **AI.grids**, iniciativa para construir un **modelo de IA compartido para operación de red**,
+  lanzada con acuerdo de proyecto el **3 de junio de 2026**. La segunda es la que puede convertirse
+  en estándar de facto: estar dentro vale más que venderle a un TSO aislado.
+- **Contrapeso que conviene decir en la reunión**: la prensa del **19 de noviembre de 2026** describe
+  proyectos de IA frenados en Europa por red tensionada, competencia por agua y electricidad y
+  oposición local, y las cinco "AI gigafactories" de la UE con disponibilidad energética limitada y
+  huecos de financiación. La restricción europea **no** es el modelo: es el punto de conexión.
+- **Precedente regulatorio nacional a vigilar**: en **Polonia**, el operador de transmisión exige
+  **aprobación previa** para sistemas de IA que influyan en el despacho. Una fuente de vendor estima
+  **3–6 meses** adicionales de plazo; el número es de vendor, el requisito es el dato. Si otro TSO
+  copia el mecanismo, el cronograma de cualquier piloto de despacho cambia.
+
 ### APAC
 
 **Contexto regulatorio (verificado)**: en **diciembre de 2025**, la **NDRC y la NEA de China**
@@ -124,6 +179,37 @@ con aplicación desigual entre países.
   datos de distribuidora, replicables en toda la región.
 - **Players**: ABB, GE, Schneider Electric y Siemens aparecen como proveedores dominantes; utilities
   regionales como Chubu Electric Power figuran en material del IEA.
+
+
+**Actualización del segundo pase (2026-11-20)** — fuentes secundarias (IEA citada de segunda mano):
+
+- **La asimetría que define todo el negocio en APAC**: un datacenter se construye en **1–2 años**;
+  una ampliación de red tarda **5–10**. En muchas jurisdicciones la espera por conexión llega a
+  **5–10 años**. Eso convierte **flexibilidad, co-localización y generación on-site** en el producto,
+  no en la alternativa.
+- **India — el país con el sustrato de datos más grande de la región**: más de **200 millones** de
+  medidores inteligentes aprobados bajo el **RDSS**, incentivos fiscales a datacenters en el
+  **presupuesto 2026**, y una calidad de red que es **restricción de diseño**: se reportan
+  variaciones rutinarias de **±5 % en tensión y ±1 Hz en frecuencia**. Un modelo entrenado con
+  supuestos europeos de estabilidad **no transfiere**; la oportunidad es justamente la robustez.
+- **Japón** — red partida en **dos frecuencias** (50/60 Hz), **TEPCO Power Grid** usando **drones con
+  IA** para diagnóstico de equipamiento, y electricidad industrial reportada en torno a
+  **USD 0,25/kWh** por dependencia de LNG importado. Precio alto + activos envejecidos = inspección
+  asistida y eficiencia tienen ROI calculable, no especulativo.
+- **China** — **State Grid** opera una plataforma de orquestación con IA **a escala de ciudad** en
+  tiempo real. Es la mayor referencia de despliegue del mundo y, a la vez, **el mercado menos
+  accesible**: régimen estricto de registro y evaluaciones de seguridad para servicios de IA.
+- ⚠️ **El gap de repos APAC sigue abierto y ahora se sabe por qué no se puede cerrar desde aquí**:
+  la hipótesis del pase anterior era "están en Gitee, no en GitHub". **`gitee.com` devuelve HTTP 403
+  del proxy** en este entorno, así que la hipótesis **no es testeable** con las herramientas de esta
+  KB. Lo único verificado de origen APAC sigue siendo `MyEMS` (MIT, 763 ★) y
+  `ronaldowzy/price_forecast` (MIT, 25 ★, forecasting de precio spot para mercados chinos). Un
+  engagement en APAC que dependa de "base open source local" necesita verificación **fuera** de esta
+  KB.
+- **Patrón regulatorio regional**: las reglas de IA de APAC apuntan mayoritariamente a **usuarios y
+  deployers**, no a desarrolladores de modelos, y lo específico del sector energético está poco
+  desarrollado. Para un cliente eso significa que **la obligación cae sobre él**, no sobre el
+  proveedor del modelo — argumento directo para vender gobernanza.
 
 ### LATAM
 
@@ -171,6 +257,48 @@ KB ha encontrado en cualquier industria.** Úsese en pitch regional.
 - **Riesgo**: `json:scada` y `OSHMI` son **GPL-3.0**. Ejecutar como sistema aislado detrás de su
   API; no enlazar en producto propietario del cliente.
 
+
+**Actualización del segundo pase (2026-11-20)** — un hallazgo de oferta verificado en GitHub y
+contexto regulatorio de fuentes secundarias:
+
+- 🎯 **El operador del sistema colombiano publica código MIT.**
+  [`EquipoAnaliticaXM/API_XM`](https://github.com/EquipoAnaliticaXM/API_XM) — **MIT**,
+  `Copyright (c) 2020 XM S.A. E.S.P.`, **75 ★ / 38 forks**, push **2026-11-10** — es el cliente de
+  consulta de datos del mercado eléctrico colombiano (generación, demanda, precio de bolsa,
+  emisiones) publicado por **XM**, operador del Sistema Interconectado Nacional y administrador del
+  mercado. El org mantiene además `datasets` (histórico, push **2026-11-19**), `Chatbot_XM` (MIT) y
+  `documentacion_emisionesCO2` (MIT).
+  **Por qué cambia el argumento regional**: el hallazgo brasileño (`json-scada`, `OSHMI`) es de **un
+  autor individual**; este es **institucional**, con copyright corporativo en el `LICENSE`. Son dos
+  tipos de evidencia distintos, y el segundo es el que un comité de compras acepta.
+- **Ya hay demanda visible aguas abajo, sin oferta profesional**: `Cdhernandezr/energyagent-colombia`
+  (agente de IA sobre el mercado eléctrico colombiano, LangGraph + FastAPI, **sin licencia**, 0 ★) y
+  `CAINavy/tablero-xm` (tablero sobre datos de XM, push **2026-11-20**). Alguien está construyendo
+  esto hoy, en proyectos personales y sin licencia. Ese es el hueco exacto.
+- **El gap LATAM, ahora medido por país y no por región**: cerrado para **Brasil** (dos repos de
+  autor individual) y **Colombia** (institucional). **Argentina (CAMMESA), Chile (Coordinador
+  Eléctrico Nacional) y México (CENACE)**: se buscó por nombre de institución y por término de
+  dominio en español y portugués — **cero repos institucionales con tracción**; lo que aparece son
+  tableros personales de 0 ★. Eso no es "LATAM no produce": es que la producción está en dos países.
+- **Brasil — el marco se cerró y tiene números**: la **Lei 15.504** creó el régimen de datacenters
+  **REDATA**, promulgada el **15 de septiembre de 2026**; **ANEEL** autorizó **acceso directo a la
+  red de alta tensión**, con un proyecto planificando **1,8 GW de demanda hacia 2033**. El Ministerio
+  reportó **205 datacenters en operación** en junio de 2026 y **38 GW** en solicitudes de opinión de
+  acceso. Antes, la **Lei 15.269** (noviembre de 2025) reformó el marco del sector eléctrico, con
+  subasta de capacidad de reserva en **marzo de 2026**. Riesgo declarado por analistas: **curtailment
+  significativo**.
+- **Chile y México: la restricción no es la misma, y confundirlas arruina una propuesta.** Chile es
+  **líder regional en almacenamiento**, y su freno es el **permisológico/ambiental** (proyectos
+  congelados o cancelados; la Comisión Nacional de Energía advierte que la expansión de
+  infraestructura no sigue el ritmo de la demanda de datacenters). México tiene el freno en el
+  **acceso a la red**: proceso de interconexión **opaco en costo y plazo** de los refuerzos, con
+  demoras de energización en **Querétaro**, su principal hub. Chile se vende con **licenciamiento y
+  evidencia ambiental**; México con **modelado de interconexión y escenarios de plazo**.
+- **Contrapeso de fuente**: la cifra regional de "**>10 GW** de capacidad lista para red en 2–3 años"
+  proviene de un **desarrollador con interés comercial** y nombra como barreras reales la
+  regulación, el permisado, la estructura de financiamiento y el riesgo de ejecución — **no** la
+  capacidad. Usarla como contexto, nunca como dato propio.
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -184,6 +312,37 @@ KB ha encontrado en cualquier industria.** Úsese en pitch regional.
    de red cambia la conversación en una licitación de utility latinoamericana.
 5. **En EMEA, liderar con cumplimiento.** El AI Act con fecha de diciembre de 2027 convierte el
    forecasting de red en trabajo regulado y por tanto financiado.
+6. **Usar la credencial colombiana como par de la brasileña.** `API_XM` es **MIT y de la
+   institución** (XM S.A. E.S.P., operador del SIN). Frente a un comité de compras, "el operador del
+   sistema publica esto bajo MIT y nosotros construimos sobre ello" pesa más que un repo de autor
+   individual, por bueno que sea.
+7. **En North America, cambiar el encuadre de velocidad a legitimidad.** Con el informe de Harvard
+   sobre subsidio cruzado al ratepayer y un proyecto de ley bipartidista en curso, el entregable que
+   se vende no es "conectamos antes" sino **"probamos que el costo no lo pagan los hogares"**:
+   atribución de costos, trazabilidad y evidencia auditable.
+8. **En O&G, cambiar el patrón de integración, no el discurso.** Todo el upstream open source
+   encontrado es **GPL-3.0** (`OPM Flow`, `equinor/ert`). El entregable propietario sólo existe si
+   el simulador queda como sistema de registro aparte. Presupuestar la integración desde el día uno.
+
+## Nota de método sobre las fuentes de este documento
+
+Lo verificado de **primera mano** en esta KB es exclusivamente lo que vive en GitHub: licencias,
+stars, forks y fecha de último push, consultadas vía `gh api search/repositories` y, para licencias,
+leyendo el archivo crudo en `raw.githubusercontent.com`.
+
+Todo lo regulatorio, de mercado y de prensa es **secundario**, obtenido de *snippets* de búsqueda.
+En este pase, el fetch directo de páginas falló por completo: `arxiv.org`, `www.oati.com` y
+`www.twobirds.com` no resuelven, y `eur-lex.europa.eu`, `www.utilitydive.com`, `huggingface.co` y
+`gitee.com` devuelven **HTTP 403 del proxy**. En consecuencia:
+
+- **No citar una cifra de mercado de este documento en una propuesta** sin re-verificarla contra la
+  fuente original fuera de esta KB.
+- Las **fechas regulatorias** (AI Act, FERC, Lei 15.504) tienen concordancia entre varias fuentes
+  secundarias independientes, lo que es razonable para orientar una estrategia y **no** para firmar
+  un plan de cumplimiento.
+- Los **nombres propios de despliegues** (CAISO/OATI, TEPCO, State Grid, Apraava) provienen de
+  prensa y páginas de vendor. Verificar antes de usarlos como referencia ante un cliente.
 
 ---
-*Investigado 2026-11-20. Cifras de consultoras: re-verificar antes de usar en propuesta.*
+*Investigado 2026-11-20 (dos pases). Cifras de consultoras: re-verificar antes de usar en propuesta.*
+
