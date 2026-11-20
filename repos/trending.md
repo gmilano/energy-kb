@@ -9,6 +9,226 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 10 (dos instituciones del sector eléctrico norteamericano estaban catalogadas con dos repos entre las dos)
+
+**Titular del pase: `epri-dev` tiene 59 repos y `GridProtectionAlliance` tiene 66. Esta KB tenía
+`gsf` y `openPDC`. Son ~125 repos, mayoritariamente BSD-3 y MIT, de las dos organizaciones de
+investigación aplicada más citadas del sector eléctrico de EE. UU. — y mueven tres de los gaps que
+esta KB midió con número hace una hora.**
+
+El método que los encontró es el hallazgo transferible, y corrige el del pase 9. El pase 9 aprendió
+"buscar la norma, no el buzzword". Eso sigue siendo cierto y **no alcanza**: ninguna de estas
+herramientas contiene el término de su categoría en el nombre. `StorageVET` y `DER-VET` no dicen
+"battery energy storage"; `QuESt` no dice "storage"; `openMIC` no dice "meter data management";
+`openXDA` no dice "power quality". Se llaman por el **acrónimo interno del método** de la institución
+que las hizo. La consulta que los encuentra es `org:epri-dev`.
+
+### Gap 1 — "Optimización de BESS: la oferta abierta es **un** repo" → **roto, y por error de vocabulario propio**
+
+El pase 9 midió `"battery energy storage" in:name,description stars:>25` → **total = 1**. La medición
+era correcta; la conclusión no. Buscando por institución aparecen **cinco** herramientas de
+valoración y dimensionado de almacenamiento, todas permisivas:
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [sandialabs/snl-quest](https://github.com/sandialabs/snl-quest) | **BSD-3-Clause** *(rescatada)* | 162 | 53 | 2026-11-09 | **QuESt**: plataforma Python de análisis de almacenamiento de Sandia. ⚠️ **44 issues abiertas** |
+| [epri-dev/StorageVET-deprecated](https://github.com/epri-dev/StorageVET-deprecated) | **BSD-3-Clause** | 64 | 24 | 2026-10-24 | StorageVET 2.0: modelo de **valoración** de almacenamiento de EPRI. Nombre con `-deprecated` y push de hace cuatro semanas |
+| [sandialabs/snl-pstess](https://github.com/sandialabs/snl-pstess) | **MIT** *(rescatada)* | 40 | 7 | 2026-01-20 | Power and Energy Storage Systems Toolbox |
+| [sandialabs/snl-progress](https://github.com/sandialabs/snl-progress) | **BSD-3-Clause** *(rescatada)* | 24 | 10 | 2026-09-25 | **ProGRESS**: fiabilidad probabilística de red **con almacenamiento** |
+| [epri-dev/DER-VET](https://github.com/epri-dev/DER-VET) | **BSD-3-Clause** | 6 | 4 | 2026-10-21 | Valoración de DER; hermano de StorageVET. Hay [GUI](https://github.com/epri-dev/DER-VET-GUI) (**sin licencia**, 5 ★) |
+
+**Consecuencia directa:** la *Receta 13 — Dimensionamiento y garantía de vida de un BESS* **ya no se
+apoya en un repo**. Se apoya en dos modelos de valoración institucionales (EPRI) y una plataforma de
+análisis (Sandia), todos BSD-3/MIT. Sigue siendo ingeniería de modelo — pero con punto de partida
+citable, no desde cero. La advertencia que se mantiene: `StorageVET-deprecated` **se llama
+deprecated**; antes de comprometerlo hay que leer qué lo reemplaza.
+
+### Gap 2 — Medición: apareció la capa de protocolo **permisiva** que el pase 9 declaró ausente
+
+El pase 9 dejó dicho que no hay plataforma MDM abierta. **Eso sigue en pie.** Lo que cambia es la
+capa de abajo: la KB tenía registrada una trampa —`u9n/dlms-cosem` es **Business Source License**, no
+permisiva— y la conclusión implícita era que hablar DLMS/COSEM obligaba a licencia comercial. **No es
+así:**
+
+| Repo | Licencia | ★ | Forks | Push | Qué aporta |
+|------|----------|---|-------|------|-----------|
+| [epri-dev/DLMS-COSEM](https://github.com/epri-dev/DLMS-COSEM) | **BSD-3-Clause** *(verificada en crudo)* | 40 | 18 | ⚠️ 2024-11-13 | Implementación EPRI del protocolo de datos de medidor **DLMS/COSEM** |
+| [epri-dev/dlms-access-point](https://github.com/epri-dev/dlms-access-point) | **BSD-3-Clause** | 5 | **10** | 2025-05-27 | Implementación de referencia de un **access point** DLMS/COSEM. Fork:★ = **2,0** |
+| [epri-dev/dlms-cim](https://github.com/epri-dev/dlms-cim) | **BSD-3-Clause** | 8 | 3 | ⚠️ 2021-01-24 | Capa de traducción **DLMS/COSEM → CIM**: exactamente el puente que un MDM necesita |
+| [GridProtectionAlliance/openMIC](https://github.com/GridProtectionAlliance/openMIC) | **MIT** | 18 | 15 | **2026-11-15** | **Meter Information Collection System**: recolección de datos de medidor. Fork:★ = 0,83 |
+| [epri-dev/c12test](https://github.com/epri-dev/c12test) | ⚠️ NOASSERTION | 12 | 4 | ⚠️ 2021-08-25 | Prueba de conformidad de medidores con **ANSI C12** |
+
+**Lectura para un SoW de metering:** el protocolo (DLMS/COSEM europeo, ANSI C12 norteamericano) y la
+recolección (`openMIC`, vivo, MIT) **sí tienen base permisiva**. Lo que no existe sigue siendo la
+**lógica tarifaria y el ciclo meter-to-cash**, que es desarrollo propio. La frontera se movió un
+escalón hacia abajo, y el presupuesto cambia: ya no hay que escribir el protocolo.
+
+### Gap 3 — Lo que esta KB nunca había buscado: el lado del **activo de campo**. Cuatro categorías, cuatro ceros
+
+Nueve pases midieron huecos en mercados, medición, cumplimiento y modelado. **Ninguno buscó las
+categorías que un cliente de utility compra primero.** Las cuatro están vacías, y **cuatro de las
+cinco consultas chocan con una colisión de nombres de herramientas de desarrollador** — el riesgo que
+T35 describe, aquí en serie:
+
+| Categoría | Consulta | Resultados | Lo que ocupa el ranking | Lo real |
+|-----------|----------|-----------|------------------------|---------|
+| **Riesgo de incendio / PSPS** | `wildfire in:name,description stars:>20` | 75 | `gcmt/wildfire.vim` (605 ★, plugin de Vim), `wildfire.nvim` (270 ★), `pan-python` (Palo Alto) | **Nada del sector eléctrico** |
+| ídem, 2.º ángulo | `PSPS OR "public safety power shutoff" in:name,description,readme` | **32.500** | `awesome-mac`, `awesome-cpp` | Consulta inútil: el acrónimo no discrimina |
+| ídem, 3.er ángulo | `"fire risk" grid OR utility OR powerline in:name,description` | 1.067 | ML de incendio forestal de 28-86 ★, sin licencia | Ninguna herramienta de utility |
+| **Salud de transformador (DGA)** | `"dissolved gas" in:name,description` | 74 | — | [`engineers-tools/xDGA`](https://github.com/engineers-tools/xDGA) **MIT, 18 ★, push 2022-06-28**; [`duvals_triangle_plotter`](https://github.com/nagusubra/duvals_triangle_plotter) MIT 5 ★ |
+| **Capacidad de alojamiento (hosting capacity)** | `"hosting capacity" in:name,description` | 171 | `oci-arm-host-capacity` (1.309 ★, script de Oracle Cloud) | [`PauloRadatz/HostingCapacity_OpenDSS`](https://github.com/PauloRadatz/HostingCapacity_OpenDSS) **MIT, 7 ★, push 2022-11-30** |
+| **Inspección de línea por visión** | `"insulator" defect in:name,description` | 148 | — | [`Light-ZhangTao/Insulator-Defect-Detection`](https://github.com/Light-ZhangTao/Insulator-Defect-Detection) MIT 37 ★ (2024-04); [`LuYang-2023/...-YOLO`](https://github.com/LuYang-2023/Insulator-Defect-Detection-YOLO) MIT 34 ★ (2025-06); `FINet` **145 ★ sin licencia** |
+| **Fuga de metano** | `"methane" in:name,description stars:>10` | 39 | `MethaneKit` (977 ★, **motor gráfico**), la cuenta `methane` de un dev | [`spaceml-org/STARCOP`](https://github.com/spaceml-org/STARCOP) **GPL-3.0** 74 ★ (2026-10-29); `MethaneMapper` **sin licencia** 85 ★ |
+| **Inversor grid-forming** | `"grid forming" in:name,description` | 301 | `cxjs` (492 ★, framework JS), `rapyd-livewire` ("grids, forms") | `ATayebi/GridFormingConverters` **sin licencia** 140 ★ (2020); [`pnnl/...WECC-Grid-Forming-Inverter-Models`](https://github.com/pnnl/PSCAD-and-PSSE-Version-of-WECC-Grid-Forming-Inverter-Models) **sin licencia** 45 ★ |
+| **Nuclear / SMR** | `"small modular reactor" OR SMR nuclear in:name,description stars:>5` | 571 | un reproductor de música (18.970 ★), tres mods de Minecraft | Confirmado: sigue siendo `openmc` y nada más |
+
+**Lo que esto significa comercialmente, y es el dato más vendible del pase:** las categorías donde la
+IA de utility tiene presupuesto aprobado hoy en Norteamérica —mitigación de incendio, salud de
+transformador, capacidad de alojamiento de DER, inspección de línea— **no tienen base open source
+mantenida**. Lo máximo es un repo MIT de 18 estrellas de 2022 o un YOLO académico sin licencia. No es
+un gap de visibilidad medido por esta KB con una consulta mala: son **ocho consultas, tres de ellas
+sobre la misma categoría desde ángulos distintos**. Es trabajo a medida, y por eso es facturable.
+
+### Oferta nueva verificada: `GridProtectionAlliance`, 66 repos, MIT, todos vivos
+
+El stack de datos operativos del sector eléctrico norteamericano. Esta KB tenía `gsf` y `openPDC` y
+los había clasificado como sincrofasores. **La organización es mucho más que eso**, y lo notable es
+que *todo* tuvo push en noviembre de 2026:
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [openHistorian](https://github.com/GridProtectionAlliance/openHistorian) | **MIT** | 207 | 60 | 2026-11-15 | **Historiador de series temporales** de código abierto. El sustituto abierto de un PI System |
+| [PTPSync](https://github.com/GridProtectionAlliance/PTPSync) | **MIT** | 97 | 26 | 2026-11-15 | Sincronización **Precision Time Protocol**: la base de cualquier medida fasorial |
+| [osisoftpi-grafana](https://github.com/GridProtectionAlliance/osisoftpi-grafana) | **Apache-2.0** | 65 | 36 | 2026-11-16 | Plugin Grafana para **OSIsoft PI**: el puente desde el histórico propietario instalado |
+| [PMUConnectionTester](https://github.com/GridProtectionAlliance/PMUConnectionTester) | **MIT** | 29 | 14 | 2026-06-04 | Verifica flujos de medida de sincrofasores |
+| [PQDashboard](https://github.com/GridProtectionAlliance/PQDashboard) | **BSD-3-Clause** | 23 | 12 | 2026-08-10 | Visualización de **calidad de onda** a escala de sistema. ⚠️ 21 issues |
+| [openXDA](https://github.com/GridProtectionAlliance/openXDA) | **MIT** | 20 | 17 | **2026-11-19** | **eXtensible Disturbance Analytics**: analítica de perturbaciones. Fork:★ = 0,85 |
+| [openMIC](https://github.com/GridProtectionAlliance/openMIC) | **MIT** | 18 | 15 | 2026-11-15 | Meter Information Collection (ver Gap 2) |
+| [openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | 16 | 8 | 2026-11-15 | Control y analítica extensible. ⚠️ **20 issues abiertas** |
+| [SIEGate](https://github.com/GridProtectionAlliance/SIEGate) | **MIT** | 9 | 6 | 2026-11-15 | **Secure Information Exchange Gateway**: intercambio entre control rooms |
+| [openHistorian-grafana](https://github.com/GridProtectionAlliance/openHistorian-grafana) | **MIT** | 9 | 4 | 2026-02-22 | Fuente de datos Grafana para openHistorian |
+
+**`openHistorian` + `openXDA` + `PQDashboard` + Grafana es una plataforma de datos operativos
+completa, MIT, mantenida.** Esta KB no la tenía, y es la respuesta directa a una pregunta que un
+cliente de utility hace siempre: *"¿con qué reemplazo o complemento mi historiador?"*.
+
+### Oferta nueva verificada: `epri-dev`, lo que no entró en los gaps
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [IEEE-2030.5-Client](https://github.com/epri-dev/IEEE-2030.5-Client) | **BSD-3-Clause** | 96 | **56** | ⚠️ 2023-02-27 | Cliente **IEEE 2030.5**. Fork:★ = **0,58**. *Nota de vocabulario: el pase 7 abrió APAC con `CSIP-AUS`; el término norteamericano de la misma familia es `IEEE 2030.5`, y buscar `CSIP` a secas devuelve clientes SIP de telefonía* |
+| [OpenDER](https://github.com/epri-dev/OpenDER) | **BSD-3-Clause** *(rescatada)* | 76 | 32 | 2025-06-23 | Modelo de DER conforme a **IEEE 1547-2018**: el comportamiento normativo del inversor |
+| [OpenADR-Virtual-End-Node](https://github.com/epri-dev/OpenADR-Virtual-End-Node) | **BSD-3-Clause** | 43 | 20 | ⚠️ 2023-04-20 | **VEN** OpenADR de referencia. Complementa `openleadr-python` por el lado del nodo |
+| [US-REGEN](https://github.com/epri-dev/US-REGEN) | **BSD-3-Clause** | 24 | 4 | 2025-05-27 | Modelo regional de economía, GEI y energía de EE. UU. |
+| [Risk-Screening-Tool](https://github.com/epri-dev/Risk-Screening-Tool) | **BSD-3-Clause** | 14 | 3 | 2026-10-31 | Cribado de riesgo |
+| [ES-CIM](https://github.com/epri-dev/ES-CIM) | **Apache-2.0** | 7 | 4 | ⚠️ 2022-12-19 | Energy Supply Common Information Model |
+| [plexos2duckdb](https://github.com/epri-dev/plexos2duckdb) | **BSD-3-Clause** | 5 | 2 | 2026-11-04 | Convierte soluciones **PLEXOS** a DuckDB: salida de la herramienta propietaria dominante de planificación |
+| [SPI-Tool](https://github.com/epri-dev/SPI-Tool) | **BSD-3-Clause** | 1 | 0 | 2026-11-14 | Stochastic Planning Inputs Tool |
+| [Universal-Semantic-Standard-Test-Harness](https://github.com/epri-dev/Universal-Semantic-Standard-Test-Harness) | **BSD-3-Clause** | **0** | 1 | 2026-08-18 | Banco de pruebas de interoperabilidad semántica de EPRI. Cero estrellas, publicado hace tres meses |
+
+`plexos2duckdb` merece una línea aparte: **PLEXOS es la herramienta propietaria de planificación que
+usan buena parte de las utilities norteamericanas**, y un conversor BSD-3 de sus resultados a DuckDB
+es la vía de entrada a un cliente que no va a migrar su modelo. Vale más que su número de estrellas.
+
+### `sandialabs`: cinco repos de energía rescatados de `NOASSERTION`, y uno bloqueado
+
+La API reporta `NOASSERTION` en **todo** el portafolio energético de Sandia. Leídos en crudo, cuatro
+de cinco son permisivos estándar:
+
+| Repo | API dice | El `LICENSE` dice | Veredicto |
+|------|----------|-------------------|-----------|
+| `snl-quest` (162 ★) | NOASSERTION | **BSD 3-Clause** + preámbulo NTESS/DE-NA0003525 | ✅ usable |
+| `snl-pstess` (40 ★) | NOASSERTION | **texto MIT** íntegro + preámbulo NTESS | ✅ usable |
+| `snl-progress` (24 ★) | NOASSERTION | **BSD-3 de tres cláusulas** + preámbulo NTESS | ✅ usable |
+| [`pvOps`](https://github.com/sandialabs/pvOps) (22 ★) | NOASSERTION | **BSD 3-Clause** + preámbulo NTESS | ✅ usable — O&M de fotovoltaica |
+| [`OpenCSP`](https://github.com/sandialabs/OpenCSP) (13 ★, 20 forks) | NOASSERTION | **no hay archivo de licencia** en `main` | ❌ bloqueado (solar de concentración) |
+
+**La causa es idéntica en los cuatro y es generalizable**: el archivo abre con *"Copyright … National
+Technology & Engineering Solutions of Sandia, LLC (NTESS). Under the terms of Contract DE-NA0003525
+with NTESS, the U.S. Government retains certain rights in this software"* **antes** del otorgamiento.
+Ese preámbulo rompe el clasificador de GitHub. El otorgamiento que sigue es estándar y sin cláusula
+adicional. Ver **T46**: esto **no contradice T24, lo acota** — en `NatLabRockies` el `NOASSERTION`
+era exacto porque hay cláusulas extra; en `sandialabs` es un falso negativo.
+
+**Y un detalle de método que costó dos intentos:** EPRI y Sandia nombran el archivo `LICENSE.txt`, no
+`LICENSE`. Una verificación que sólo pide `LICENSE` devuelve 404 y haría concluir "sin licencia" en
+`StorageVET`, `DER-VET` y `OpenDER` — tres repos BSD-3 perfectamente usables. **Pedir `LICENSE`,
+`LICENSE.txt` y `LICENSE.md` antes de declarar ausencia.**
+
+### `oemof`: 18 repos, 15 MIT, y esta KB tenía uno
+
+Mismo patrón que `open-energy-transition` en el pase 8, ahora en EMEA. La KB tenía `oemof-solph`
+(430 ★, MIT por SPDX en `pyproject.toml`, API dice `null` — trampa ya catalogada):
+
+| Repo | Licencia | ★ | Forks | Push | Qué aporta |
+|------|----------|---|-------|------|-----------|
+| [tespy](https://github.com/oemof/tespy) | **MIT** | 440 | 150 | 2026-11-19 | **Thermal Engineering Systems in Python**: ciclos térmicos, bombas de calor, plantas. **Más estrellado que `oemof-solph`** y ausente de esta KB |
+| [feedinlib](https://github.com/oemof/feedinlib) | **MIT** | 117 | 43 | 2024-12-02 | Modelos PV para series de generación. ⚠️ **ARCHIVADO** |
+| [oemof-demand](https://github.com/oemof/oemof-demand) | **MIT** | 76 | 46 | 2026-10-22 | Perfiles de demanda de calor y electricidad desde valores anuales. Fork:★ = 0,61 |
+| [DHNx](https://github.com/oemof/DHNx) | **MIT** | 47 | 16 | 2026-11-14 | **Redes de calor de distrito**: optimización y simulación. ⚠️ 35 issues |
+| [cydets](https://github.com/oemof/cydets) | **MIT** | 41 | 6 | 2022-12-01 | Detección de ciclos en series temporales (ciclado de batería) |
+| [oemof-thermal](https://github.com/oemof/oemof-thermal) | **MIT** | 36 | 15 | 2025-05-26 | Componentes térmicos para oemof |
+| [exerpy](https://github.com/oemof/exerpy) | **MIT** | 22 | 9 | 2026-11-19 | Análisis **exergético** desde entrada tabular |
+| [marketlib](https://github.com/oemof/marketlib) | **MIT** | 16 | 8 | 2022-03-24 | Modelado de comercialización a distintos mercados. ⚠️ **ARCHIVADO** |
+
+⚠️ **Dos están archivados y ninguna consulta lo advierte en el título** (`feedinlib`, `marketlib`) —
+tercera vez que esta KB tropieza con lo mismo. `feedinlib` es el caso incómodo: 117 ★ y 43 forks,
+archivado. Para generación PV la pieza viva es `pvlib-python`, ya catalogada.
+
+### Calor de distrito: una categoría entera ausente, y es la dominante en el norte de EMEA
+
+| Repo | Licencia | ★ | Forks | Push | Nota |
+|------|----------|---|-------|------|------|
+| `oemof/DHNx` | **MIT** | 47 | 16 | 2026-11-14 | Ver arriba |
+| [jylambert/topotherm](https://github.com/jylambert/topotherm) | **MIT** | 37 | 11 | 2026-10-06 | Optimización de **topología** de red de calor (TU München) |
+| [idiap/pydhn](https://github.com/idiap/pydhn) | ⚠️ **sin licencia** | 23 | 5 | 2025-06-09 | Idiap Research Institute. Bloqueado por licencia, no por calidad |
+
+Tres repos, dos MIT. **Base para un estudio de red de calor; no una plataforma.** Pero la KB no tenía
+ninguno, y el calor de distrito es el vector de descarbonización dominante en Escandinavia, Alemania,
+Polonia y los bálticos — regiones donde Globant vende transición energética.
+
+### Intercambio de datos ENTSO-E: la cuenta individual que sostiene el transporte del CGMES
+
+El pase 7 catalogó la **tubería** CGMES (Receta 27). Faltaba el **transporte**: cómo se mueven de
+verdad esos modelos entre TSOs europeos. Son `EDX` y `OPDM`, y están implementados en MIT por una
+cuenta individual, [`Haigutus`](https://github.com/Haigutus) (18 repos):
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [USVDM](https://github.com/Haigutus/USVDM) | **MIT** | 10 | **9** | 2026-08-08 | Herramientas para usar e intercambiar CIM. Fork:★ = **0,9** |
+| [cim-bench](https://github.com/Haigutus/cim-bench) | **MIT** | 10 | 5 | 2026-07-16 | **Benchmarking de herramientas CIM**: comparar implementaciones, no sólo usarlas |
+| [EDX](https://github.com/Haigutus/EDX) | **MIT** | 7 | 2 | 2025-12-07 | API SOAP de **EDX (ENTSO-E Data Exchange)** en Python |
+| [triplets](https://github.com/Haigutus/triplets) | **MIT** | 3 | 1 | **2026-11-18** | XML/RDF → pandas/polars/**DuckDB**. ⚠️ 32 issues |
+| [OPDM](https://github.com/Haigutus/OPDM) | **MIT** | 2 | 2 | 2025-05-21 | API del **Operational Planning Data Management** de ENTSO-E |
+| [Digital4Grids/Bridge_energy_schemas](https://github.com/Digital4Grids/Bridge_energy_schemas) | **MIT** | 5 | 2 | 2026-11-19 | Esquemas CIM de referencia del Bridge Data Working Group |
+
+**Advertencia de riesgo explícita:** son 2-10 estrellas y **una sola persona**. Es la pieza que hace
+operable el CGMES de EMEA y es, a la vez, el punto de fallo de bus único más claro que ha catalogado
+esta KB. Proponerlo como **acelerador interno** (se lee el código, se internaliza), no como
+dependencia de producción sin plan de mantenimiento propio.
+
+### Dos de LATAM y uno de EMEA, en el margen
+
+- **Ecuador aparece por primera vez en esta KB**:
+  [`wilianguamancuenca/EC-PowerSystems`](https://github.com/wilianguamancuenca/EC-PowerSystems) —
+  **MIT, 21 ★ y 39 forks** (fork:★ = **1,86**, el ratio más alto de este pase: se usa, no se
+  estrella). Último push **2024-05-02**. Material docente/laboral del sistema ecuatoriano.
+- **Argentina: cero, sexta medición consecutiva.** `Argentina energia OR electrico
+  in:name,description,readme stars:>2` → 4.358 resultados, **todos** listas genéricas
+  (`public-apis`, `awesome-go`). El gap argentino no es de consulta: está medido desde seis ángulos.
+- **EMEA doméstico:** [`raomin/ESPAltherma`](https://github.com/raomin/ESPAltherma) — **MIT, 540 ★,
+  188 forks, push 2026-11-18**: lectura de bomba de calor Daikin Altherma por ESP32. Fork:★ = 0,35 y
+  vivo. Complementa el cuadro EEBus del pase 9 por el lado del **fabricante no cooperativo**: donde
+  no hay protocolo abierto, la comunidad hace ingeniería inversa del bus del equipo.
+
+### Verificación de este pase
+
+**56 repos consultados por `repo:owner/name` contra `search/repositories`. 56 resolvieron, 0
+404.** Licencias `NOASSERTION` resueltas leyendo `LICENSE`/`LICENSE.txt` en
+`raw.githubusercontent.com` (200, canal confirmado por décima vez). Dos archivados detectados
+(`oemof/feedinlib`, `oemof/marketlib`). `repo:epri-dev/StorageVET` devuelve **422**: el repo se llama
+`StorageVET-deprecated` — un 422 sigue siendo nombre equivocado, nunca inexistencia.
+
 ## 2026-11-20 — pase 9 (tres gaps medidos con número, y la frontera exacta del canal de verificación)
 
 **Titular del pase: la oferta nueva está en las capas de protocolo (ISO 15118, EEBus, IEC 61850-6) y

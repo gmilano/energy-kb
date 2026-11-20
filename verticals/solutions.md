@@ -454,5 +454,99 @@ Creado 2026-06-21, **push 2026-11-20 (hoy)**, respaldado por una empresa (Batu E
 `AngelCarballoCremades/CENACE-Scraper-Dashboard` (scraper de CENACE, **sin licencia**, 7 ★) está
 **muerto desde 2021**. La vía viva para México es `atlas-sen`, no el scraper.
 
+## Décimo pase (2026-11-20): la plataforma de datos operativos que faltaba, y es MIT
+
+**La pregunta que un cliente de utility hace siempre y esta KB no sabía responder: "¿con qué
+reemplazo o complemento mi historiador?"** Nueve pases catalogaron SCADA/EMS (`OpenEMS`,
+`openremote`, `json-scada`), modelado (`pandapower`, `PyPSA`) y datos de mercado (`gridstatus`,
+`entsoe-py`). El **histórico operativo** —la pieza donde vive la serie temporal de la red, hoy
+ocupada por el PI System de AVEVA/OSIsoft— estaba ausente.
+
+Es [`GridProtectionAlliance`](https://github.com/GridProtectionAlliance), y es una plataforma, no
+piezas:
+
+| Capa | Repo | Licencia | ★ | Push |
+|------|------|----------|---|------|
+| **Histórico de series temporales** | [openHistorian](https://github.com/GridProtectionAlliance/openHistorian) | **MIT** | 207 | 2026-11-15 |
+| **Ingesta fasorial** | [openPDC](https://github.com/GridProtectionAlliance/openPDC) + [gsf](https://github.com/GridProtectionAlliance/gsf) | **MIT** | 159 / 179 | 2026-11-15 |
+| **Sincronización de tiempo** | [PTPSync](https://github.com/GridProtectionAlliance/PTPSync) | **MIT** | 97 | 2026-11-15 |
+| **Analítica de perturbaciones** | [openXDA](https://github.com/GridProtectionAlliance/openXDA) | **MIT** | 20 | 2026-11-19 |
+| **Calidad de onda (front)** | [PQDashboard](https://github.com/GridProtectionAlliance/PQDashboard) | **BSD-3-Clause** | 23 | 2026-08-10 |
+| **Recolección de medidores** | [openMIC](https://github.com/GridProtectionAlliance/openMIC) | **MIT** | 18 | 2026-11-15 |
+| **Analítica en el lazo** | [openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | 16 | 2026-11-15 |
+| **Intercambio entre control rooms** | [SIEGate](https://github.com/GridProtectionAlliance/SIEGate) | **MIT** | 9 | 2026-11-15 |
+| **Visualización** | [openHistorian-grafana](https://github.com/GridProtectionAlliance/openHistorian-grafana) | **MIT** | 9 | 2026-02-22 |
+
+**La pieza comercialmente más astuta del conjunto no es el historiador: es
+[`osisoftpi-grafana`](https://github.com/GridProtectionAlliance/osisoftpi-grafana) (Apache-2.0,
+65 ★, 36 forks, push 2026-11-16).** Un plugin de Grafana para el PI System permite entrar en un
+cliente **sin pedirle que migre su histórico** — se lee lo que ya tiene y se construye la capa de
+analítica e IA encima. Es el patrón de adopción de menor fricción que ha encontrado esta KB para una
+utility con instalación propietaria, y aplica igual en las cuatro regiones.
+
+**Riesgos que hay que decir en la propuesta:**
+
+- Es un stack **.NET/Windows** en su origen (GPA nace del mundo NERC/DOE norteamericano). Verificar
+  el plan de despliegue antes de prometer contenedores Linux.
+- `openECA` tiene **20 issues abiertas**, `PQDashboard` **21** y `openHistorian` **14**. Es software
+  de verdad, con deuda de verdad.
+- Las estrellas son bajas (9-207) para lo que son. Es software de **nicho operativo**, no de
+  comunidad de desarrolladores: el indicador útil aquí es el push de noviembre de 2026 en diez
+  repos, no el ranking.
+
+### Medición: la frontera se movió un escalón, y conviene reescribir el presupuesto
+
+El octavo pase concluyó —y el noveno cuantificó— que **no hay plataforma MDM abierta**. **Eso sigue
+siendo verdad.** Lo que este pase cambia es la capa de abajo. La KB tenía registrado que
+`u9n/dlms-cosem` es **Business Source License**, de donde se seguía que hablar el protocolo de
+medidor obligaba a licencia comercial. Es falso:
+
+| Capa de un meter-to-cash | Estado tras este pase | Pieza |
+|--------------------------|----------------------|-------|
+| **Protocolo de medidor (EMEA)** | ✅ **Permisivo** | [epri-dev/DLMS-COSEM](https://github.com/epri-dev/DLMS-COSEM) **BSD-3**, [dlms-access-point](https://github.com/epri-dev/dlms-access-point) **BSD-3** |
+| **Protocolo de medidor (NA)** | 🟡 Existe, bloqueado | [epri-dev/c12test](https://github.com/epri-dev/c12test) (**ANSI C12**, `NOASSERTION`, 12 ★) |
+| **Traducción a modelo de red** | ✅ **Permisivo** | [epri-dev/dlms-cim](https://github.com/epri-dev/dlms-cim) **BSD-3** (DLMS → CIM) |
+| **Recolección** | ✅ **Permisivo y vivo** | [openMIC](https://github.com/GridProtectionAlliance/openMIC) **MIT**, push 2026-11-15 |
+| **Gestión de datos de medición (MDM)** | ❌ **Sigue ausente** | Lo mejor del mercado abierto: 7 ★ y dos años sin push (medido en el pase 9) |
+| **Tarifa regulada y facturación** | ❌ **Desarrollo propio** | Sustrato: `killbill` Apache-2.0, `openmeter` Apache-2.0 — **no conocen una tarifa eléctrica** |
+
+**Consecuencia de presupuesto:** un SoW de metering ya **no** tiene que incluir escribir el
+protocolo ni la recolección. Sigue teniendo que incluir el MDM y toda la lógica tarifaria. La
+conclusión del cuarto pase ("no existe un Odoo de la energía") se mantiene intacta; lo que se reduce
+es el tamaño del desarrollo a medida.
+
+### Valoración de almacenamiento como plataforma de laboratorio
+
+El noveno pase midió la oferta de optimización de BESS en **un** repo. Buscando por institución son
+cinco, todos permisivos — y dos de ellos son plataformas con interfaz, no librerías:
+
+| Plataforma | Licencia | Qué hace | ★ | Push |
+|-----------|----------|----------|---|------|
+| [sandialabs/snl-quest](https://github.com/sandialabs/snl-quest) | **BSD-3** *(rescatada)* | **QuESt**: aplicación de análisis de almacenamiento de Sandia, modular. ⚠️ 44 issues | 162 | 2026-11-09 |
+| [epri-dev/StorageVET-deprecated](https://github.com/epri-dev/StorageVET-deprecated) | **BSD-3** | Valoración de almacenamiento de EPRI. ⚠️ El nombre dice `deprecated` | 64 | 2026-10-24 |
+| [epri-dev/DER-VET](https://github.com/epri-dev/DER-VET) | **BSD-3** | Valoración de DER, con [GUI](https://github.com/epri-dev/DER-VET-GUI) ⚠️ **sin licencia** | 6 | 2026-10-21 |
+
+⚠️ **Antes de comprometer `StorageVET-deprecated` en un alcance hay que resolver qué lo reemplaza**:
+el repo se llama *deprecated* y tiene push de hace cuatro semanas, que es una combinación que no se
+interpreta sola.
+
+## Calor de distrito como vertical (décimo pase, 2026-11-20)
+
+Vertical ausente en nueve pases, y es el **dominante en el norte y este de EMEA**: Escandinavia,
+Alemania, Polonia y los bálticos calefaccionan por red, no por caldera individual.
+
+| Repo | Licencia | Qué cubre | ★ | Push |
+|------|----------|-----------|---|------|
+| [oemof/DHNx](https://github.com/oemof/DHNx) | **MIT** | Optimización y simulación de la red de calor. ⚠️ 35 issues | 47 | 2026-11-14 |
+| [jylambert/topotherm](https://github.com/jylambert/topotherm) | **MIT** | Optimización de **topología** (TU München) | 37 | 2026-10-06 |
+| [oemof/tespy](https://github.com/oemof/tespy) | **MIT** | Ciclo térmico del lado de generación: bomba de calor, CHP, planta | 440 | 2026-11-19 |
+| [oemof/oemof-demand](https://github.com/oemof/oemof-demand) | **MIT** | Perfiles de demanda de calor desde valores anuales | 76 | 2026-10-22 |
+
+**Veredicto honesto, en los términos de esta KB:** `DHNx` + `topotherm` + `tespy` + `oemof-demand`
+es un **estudio de red de calor** completo y todo MIT — dimensionado, topología, generación y
+demanda. **No es una plataforma de operación**: no hay SCADA de calor, ni facturación de calor, ni
+gestión de subestación térmica en open source. Vender estudio y diseño; no vender operación.
+
+
 ---
 *Ver `compose/patterns.md` para recetas concretas que combinan estas plataformas con los agentes.*

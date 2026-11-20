@@ -359,6 +359,52 @@ la misma cosa** en este pase. Son adyacentes por nombre y por tema; no afirmar l
 propuesta sin comprobarla. Y del lado abierto hay un límite real: `gridfm-graphkit` **no publica
 checkpoint preentrenado** — se entrena, no se descarga.
 
+
+### Actualización del décimo pase (2026-11-20) — North America
+
+**Hallazgo de oferta que cambia el posicionamiento en esta región.** Nueve pases construyeron la
+tesis T2 ("los operadores de red se volvieron proveedores de open source") sobre casos **europeos**:
+RTE (`Grid2Op`), Alliander (`power-grid-model`, `openstef`, `s4casting`), la familia LF Energy. La
+consecuencia implícita era que el stack abierto de la energía es de origen EMEA y, por licencia,
+**MPL-2.0** — copyleft por archivo.
+
+**Norteamérica tiene su propia capa institucional y es más permisiva**: `epri-dev` (**59 repos**,
+dominante **BSD-3-Clause**), `GridProtectionAlliance` (**66 repos**, dominante **MIT**, los diez
+principales con push de noviembre de 2026) y el portafolio energético de `sandialabs` (**30 repos**,
+BSD-3/MIT bajo un preámbulo de contrato DOE). Son ~125 repos que esta KB tenía catalogados con tres.
+
+**Lo que habilita en una propuesta norteamericana**, y es una ventaja comercial concreta: se puede
+ofrecer una base de **marca blanca** sin la obligación de MPL de liberar el motor modificado. Para un
+cliente de utility que quiere producto propio, **BSD-3 de EPRI/Sandia y MIT de GPA son mejores
+términos que MPL-2.0 de LF Energy.** Ver `repos/foundations.md` y **T47**.
+
+**Contexto regulatorio añadido (fuentes secundarias, concordantes):**
+
+- **Vacío regulatorio formal, con una excepción nombrada.** Según análisis de Foley Hoag, la
+  **Arizona Corporation Commission es la única comisión estatal** que ha abierto un examen formal
+  sobre el despliegue de IA en el sector eléctrico. El resto es ausencia de guía, no prohibición —
+  lo que convierte el **expediente de justificación** en el entregable, no el modelo.
+- **EO 14409 (junio de 2026)** instruye a las agencias a reforzar la infraestructura frente a
+  riesgos cibernéticos habilitados por IA. Se suma al plazo de **diciembre de 2026** de los
+  estándares de carga computacional de NERC que esta KB ya rastrea (Receta 29).
+- **El DOE anunció ~11,5 M USD** para desarrollar **foundation models de IA para planificación de
+  redes eléctricas**. Es financiación pública dirigida exactamente a la categoría que esta KB
+  catalogó en el cuarto pase (`PowerFM`, `gridfm-*`) y clasificó como vía de **evaluación**, no de
+  producción. Un cliente puede ahora apuntar a dinero público concreto para ese piloto.
+- **Cuota de mercado**: las consultoras sitúan a Norteamérica en **~38,6 % del mercado global de IA
+  en energía en 2026**. Como todas las cifras de este documento, es estimación de consultora: útil
+  para dimensionar relativamente, no para firmar.
+
+**Oportunidad nueva — "el lado del activo de campo está vacío".** Este pase midió con ocho consultas
+que las cuatro categorías que una utility norteamericana compra primero **no tienen base open source
+mantenida**: mitigación de riesgo de incendio/PSPS (**cero** repos del sector en tres ángulos de
+consulta), salud de transformador por DGA (lo mejor: **MIT, 18 ★, 2022**), capacidad de alojamiento
+de DER (**MIT, 7 ★, 2022**) e inspección de línea por visión (YOLO académicos de 34-37 ★, el de
+145 ★ **sin licencia**). Es el perfil de demanda alta con oferta inexistente: **trabajo a medida y
+por eso facturable**, y hay que presupuestarlo como desarrollo, nunca como integración. Ver
+`repos/trending.md` (pase 10, Gap 3) y **T48**.
+
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -696,6 +742,52 @@ Este pase añadió, todo de origen EMEA: la pila **ISO 15118** (`ecog-io/*`, Apa
 **fabricante**), la ingeniería **IEC 61850-6** (`openscd/open-scd`, Apache-2.0), el benchmark de
 precio (`jeslago/epftoolbox`, Apache-2.0) y **`alliander-opensource/s4casting`** (MPL-2.0, push de
 hoy) — tercera aparición de Alliander en esta KB.
+
+
+### Actualización del décimo pase (2026-11-20) — EMEA
+
+**Contexto regulatorio nuevo. ⚠️ Advertencia de método que esta región ya arrastra: ninguna de estas
+fechas pudo verificarse en fuente primaria desde este entorno** — `eur-lex.europa.eu` y
+`energy.ec.europa.eu` **no resuelven** (ver **T49**). Todo lo de abajo tiene concordancia de varias
+fuentes secundarias y **sirve para planear, no para firmar**.
+
+- **Hoja de ruta estratégica de digitalización e IA en energía, `COM(2026) 501`, presentada el 3 de
+  junio de 2026.** Tres pilares; uno de ellos se titula **"Energy for AI"** y cubre explícitamente
+  **conexión a red y emplazamiento (*siting*) de datacenters**. Es el instrumento europeo equivalente
+  a las *show-cause orders* de FERC que esta KB ya rastrea en Norteamérica: misma preocupación, dos
+  mecanismos distintos.
+- **Acuerdo tripartito modelo**, previsto para publicarse y promoverse en el **segundo semestre de
+  2026**, entre **operador de datacenter + parte energética + autoridad pública**. Esta es, de todo
+  el paquete, **la pieza con forma de servicio facturable más clara**: un contrato modelo
+  tripartito necesita, de cada parte, un expediente técnico —perfil de carga, flexibilidad
+  comprometida, estudio de conexión— que nadie tiene preparado. Ver **T50**.
+- **Horizon Europe destinaría ~75 M€ a tecnologías de IA en energía para 2026-2027.** Financiación
+  concreta y con ventana: es el argumento para que un piloto europeo no salga del presupuesto
+  operativo del cliente.
+- **La Oficina Europea de IA tiene potestades de ejecución desde el 2 de agosto de 2026**, y los
+  proveedores de modelos de propósito general deben **documentar el consumo energético de sus
+  modelos**. Esto cierra el círculo de T16 ("lo que la IA consume ya es parte del alcance"): pasa de
+  buena práctica a obligación documental del proveedor.
+- **El plazo del Anexo III sigue sin ser firme.** Se mantiene íntegro lo establecido en **T41**: el
+  *Digital Omnibus* (acuerdo político del 7 de mayo de 2026) correría la fecha al 2 de diciembre de
+  2027, pero **hasta la publicación formal rigen el 2 de agosto de 2026 (Anexo III) y el 2 de agosto
+  de 2027 (Anexo I)**. Preparar contra la fecha original; tratar la prórroga como margen.
+- **Diagnóstico propio de la Comisión**: su informe sobre IA y IA generativa en redes inteligentes
+  sitúa la **fragmentación** como la barrera principal, y plantea el equilibrio entre armonización a
+  escala UE y autonomía regional. Es el argumento de venta de un integrador paneuropeo.
+
+**Oportunidad nueva — calor de distrito.** Vertical ausente de esta KB durante nueve pases y
+dominante en Escandinavia, Alemania, Polonia y los bálticos. Hay base **MIT** para el estudio
+completo (`oemof/DHNx` 47 ★, `jylambert/topotherm` 37 ★, `oemof/tespy` 440 ★, `oemof/oemof-demand`
+76 ★) y **nada** para la operación: no existe SCADA de calor, ni facturación de calor, ni gestión de
+subestación térmica abierta. **Vender diseño y dimensionado; no vender operación.**
+
+**Riesgo nuevo que hay que declarar en cualquier propuesta de interoperabilidad europea.** El
+transporte real de modelos de red entre TSOs europeos (**EDX** y **OPDM** de ENTSO-E) está
+implementado en MIT por **una sola cuenta individual** (`Haigutus`, 2-10 ★ por repo). Es la pieza que
+hace operable el CGMES y el punto de fallo más concentrado que ha catalogado esta KB. Proponerlo como
+acelerador internalizado, con plan de mantenimiento propio presupuestado.
+
 
 ### APAC
 
@@ -1054,6 +1146,50 @@ región con código de la región: **`Ninemilo/OpenVigil`** (Apache-2.0, 180 ★
 de O&M eólico, con proveedores de modelo **SiliconFlow / Alibaba Bailian / DeepSeek**—,
 **`waiwera/waiwera`** (LGPL-3.0, simulador geotérmico, Nueva Zelanda, push de hoy) y
 **`kinverarity1/lasio`** (MIT, registros de pozo LAS, Australia).
+
+
+### Actualización del décimo pase (2026-11-20) — APAC
+
+**Contexto regulatorio nuevo. ⚠️ `apec.org` no resuelve desde este entorno** (ver **T49**): lo de
+abajo es concordancia de fuentes secundarias.
+
+- **La reunión ministerial de energía de APEC de 2026 respaldó recomendaciones de política que
+  vinculan IA y energía**, y encargó a su **Energy Working Group** la creación de un **grupo de
+  trabajo específico**. Los ministros instaron además a **coordinar la planificación de
+  infraestructura energética y de cómputo** y a adoptar herramientas de IA para la **operación de
+  sistemas eléctricos**. Es el primer instrumento multilateral de esta KB que pide explícitamente IA
+  *en la operación* —justo la categoría donde esta KB lleva **seis ceros consecutivos** de oferta
+  abierta proponible. Demanda institucional declarada contra oferta medida en cero: eso es alcance.
+- **Singapur aprobó su *Digital Infrastructure Bill* el 7 de octubre de 2026**: licenciamiento
+  obligatorio para datacenters grandes, con **referencias de eficiencia energética**. Los detalles de
+  ejecución siguen pendientes. Es el régimen de **acceso condicional** que T37 describe, ahora con
+  fecha de aprobación.
+- **Tailandia habría pausado la aprobación de nuevos proyectos de datacenter** mientras redacta
+  normas nacionales. Un freno administrativo es, para un cliente, un problema de *cronograma de
+  conexión*, que es exactamente lo que un estudio de interconexión resuelve.
+- **Corea del Sur: la *AI Basic Act* está en vigor desde el 22 de enero de 2026.** Japón sigue
+  promoviendo IA **sin sanciones**. Las fuentes **discrepan** sobre qué países tienen estatuto
+  vinculante (una lista incluye a Taiwán y Vietnam; otra deja a India sin ley alguna): tratar el
+  estado país por país como **no asentado** y verificarlo en fuente primaria antes de comprometer
+  cumplimiento.
+- **Malasia: el build-out de Johor iría camino de ~1 GW a finales de 2026** (fuente secundaria).
+  Combinado con la pausa tailandesa y el licenciamiento singapurense, el mapa APAC de carga de
+  datacenter se está redibujando por **regulación**, no por demanda.
+
+**Nota de oferta, sin cambios en este pase.** Las ~125 piezas institucionales encontradas son de
+origen **norteamericano** (EPRI, GPA, Sandia) y las de calor de distrito, **europeas**. **Este pase
+no encontró oferta nueva de origen APAC.** Se registra explícitamente como pase sin hallazgo
+regional, no como cobertura: la credencial APAC verificable sigue siendo la del séptimo pase
+—`open-dynamic-export` **MIT**, `sep2_client` Apache-2.0, `NEMSEER` y `NEMO` GPL-3.0, vía el
+vocabulario **CSIP-AUS**— más `MyEMS` (MIT, origen China) y los proveedores de modelo de `OpenVigil`
+(SiliconFlow, Alibaba Bailian, DeepSeek) del noveno pase.
+
+**Precisión de vocabulario útil para APAC y NA a la vez, hallada en este pase:** la familia de normas
+de conexión de DER se busca por **el nombre de la norma local** (T36) y los nombres son distintos en
+cada región pero **comparten el estándar base IEEE 2030.5**: `CSIP-AUS` en Australia, `IEEE 2030.5`
+en Norteamérica (cliente de referencia de EPRI, BSD-3, 96 ★). Buscar `CSIP` a secas devuelve clientes
+**SIP de telefonía**.
+
 
 ### LATAM
 
@@ -1510,6 +1646,66 @@ Y dos matices honestos sobre la misma búsqueda:
   LATAM con más tracción. ⚠️ **No se verificó que incluya APIs energéticas** (ANEEL, ONS, CCEE): es
   un candidato a puerta de entrada de dato público brasileño, no un hallazgo energético confirmado.
   Comprobarlo es una tarea de un pase futuro, barata y de alto retorno.
+
+
+### Actualización del décimo pase (2026-11-20) — LATAM
+
+**Contexto regulatorio nuevo (fuentes secundarias):**
+
+- **Un estudio de la Universidad de los Andes de 2026 contabiliza 716 instrumentos regulatorios
+  relacionados con IA en 23 países y territorios** de la región, la mayoría iniciados **desde 2023**.
+  El dato importa por su forma: no es ausencia de regulación, es **volumen sin armonización**. Para
+  un cliente regional multipaís, el entregable no es "cumplir la ley de IA" —no hay una— sino un
+  **mapa de obligaciones por jurisdicción**, que es trabajo de consultoría recurrente.
+- **Uruguay fue el primero de la región en firmar el convenio de IA del Consejo de Europa.** Es la
+  vía por la que un requisito de tipo europeo entra en la región sin pasar por el AI Act, y es
+  relevante para un exportador de servicios.
+- **Colombia optó por política nacional (CONPES 4144) con presupuesto hasta 2030** en lugar de reglas
+  vinculantes inmediatas. Encaja con lo que esta KB ya registró: Colombia es la credencial
+  **institucional** LATAM verificable (`API_XM`, de XM).
+- **Argentina, Brasil, Chile, Colombia, Costa Rica, México y Perú** han adoptado los principios de
+  IA de la OCDE. El WEF señala la **demanda energética** como el desafío nuevo de la región y pide
+  reglas armonizadas y predecibles.
+- **México: el crecimiento de datacenters en Querétaro está levantando preguntas de energía y agua.**
+  Es el mismo nudo que NA y APAC —carga de datacenter contra red— con una variable añadida que en las
+  otras regiones aparece menos: **agua**. Un estudio de emplazamiento mexicano que no modele agua
+  está incompleto.
+- **Adopción sectorial reportada**: Chile usa IA para **pronóstico y despacho de renovables**; la
+  generación distribuida de Brasil empujó medidores inteligentes y gestión de energía en nube;
+  Brasil, Uruguay y México aplican IA a **modernización de red**. Jugadores privados nombrados:
+  **Niko Energy** (México, mapeo de techos para solar y VPP), **Ainwater** (Chile, software de IA
+  para utilities de agua).
+
+⚠️ **Una de las fuentes de adopción encontradas (`nivelics`) contiene marcadores `[VERIFY]` sin
+rellenar en lugar de cifras.** No se cita ningún número de esa página. Se registra porque es el
+caso más limpio de T8 que ha visto esta KB: una página que *parece* dato de adopción y es una
+plantilla sin terminar.
+
+**Oferta: Ecuador entra, Argentina sigue en cero.**
+
+- **Ecuador aparece por primera vez**:
+  [`wilianguamancuenca/EC-PowerSystems`](https://github.com/wilianguamancuenca/EC-PowerSystems) —
+  **MIT, 21 ★ y 39 forks**. El ratio fork:★ de **1,86** es el más alto medido en este pase: material
+  que se usa, no que se estrella. ⚠️ Último push **2024-05-02**, 18 meses. La credencial LATAM
+  verificable pasa a ser **Brasil, Colombia, Chile, México y Ecuador**.
+- **Argentina: cero, por sexta medición consecutiva.** `Argentina energia OR electrico
+  in:name,description,readme stars:>2` → 4.358 resultados, **todos** listas genéricas globales
+  (`public-apis`, `awesome-go`, `awesome-mcp-servers`). Sumado a las búsquedas previas por
+  institución (CAMMESA) y por término de dominio, el gap argentino está medido desde **seis ángulos
+  distintos**. No es un gap de consulta: **no hay oferta open source argentina con tracción en
+  energía.** En una propuesta para Argentina, la base técnica es regional o europea, y conviene
+  decirlo antes de que lo pregunten.
+
+**Lo que el hallazgo principal de este pase significa para LATAM, dicho sin adornos:** las ~125
+piezas institucionales encontradas son de **EPRI, Grid Protection Alliance y Sandia** — las tres
+norteamericanas. **Son usables en LATAM** (BSD-3 y MIT no discriminan por geografía) y de hecho son
+la mejor base disponible para un proyecto de utility latinoamericano: `openHistorian` para el
+histórico, `openMIC` para recolección de medidores, `DLMS-COSEM` para el protocolo, `snl-quest` para
+almacenamiento. Lo que **no** aportan es dato local ni modelo de red local, y eso sigue viniendo de
+`API_XM` (Colombia), `atlas-sen` (México), `PyPSA-CL` (Chile), `pypsa-meets-brazil` y ahora
+`EC-PowerSystems` (Ecuador). **La arquitectura correcta para LATAM es stack norteamericano permisivo
++ capa de datos local.**
+
 
 ## Posicionamiento Globant
 

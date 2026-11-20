@@ -1030,6 +1030,188 @@ existe es tan dañino como uno que no se declara.
 - **Protocolos que GitHub no puede buscar**: "Green Button" devuelve 355.315 resultados a solas.
   Para esos, la vía es la organización o el proveedor (T43).
 
+
+## T46 — `NOASSERTION` en un laboratorio nacional depende **del laboratorio**: acotación de T24
+
+T24 estableció que en los repos de `NatLabRockies` (ex-NREL) el `NOASSERTION` es **exacto**: esas
+licencias no son OSI porque añaden cláusulas reales (copyleft según el tipo de redistribuidor en
+`resstock`, designación de marca en `REopt_API` y `OpenStudio`, no-endoso gubernamental). Eso sigue
+siendo verdad y el proceso que T24 impuso —leer el archivo completo— sigue siendo obligatorio.
+
+**Lo que este pase descubre es que la conclusión no se traslada a otros laboratorios.** En
+`sandialabs`, la API reporta `NOASSERTION` en **todo** el portafolio energético y es un **falso
+negativo** en cuatro de cinco casos:
+
+| Repo | API | `LICENSE` leído en crudo | Cláusula añadida |
+|------|-----|--------------------------|------------------|
+| `snl-quest` (162 ★) | NOASSERTION | **BSD-3-Clause** | ninguna |
+| `snl-pstess` (40 ★) | NOASSERTION | **texto MIT íntegro** | ninguna |
+| `snl-progress` (24 ★) | NOASSERTION | **BSD-3-Clause** | ninguna |
+| `pvOps` (22 ★) | NOASSERTION | **BSD-3-Clause** | ninguna |
+| `OpenCSP` (13 ★) | NOASSERTION | **no existe el archivo** | — (bloqueado de verdad) |
+
+**La causa es mecánica y generalizable:** el archivo abre con *"Copyright … National Technology &
+Engineering Solutions of Sandia, LLC (NTESS). Under the terms of Contract DE-NA0003525 with NTESS,
+the U.S. Government retains certain rights in this software"* **antes** del otorgamiento. Ese
+preámbulo de contrato DOE rompe el clasificador de GitHub; el otorgamiento que sigue es estándar.
+
+**Las dos mitades juntas dan la regla utilizable:** en un repo de laboratorio nacional,
+`NOASSERTION` significa *"el clasificador no pudo decidir"*, y hay **dos razones posibles con
+consecuencias opuestas** — cláusula añadida real (NREL: bloquea o condiciona) o preámbulo de
+contrato (Sandia: no cambia nada). **Nunca se puede inferir cuál sin leer el archivo**, y leer sólo
+la etiqueta falla en las dos direcciones: descarta BSD-3 usable en Sandia y acepta como permisivo lo
+que en NREL no lo es.
+
+**Corolario de método que costó dos intentos en este pase:** EPRI y Sandia nombran el archivo
+`LICENSE.txt`, no `LICENSE`. Pedir sólo `LICENSE` devuelve 404 y haría declarar "sin licencia" a
+`StorageVET`, `DER-VET` y `OpenDER`, tres repos **BSD-3 perfectamente usables**. Antes de declarar
+ausencia de licencia hay que pedir `LICENSE`, `LICENSE.txt` y `LICENSE.md`.
+
+## T47 — Cuando la oferta esperable es de investigación aplicada, buscar **la institución**, no la cosa
+
+Esta es la corrección de método más rentable de la rotación, medida en repos: **~125 encontrados en
+un pase**, en organizaciones que nueve pases anteriores no vieron.
+
+La cadena de lecciones de esta KB venía siendo:
+
+| Pase | Lección | Alcance real |
+|------|---------|--------------|
+| 7 | Buscar **el nombre de la norma local** (`CSIP-AUS`), no la región | Abrió APAC |
+| 8 | Esa regla **no generaliza**: la norma sin comunidad no devuelve nada | Acotó la anterior |
+| 9 | Buscar **la norma**, no el buzzword (`ISO 15118`, `ISO 26262`) | Abrió la capa de protocolo |
+| **10** | **Buscar la institución, no la categoría** | **~125 repos de EPRI, GPA y Sandia** |
+
+**El mecanismo por el que la búsqueda por categoría falla es que las instituciones nombran sus
+herramientas con el acrónimo interno del método, y ese acrónimo no contiene ningún término de
+dominio:**
+
+| Herramienta | Qué es | Término de categoría que **no** aparece en su nombre |
+|-------------|--------|----------------------------------------------------|
+| `StorageVET`, `DER-VET` | Valoración de almacenamiento y DER | *battery energy storage* |
+| `QuESt` (`snl-quest`) | Análisis de almacenamiento | *storage*, *BESS* |
+| `ProGRESS` (`snl-progress`) | Fiabilidad probabilística con almacenamiento | *reliability*, *storage* |
+| `openMIC` | Recolección de datos de medidor | *meter data management* |
+| `openXDA` | Analítica de perturbaciones | *power quality*, *disturbance analytics* |
+| `SPI-Tool` | Entradas estocásticas de planificación | *planning* |
+
+El pase 9 midió `"battery energy storage" in:name,description stars:>25` → **total = 1**. La
+medición era correcta y la conclusión ("la oferta abierta es un repo") era **falsa**: hay cinco
+herramientas permisivas de valoración de almacenamiento, y ninguna se llama así.
+
+**Regla operativa para los próximos pases.** Antes de declarar un gap en una categoría donde cabe
+esperar investigación aplicada —fiabilidad, protección, valoración regulada, conformidad de norma—
+barrer por `org:` los institutos y laboratorios que ya aparecen en la KB: `epri-dev`,
+`GridProtectionAlliance`, `sandialabs`, `pnnl`, `argonne-citadel`, `lbl-srg`, `NatLabRockies`,
+`entsoe`, `statnett`, `alliander-opensource`, `equinor`. Un gap declarado sin ese barrido no está
+medido.
+
+## T48 — El lado del **activo de campo** está vacío, y es exactamente donde está el presupuesto
+
+Nueve pases midieron huecos en mercados, medición, cumplimiento y modelado de red — el lado del
+**sistema**. Ninguno buscó el lado del **activo**: lo que una utility compra primero. Este pase lo
+midió con ocho consultas y encontró cuatro categorías vacías:
+
+| Categoría | Mejor oferta abierta real | Veredicto |
+|-----------|--------------------------|-----------|
+| Riesgo de incendio / PSPS | **nada del sector** en tres ángulos de consulta distintos | ❌ cero |
+| Salud de transformador (DGA) | `engineers-tools/xDGA` **MIT, 18 ★, push 2022-06-28** | ❌ sin base viva |
+| Capacidad de alojamiento de DER | `PauloRadatz/HostingCapacity_OpenDSS` **MIT, 7 ★, 2022-11-30** | ❌ sin base viva |
+| Inspección de línea por visión | YOLO académicos **MIT de 34-37 ★** (2024-2025); el de **145 ★ sin licencia** | ❌ sin base viva |
+| Fuga de metano | `STARCOP` **GPL-3.0** 74 ★; `MethaneMapper` **sin licencia** 85 ★ | 🟡 existe, no permisivo |
+| Inversor grid-forming | `GridFormingConverters` **sin licencia** 140 ★ (2020); modelos WECC de `pnnl` **sin licencia** | 🟡 existe, no permisivo |
+
+**La asimetría es la tesis.** El open source energético es fuerte donde el publicador es un
+**operador de red o un instituto** —que modela el sistema— y vacío donde el dueño del problema es
+**el propietario del activo**, que no publica porque el modelo *es* su ventaja operativa. Eso explica
+la forma del mapa mejor que cualquier argumento de madurez: no es que la categoría sea joven, es que
+**nadie tiene incentivo para publicarla**.
+
+**Consecuencia comercial directa, y es buena noticia:** estas categorías tienen presupuesto aprobado
+y **no** tienen acelerador que un competidor pueda forkear. Son desarrollo a medida sobre bases
+genéricas (`OpenDSS`/`pandapower` para red, visión por computador estándar para inspección) y hay que
+presupuestarlas como desarrollo. Lo que **no** se puede hacer es prometer un acelerador reutilizable,
+ni estimarlas como integración.
+
+**Y una advertencia de medición que se repitió en serie:** **cuatro de las cinco consultas chocan
+con herramientas de desarrollador que ocupan el término.** `wildfire` es un plugin de Vim de 605 ★ y
+uno de Neovim de 270 ★; `hosting capacity` es un script de Oracle Cloud de 1.309 ★; `grid forming`
+es un framework JavaScript de 492 ★; `SMR`/`nuclear` es un reproductor de música de 18.970 ★ y tres
+mods de Minecraft; `PSPS` devuelve 32.500 resultados de listas genéricas. Es T35 en su forma más
+peligrosa: **no devuelven cero, devuelven miles de resultados equivocados** — que es lo que hace que
+el error pase inadvertido.
+
+## T49 — El techo de verificación ya no es sólo técnico: los registros regulatorios primarios no resuelven
+
+T12 estableció que el techo de verificación es la red, y T44 lo afinó al endpoint. Este pase lo
+extiende al **dominio regulatorio**, que es el que más importa cuando el entregable es un expediente:
+
+| Dominio | Resultado desde este entorno | Qué queda sin verificar |
+|---------|------------------------------|-------------------------|
+| `eur-lex.europa.eu` | **no resuelve** (séptimo pase consecutivo con fallo) | `COM(2026) 501`, fechas del AI Act, Reglamento (UE) 2026/1744 |
+| `energy.ec.europa.eu` | **no resuelve** | Hoja de ruta de digitalización e IA en energía, acuerdo tripartito |
+| `apec.org` | **no resuelve** | Declaración ministerial de energía de APEC 2026 |
+| `huggingface.co` | no resuelve (sexto pase consecutivo) | Licencias de pesos de modelos |
+| `raw.githubusercontent.com` | **200** | Licencias de repo: ✅ canal confirmado por décima vez |
+| `search/repositories` (vía `gh api`) | **200** | Metadatos de repo: ✅ 56/56 resueltos este pase |
+
+**La consecuencia práctica es una regla de redacción, no una queja de infraestructura:** esta KB
+puede afirmar con primera mano **cualquier cosa sobre un repo** y **ninguna cosa sobre una norma**.
+Toda fecha regulatoria de este documento es concordancia de fuentes secundarias. En un entregable de
+cliente, las fechas de código se citan; las fechas de norma **se verifican en el registro oficial
+antes de firmar**. La distinción tiene que viajar escrita, porque las dos parecen igual de duras en
+una tabla.
+
+## T50 — EMEA convirtió la regulación en un **contrato tripartito**, y ahí está el expediente facturable
+
+T37 observó que las cuatro regiones convergieron en el mismo instrumento: **acceso condicional** a la
+red. Este pase encuentra la forma contractual que EMEA le está dando, y es más específica y más
+vendible que una obligación de cumplimiento.
+
+La hoja de ruta europea prevé publicar en el **segundo semestre de 2026** un **acuerdo tripartito
+modelo** entre **operador de datacenter + parte energética + autoridad pública** (fuente secundaria;
+ver T49). Un contrato modelo con tres firmantes obliga a que **cada parte traiga un expediente
+técnico**:
+
+| Firmante | Lo que tiene que poder demostrar | Con qué se construye en esta KB |
+|----------|----------------------------------|--------------------------------|
+| Operador de datacenter | Perfil de carga, **flexibilidad comprometida y verificable**, plan de eficiencia | `vessim`, `dcgym`/`dchub`, `carbon-aware-sdk`, `FlexMeasures` |
+| Parte energética (TSO/DSO/generador) | Estudio de conexión, impacto en red, escenarios | `pandapower`, `PyPSA`, `power-grid-model`, `plexos2duckdb` |
+| Autoridad pública | Trazabilidad y auditoría de ambos expedientes | `openHistorian` + `openXDA` como registro, `opendsm` para M&V |
+
+**Por qué esto es mejor negocio que "cumplimiento del AI Act":** el cumplimiento es un gasto que el
+cliente intenta minimizar; un contrato de conexión es la **condición para que su datacenter exista**.
+Y la flexibilidad que firme ahí tiene que ser **medida y verificada de forma continua**, no declarada
+una vez — lo que convierte un proyecto de documentación en una plataforma operativa con mantenimiento
+recurrente. Es la misma conversión que T18 identificó para la verificación del ahorro, aplicada al
+mayor consumidor marginal de la década.
+
+## T51 — El perfil de licencia también cambia con la **geografía de la institución que publica**, y favorece a Norteamérica
+
+T9 estableció que el perfil de licencia cambia por **subsector**. Este pase añade un segundo eje, y
+tiene consecuencia directa sobre qué se puede prometer en cada región:
+
+| Origen | Quién publica | Licencia dominante | Qué permite en un entregable |
+|--------|---------------|-------------------|------------------------------|
+| **EMEA** | Operadores de red y TSOs (RTE, Alliander, Elia, Statnett) y la familia **LF Energy** | **MPL-2.0** de forma consistente | Integración sí; **marca blanca con motor modificado no** (copyleft por archivo) |
+| **EMEA** | Consorcios académicos (`oemof`, `pypsa`, TU München) | **MIT** | Libre |
+| **North America** | **EPRI** (59 repos), **Sandia** (30) | **BSD-3-Clause** | Libre, incluida marca blanca |
+| **North America** | **Grid Protection Alliance** (66 repos) | **MIT** | Libre, incluida marca blanca |
+| **North America** | **NatLabRockies** (ex-NREL) | BSD-3 **con cláusulas añadidas** | Condicionado: marca, no-endoso, y en `resstock` según **quién es el cliente** (T24) |
+| **LATAM** | Instituciones de mercado (XM, Batu Energy) y académicos | **MIT** cuando hay licencia; **ausente** con frecuencia | Caso por caso (T20) |
+
+**La lectura comercial, que invierte un supuesto de nueve pases de esta KB:** el stack abierto de la
+energía *no* es predominantemente europeo y copyleft. Lo era en la muestra que esta KB había
+construido. Con EPRI, GPA y Sandia catalogados, **la base institucional norteamericana es más
+permisiva que la europea** — BSD-3 y MIT frente a MPL-2.0.
+
+Para un cliente que quiere **producto propio** con motor modificado y sin obligación de publicar:
+partir de `openHistorian`/`openXDA` (MIT), `StorageVET`/`DER-VET`/`snl-quest` (BSD-3) y
+`DLMS-COSEM` (BSD-3) da mejores términos que la ruta LF Energy. La ruta europea sigue siendo la
+correcta cuando lo que se necesita es **el modelo de red europeo** y su interoperabilidad
+(CGMES, `pypowsybl`, `power-grid-model`), donde no hay equivalente norteamericano. **La elección de
+base ya no es técnica ni regional por defecto: es una decisión de licencia, y hay que tomarla
+explícitamente en la fase de propuesta.**
+
 ---
-*Investigado 2026-11-20 en nueve pases. Lo verificado de primera mano es, sin excepción, lo que vive
-en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*
+*Investigado 2026-11-20 en diez pases. Lo verificado de primera mano es, sin excepción, lo que vive
+en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal (ver T49).*

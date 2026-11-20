@@ -1473,3 +1473,206 @@ puede usar.
 ---
 *Verificado 2026-11-20 en nueve pases (35 recetas). Re-verificar licencias y stars antes de
 comprometer alcance.*
+
+## Recetas del décimo pase (2026-11-20)
+
+> Las seis se apoyan en la capa institucional norteamericana (EPRI, Grid Protection Alliance,
+> Sandia) y en la familia `oemof`, catalogadas en este pase. Todas las licencias verificadas en el
+> `LICENSE`/`LICENSE.txt` crudo, no en la etiqueta de la API.
+
+### Receta 36 — Plataforma de analítica operativa **sin migrar el histórico del cliente**
+
+**Para quién:** utility con PI System (AVEVA/OSIsoft) instalado que quiere IA sobre sus datos
+operativos y **no** va a cambiar de histórico. Es el escenario más común y el que mataba propuestas.
+
+**Por qué funciona:** el punto de entrada no es el historiador, es el **puente**.
+
+| Pieza | Repo | Licencia | Papel |
+|-------|------|----------|-------|
+| Puente al histórico propietario | [osisoftpi-grafana](https://github.com/GridProtectionAlliance/osisoftpi-grafana) | **Apache-2.0** | Lee el PI que ya existe, sin migración |
+| Histórico abierto (sólo lo nuevo) | [openHistorian](https://github.com/GridProtectionAlliance/openHistorian) | **MIT** | Series nuevas y de alta frecuencia, sin tocar el PI |
+| Analítica de perturbaciones | [openXDA](https://github.com/GridProtectionAlliance/openXDA) | **MIT** | Eventos, faltas, perturbaciones |
+| Calidad de onda | [PQDashboard](https://github.com/GridProtectionAlliance/PQDashboard) | **BSD-3** | Vista de sistema |
+| Analítica en el lazo | [openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | Punto de inserción de modelos |
+| Capa de pregunta | `PowerMCP` + LLM | **MIT** | Consulta en lenguaje natural sobre lo anterior |
+
+**Cableado:** Grafana con el plugin PI como capa de lectura unificada → `openHistorian` recibe las
+series nuevas (fasorial, alta cadencia) → `openXDA` procesa eventos y escribe resultados al
+histórico → `openECA` expone el punto donde entra el modelo → `PowerMCP` sobre las dos fuentes para
+la capa conversacional. **La persona autoriza; el agente no actúa sobre el lazo** (regla de
+arquitectura).
+
+**Qué presupuestar y qué no:** el puente y los dashboards son configuración. **La calibración de
+`openXDA` contra los eventos reales del cliente es el trabajo**, y hay que estimarla por número de
+tipos de evento, no por número de subestaciones. ⚠️ Stack **.NET/Windows** en origen: validar el
+plan de despliegue antes de prometer contenedores Linux. ⚠️ `openECA` tiene **20 issues abiertas**,
+`PQDashboard` **21**.
+
+### Receta 37 — Valoración y dimensionado de BESS con base institucional
+
+**Sustituye el veredicto de la Receta 13.** El pase 9 midió la oferta en **un** repo y concluyó
+"ingeniería de modelo desde cero". Con la búsqueda por institución son cinco herramientas
+permisivas, y la receta cambia de forma.
+
+| Pieza | Repo | Licencia | Papel |
+|-------|------|----------|-------|
+| Valoración de almacenamiento | [epri-dev/StorageVET-deprecated](https://github.com/epri-dev/StorageVET-deprecated) | **BSD-3** | Modelo de valoración de EPRI (StorageVET 2.0) |
+| Valoración de DER | [epri-dev/DER-VET](https://github.com/epri-dev/DER-VET) | **BSD-3** | Cartera DER, no sólo batería |
+| Plataforma de análisis | [sandialabs/snl-quest](https://github.com/sandialabs/snl-quest) | **BSD-3** *(rescatada)* | QuESt: aplicación modular de Sandia |
+| Fiabilidad con almacenamiento | [sandialabs/snl-progress](https://github.com/sandialabs/snl-progress) | **BSD-3** *(rescatada)* | ProGRESS: aporte del BESS a fiabilidad |
+| Degradación / ciclado | [oemof/cydets](https://github.com/oemof/cydets) | **MIT** | Detección de ciclos en la serie real |
+| Precio de entrada | `gridstatus` (NA) · `entsoe-py` (EMEA) · `API_XM` (CO) | BSD-3 / MIT | Serie de precio por región |
+| Arbitraje de referencia | `BigdogManLuo/DBESS-Arbitrage` | Apache-2.0 | Único optimizador sectorial permisivo con tracción |
+
+**Cableado:** `gridstatus`/`entsoe-py` alimenta la serie de precio → `StorageVET` o `DER-VET`
+calcula el valor por flujo de ingreso → `snl-quest` como entorno de escenarios → `snl-progress` si
+el cliente necesita el argumento de **fiabilidad** (regulador o ISO) → `cydets` sobre la serie real
+de operación para contrastar la degradación supuesta con la medida.
+
+**Advertencias que van en la propuesta, no en una nota al pie:** ⚠️ `StorageVET-deprecated` **se
+llama *deprecated*** y tiene push de hace cuatro semanas — hay que resolver con EPRI qué lo
+reemplaza antes de comprometerlo. ⚠️ `snl-quest` tiene **44 issues abiertas**. ⚠️ `DER-VET-GUI`
+(la interfaz) está **sin licencia**: usar la librería, no la GUI.
+
+### Receta 38 — Cadena meter-to-cash: la frontera nueva, con el presupuesto redibujado
+
+**Qué cambia respecto del octavo pase:** el protocolo de medidor y la recolección **ya no son
+desarrollo propio**. El MDM y la tarifa siguen siéndolo.
+
+| Capa | Repo | Licencia | Estado |
+|------|------|----------|--------|
+| Protocolo de medidor (EMEA) | [epri-dev/DLMS-COSEM](https://github.com/epri-dev/DLMS-COSEM) + [dlms-access-point](https://github.com/epri-dev/dlms-access-point) | **BSD-3** | ✅ permisivo |
+| Traducción a modelo de red | [epri-dev/dlms-cim](https://github.com/epri-dev/dlms-cim) | **BSD-3** | ✅ DLMS → CIM |
+| Recolección | [openMIC](https://github.com/GridProtectionAlliance/openMIC) | **MIT** | ✅ vivo (push 2026-11-15) |
+| Almacenamiento de la serie | [openHistorian](https://github.com/GridProtectionAlliance/openHistorian) | **MIT** | ✅ |
+| Motor de facturación | `killbill` | Apache-2.0 | ✅ genérico: **no conoce una tarifa eléctrica** |
+| Medición de consumo | `openmeter` | Apache-2.0 | ✅ genérico |
+| **MDM** | — | — | ❌ **ausente** (medido: lo mejor tiene 7 ★ y dos años sin push) |
+| **Lógica tarifaria regulada** | — | — | ❌ **desarrollo propio, siempre** |
+
+**Cableado:** medidor → `DLMS-COSEM`/`dlms-access-point` (o ANSI C12 en NA, con la advertencia de
+licencia de `c12test`) → `openMIC` recolecta → `dlms-cim` normaliza a CIM → `openHistorian` guarda
+la serie → **capa de MDM y tarifa a construir** → `killbill` emite.
+
+**Cómo presupuestarlo con honestidad:** dos de las siete capas son desarrollo completo y están
+nombradas arriba. La diferencia con el presupuesto del octavo pase es que **ya no hay que escribir
+el protocolo ni la recolección**, que eran las dos capas que más se subestiman. ⚠️ `DLMS-COSEM` no
+tiene push desde 2024-11 y `dlms-cim` desde 2021-01: son **referencias de protocolo** (los
+protocolos no cambian), no software mantenido; auditar antes de empotrar.
+
+### Receta 39 — Estudio completo de red de calor de distrito, todo MIT
+
+**Para quién:** municipio, utility de calor o promotor en Escandinavia, Alemania, Polonia o los
+bálticos. Vertical ausente de esta KB durante nueve pases.
+
+| Pieza | Repo | Licencia | Papel |
+|-------|------|----------|-------|
+| Demanda de calor | [oemof/oemof-demand](https://github.com/oemof/oemof-demand) | **MIT** | Perfiles horarios desde valores anuales |
+| Topología de la red | [jylambert/topotherm](https://github.com/jylambert/topotherm) | **MIT** | Qué trazado, qué diámetros (TU München) |
+| Hidráulica y térmica de la red | [oemof/DHNx](https://github.com/oemof/DHNx) | **MIT** | Optimización y simulación de la red |
+| Generación (bomba de calor, CHP) | [oemof/tespy](https://github.com/oemof/tespy) | **MIT** | Ciclo termodinámico del lado de producción |
+| Exergía | [oemof/exerpy](https://github.com/oemof/exerpy) | **MIT** | Dónde se pierde calidad de energía, no sólo cantidad |
+| Despacho del sistema | `oemof-solph` | **MIT** *(SPDX en `pyproject.toml`)* | Optimización del conjunto |
+| Telemetría de bomba de calor | [raomin/ESPAltherma](https://github.com/raomin/ESPAltherma) | **MIT** | Lectura de equipo Daikin instalado |
+
+**Cableado:** `oemof-demand` genera el perfil → `topotherm` decide trazado → `DHNx` dimensiona y
+simula → `tespy` modela la central → `exerpy` audita la calidad → `oemof-solph` despacha el conjunto.
+
+**El límite, declarado:** esto es un **estudio de diseño y dimensionado**, completo y permisivo. **No
+es operación**: no existe SCADA de calor, ni facturación de calor, ni gestión de subestación térmica
+en open source. Vender diseño; no vender operación. ⚠️ `DHNx` tiene 35 issues abiertas.
+
+### Receta 40 — Expediente para el **acuerdo tripartito** europeo de conexión de datacenter
+
+**Para quién:** operador de datacenter que necesita conexión a red en la UE, o la parte energética
+del otro lado de la mesa. Instrumento previsto para el segundo semestre de 2026 (ver **T50**;
+fuente secundaria, ver **T49**).
+
+El contrato tiene tres firmantes, así que el entregable son **tres expedientes que tienen que
+cuadrar entre sí** — y eso es lo que lo hace un proyecto y no un informe.
+
+| Expediente | Qué tiene que demostrar | Con qué se construye | Licencia |
+|-----------|------------------------|---------------------|----------|
+| **Del datacenter** | Perfil de carga y **flexibilidad comprometida** | `dos-group/vessim` + `FlexMeasures` + `OpenLEADR` | MIT / Apache-2.0 / Apache-2.0 |
+| **Del datacenter** | Plan de eficiencia y huella | `carbon-aware-sdk` + `scaphandre` + `ecologits` | MIT / Apache-2.0 / MPL-2.0 |
+| **De la parte energética** | Estudio de conexión e impacto en red | `pandapower` + `PyPSA` + `power-grid-model` | BSD-3 / MIT / MPL-2.0 |
+| **De la parte energética** | Escenarios de planificación | `plexos2duckdb` si el cliente ya usa PLEXOS | **BSD-3** |
+| **De la autoridad** | Trazabilidad y auditoría continua | `openHistorian` + `openXDA` como registro; `opendsm` para M&V | MIT / MIT / Apache-2.0 |
+
+**Cableado:** `vessim` produce el perfil de carga flexible → `FlexMeasures` lo convierte en
+compromiso despachable y `OpenLEADR` en señal ejecutable → `pandapower`/`PyPSA` evalúan el impacto
+del perfil comprometido → `openHistorian` registra lo que realmente pasó y `opendsm` verifica que la
+flexibilidad entregada es la firmada.
+
+**Por qué se vende mejor que un proyecto de cumplimiento:** el cumplimiento es gasto a minimizar; la
+conexión es la **condición de existencia** del datacenter. Y la flexibilidad firmada hay que
+**medirla y verificarla de forma continua**, lo que convierte el expediente en plataforma con
+mantenimiento recurrente (la misma conversión que T18 identificó para el ahorro energético).
+
+### Receta 41 — Conformidad de interconexión de DER (IEEE 1547 / IEEE 2030.5)
+
+**Para quién:** DSO, agregador o fabricante de inversor que tiene que demostrar comportamiento
+normativo del DER en Norteamérica (y, con el mismo estándar base, en Australia vía CSIP-AUS).
+
+| Pieza | Repo | Licencia | Papel |
+|-------|------|----------|-------|
+| Comportamiento normativo del inversor | [epri-dev/OpenDER](https://github.com/epri-dev/OpenDER) | **BSD-3** *(rescatada)* | Modelo conforme a **IEEE 1547-2018** |
+| Comunicación con el DER | [epri-dev/IEEE-2030.5-Client](https://github.com/epri-dev/IEEE-2030.5-Client) | **BSD-3** | Cliente **IEEE 2030.5** |
+| Variante australiana | `longzheng/open-dynamic-export` + `ethanndickson/sep2_client` | MIT / Apache-2.0 | **CSIP-AUS** sobre el mismo estándar base |
+| Red de distribución | `OpenDSS` / `pandapower` | BSD-3 | Dónde se conecta el DER |
+| Señal de demanda | [epri-dev/OpenADR-Virtual-End-Node](https://github.com/epri-dev/OpenADR-Virtual-End-Node) + `openleadr-python` | BSD-3 / Apache-2.0 | VEN y VTN de OpenADR |
+
+**Cableado:** `OpenDER` da el comportamiento esperado del inversor bajo norma → `IEEE-2030.5-Client`
+(o `open-dynamic-export` en Australia) es el canal de control → `OpenDSS`/`pandapower` modela el
+alimentador → el par VEN/VTN de OpenADR cierra el lazo de señal de demanda.
+
+**El hueco que hay que decir en voz alta en esta receta:** falta la pieza de **capacidad de
+alojamiento** (*hosting capacity*), que es la pregunta que el DSO hace primero: *¿cuánto DER aguanta
+este alimentador?* La oferta abierta medida es `PauloRadatz/HostingCapacity_OpenDSS` (**MIT, 7 ★,
+sin push desde 2022-11**). Es decir: el análisis de capacidad de alojamiento **es desarrollo propio
+sobre `OpenDSS`**, y hay que presupuestarlo como tal. ⚠️ `IEEE-2030.5-Client` no tiene push desde
+2023-02 y `OpenADR-Virtual-End-Node` desde 2023-04: referencias de protocolo, auditar antes de
+empotrar.
+
+## Actualización del décimo pase a "qué no proponer" (2026-11-20)
+
+**Entradas que se caen de la lista:**
+
+| Lo que decía un pase anterior | Estado al décimo pase |
+|-------------------------------|------------------------|
+| "**Optimización de BESS**: la oferta abierta es **un** repo; presupuestar como ingeniería de modelo desde cero" | ✅ **Corregido.** Cinco herramientas permisivas de valoración y dimensionado: `StorageVET` y `DER-VET` (EPRI, BSD-3), `snl-quest`, `snl-progress`, `snl-pstess` (Sandia, BSD-3/MIT) → **Receta 37**. La medición del pase 9 era correcta; la conclusión, falsa por vocabulario (T47) |
+| "Hablar **DLMS/COSEM** obliga a licencia comercial (`u9n/dlms-cosem` es BSL)" | ✅ **Falso.** `epri-dev/DLMS-COSEM` y `dlms-access-point` son **BSD-3**, y `dlms-cim` traduce a CIM → **Receta 38** |
+| (implícito) "No hay histórico de series temporales abierto para la red" | ✅ **Cerrado.** `openHistorian` **MIT, 207 ★, push 2026-11-15**, con puente Apache-2.0 al PI System instalado → **Receta 36** |
+| (implícito) "El calor de distrito no está cubierto" | ✅ **Cerrado para estudio** (`DHNx`, `topotherm`, `tespy`, `oemof-demand`, todos MIT) → **Receta 39**. **Sigue vacío para operación** |
+
+**Nuevos "no proponer", medidos en este pase:**
+
+- **Nada del lado del activo de campo como acelerador reutilizable.** Medido con ocho consultas
+  (ver T48): **riesgo de incendio / PSPS = cero repos del sector** en tres ángulos distintos de
+  consulta; **salud de transformador (DGA)** = `xDGA` MIT **18 ★ de 2022**; **capacidad de
+  alojamiento** = `HostingCapacity_OpenDSS` MIT **7 ★ de 2022**; **inspección de línea por visión** =
+  YOLO académicos MIT de 34-37 ★, el de 145 ★ **sin licencia**. Son categorías con presupuesto
+  aprobado y **sin base open source mantenida**: presupuestar como **desarrollo a medida** sobre
+  `OpenDSS`/`pandapower` y visión estándar. **No prometer acelerador ni estimar como integración.**
+- **Detección de fuga de metano en un entregable propietario.** La oferta existe y **no es
+  permisiva**: `spaceml-org/STARCOP` es **GPL-3.0** (74 ★) y `MethaneMapper` (85 ★) **no tiene
+  licencia**. Gap de permiso, no de oferta — el caso `GEM` otra vez.
+- **Control de inversor grid-forming sobre base abierta.** `GridFormingConverters` (140 ★) y los
+  modelos WECC de `pnnl` (45 ★) **no tienen licencia**, y son MATLAB/PSCAD. Es la categoría central
+  de los recursos basados en inversor en 2026 y su oferta abierta está **bloqueada por permiso**.
+- **`sandialabs/OpenCSP` en cualquier alcance.** Única base abierta de solar de concentración que ha
+  encontrado esta KB (13 ★, **20 forks**, 91 issues) y **no tiene archivo de licencia en `main`**.
+- **`oemof/feedinlib` y `oemof/marketlib`.** Ambos MIT y utilizables en teoría; ambos
+  **ARCHIVADOS** (`feedinlib` con 117 ★ y 43 forks). Para generación PV la pieza viva es
+  `pvlib-python`. Tercera vez que esta KB tropieza con un archivado que ninguna consulta señala.
+- **`EDX`/`OPDM` de ENTSO-E como dependencia de producción sin plan propio.** Son **MIT** y son la
+  pieza que hace operable el CGMES europeo, y están mantenidos por **una sola cuenta individual**
+  con 2-10 ★ por repo. Proponer como acelerador internalizado con mantenimiento presupuestado.
+- **Cualquier compromiso con fecha sobre la hoja de ruta europea o la declaración de APEC.**
+  `eur-lex.europa.eu`, `energy.ec.europa.eu` y `apec.org` **no resuelven** desde este entorno
+  (T49). `COM(2026) 501`, el acuerdo tripartito del segundo semestre de 2026 y el grupo de trabajo
+  de APEC tienen concordancia de fuentes secundarias y **cero** confirmación primaria. Sirven para
+  planear; **no para firmar**.
+- **Una propuesta argentina que prometa base local.** **Sexta medición consecutiva en cero.** La
+  base para Argentina es regional (`PyPSA-CL`, `pypsa-meets-brazil`) o norteamericana permisiva, y
+  conviene decirlo antes de que lo pregunten.

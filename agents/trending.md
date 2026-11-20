@@ -9,6 +9,73 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 10 (la cola larga agéntica tiene número: 33 repos en siete semanas, el mejor con 7 estrellas y sin licencia)
+
+**Titular del pase: este pase no encontró ningún agente energético nuevo proponible, y por primera
+vez puede decir cuántos hay y de qué tamaño.** La consulta `agent energy grid in:name,description
+created:>2026-10-01` devuelve **33 repos creados en las últimas siete semanas**. El mejor tiene
+**7 ★ y licencia `NOASSERTION`**; los cinco siguientes tienen **1, 0, 0, 0 y 0 estrellas** y
+**ninguno tiene licencia**:
+
+| Repo | Licencia | ★ | Push | Qué dice ser |
+|------|----------|---|------|--------------|
+| `arhamshah08/energy-hack` | ⚠️ NOASSERTION | 7 | 2026-11-16 | Pack de recursos "agent-ready" para un hack day de energía |
+| `xvbohan92-ai/gridnote-energy-agent` | ⚠️ **sin licencia** | 0 | 2026-10-26 | Agente de análisis energético "evidence-backed" con **LangGraph**, sólo lectura |
+| `tarrini/renewable-grid-agent` | ⚠️ **sin licencia** | 0 | 2026-10-11 | Despacho simulado de corredor renovable |
+| `Likhitha-B-Y/smart-grid-energy-arbitrage-agent` | ⚠️ **sin licencia** | 0 | 2026-10-09 | Arbitraje de energía |
+| `ssblip/gridmind` | ⚠️ **sin licencia** | 0 | 2026-10-11 | Multi-agente para gestión autónoma de red renovable |
+
+Y en MCP, `mcp energy grid in:name,description created:>2026-09-01` devuelve **4 repos, los cuatro
+con 0 estrellas** (`pipeworx-io/mcp-georgia-energy` y `azmartone67/dchub-claude-plugin` ya estaban
+catalogados; `sohamshindework/gridpulse` se creó **hoy**).
+
+**Lo que esto cambia, que no es poco:** hasta este pase, "no hay agente de operación de red
+proponible" era una ausencia. Ahora es una **distribución medida**: hay actividad —33 repos en siete
+semanas, nombres que prometen despacho autónomo y arbitraje— y **toda ella está por debajo del umbral
+de proponible, y mayoritariamente sin licencia**. Es el **sexto cero consecutivo** en operación de
+red, y el primero con la forma del cero descrita. Un cliente que pregunte "¿no hay ya agentes de red
+open source?" tiene ahora una respuesta con número: los hay, son de una semana, de una persona y de
+cero estrellas.
+
+`gridnote-energy-agent` merece una nota aparte porque **acierta en el diseño**: LangGraph,
+*evidence-backed*, y explícitamente **sólo lectura**. Es la regla de arquitectura de esta KB y la
+postura de `OpenVigil` (pase 9), en un repo de cero estrellas sin licencia. **La idea correcta está
+circulando; la base utilizable no.**
+
+### Lo que sí aportó este pase a la capa agéntica: el banco de pruebas que un agente de red necesitaría
+
+El hallazgo principal del pase 10 son dos organizaciones institucionales norteamericanas (EPRI y
+Grid Protection Alliance, ~125 repos — ver `repos/trending.md`). **Ninguno de esos repos es un
+agente, y conviene decirlo sin adornos.** Pero dos piezas son precondición directa de la capa
+agéntica, y esta KB no las tenía:
+
+| Repo | Licencia | ★ | Forks | Push | Por qué importa para un agente |
+|------|----------|---|-------|------|-------------------------------|
+| [epri-dev/Universal-Semantic-Standard-Test-Harness](https://github.com/epri-dev/Universal-Semantic-Standard-Test-Harness) | **BSD-3-Clause** | **0** | 1 | 2026-08-18 | Banco de pruebas de **interoperabilidad semántica**. Un agente que actúa sobre la red necesita exactamente esto: un arnés que compruebe que lo que entendió es lo que el modelo dice |
+| [Haigutus/cim-bench](https://github.com/Haigutus/cim-bench) | **MIT** | 10 | 5 | 2026-07-16 | **Benchmarking de herramientas CIM**. Comparar implementaciones es el paso previo a dejar que un modelo elija entre ellas |
+| [GridProtectionAlliance/openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | 16 | 8 | 2026-11-15 | *Extensible Control & Analytics*: el punto de inserción de analítica en el lazo operativo. ⚠️ **20 issues abiertas** |
+
+El patrón que esta KB viene registrando desde el pase 4 se repite con otro signo: **la capa de
+evaluación llega antes que la capa de agente, y llega de las instituciones.** `PowerAgentBench` y
+`PowerFM` (pase 4-5) venían de la academia; el arnés semántico de EPRI tiene **cero estrellas y tres
+meses**. Cuando exista un agente de operación de red proponible, el arnés para auditarlo ya estará
+escrito, en BSD-3, y nadie lo habrá mirado.
+
+### Nota de método que afecta al descubrimiento de agentes
+
+El pase 9 estableció "buscar la norma, no el buzzword". Este pase encontró el límite de esa regla, y
+es el motivo por el que nueve pases no vieron 125 repos institucionales: **las instituciones no
+nombran sus herramientas por la categoría ni por la norma, sino por el acrónimo interno del método**.
+`StorageVET`, `DER-VET`, `QuESt`, `openMIC`, `openXDA`, `ProGRESS`, `SPI-Tool`. Ninguno contiene el
+término de su categoría. La consulta que los encuentra es `org:epri-dev` y
+`org:GridProtectionAlliance` — es decir: **cuando la oferta esperable es de investigación aplicada,
+buscar la institución, no la cosa.** Ver **T47**.
+
+Para la caza de agentes esto tiene una consecuencia directa y comprobable en el próximo pase:
+conviene barrer por organización los laboratorios e institutos que ya aparecen en esta KB
+(`pnnl`, `argonne-*`, `lbl-srg`, `NatLabRockies`, `equinor`, `statnett`, `alliander-opensource`,
+`entsoe`) antes de volver a barrer por buzzword agéntico.
+
 ## 2026-11-20 — pase 9 (el agente que opera un activo real: 22 agentes, capa de autorización humana, y publica que no está verificado)
 
 **Titular del pase: apareció el primer repo de esta KB que implementa T28 ("la IA asiste, no decide")

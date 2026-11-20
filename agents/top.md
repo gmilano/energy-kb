@@ -591,3 +591,50 @@ es Apache-2.0**, pese a que la API informa `NOASSERTION` en ambos — otra insta
 
 ---
 *Verificado contra GitHub REST API el 2026-11-20 (noveno pase). Re-verificar antes de citar en una propuesta.*
+
+## Décimo pase (2026-11-20): cero agentes nuevos proponibles, y por primera vez con la forma del cero medida
+
+**Este pase no añade ninguna fila a las tablas de arriba, y eso es el hallazgo.** La consulta
+`agent energy grid in:name,description created:>2026-10-01` devuelve **33 repos creados en siete
+semanas**; el mejor tiene **7 ★ y `NOASSERTION`**, y los cinco siguientes tienen **1, 0, 0, 0 y 0
+estrellas, ninguno con licencia**. En MCP, `mcp energy grid created:>2026-09-01` devuelve **4 repos,
+los cuatro con 0 ★**.
+
+Es el **sexto cero consecutivo** en operación de red, y el primero que puede describirse como
+distribución y no como ausencia: **hay actividad intensa y toda está por debajo del umbral de
+proponible**. A un cliente que pregunte *"¿no hay ya agentes de red open source?"* se le puede
+responder con número: los hay, son de una semana, de una persona y de cero estrellas.
+
+`xvbohan92-ai/gridnote-energy-agent` (0 ★, **sin licencia**) merece mención porque **acierta en el
+diseño** —LangGraph, *evidence-backed*, explícitamente **sólo lectura**—, que es la regla de
+arquitectura de esta KB y la postura de `OpenVigil`. **La idea correcta circula; la base utilizable
+no.**
+
+### La capa de evaluación llega antes que la capa de agente, otra vez
+
+El hallazgo principal del pase son dos organizaciones institucionales (EPRI, 59 repos; Grid
+Protection Alliance, 66 — ver `repos/foundations.md`). **Ninguno de esos repos es un agente.** Tres
+son precondición directa de uno que actúe sobre la red, y esta KB no los tenía:
+
+| Repo | Licencia | ★ | Forks | Push | Por qué importa para la capa agéntica |
+|------|----------|---|-------|------|--------------------------------------|
+| [epri-dev/Universal-Semantic-Standard-Test-Harness](https://github.com/epri-dev/Universal-Semantic-Standard-Test-Harness) | **BSD-3-Clause** | 0 | 1 | 2026-08-18 | Arnés de **interoperabilidad semántica**: comprueba que lo que el sistema entendió es lo que el modelo de red dice |
+| [GridProtectionAlliance/openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | 16 | 8 | 2026-11-15 | *Extensible Control & Analytics*: el punto de inserción de un modelo en el lazo operativo. ⚠️ **20 issues** |
+| [Haigutus/cim-bench](https://github.com/Haigutus/cim-bench) | **MIT** | 10 | 5 | 2026-07-16 | **Benchmarking de herramientas CIM**: comparar implementaciones antes de dejar que un modelo elija |
+
+Patrón que esta KB registra desde el pase 4, ahora con otro signo: **cuando exista un agente de
+operación de red proponible, el arnés para auditarlo ya estará escrito, en BSD-3, y nadie lo habrá
+mirado** — el de EPRI tiene cero estrellas y tres meses.
+
+### Corrección de método para la caza de agentes (ver T47)
+
+El pase 9 estableció "buscar la norma, no el buzzword". Es correcto y **no alcanza**: las
+instituciones nombran sus herramientas por el **acrónimo interno del método**, que no contiene ningún
+término de categoría (`StorageVET`, `QuESt`, `openMIC`, `openXDA`, `ProGRESS`). Por eso nueve pases
+no vieron ~125 repos.
+
+**Instrucción concreta para el próximo pase:** antes de volver a barrer por buzzword agéntico,
+barrer por `org:` los laboratorios e institutos que ya aparecen en esta KB — `pnnl`,
+`argonne-citadel`, `lbl-srg`, `NatLabRockies`, `entsoe`, `statnett`, `alliander-opensource`,
+`equinor`, `eclipse-volttron` — y comprobar si alguno publica ya capa agéntica bajo un nombre que no
+dice "agent".

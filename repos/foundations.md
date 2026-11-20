@@ -749,5 +749,134 @@ Apache, y es lo que un agente necesita leer antes de razonar.
 
 Consistente con T19. Un repo con 1.764 estrellas y cero forks no lo usó nadie.
 
+## La capa institucional norteamericana: EPRI, Grid Protection Alliance y Sandia (décimo pase, 2026-11-20)
+
+> **Por qué estaba ausente.** Nueve pases buscaron por categoría y por norma. Estas tres
+> organizaciones nombran sus herramientas por el **acrónimo interno del método** (`StorageVET`,
+> `QuESt`, `openXDA`, `openMIC`, `ProGRESS`), así que ninguna consulta de categoría las devuelve.
+> La consulta que funciona es `org:<nombre>`. Ver **T47**.
+> Totales: `epri-dev` **59 repos**, `GridProtectionAlliance` **66**, portafolio energético de
+> `sandialabs` **30**. Esta KB tenía **tres** (`gsf`, `openPDC`, `quest_planning`).
+
+### EPRI — Electric Power Research Institute (`epri-dev`)
+
+Perfil de licencia dominante: **BSD-3-Clause**. El archivo se llama `LICENSE.txt`, no `LICENSE`.
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [IEEE-2030.5-Client](https://github.com/epri-dev/IEEE-2030.5-Client) | **BSD-3-Clause** | Cliente **IEEE 2030.5**: el estándar de comunicación con DER de Norteamérica | 96 | 56 | ⚠️ 2023-02-27 | North America |
+| [OpenDER](https://github.com/epri-dev/OpenDER) | **BSD-3-Clause** *(rescatada del `NOASSERTION`)* | Modelo de DER conforme a **IEEE 1547-2018** | 76 | 32 | 2025-06-23 | North America |
+| [StorageVET-deprecated](https://github.com/epri-dev/StorageVET-deprecated) | **BSD-3-Clause** | Valoración de almacenamiento (StorageVET 2.0) | 64 | 24 | 2026-10-24 | North America |
+| [OpenADR-Virtual-End-Node](https://github.com/epri-dev/OpenADR-Virtual-End-Node) | **BSD-3-Clause** | **VEN** OpenADR de referencia (lado del nodo) | 43 | 20 | ⚠️ 2023-04-20 | North America |
+| [DLMS-COSEM](https://github.com/epri-dev/DLMS-COSEM) | **BSD-3-Clause** | Protocolo de datos de medidor **DLMS/COSEM**, permisivo | 40 | 18 | ⚠️ 2024-11-13 | Global |
+| [US-REGEN](https://github.com/epri-dev/US-REGEN) | **BSD-3-Clause** | Modelo regional de economía, GEI y energía de EE. UU. | 24 | 4 | 2025-05-27 | North America |
+| [Risk-Screening-Tool](https://github.com/epri-dev/Risk-Screening-Tool) | **BSD-3-Clause** | Cribado de riesgo | 14 | 3 | 2026-10-31 | North America |
+| [dlms-cim](https://github.com/epri-dev/dlms-cim) | **BSD-3-Clause** | Traducción **DLMS/COSEM → CIM**: el puente de un MDM | 8 | 3 | ⚠️ 2021-01-24 | Global |
+| [ES-CIM](https://github.com/epri-dev/ES-CIM) | **Apache-2.0** | Energy Supply Common Information Model | 7 | 4 | ⚠️ 2022-12-19 | Global |
+| [DER-VET](https://github.com/epri-dev/DER-VET) | **BSD-3-Clause** | Valoración de DER | 6 | 4 | 2026-10-21 | North America |
+| [dlms-access-point](https://github.com/epri-dev/dlms-access-point) | **BSD-3-Clause** | *Access point* DLMS/COSEM de referencia. Fork:★ = **2,0** | 5 | 10 | 2025-05-27 | Global |
+| [plexos2duckdb](https://github.com/epri-dev/plexos2duckdb) | **BSD-3-Clause** | Soluciones **PLEXOS** → DuckDB: salida de la herramienta propietaria de planificación | 5 | 2 | 2026-11-04 | North America |
+| [SPI-Tool](https://github.com/epri-dev/SPI-Tool) | **BSD-3-Clause** | Stochastic Planning Inputs Tool | 1 | 0 | 2026-11-14 | North America |
+| [Universal-Semantic-Standard-Test-Harness](https://github.com/epri-dev/Universal-Semantic-Standard-Test-Harness) | **BSD-3-Clause** | Banco de pruebas de interoperabilidad semántica | 0 | 1 | 2026-08-18 | Global |
+
+⚠️ **Bloqueados por licencia en la misma organización** (no usar): `DER-VET-GUI` (5 ★, sin
+licencia), `c12test` (12 ★, `NOASSERTION`, conformidad **ANSI C12**), `PV-BESS-Hybrid` (23 ★, sin
+licencia), `OpenDSS-C` (7 ★, sin licencia).
+
+### Grid Protection Alliance (`GridProtectionAlliance`) — el stack de datos operativos, MIT y vivo
+
+Los diez repos de abajo tuvieron push entre junio y **noviembre de 2026**.
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [openHistorian](https://github.com/GridProtectionAlliance/openHistorian) | **MIT** | **Historiador de series temporales** de red: el sustituto abierto de un PI System | 207 | 60 | 2026-11-15 | North America |
+| [gsf](https://github.com/GridProtectionAlliance/gsf) *(ya catalogado)* | **MIT** | Grid Solutions Framework | 179 | 76 | 2026-11-13 | North America |
+| [openPDC](https://github.com/GridProtectionAlliance/openPDC) *(ya catalogado)* | **MIT** | Concentrador de datos fasoriales | 159 | 67 | 2026-11-15 | North America |
+| [PTPSync](https://github.com/GridProtectionAlliance/PTPSync) | **MIT** | Sincronización **PTP**: base de toda medida fasorial | 97 | 26 | 2026-11-15 | North America |
+| [osisoftpi-grafana](https://github.com/GridProtectionAlliance/osisoftpi-grafana) | **Apache-2.0** | Plugin Grafana para **OSIsoft PI**: puente desde el histórico propietario instalado | 65 | 36 | 2026-11-16 | North America |
+| [PMUConnectionTester](https://github.com/GridProtectionAlliance/PMUConnectionTester) | **MIT** | Verificación de flujos de sincrofasores | 29 | 14 | 2026-06-04 | North America |
+| [PQDashboard](https://github.com/GridProtectionAlliance/PQDashboard) | **BSD-3-Clause** | Calidad de onda a escala de sistema. ⚠️ 21 issues | 23 | 12 | 2026-08-10 | North America |
+| [openXDA](https://github.com/GridProtectionAlliance/openXDA) | **MIT** | **Analítica de perturbaciones** extensible | 20 | 17 | 2026-11-19 | North America |
+| [openMIC](https://github.com/GridProtectionAlliance/openMIC) | **MIT** | **Meter Information Collection**: recolección de datos de medidor | 18 | 15 | 2026-11-15 | North America |
+| [openECA](https://github.com/GridProtectionAlliance/openECA) | **MIT** | Control y analítica extensible. ⚠️ **20 issues** | 16 | 8 | 2026-11-15 | North America |
+| [SIEGate](https://github.com/GridProtectionAlliance/SIEGate) | **MIT** | Gateway seguro de intercambio entre control rooms | 9 | 6 | 2026-11-15 | North America |
+
+### Sandia National Laboratories (`sandialabs`) — cuatro licencias rescatadas, una bloqueada
+
+La API reporta `NOASSERTION` en todo el portafolio porque el `LICENSE` abre con el preámbulo de
+contrato **DE-NA0003525 (NTESS)** antes del otorgamiento. El otorgamiento es estándar. Ver **T46**.
+
+| Repo | Licencia real (leída en crudo) | Para qué | ★ | Forks | Push | Región |
+|------|-------------------------------|----------|---|-------|------|--------|
+| [snl-quest](https://github.com/sandialabs/snl-quest) | **BSD-3-Clause** | **QuESt**: plataforma de análisis de almacenamiento. ⚠️ **44 issues** | 162 | 53 | 2026-11-09 | North America |
+| [snl-pstess](https://github.com/sandialabs/snl-pstess) | **MIT** | Power and Energy Storage Systems Toolbox | 40 | 7 | 2026-01-20 | North America |
+| [snl-progress](https://github.com/sandialabs/snl-progress) | **BSD-3-Clause** | **ProGRESS**: fiabilidad probabilística de red con almacenamiento | 24 | 10 | 2026-09-25 | North America |
+| [pvOps](https://github.com/sandialabs/pvOps) | **BSD-3-Clause** | O&M de fotovoltaica: investigación de operaciones sobre datos de planta | 22 | 12 | ⚠️ 2025-09-12 | North America |
+| [quest_planning](https://github.com/sandialabs/quest_planning) *(ya catalogado)* | **NOASSERTION** | Expansión de capacidad a largo plazo | 21 | 3 | 2026-11-19 | North America |
+
+⚠️ [`sandialabs/OpenCSP`](https://github.com/sandialabs/OpenCSP) (13 ★, **20 forks**, 91 issues,
+push 2026-09-17) — solar de concentración, **sin archivo de licencia en `main`**. Es la única base
+abierta de CSP que ha encontrado esta KB y está bloqueada por permiso, no por calidad.
+
+## La familia `oemof`: 18 repos, 15 MIT (décimo pase, 2026-11-20)
+
+Mismo patrón que `open-energy-transition` en el pase 8, ahora en EMEA. La KB tenía `oemof-solph`.
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [tespy](https://github.com/oemof/tespy) | **MIT** | **Thermal Engineering Systems in Python**: ciclos térmicos, bombas de calor, plantas. Más estrellado que `oemof-solph` | 440 | 150 | 2026-11-19 | EMEA |
+| [oemof-demand](https://github.com/oemof/oemof-demand) | **MIT** | Perfiles horarios de demanda de calor y electricidad desde valores anuales | 76 | 46 | 2026-10-22 | EMEA |
+| [DHNx](https://github.com/oemof/DHNx) | **MIT** | Optimización y simulación de **redes de calor de distrito**. ⚠️ 35 issues | 47 | 16 | 2026-11-14 | EMEA |
+| [cydets](https://github.com/oemof/cydets) | **MIT** | Detección de ciclos en series temporales (ciclado de batería) | 41 | 6 | ⚠️ 2022-12-01 | EMEA |
+| [oemof-thermal](https://github.com/oemof/oemof-thermal) | **MIT** | Componentes térmicos para oemof | 36 | 15 | ⚠️ 2025-05-26 | EMEA |
+| [exerpy](https://github.com/oemof/exerpy) | **MIT** | Análisis **exergético** desde entrada tabular | 22 | 9 | 2026-11-19 | EMEA |
+
+⚠️ **Archivados, y ninguna consulta lo advierte**: [`feedinlib`](https://github.com/oemof/feedinlib)
+(MIT, **117 ★, 43 forks**, modelos PV) y [`marketlib`](https://github.com/oemof/marketlib) (MIT,
+16 ★). Para generación PV la pieza viva sigue siendo `pvlib-python`.
+
+## Calor de distrito: la categoría ausente que domina el norte de EMEA (décimo pase, 2026-11-20)
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [oemof/DHNx](https://github.com/oemof/DHNx) | **MIT** | Optimización y simulación de red de calor | 47 | 16 | 2026-11-14 | EMEA |
+| [jylambert/topotherm](https://github.com/jylambert/topotherm) | **MIT** | Optimización de **topología** de red de calor (TU München) | 37 | 11 | 2026-10-06 | EMEA |
+| [raomin/ESPAltherma](https://github.com/raomin/ESPAltherma) | **MIT** | Lectura de bomba de calor **Daikin Altherma** por ESP32. Fork:★ = 0,35 | 540 | 188 | 2026-11-18 | EMEA |
+
+⚠️ [`idiap/pydhn`](https://github.com/idiap/pydhn) (23 ★, Idiap Research Institute) — **sin
+licencia**. Bloqueado por permiso.
+
+**Veredicto honesto:** dos repos MIT de optimización de red de calor (47 ★ y 37 ★) son base para un
+**estudio**, no para una plataforma. Pero la KB no tenía ninguno, y el calor de distrito es el vector
+de descarbonización dominante en Escandinavia, Alemania, Polonia y los bálticos.
+
+## Transporte de datos ENTSO-E: EDX y OPDM, MIT, una sola persona (décimo pase, 2026-11-20)
+
+El pase 7 catalogó la **tubería** CGMES. Esto es el **transporte**: cómo se mueven de verdad los
+modelos entre TSOs europeos.
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [Haigutus/USVDM](https://github.com/Haigutus/USVDM) | **MIT** | Uso e intercambio de CIM. Fork:★ = **0,9** | 10 | 9 | 2026-08-08 | EMEA |
+| [Haigutus/cim-bench](https://github.com/Haigutus/cim-bench) | **MIT** | **Benchmarking de herramientas CIM** | 10 | 5 | 2026-07-16 | EMEA |
+| [Haigutus/EDX](https://github.com/Haigutus/EDX) | **MIT** | API SOAP de **EDX (ENTSO-E Data Exchange)** | 7 | 2 | 2025-12-07 | EMEA |
+| [Digital4Grids/Bridge_energy_schemas](https://github.com/Digital4Grids/Bridge_energy_schemas) | **MIT** | Esquemas CIM de referencia del Bridge Data Working Group | 5 | 2 | 2026-11-19 | EMEA |
+| [Haigutus/triplets](https://github.com/Haigutus/triplets) | **MIT** | XML/RDF → pandas/polars/**DuckDB**. ⚠️ 32 issues | 3 | 1 | 2026-11-18 | EMEA |
+| [Haigutus/OPDM](https://github.com/Haigutus/OPDM) | **MIT** | API del **Operational Planning Data Management** de ENTSO-E | 2 | 2 | 2025-05-21 | EMEA |
+
+⚠️ **Riesgo de bus único, declarado:** cinco de los seis son de **una cuenta individual** y tienen
+2-10 estrellas. Es la pieza que hace operable el CGMES europeo y el punto de fallo más concentrado de
+esta KB. Usar como **acelerador internalizado**, no como dependencia de producción sin plan propio.
+
+## Sistema eléctrico de Ecuador: primera aparición de LATAM-Andina (décimo pase, 2026-11-20)
+
+| Repo | Licencia | Para qué | ★ | Forks | Push | Región |
+|------|----------|----------|---|-------|------|--------|
+| [wilianguamancuenca/EC-PowerSystems](https://github.com/wilianguamancuenca/EC-PowerSystems) | **MIT** | Información y material del sistema eléctrico ecuatoriano. Fork:★ = **1,86**, el ratio más alto medido en este pase | 21 | 39 | ⚠️ 2024-05-02 | LATAM |
+
+Añade **Ecuador** a la credencial LATAM verificable (Brasil, Colombia, Chile, México). **Argentina
+sigue en cero por sexta medición consecutiva.**
+
+
 ---
 *Ver también `verticals/solutions.md` para plataformas verticales completas.*
