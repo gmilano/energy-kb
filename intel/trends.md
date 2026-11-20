@@ -256,6 +256,104 @@ registra porque cierra un círculo incómodo y cada vez más auditado: un agente
 tiene a su vez un coste energético, y en un encargo de sostenibilidad el cliente va a preguntar por
 él. Tenerlo instrumentado desde el inicio es más barato que justificarlo al final.
 
+## T17 — Apareció la capa de modelo: foundation models de red, permisivos y corporativos
+
+Los pases 1–3 describieron una arquitectura agéntica con un hueco en el medio: servidores MCP para
+razonar sobre herramientas, entornos RL para entrenar, sala de control para aceptar — pero ningún
+**modelo preentrenado del dominio**. En este pase aparece, con tres señales que no se habían dado
+antes juntas:
+
+1. **Respaldo corporativo**: `microsoft/GridSFM` (MIT, 177 ★) — *Small Foundation Models for the
+   Power Grid*, publicado por Microsoft en abril de 2026.
+2. **Herramientas de entrenamiento, no sólo pesos**: `gridfm/gridfm-datakit` (Apache-2.0, 170 ★)
+   genera los datos de flujo de potencia y `gridfm/gridfm-graphkit` (Apache-2.0, 113 ★) entrena y
+   hace fine-tuning del GNN fundacional. Son un par, diseñado para usarse en secuencia.
+3. **Una vara de medir**: `emarche/RL2Grid` (MIT, 58 ★), benchmark estandarizado de agentes RL en
+   entornos de red realistas.
+
+**Por qué es un cambio de fase y no un repo más**: hasta ahora, proponer IA de red significaba
+entrenar desde cero con datos del cliente — meses, y riesgo de que no converja. Con esta capa, el
+punto de partida es *fine-tuning*. Cambia la forma de la propuesta: fase de evaluación corta sobre un
+modelo existente, en lugar de un proyecto de investigación.
+
+⚠️ **Y el límite, dicho con la misma claridad**: 58–177 ★. `GridSFM` no tiene push desde julio de
+2026. Es una categoría **naciente**: vía de evaluación técnica, no base de producción. La relación
+fork/star de `gridfm-graphkit` (0,36, la más alta de la capa agéntica de esta KB) indica que se está
+usando de verdad, pero por decenas de equipos, no por cientos.
+
+## T18 — La verificación del ahorro es la pieza comercial, y estaba ausente de esta KB
+
+De todo lo encontrado en cuatro pases, la combinación con el camino más corto a factura **no es
+agéntica**:
+
+- `opendsm/opendsm` (**Apache-2.0**, 244 ★, 76 forks, creado en 2016, linaje OpenEEmeter/CalTRACK)
+  implementa los **métodos estándar** de consumo normalizado (NMEC) y ahorro medido.
+- `FlexMeasures/flexmeasures` (**Apache-2.0**, 217 ★, LF Energy) decide **cuándo** mover la carga.
+
+El patrón habitual —"ponemos IA a optimizar y el cliente ahorra"— se cae en la primera auditoría,
+porque el ahorro no es demostrable con un método que el regulador o el CFO acepten. `FlexMeasures`
+decide, `opendsm` certifica. Ambas permisivas y empotrables en entregable cerrado.
+
+**La lección de método**: esta KB pasó tres pases buscando *agentes* y se le escapó la capa que hace
+cobrable lo que los agentes optimizan. Un gap de vocabulario otra vez (T10), pero de vocabulario
+**comercial**: `NMEC`, `measurement and verification`, `CalTRACK` — no `AI` ni `agent`.
+
+## T19 — Las estrellas de GitHub ya se compran en este sector
+
+Hallazgo nuevo y directamente accionable. Dos repos de forecasting de carga eléctrica, misma cuenta:
+
+| Repo | ★ | Forks | Issues |
+|------|---|-------|--------|
+| `KEV0143/Comparative-analysis-of-hourly-load-forecasting-...` | 1764 | **0** | 0 |
+| `KEV0143/Adaptive-forecasting-of-electricity-consumption-...` | 1627 | **0** | 0 |
+
+Habrían encabezado la tabla de forecasting de esta KB por un factor de 7 sobre el siguiente. La
+relación fork/star del resto de la KB va de **0,10 a 0,75**; una de **0,00** con cuatro cifras de
+estrellas no describe adopción.
+
+**Regla operativa**: ante >1000 ★, comprobar `forks_count` y `open_issues_count` **antes** de escribir
+la fila. `stars` es el único campo de la API que se puede comprar — `forks` e `issues` exigen que
+alguien use el código. Este es el primer pase de esta KB que documenta el problema en el sector
+energético, y conviene asumir que no son los dos únicos.
+
+## T20 — "Sin licencia" es una categoría bloqueada, distinta de una categoría ausente
+
+El tercer pase estableció que `NOASSERTION` se resuelve leyendo el `LICENSE` crudo. Este pase
+encuentra el caso peor: repos **sin archivo de licencia en ninguna rama**. Sin concesión expresa, el
+código está bajo copyright exclusivo del autor y **no es utilizable**, por público que sea el repo.
+
+El caso que más cuesta: **`douyimin/GEM`** — *Geological Everything Model 3D*, foundation model
+promptable de subsuelo, zero-shot. Es el único foundation model de subsuelo encontrado en cuatro
+pases, resuelve exactamente lo que pediría un cliente de O&G, y es intocable. Igual
+`xingyuz-phd/Generic-EMT-Modeling-of-Data-Center-Load` (modelo EMT de carga de datacenter, el objeto
+central de T1/T6) y `ames-market/AMES-V5.0` (test bed de mercado mayorista RTO/ISO).
+
+**Acción barata y concreta para el próximo pase**: abrir issue pidiendo licencia explícita en los
+tres. Son repos académicos de decenas de estrellas; sus autores suelen responder. Es la diferencia
+entre tres categorías bloqueadas y tres disponibles, por el coste de tres issues.
+
+Caso aparte: **`pnoker/iot-dc3`** (1273 ★, runtime IIoT con 36 protocolos) usa una **licencia propia**,
+*"IoT DC3 License Notice, Version 2026.5"* — ni OSI ni SPDX. Un gate automático de compliance la
+marcará como desconocida, igual que `GridLAB-D` (T9).
+
+## T21 — El subsector de O&G no es "todo GPL": era un artefacto de la muestra
+
+El tercer pase concluyó que el upstream de petróleo y gas open source es **100 % GPL-3.0** y que por
+tanto hay que tratar el simulador como sistema de registro aislado. **La conclusión de licencia era
+falsa**, aunque el consejo arquitectónico siga siendo prudente:
+
+- `sintefmath/JutulDarcy.jl` — **MIT**, 170 ★, 46 forks: simulación de yacimiento (Darcy multifásico,
+  multicomponente) en Julia, de SINTEF. **La alternativa permisiva a OPM Flow.**
+- `GeoBrain-Project/GeoBrain` — **Apache-2.0**, 88 ★: plataforma **diferenciable de extremo a extremo**
+  para modelado integrado de subsuelo. Diferenciable significa que el modelo aprendido se acopla
+  *dentro* del lazo físico, no al lado.
+- `douyimin/CIG-bench` — **MIT**, 66 ★: benchmark de interpretación de imagen de subsuelo con IA.
+
+**La lección de método, que es la misma de T19 y T10**: una conclusión de *categoría* ("este
+subsector es copyleft") sacada de 3–4 repos es una conclusión sobre la muestra, no sobre el mundo. Si
+un pase declara una propiedad de un subsector entero, el siguiente debe intentar refutarla
+explícitamente. Este pase lo hizo y la refutó.
+
 ## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
@@ -339,6 +437,39 @@ existe es tan dañino como uno que no se declara.
 - **Argentina, Chile y México: sin cambio.** Cero repos institucionales con tracción. La credencial
   LATAM verificable sigue siendo Brasil y Colombia.
 
+### Estado al cierre del cuarto pase (2026-11-20)
+
+**Cerrados en este pase:**
+
+- **Foundation models de red** (estaba implícito como hueco en T4): `GridSFM`, `gridfm-datakit`,
+  `gridfm-graphkit`, `RL2Grid`. Naciente pero real.
+- **Sincrofasores / PMU**: ausente por completo hasta hoy. `openPDC` + `gsf`, ambos **MIT**.
+- **Medición y verificación de ahorro (NMEC)**: `opendsm` (Apache-2.0). Era el hueco comercial más
+  caro de la KB.
+- **Scheduling de flexibilidad como plataforma**: `FlexMeasures` (Apache-2.0, LF Energy).
+- **Simulación de protocolo sin hardware**: `ProtoForge` (MIT, 28 protocolos), `iec104-python`,
+  `Gurux` DLMS. Desbloquea pilotos sin acceso a subestación.
+- **Seguridad OT de la capa agéntica**: `mitre/caldera-ot` (Apache-2.0).
+- **O&G permisivo**: `JutulDarcy.jl` (MIT), `GeoBrain` (Apache-2.0) — refuta la tesis del pase 3.
+- **ERP/CRM de utility**: cerrado **como respuesta negativa verificada**. No existe ERP/CRM open
+  source específico de energía con licencia MIT/Apache. La ruta es `OFBiz` (Apache-2.0) + `killbill`
+  + `openmeter`, con la lógica tarifaria como desarrollo propio.
+
+**Abiertos, con el límite medido:**
+
+- **Agente de ejecución de trading mayorista**: cuarto pase consecutivo sin encontrarlo. `assume` y
+  `elecsim` son simuladores. Parece ser un hueco estructural, no de búsqueda.
+- **Foundation model de subsuelo utilizable**: existe (`GEM`) y está **bloqueado por ausencia de
+  licencia**, no ausente.
+- **Oferta de origen LATAM**: sin crecimiento. Sigue siendo `json-scada` + `OSHMI` (Brasil, GPL-3.0)
+  y `API_XM` (Colombia, MIT). Tres repos, dos autores.
+- **Oferta de origen APAC**: escasa y medida — `MyEMS`, `hass-state-grid`, `GeoBrain`, `CIG-bench`.
+  Hueco de **oferta**, no de demanda: APAC lidera adopción según fuentes secundarias.
+- **DERMS open source**: no se encontró ninguna plataforma DERMS completa. Hay piezas
+  (`FlexMeasures`, `OpenLEADR`, `power-grid-model`), no el sistema.
+- **Pesos de modelo con licencia verificada**: `huggingface.co` sigue sin resolver desde este entorno
+  (sexto pase consecutivo). Ninguna afirmación sobre licencia de pesos es verificable aquí.
+
 ---
-*Investigado 2026-11-20 en tres pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en cuatro pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

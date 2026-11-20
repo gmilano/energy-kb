@@ -9,6 +9,66 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 4 (los foundation models de red, y una trampa de estrellas)
+
+**Titular del pase: apareció la capa que faltaba entre el servidor MCP y el entorno RL — modelos
+preentrenados específicos de red, permisivos y con respaldo corporativo.** Los pases 1-3 de hoy
+describieron el razonamiento sobre herramientas (`PowerMCP`), el lugar de ejecución (`VOLTTRON`) y la
+sala de control (`operatorfabric-core`). Faltaba el modelo.
+
+**Nuevo esta semana — foundation models de red:**
+
+| Repo | Licencia | ★ | Forks | Push | Señal |
+|------|----------|---|-------|------|-------|
+| [microsoft/GridSFM](https://github.com/microsoft/GridSFM) | MIT | 177 | 41 | 2026-07-15 | Microsoft publica *Small Foundation Models* de red. Creado 2026-04-23; **sin push en 4 meses** |
+| [gridfm/gridfm-datakit](https://github.com/gridfm/gridfm-datakit) | Apache-2.0 | 170 | 40 | 2026-11-14 | genera datos de flujo de potencia para entrenar |
+| [gridfm/gridfm-graphkit](https://github.com/gridfm/gridfm-graphkit) | Apache-2.0 | 113 | 41 | 2026-11-19 | entrena/fine-tunea el GNN fundacional; par del anterior |
+| [emarche/RL2Grid](https://github.com/emarche/RL2Grid) | MIT | 58 | 11 | 2026-09-16 | benchmark estandarizado de agentes RL en red realista |
+
+Relación fork/star de `gridfm-graphkit`: **0.36** — la más alta de la categoría agéntica de esta KB.
+Gente lo está bifurcando para entrenar, no sólo marcándolo. Es la señal que distingue una categoría
+naciente real de una moda.
+
+**Nuevo esta semana — MCP sobre datos de red en vivo (categoría embrionaria, 0–3 ★):**
+
+`azmartone67/dchub-mcp-server` (MIT, *Data Center Power Index*, 300+ mercados),
+`pipeworx-io/mcp-neso` (MIT, operador británico NESO), `pipeworx-io/mcp-georgia-energy` (MIT),
+`sohamshindework/gridpulse` (MIT, red DE+US, scheduling carbon-aware, **creado hace dos días**).
+
+Se registran como *prueba de viabilidad del patrón*, no como dependencias. Lo relevante para una
+propuesta: conectar el API de un TSO a un agente vía MCP es ya trabajo de días.
+
+**Hallazgo negativo que ahorra un error:** dos repos de forecasting de carga con **1764 ★ / 0 forks** y
+**1627 ★ / 0 forks** (misma cuenta, `KEV0143`, cero issues en ambos). Habrían encabezado la tabla de
+forecasting de esta KB. Descartados: estrellas de cuatro cifras con relación fork/star de 0.00 no son
+adopción. **Regla nueva: ante >1000 ★, verificar `forks_count` e `open_issues_count` antes de escribir
+la fila.**
+
+**Categoría confirmada vacía otra vez:** agente de *ejecución* de trading mayorista. Cuarto pase
+consecutivo sin encontrarlo. `assume` y `elecsim` siguen siendo simuladores.
+
+**Deuda de verificación del pase 1, cerrada.** El primer pase dejó cinco filas con licencia `?`.
+Resueltas todas hoy, y **las cinco son inutilizables** — vale la pena que quede escrito, porque una
+licencia desconocida se parece demasiado a una licencia permisiva cuando hay prisa:
+
+| Repo | Veredicto | Evidencia |
+|------|-----------|-----------|
+| `Basil-Saad/smart-water-grid-ai` | ❌ **"All rights reserved"** | el `LICENSE` dice literalmente *"No permission is granted to copy, modify, redistribute, or use this project"*; publicado *"for academic and portfolio purposes only"* |
+| `sariekiriyuu/smartEMS-MultiAgent-Demo` | ❌ **no comercial** | *"Custom License Agreement"*: permiso sólo para uso *personal, educational, and non-commercial* |
+| `Marinalizm/BESS-energy-management-system` | ❌ sin licencia | sin archivo en ninguna rama |
+| `ArsamAryandoust/awesome-ml-power-systems` | ❌ sin licencia | sin archivo en ninguna rama |
+| `Legalagecolouring820/Random-Forest-Model-EMS-...` | ❌ sin licencia | sin archivo en ninguna rama |
+
+**La lección**: `?` en una columna de licencia no es neutral, es **deuda**. De cinco casos, cero
+resultaron usables — dos de ellos con prohibición expresa. Ninguna fila con licencia sin resolver
+debería sobrevivir a un pase.
+
+⚠️ **Nota de homónimos**: existen **dos** repos `smartEMS-MultiAgent-Demo` distintos
+(`sariekiriyuu/`, 3 ★ y `lhg96/`, 6 ★), con la misma descripción. No son el mismo proyecto ni un
+renombre: resuelven por separado en la API con contadores distintos. Al citar uno, incluir el owner.
+
+---
+
 ## 2026-11-20 — pase 3 (la capa agéntica europea y su licencia)
 
 **Titular del pase: existen DOS stacks agénticos energéticos, no uno, y se distinguen por licencia.

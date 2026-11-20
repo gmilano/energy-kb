@@ -464,6 +464,137 @@ Responde a la pregunta que ninguna receta anterior de esta KB respondía: *"¿c�
 
 ---
 
+### Receta 17 — Proyecto de eficiencia con ahorro **demostrable** (las cuatro regiones)
+
+La receta que esta KB no tenía y que convierte un piloto de optimización en una factura.
+
+**Problema del cliente**: "optimizamos con IA y ahorramos un 12 %" — y el CFO, el regulador o el
+cliente final no lo aceptan, porque no hay método reconocido detrás del número.
+
+**Componentes:**
+
+| Capa | Repo | Licencia | Papel |
+|------|------|----------|-------|
+| Decisión | [FlexMeasures/flexmeasures](https://github.com/FlexMeasures/flexmeasures) | Apache-2.0 | planifica *cuándo* mover carga (batería, EV, bomba de calor) con forecasting integrado |
+| Verificación | [opendsm/opendsm](https://github.com/opendsm/opendsm) | Apache-2.0 | calcula consumo normalizado (NMEC) y **ahorro medido** con métodos estándar (linaje OpenEEmeter/CalTRACK) |
+| Lectura de campo | [Gurux/Gurux.DLMS.Python](https://github.com/Gurux/Gurux.DLMS.Python) | ⚠️ GPL-2.0 | pila DLMS/COSEM para leer el medidor inteligente — **proceso aislado** |
+| Meteo | proveedor del cliente, o [open-meteo](https://github.com/open-meteo/open-meteo) | ⚠️ AGPL-3.0 | normalización por clima (ver aviso abajo) |
+| Capa agéntica | [Power-Agent/PowerSkills](https://github.com/Power-Agent/PowerSkills) | MIT | explicación en lenguaje natural del resultado y de la cadena de cálculo |
+
+**Cableado:**
+
+1. `Gurux` corre como **servicio separado** (es GPL-2.0) y publica lecturas a una cola; nunca se
+   enlaza en el producto.
+2. `FlexMeasures` ingiere lecturas + precio + pronóstico y emite el plan de despacho.
+3. Tras el periodo, `opendsm` toma la **línea base** pre-intervención y el consumo post-intervención
+   y produce el ahorro normalizado por clima y ocupación. **Este es el entregable que se firma.**
+4. La capa agéntica MIT explica el resultado y responde preguntas; **no** recalcula el ahorro — el
+   número viene del método, no del modelo.
+
+**Por qué este orden importa**: si el agente produce la cifra de ahorro, la cifra es tan auditable
+como un LLM. Si la produce `opendsm` y el agente sólo la explica, es auditable como un método
+estándar. Es la misma distinción que `operatorfabric-core` introduce en operación de red: el modelo
+recomienda, otra cosa decide y registra.
+
+⚠️ **Aviso de licencia, día uno**: `open-meteo` es **AGPL-3.0** y su servicio público es *free for
+non-commercial use*. Un piloto que pega a `api.open-meteo.com` y luego pasa a producción comercial
+cambia de régimen sin que nadie lo note. Decidir al inicio: plan comercial de Open-Meteo, proveedor
+meteorológico del cliente, o aceptar AGPL con auto-hospedaje aislado.
+
+**Entregable**: motor de despacho + informe de ahorro con método reconocido + explicación
+conversacional. Núcleo **100 % Apache-2.0**, empotrable en producto cerrado.
+
+### Receta 18 — Observabilidad de red de alta resolución sin plataforma propietaria (North America primero)
+
+**Problema del cliente**: quiere analítica de eventos y estabilidad sobre datos de PMU, y la oferta
+que conoce es propietaria (OSI PI, e-terra) con licencia por punto.
+
+**Componentes:**
+
+| Capa | Repo | Licencia | Papel |
+|------|------|----------|-------|
+| Ingesta de fasores | [GridProtectionAlliance/openPDC](https://github.com/GridProtectionAlliance/openPDC) | **MIT** | concentrador de datos de fasores (IEEE C37.118): ingiere, concentra y encamina en tiempo real |
+| Base de aplicación | [GridProtectionAlliance/gsf](https://github.com/GridProtectionAlliance/gsf) | **MIT** | *Grid Solutions Framework*: series temporales, adaptadores, transporte |
+| Dinámica / validación | [JuliaEnergy/PowerDynamics.jl](https://github.com/JuliaEnergy/PowerDynamics.jl) | **MIT** | modelo dinámico contra el que contrastar el evento observado |
+| Estabilidad con electrónica | [Future-Power-Networks/Simplus-Grid-Tool](https://github.com/Future-Power-Networks/Simplus-Grid-Tool) | BSD-3 | análisis de impedancia y modos con alta penetración de inversores |
+| Pruebas sin hardware | [suoten/ProtoForge](https://github.com/suoten/ProtoForge) | **MIT** | simula los 28 protocolos de campo para probar la cadena sin subestación |
+| Seguridad | [mitre/caldera-ot](https://github.com/mitre/caldera-ot) | Apache-2.0 | emulación de adversario OT en el plan de pruebas |
+| Capa agéntica | [Power-Agent/PowerMCP](https://github.com/Power-Agent/PowerMCP) + [PowerSkills](https://github.com/Power-Agent/PowerSkills) | MIT | consulta y narración del evento |
+
+**Cableado:**
+
+1. `ProtoForge` genera el flujo sintético: se construye y prueba la cadena completa **antes** de
+   tener acceso al equipo del cliente. Esto es lo que permite cotizar con riesgo acotado.
+2. `openPDC` sobre `gsf` ingiere y archiva.
+3. Detección de evento → `PowerDynamics.jl` / `Simplus-Grid-Tool` contrastan contra el modelo.
+4. `PowerMCP` expone el histórico y los modelos al agente, que redacta el informe del evento.
+5. `caldera-ot` corre en el plan de pruebas de seguridad, no al final.
+
+**Lo que hace vendible esta receta**: el stack central —`openPDC`, `gsf`, `PowerDynamics.jl`,
+`ProtoForge`— es **todo MIT**. Se puede empotrar en un producto del cliente y cerrarlo. Es inusual en
+el sector eléctrico (ver T9: el perfil de licencia cambia por subsector) y es exactamente el
+argumento frente a una licencia por punto de medida.
+
+### Receta 19 — Evaluación de foundation model de red (vía de evaluación, no de producción)
+
+**Problema del cliente**: le han dicho que "hay modelos fundacionales de red" y quiere saber si
+sirven para su caso antes de financiar un proyecto de ML.
+
+**Componentes:**
+
+| Capa | Repo | Licencia | Papel |
+|------|------|----------|-------|
+| Datos de entrenamiento | [gridfm/gridfm-datakit](https://github.com/gridfm/gridfm-datakit) | Apache-2.0 | sintetiza casos de flujo de potencia desde la topología del cliente |
+| Modelo | [gridfm/gridfm-graphkit](https://github.com/gridfm/gridfm-graphkit) | Apache-2.0 | entrena / fine-tunea el GNN fundacional |
+| Alternativa | [microsoft/GridSFM](https://github.com/microsoft/GridSFM) | MIT | *small foundation models* de red (⚠️ sin push desde 2026-07-15) |
+| Topología real | [PowerGridModel/power-grid-model](https://github.com/PowerGridModel/power-grid-model) + [power-grid-model-ds](https://github.com/PowerGridModel/power-grid-model-ds) | MPL-2.0 | motor de cálculo de grado producción y puente a pandas |
+| Vara de medir | [emarche/RL2Grid](https://github.com/emarche/RL2Grid) | MIT | benchmark estandarizado; y `Power-Agent/PowerAgentBench` (MIT) para tareas agénticas |
+| Línea base obligatoria | [OpenSTEF/openstef](https://github.com/OpenSTEF/openstef) | MPL-2.0 | forecasting clásico de operador de red: **si no se le gana, no hay proyecto** |
+
+**Cableado:**
+
+1. Topología del cliente → `gridfm-datakit` genera el corpus de flujo de potencia.
+2. `gridfm-graphkit` hace fine-tuning sobre ese corpus.
+3. **Se compara contra `openstef`**, no contra nada. `openstef` es lo que un operador de red ya usa.
+4. `RL2Grid` / `PowerAgentBench` dan la cifra comparable.
+5. Entregable: informe de viabilidad con números, y una recomendación de seguir o parar.
+
+⚠️ **Cómo presentarla con honestidad**: 58–177 ★ y una categoría de siete meses de vida. Esto es una
+**fase de evaluación acotada** (semanas), no una plataforma. Vender un foundation model de red como
+base de producción en 2026 es sobrevender; vender la evaluación rigurosa de si lo será es un encargo
+real, corto y con resultado útil en cualquiera de los dos sentidos.
+
+**El paso 3 es el que protege la relación con el cliente.** Sin la línea base `openstef`, cualquier
+resultado parece bueno. Con ella, el informe dice algo.
+
+### Receta 20 — Agregador V2G de flota (EMEA primero, replicable en APAC)
+
+Amplía la Receta 6 (carga de EV) del nivel hogar al nivel **flota**, que es donde está el negocio.
+
+**Componentes:**
+
+| Capa | Repo | Licencia | Papel |
+|------|------|----------|-------|
+| Simulación V2G a escala | [StavrosOrf/EV2Gym](https://github.com/StavrosOrf/EV2Gym) | **MIT** | entorno de optimización de carga de **flotas** de EV, no un vehículo |
+| Optimización de flexibilidad | [FlexMeasures/flexmeasures](https://github.com/FlexMeasures/flexmeasures) | Apache-2.0 | scheduling con precio y restricción de red |
+| Protocolo de carga | [mobilityhouse/ocpp](https://github.com/mobilityhouse/ocpp) | MIT | OCPP contra las estaciones |
+| Señal de red | [OpenLEADR/openleadr-rs](https://github.com/OpenLEADR/openleadr-rs) | **doble MIT / Apache-2.0** | **OpenADR 3.0** (la versión nueva; `openleadr-python` es 2.0b) |
+| Operación en campo | [evcc-io/evcc](https://github.com/evcc-io/evcc) | MIT | 7638 ★: el componente con más tracción real del sector |
+| Sitio y flota | [TUMFTM/REVOL-E-TION](https://github.com/TUMFTM/REVOL-E-TION) | Apache-2.0 | optimización a nivel de sitio con integración de flota EV (TU München) |
+
+**Cableado:**
+
+1. `EV2Gym` dimensiona y entrena la política de agregación **offline**, con la flota real del cliente.
+2. `FlexMeasures` la ejecuta contra precio y límites de red.
+3. `openleadr-rs` recibe la señal de respuesta de demanda del operador — **OpenADR 3.0**, que es lo
+   que se está desplegando ahora.
+4. `ocpp` / `evcc` actúan sobre las estaciones.
+5. `opendsm` (Receta 17) certifica el ahorro y el servicio prestado a la red.
+
+**Nota de licencia favorable, poco habitual**: todo el stack es **MIT o Apache-2.0**. Es el vertical
+más limpio de esta KB, y además el de mayor masa crítica comunitaria (T7). Para un primer encargo
+energético con un cliente nuevo, es el de menor riesgo técnico y legal.
+
 ## Qué **no** proponer (gaps medidos, actualizado en el tercer pase del 2026-11-20)
 
 Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
@@ -510,6 +641,24 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
   2026/1744) tiene concordancia de **nueve fuentes secundarias** y **cero** confirmación primaria:
   `eur-lex.europa.eu` devuelve 403 desde este entorno. Sirve para planear; **no** para firmar.
 
+### Actualización del cuarto pase (2026-11-20)
+
+**Nuevos "no proponer", medidos en este pase:**
+
+- **Un foundation model de subsuelo.** `douyimin/GEM` existe, hace exactamente lo que un cliente de
+  O&G pediría, y **no tiene archivo de licencia en ninguna rama**. No es un gap de oferta: es un gap
+  de permiso. No incluir en alcance hasta que el autor publique licencia.
+- **Un "ERP/CRM energético open source".** Verificado como respuesta negativa: no existe con licencia
+  MIT/Apache. Proponer `OFBiz` + `killbill` + `openmeter` (todas permisivas) **más desarrollo propio
+  de la lógica tarifaria regulada**, y presupuestar ese desarrollo explícitamente.
+- **Una plataforma DERMS open source.** Hay piezas (`FlexMeasures`, `OpenLEADR`, `power-grid-model`);
+  no hay sistema. Un DERMS es integración, no instalación.
+- **Un foundation model de red como base de producción.** Ver Receta 19: es vía de **evaluación**.
+  58–177 ★ y siete meses de vida no sostienen un SLA.
+- **Cualquier fila basada sólo en stars.** Dos repos de forecasting de carga con 1764 ★ / 0 forks y
+  1627 ★ / 0 forks (cuenta `KEV0143`) habrían encabezado la tabla de esta KB. Comprobar
+  `forks_count` e `open_issues_count` antes de comprometer alcance sobre un repo de >1000 ★.
+
 ### Trampas de licencia que ya costarían dinero hoy
 
 | Repo | Parece | Es | Consecuencia si se asume mal |
@@ -527,4 +676,5 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
 | Familia LF Energy (`Grid2Op`, `PowSyBl`, `operatorfabric-core`, `ExpertOp4Grid`, `power-grid-model-ai`) | "open source europeo" | **MPL-2.0** de forma consistente | Copyleft por archivo: integración sí, marca blanca con motor modificado no |
 
 ---
-*Verificado 2026-11-20 en tres pases. Re-verificar licencias y stars antes de comprometer alcance.*
+*Verificado 2026-11-20 en cuatro pases (20 recetas). Re-verificar licencias y stars antes de
+comprometer alcance.*

@@ -123,6 +123,41 @@ directo de páginas falla en este entorno, ver nota de método al pie):
   desconectadas de la red. Es **propuesta, no ley**. Si avanzara, abre un mercado de diseño de
   sistemas aislados; no conviene presupuestar sobre ello todavía.
 
+#### Actualización del cuarto pase (2026-11-20)
+
+**El vacío regulatorio es, literalmente, el producto.** Un análisis jurídico de septiembre de 2026
+(Foley Hoag) sostiene que la **Arizona Corporation Commission es la única comisión estatal** que ha
+abierto un examen formal del despliegue de IA en el sector energético, y describe el resultado como
+un *"regulatory vacuum"* para la IA operativa en la industria eléctrica. Al mismo tiempo:
+
+- **FERC no tiene norma sobre IA operativa**, pero sí emitió órdenes de co-ubicación en PJM y
+  **órdenes de *show cause* sobre grandes cargas a los seis RTO/ISO**.
+- **NERC: estándares de carga computacional previstos para diciembre de 2026.**
+- **NIST** desarrolla un *perfil de infraestructura crítica* para su AI Risk Management Framework,
+  con la energía **identificada explícitamente como foco primario**.
+- Al menos **cinco estados** tienen legislación pendiente sobre IA y energía en la sesión 2026.
+- **EO 14409** (junio de 2026) instruye a las agencias a reforzar la infraestructura federal frente
+  a riesgos habilitados por IA.
+
+**Oportunidad 4 — Preparación para el perfil NIST de infraestructura crítica.** La secuencia es
+inusualmente favorable: existe un marco (AI RMF), se está escribiendo el perfil sectorial, y no hay
+todavía norma vinculante de FERC. Un cliente que llegue con gobernanza alineada al perfil antes de
+que cierre, llega con ventaja y sin coste de remediación. El entregable —inventario de sistemas de
+IA, clasificación de riesgo, trazabilidad de decisión, plan de pruebas— es consultoría pura y no
+depende de que el perfil final cambie en los detalles.
+
+**Oportunidad 5 — Siting de datacenter como herramienta consultable.**
+[azmartone67/dchub-mcp-server](https://github.com/azmartone67/dchub-mcp-server) (MIT) publica un
+*Data Center Power Index* diario sobre **300+ mercados**, expuesto por MCP. Tiene 3 ★ y es
+irrelevante como producto; es relevante como **prueba de que el patrón funciona**. La pregunta
+"¿dónde puedo enchufar 500 MW?" es la pregunta de 2026 en Norteamérica, y convertirla en una
+herramienta que un agente consulta —sobre datos del cliente y de los seis ISO— es un encargo
+delimitado y vendible.
+
+⚠️ **Dato que no pudimos verificar**: un blog afirma mandatos NERC CIP-011/CIP-014 para sistemas de
+IA en 2026. No se encontró fuente primaria. **No usar en una propuesta** sin consultar los dockets de
+NERC/FERC directamente.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -203,6 +238,42 @@ de verificación que hay que dejar de pedir:
   2026/1744 como vigente desde el **27-jul-2026**, y no se pudo verificar. Sirve para planear,
   **no para firmar un compromiso de cumplimiento**.
 
+#### Actualización del cuarto pase (2026-11-20)
+
+**Hay dinero asignado, con fecha y cifra.** La *Strategic Roadmap for Digitalisation and AI in the
+Energy Sector* de la Comisión Europea (publicada el **3 de junio de 2026**) es una comunicación de
+política, **no legislación vinculante** — pero su financiación es concreta: **Horizon Europe
+financiará modelos de IA para gestión de red con convocatorias de 30 M€ en 2026 y 20 M€ en 2027**.
+
+**El calendario del AI Act se movió, y esto cambia la conversación con el cliente.** Según Baker
+Botts, un acuerdo político del **7 de mayo de 2026** desplaza el plazo de cumplimiento de los
+sistemas de alto riesgo del Anexo III del **2 de agosto de 2026 al 2 de diciembre de 2027**.
+⚠️ **Condición crítica**: la adopción formal estaba **pendiente**, y hasta su publicación en el
+Diario Oficial **los plazos originales siguen en vigor**. Un cliente que ya planificó para agosto de
+2026 no debe desmovilizar basándose en un acuerdo político.
+
+Marcos que se acumulan sobre el mismo sistema: **AI Act + NIS2 + REMIT** (bajo REMIT, el trading
+energético con IA debe ser transparente, auditable y libre de manipulación de mercado), y en Reino
+Unido la guía de **Ofgem *"Ethical AI use in the energy sector"*, segunda edición de mayo de 2026**.
+
+**Oportunidad 4 — Conformidad multi-marco como un solo entregable.** Lo que un operador europeo
+necesita no es cumplir el AI Act: es cumplir AI Act, NIS2 y REMIT **sobre el mismo sistema de IA**,
+con una sola trazabilidad. Esa consolidación es el trabajo facturable, y el desplazamiento del plazo
+a diciembre de 2027 abre la ventana para hacerlo bien en lugar de a la carrera.
+
+**Oportunidad 5 — Captura de Horizon Europe.** 50 M€ en dos convocatorias, dirigidas
+específicamente a modelos de IA para gestión de red. El stack de origen EMEA que esta KB ya
+documenta —`powsybl`, `power-grid-model`, `Grid2Op`, `openSTEF`, `operatorfabric-core`, todos
+MPL-2.0 y todos de operadores de red europeos— es exactamente el perfil que esas convocatorias
+esperan. Posicionarse como integrador en un consorcio es una vía de entrada con financiación
+pública, no con presupuesto de cliente.
+
+**La oferta sigue siendo EMEA-dominante.** De los repos nuevos de este pase, los de origen EMEA
+incluyen `FlexMeasures` (LF Energy), `iec104-python` (Fraunhofer FIT), `Gurux` DLMS,
+`JutulDarcy.jl` y `ecalc`/`xtgeo`/`resdata` (Equinor), `PowerDynamics.jl`, `Simplus-Grid-Tool`,
+`RL2Grid`, `EV2Gym`, `open-meteo` y los MCP de NESO. **Es la región con mayor oferta open source
+del sector, por un margen amplio** — argumento de soberanía tecnológica utilizable tal cual.
+
 ### APAC
 
 **Contexto regulatorio (verificado)**: en **diciembre de 2025**, la **NDRC y la NEA de China**
@@ -280,6 +351,49 @@ con aplicación desigual entre países.
   la evaluación de impacto en red; **Johor** restringió ciertos proyectos por consumo de agua. Eso
   convierte el dimensionamiento de BESS en requisito de permiso — y conecta con `PyBaMM` y `SAM`
   (ver `repos/foundations.md`).
+
+#### Actualización del cuarto pase (2026-11-20)
+
+**Marco regional específico de IA y energía, y es nuevo.** APEC publicó las *Policy Recommendations
+on the Mutual Enhancement Between AI and Energy in the Asia-Pacific (**2026–2030**)*: **voluntarias**,
+piden planificación **coordinada** de instalaciones de cómputo e infraestructura energética y
+mencionan posibles *benchmarks* IA-energía. Es el único instrumento regional que trata IA y energía
+como un problema conjunto en lugar de dos políticas separadas.
+
+**Leyes de IA que ya están en vigor** (no futuras — varias fuentes las describen como pendientes y
+han quedado desactualizadas):
+
+- **Corea del Sur**: *AI Basic Act* **en vigor desde el 22 de enero de 2026**; el ministerio plantea
+  2026 como **año piloto con aplicación limitada**.
+- **Vietnam**: ley de IA **efectiva el 1 de marzo de 2026**, regulador Ministerio de Ciencia y
+  Tecnología.
+- **China**: el marco más extenso ya existente. **Indonesia**: reglas vía Regulación Presidencial.
+  **Singapur**: consulta sobre guías de gestión de riesgo de IA, posible cierre a finales de 2026.
+
+**Energía y datacenter**: **Singapur** apunta a medición avanzada **nacional en 2026**. **Tailandia**
+tiene reglas en borrador para que datacenters promovidos por el **BOI** contraten directamente con
+generadores renovables, con *wheeling* por la red. Análisis de IBM señala el freno estructural: buena
+parte de la región depende de **monopolios de utility respaldados por el Estado**, lentos en adoptar
+tarifas flexibles. **Malasia** enmarca un ecosistema cloud *"seguro y soberano"* como base de la
+adopción de IA.
+
+**Oportunidad 4 — Soberanía de datos como requisito de arquitectura, no como preferencia.** Entre la
+ley coreana, las reglas indonesias, el encuadre soberano de Malasia y el marco chino, un despliegue
+de IA energética multinacional en APAC necesita diseño **por jurisdicción** desde el inicio:
+residencia de datos, modelos desplegables on-premise, trazabilidad local. Es trabajo de arquitectura
+y de compliance, y es facturable precisamente porque no se puede resolver con un SaaS único.
+
+**Oportunidad 5 — PPA directo para datacenter en Tailandia.** Si la regla del BOI se confirma,
+habilita contratación directa datacenter↔renovable con *wheeling*. Modelar, optimizar y verificar ese
+contrato es un encargo concreto, y la combinación `FlexMeasures` + `opendsm` (ambas Apache-2.0) es el
+punto de partida que lo cubre.
+
+**Oferta open source de origen APAC — medida, y es escasa.** En las once consultas de este pase, los
+únicos repos energéticos de origen APAC fueron `MyEMS` (MIT, China, ya en esta KB),
+`stevenjoezhang/hass-state-grid` (MIT, 72 ★, consumo de State Grid), `GeoBrain` (Apache-2.0, 88 ★,
+subsuelo) y `douyimin/CIG-bench` (MIT, 66 ★). **El hueco es de oferta, no de demanda**: APAC es, según
+un informe, la región que lidera la *adopción*. Para un encargo APAC se integra stack EMEA o
+norteamericano; no hay base regional sobre la que construir.
 
 ### LATAM
 
@@ -397,6 +511,53 @@ contexto regulatorio de fuentes secundarias:
   renovable pero opera con respaldo fósil. Para una propuesta de sostenibilidad, la medición de
   factor de emisión horario es parte del alcance, no un supuesto.
 
+#### Actualización del cuarto pase (2026-11-20)
+
+**Oferta open source de origen LATAM: medida de nuevo, y el resultado hay que decirlo con precisión
+porque "cero" sería falso.** Once consultas en este pase (incluida una dirigida a `ONS`, `CAMMESA`,
+`XM` y `energia`) **no encontraron ningún repo energético de origen LATAM nuevo**. Los que esta KB ya
+tiene siguen siendo los únicos, y son reales y sustanciales:
+
+| Repo | Licencia | ★ | Qué es |
+|------|----------|---|--------|
+| [riclolsen/json-scada](https://github.com/riclolsen/json-scada) | GPL-3.0 | 513 | SCADA/EMS/IIoT completo, **origen Brasil** |
+| [riclolsen/OSHMI](https://github.com/riclolsen/OSHMI) | GPL-3.0 | 467 | HMI de subestación, **origen Brasil** |
+| [EquipoAnaliticaXM/API_XM](https://github.com/EquipoAnaliticaXM/API_XM) | MIT | 75 | Datos del mercado eléctrico colombiano, publicados por el **operador del SIN** |
+
+Por tanto el enunciado honesto es: **la oferta LATAM existe, está concentrada en tres repos de dos
+autores, y no creció en este pase.** Un `json-scada` de 513 ★ con cobertura de IEC 61850, DNP3,
+ICCP y OPC-UA, escrito en Brasil, es un activo regional real — y es GPL-3.0, lo que determina la
+arquitectura (proceso aislado detrás de su API, nunca enlazado).
+
+**Adopción: la demanda sí se mueve.** BNamericas documenta petroleras y energéticas regionales
+profundizando el uso de IA para mantenimiento predictivo y eficiencia, con **Petrobras** y **Prio**
+nombradas. **Chile** aplica IA a **despacho y pronóstico de irradiancia solar**. En **Brasil**, el
+crecimiento de generación distribuida empujó medidores inteligentes y plataformas cloud de gestión
+energética. El WEF advierte que la demanda energética de la IA es un desafío nuevo para la región, y
+que las brechas de infraestructura digital siguen siendo agudas.
+
+**Regulación: fragmentada y en movimiento.**
+
+- **Perú**: uno de los primeros países de la región con **ley general de IA y mecanismos de
+  implementación**; acuerdo de cooperación con la Embajada de EE. UU. que cubre regulación,
+  datacenters y cloud.
+- **Brasil**: la **ANPD** pasó a ser **agencia reguladora plena el 25 de febrero de 2026**, con mayor
+  autoridad técnica, administrativa y financiera. **PL 2338** seguía pendiente.
+- **Colombia**: **CONPES 4144**, política de gobierno con acciones y **presupuesto hasta 2030**.
+- Un estudio de 2026 contabiliza **716 instrumentos regulatorios, normas y propuestas legislativas
+  sobre IA en 23 países y territorios**, la mayoría desde 2023.
+
+**Oportunidad 4 — El constreñimiento LATAM no es ley de IA: es protección de datos y red.** Igual que
+concluyó el pase de automotive, lo vinculante aquí es **LGPD** (con una ANPD ahora con dientes) y la
+capacidad física de red, no una ley horizontal de IA. Una propuesta que llegue hablando de AI Act
+europeo está mal calibrada; una que llegue con gobernanza LGPD y un caso de mantenimiento predictivo
+medible está calibrada.
+
+**Oportunidad 5 — Exportar el activo brasileño.** `json-scada` + `OSHMI` cubren el núcleo SCADA/HMI
+con protocolos de red completos. La capa agéntica MIT de esta KB se monta encima **sin tocar el
+código GPL**, como servicio separado. Es una oferta con componente regional genuino —no una
+importación— y aplicable a utilities medianas de toda la región.
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -422,6 +583,32 @@ contexto regulatorio de fuentes secundarias:
    encontrado es **GPL-3.0** (`OPM Flow`, `equinor/ert`). El entregable propietario sólo existe si
    el simulador queda como sistema de registro aparte. Presupuestar la integración desde el día uno.
 
+## Tamaño de mercado: la dispersión es el dato (actualizado en el cuarto pase, 2026-11-20)
+
+Cuatro fuentes consultadas en este pase dan cifras **irreconciliables** para el mismo mercado
+("AI in Energy"). Se listan juntas a propósito, porque la conclusión útil no es ninguna de ellas:
+
+| Fuente | Cifra | Horizonte | CAGR |
+|--------|-------|-----------|------|
+| GlobeNewswire / informe "AI in Energy Market 2026" | **22,82 B USD (2025) → 60,6 B USD (2030)** | 2030 | 21,4 % |
+| Coherent Market Insights | **6,04 B USD en 2026** | — | — |
+| openPR | **85,5 B USD para 2034** | 2034 | 18,2 % |
+| (pases anteriores) Agentic AI in Energy | 656,6 M USD (2025) → 14,9 B USD (2035) | 2035 | 36,65 % |
+
+**La cifra de 2026 varía casi 4× entre fuentes** (6,04 B vs. ~27 B implícito en la serie de 22,82 B
+para 2025 con 21,4 %). Esto reproduce exactamente el patrón que el pase de automotive registró.
+
+**Regla que esta KB mantiene**: en una propuesta, **citar adopción, no tamaño**. "Seis RTO/ISO
+recibieron órdenes de *show cause* sobre grandes cargas", "Horizon Europe asigna 30 M€ en 2026 a
+modelos de IA de red" y "Singapur apunta a medición avanzada nacional en 2026" son hechos
+verificables con fuente. "El mercado vale X" no lo es, y un cliente del sector lo sabe.
+
+⚠️ **Contradicción regional directa entre fuentes**: Coherent Market Insights afirma que
+**Norteamérica domina con 38,6 % de cuota en 2026**; openPR titula que **Asia-Pacífico lidera la
+adopción**. Ambas no pueden ser la misma métrica. Probablemente una mide ingresos de vendors y la
+otra ritmo de despliegue — pero ninguna lo aclara. **No usar ninguna de las dos como afirmación de
+liderazgo regional.**
+
 ## Nota de método sobre las fuentes de este documento
 
 Lo verificado de **primera mano** en esta KB es exclusivamente lo que vive en GitHub: licencias,
@@ -442,6 +629,6 @@ En este pase, el fetch directo de páginas falló por completo: `arxiv.org`, `ww
   prensa y páginas de vendor. Verificar antes de usarlos como referencia ante un cliente.
 
 ---
-*Investigado 2026-11-20 (dos pases). Cifras de consultoras: re-verificar antes de usar en propuesta.*
+*Investigado 2026-11-20 (cuatro pases). Cifras de consultoras: re-verificar antes de usar en propuesta.*
 
 

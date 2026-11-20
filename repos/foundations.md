@@ -108,7 +108,8 @@ Equivalente funcional de lo que `hass-entso-e` (Apache-2.0, 280 ★) es para Eur
 por la institución misma. Es el **sustrato de datos** sobre el que se puede construir un agente de
 mercado para Colombia sin negociar acceso.
 
-**34 repos fundacionales reales** (13 del primer pase + 21 añadidos en el segundo).
+**34 repos fundacionales reales** (13 del primer pase + 21 añadidos en el segundo);
+**63 tras los pases tercero y cuarto** (ver secciones fechadas más abajo).
 
 ## Activos físicos: baterías, eólica, solar y nuclear (categoría añadida en el tercer pase del 2026-11-20)
 
@@ -175,6 +176,109 @@ utility**. Sin ella, un piloto de flexibilidad no se integra con el programa del
 `OSeMOSYS` importa especialmente fuera de Europa: es el modelo con el que varios ministerios de
 LATAM y África han construido planes nacionales, lo que lo vuelve una credencial de conversación
 con reguladores, no sólo una herramienta.
+
+## Sincrofasores y calidad de medida: la categoría MIT que faltaba (cuarto pase, 2026-11-20)
+
+Esta KB tenía modelado de red (PyPSA, pandapower, power-grid-model) y protocolos de campo
+(libiec61850), pero nada de la capa que en una utility real alimenta la detección de eventos:
+**PMU / sincrofasores**. Es además, y esto es inusual en el sector eléctrico, **MIT**.
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [GridProtectionAlliance/gsf](https://github.com/GridProtectionAlliance/gsf) | **MIT** | *Grid Solutions Framework*: biblioteca base de la Grid Protection Alliance para aplicaciones de red (series temporales, adaptadores, transporte) | 179 | 76 | 2026-11-13 | North America |
+| [GridProtectionAlliance/openPDC](https://github.com/GridProtectionAlliance/openPDC) | **MIT** | *Phasor Data Concentrator* open source: ingesta, concentra y encamina flujos de sincrofasores en tiempo real (IEEE C37.118) | 159 | 67 | 2026-11-15 | North America |
+
+**Por qué cambia una propuesta**: el argumento habitual es que la observabilidad de red de alta
+resolución obliga a producto propietario (OSI PI, e-terra). `openPDC` es un PDC de producción con
+licencia MIT y 67 forks. Permite ofrecer analítica de eventos sobre datos de PMU **sin** licencia de
+plataforma y sin contaminar el código del cliente. Es el complemento aguas arriba de todo lo demás
+en esta página: los modelos predicen, el PDC mide.
+
+## Medición y verificación de ahorros: el repo que hace facturable la eficiencia
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [opendsm/opendsm](https://github.com/opendsm/opendsm) | **Apache-2.0** | Métodos **estándar** de cálculo de consumo energético normalizado (NMEC) y ahorro medido. Linaje OpenEEmeter/CalTRACK; creado 2016 | 244 | 76 | 2026-11-14 | North America |
+| [FlexMeasures/flexmeasures](https://github.com/FlexMeasures/flexmeasures) | **Apache-2.0** | Motor de optimización energética listo para empresa: *scheduling* y forecasting de flexibilidad (baterías, carga de EV, bombas de calor). Proyecto LF Energy; creado 2020, 248 issues abiertas = comunidad viva | 217 | 66 | 2026-11-19 | EMEA |
+
+**`opendsm` es la pieza con más valor comercial directo de este pase.** Un proyecto de eficiencia o
+de respuesta de demanda sólo se cobra si el ahorro se puede **demostrar** con un método que el
+regulador o el cliente acepten. `opendsm` implementa precisamente esos métodos, con Apache-2.0 y
+diez años de historia. Sin esa capa, un piloto de optimización con IA produce un número que nadie
+firma. Con ella, produce una factura.
+
+**`FlexMeasures`** es el par operativo: decide *cuándo* mover la carga; `opendsm` certifica *cuánto*
+se ahorró. Ambas Apache-2.0, ambas empotrables en un entregable cerrado.
+
+## Simulación de protocolo sin hardware: cómo arrancar un piloto sin subestación
+
+El bloqueo más frecuente de un piloto energético no es el modelo: es que no hay acceso al equipo. La
+KB tenía librerías *cliente* de protocolo; faltaban los **simuladores de la contraparte**.
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [suoten/ProtoForge](https://github.com/suoten/ProtoForge) | **MIT** | Simulador **sin hardware** de 28 protocolos industriales (Modbus TCP, S7, OPC UA, BACnet, MQTT…). Permite probar SCADA/HMI contra equipo virtual. Creado 2026-04-24 | 325 | 100 | 2026-11-19 | Global |
+| [Fraunhofer-FIT-DIEN/iec104-python](https://github.com/Fraunhofer-FIT-DIEN/iec104-python) | ⚠️ GPL-3.0 | Simula comunicación **SCADA y RTU** sobre IEC 60870-5-104 para investigar comportamiento TIC en red. Fraunhofer FIT | 106 | 30 | 2026-11-10 | EMEA |
+| [Gurux/Gurux.DLMS.Python](https://github.com/Gurux/Gurux.DLMS.Python) | ⚠️ GPL-2.0 | Pila **DLMS/COSEM**: el estándar de lectura de medidor inteligente en Europa y buena parte de LATAM | 125 | 94 | 2026-11-19 | EMEA |
+| [bemasher/rtlamr](https://github.com/bemasher/rtlamr) | ⚠️ AGPL-3.0 | Receptor rtl-sdr para medidores Itron ERT en banda ISM 900 MHz: lectura de medidor **por radio**, sin integración con la utility. 2559 ★ | 2559 | 283 | 2026-11-18 | North America |
+| [mitre/caldera-ot](https://github.com/mitre/caldera-ot) | **Apache-2.0** | Plugins OT para MITRE Caldera: emulación de adversario sobre protocolos industriales. La contraparte defensiva obligatoria de todo lo anterior | 265 | 34 | 2026-11-20 | North America |
+
+⚠️ **Aviso de licencia que decide el uso**: sólo `ProtoForge` (MIT) y `caldera-ot` (Apache-2.0) son
+empotrables. `Gurux` es **GPL-2.0** y `rtlamr` **AGPL-3.0** — útiles como herramienta de laboratorio
+o proceso aislado, nunca enlazados en el producto del cliente. `Gurux` tiene 94 forks sobre 125 ★
+(relación 0.75, la más alta de esta KB): señal de que se usa como base de integraciones, no de que
+se lea.
+
+**`caldera-ot` no está aquí por completismo.** Cualquier propuesta que ponga un agente a leer o
+escribir en protocolo industrial recibirá la pregunta de seguridad en la primera revisión. Tener
+nombrada la herramienta de emulación de adversario del MITRE, Apache-2.0, convierte esa pregunta en
+una línea del plan de pruebas.
+
+## Dinámica, EMT y co-simulación (añadidos del cuarto pase)
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [JuliaEnergy/PowerDynamics.jl](https://github.com/JuliaEnergy/PowerDynamics.jl) | **MIT** (leída del `LICENSE`) | Modelado **dinámico** de redes en Julia: estabilidad, transitorios electromecánicos | 141 | 40 | 2026-11-18 | EMEA |
+| [Future-Power-Networks/Simplus-Grid-Tool](https://github.com/Future-Power-Networks/Simplus-Grid-Tool) | **BSD-3-Clause** | Análisis de estabilidad de redes con alta penetración de electrónica de potencia (impedancia, modos) | 148 | 64 | 2026-11-10 | EMEA |
+| [lbl-srg/modelica-buildings](https://github.com/lbl-srg/modelica-buildings) | **BSD-3-Clause** (vía `Buildings/legal.html`) | Librería Modelica de edificios de LBNL: HVAC, envolvente, plantas térmicas, districts | 363 | 193 | 2026-11-20 | North America |
+| [PowerGridModel/power-grid-model-ds](https://github.com/PowerGridModel/power-grid-model-ds) | MPL-2.0 | Toolkit de data science sobre `power-grid-model` (Alliander): el puente de la ingeniería a pandas | 34 | 20 | 2026-11-19 | EMEA |
+| [rtc-tools/rtc-tools](https://github.com/rtc-tools/rtc-tools) | ⚠️ LGPL-3.0 | Framework de modelado, simulación y **optimización de sistemas dinámicos** (origen en gestión hídrica, aplicable a hidro y térmica) | 31 | 25 | 2026-11-19 | EMEA |
+| [sandialabs/quest_planning](https://github.com/sandialabs/quest_planning) | **BSD** (Sandia) | Expansión de capacidad a largo plazo: mezcla de recursos coste-óptima. Sandia National Laboratories | 21 | 3 | 2026-11-19 | North America |
+| [DrafProject/draf](https://github.com/DrafProject/draf) | **MIT** | *Demand Response Analysis Framework*: evalúa el valor de la flexibilidad industrial | 29 | 6 | 2026-06-10 | EMEA |
+
+## Upstream de O&G: ampliación del cuarto pase
+
+El tercer pase concluyó que el subsector es "100 % GPL-3.0". **Eso era un artefacto de la muestra.**
+Hay piezas MIT y BSD de primer nivel:
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [sintefmath/JutulDarcy.jl](https://github.com/sintefmath/JutulDarcy.jl) | **MIT** | Simulación de yacimientos en Julia: flujo de Darcy multifásico y multicomponente. **La alternativa permisiva a OPM Flow** | 170 | 46 | 2026-11-19 | EMEA (Noruega) |
+| [OPM/ResInsight](https://github.com/OPM/ResInsight) | ⚠️ GPL-3.0 | Visor 3D y post-proceso de modelos de yacimiento. 808 issues abiertas = producto real en uso | 222 | 106 | 2026-11-19 | EMEA |
+| [SINTEF-AppliedCompSci/MRST](https://github.com/SINTEF-AppliedCompSci/MRST) | ⚠️ GPL-3.0 | *MATLAB Reservoir Simulation Toolbox*: la referencia académica del sector | 147 | 54 | 2026-11-03 | EMEA (Noruega) |
+| [equinor/ecalc](https://github.com/equinor/ecalc) | ⚠️ GPL (leída del `LICENSE`) | Cálculo de **demanda energética y emisiones de GEI** de producción de petróleo y gas. Herramienta de Equinor | 54 | 10 | 2026-11-19 | EMEA (Noruega) |
+| [equinor/xtgeo](https://github.com/equinor/xtgeo) | ⚠️ LGPL-3.0 | Librería Python de superficies, cubos, pozos y grids de subsuelo | 123 | 71 | 2026-11-19 | EMEA (Noruega) |
+| [equinor/resdata](https://github.com/equinor/resdata) | ⚠️ GPL-3.0 | Lectura/escritura de resultados del simulador Eclipse | 129 | 104 | 2026-11-19 | EMEA (Noruega) |
+| [GeoBrain-Project/GeoBrain](https://github.com/GeoBrain-Project/GeoBrain) | **Apache-2.0** | Plataforma **diferenciable de extremo a extremo** para modelado integrado de subsuelo: permite meter ML dentro del lazo físico | 88 | 10 | 2026-08-20 | APAC |
+| [douyimin/CIG-bench](https://github.com/douyimin/CIG-bench) | **MIT** | Survey y benchmark de interpretación de imagen de subsuelo con IA | 66 | 11 | 2026-06-18 | APAC |
+
+**Corrección de la tesis del tercer pase**: `JutulDarcy.jl` (MIT) y `GeoBrain` (Apache-2.0) rompen la
+conclusión de que en O&G hay que aceptar GPL. Para un encargo nuevo de simulación de yacimiento con
+capa de IA, `JutulDarcy.jl` es el punto de partida que **sí** se puede empotrar. `GeoBrain` además es
+diferenciable, que es la propiedad que permite acoplar un modelo aprendido al simulador físico en vez
+de ponerlo al lado.
+
+## Recurso meteorológico: la dependencia que todo forecasting arrastra
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [open-meteo/open-meteo](https://github.com/open-meteo/open-meteo) | ⚠️ **AGPL-3.0** | API de pronóstico meteorológico abierta, auto-hospedable. 6704 ★: el repo con más tracción de este pase | 6704 | 485 | 2026-11-19 | EMEA |
+
+⚠️ **Dos trampas en una fila.** (1) Es **AGPL-3.0**: auto-hospedarla dentro de un SaaS de cliente
+activa la cláusula de red. (2) El servicio público es *"free for non-commercial use"* — un piloto que
+pega a `api.open-meteo.com` y luego pasa a producción comercial cambia de régimen de licencia sin que
+nadie lo note. Decidir desde el día uno: plan comercial de Open-Meteo, o proveedor meteorológico del
+cliente, o aceptar AGPL. Es la clase de detalle que aparece en la auditoría, no en el piloto.
 
 ## Notas de licencia que cambian decisiones
 

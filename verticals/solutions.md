@@ -85,7 +85,8 @@ afuera. Presupuestar la integración, no la licencia.
 | **API_XM** | **MIT** (`XM S.A. E.S.P.`) | [EquipoAnaliticaXM/API_XM](https://github.com/EquipoAnaliticaXM/API_XM) | Python | Acceso a datos del mercado eléctrico colombiano —generación, demanda, precio de bolsa, emisiones— publicado por el **operador del Sistema Interconectado Nacional** | 75 | **LATAM (Colombia)** |
 | **hass-entso-e** | Apache-2.0 | [JaccoR/hass-entso-e](https://github.com/JaccoR/hass-entso-e) | Python | Precios day-ahead de ENTSO-E: la vía más corta a precio horario europeo en un piloto | 280 | EMEA |
 
-**23 plataformas reales** (16 del primer pase + 7 añadidas en el segundo). Ninguna fila es plantilla.
+**23 plataformas reales** (16 del primer pase + 7 del segundo); **34 tras los pases tercero y
+cuarto** (ver secciones fechadas). Ninguna fila es plantilla.
 
 ## Comercial de utility: facturación, medición y gestión de cliente (añadido en el tercer pase del 2026-11-20)
 
@@ -124,6 +125,45 @@ conjunto de piezas que se componen, y conviene decirlo así en una propuesta.
 Es el destino natural de cualquier recomendación agéntica en operación de red. Ningún TSO permite
 ejecución automática de maniobras; sin una capa de aceptación humana trazable, un piloto agéntico
 de red no pasa de demo.
+
+## ERP/CRM generalista: la respuesta honesta a "¿cuál es el Odoo de la energía?" (cuarto pase, 2026-11-20)
+
+El tercer pase estableció que no existe un sistema único que cubra ERP + CRM + facturación + MDM para
+utilities. Este pase lo confirmó buscándolo explícitamente y conviene cerrar la pregunta con datos:
+
+**No existe ningún ERP/CRM open source específico de energía con licencia MIT o Apache 2.0.** Lo que
+hay son dos caminos:
+
+| Plataforma | Licencia | Qué cubre | Stars | Forks | Último push | Región origen |
+|------------|----------|-----------|-------|-------|-------------|---------------|
+| [apache/ofbiz-framework](https://github.com/apache/ofbiz-framework) | **Apache-2.0** | Suite Java de ERP + CRM + e-commerce + SCM + MRP. Proyecto top-level de Apache desde 2006. **La opción permisiva más madura** para la capa empresarial | 1151 | 766 | 2026-11-19 | Global |
+| [ishandutta2007/Awesome-Energy-Utilities-CRM](https://github.com/ishandutta2007/Awesome-Energy-Utilities-CRM) | **MIT** | Catálogo curado de CRM, facturación y medición para utilities. Creado 2026-10-12; **0 ★, sin tracción** — útil como punto de partida de búsqueda, no como referencia | 0 | 0 | 2026-10-12 | Global |
+
+**La decisión, dicha sin rodeos**: `OFBiz` es Apache-2.0, maduro (766 forks) y **no sabe nada de
+energía**. `ERPNext` tiene 41k ★ pero es GPL-3.0 y su app de utility billing es AGPL-3.0. Por tanto:
+
+- **Entregable propietario / marca blanca** → `OFBiz` (Apache-2.0) para ERP/CRM + `killbill`
+  (Apache-2.0) para facturación + `openmeter` (Apache-2.0) para agregación de consumo. Las tres
+  permisivas. La lógica tarifaria regulada es **desarrollo propio**: presupuestarla explícitamente.
+- **El cliente ya usa ERPNext** → extenderlo, aceptando el régimen GPL/AGPL y sus consecuencias
+  para un SaaS multi-tenant.
+- **Lo que no hay que hacer**: prometer un "vertical energético open source listo" en la capa
+  comercial. No existe. Lo que existe es un conjunto de piezas permisivas y un trabajo de
+  integración real y facturable.
+
+## Flexibilidad y verificación de ahorro como plataforma (añadido en el cuarto pase)
+
+| Plataforma | Licencia | Qué cubre | Stars | Forks | Último push | Región origen |
+|------------|----------|-----------|-------|-------|-------------|---------------|
+| [FlexMeasures/flexmeasures](https://github.com/FlexMeasures/flexmeasures) | **Apache-2.0** | Plataforma LF Energy de *scheduling* de flexibilidad: baterías, carga de EV, bombas de calor, con forecasting integrado. 248 issues abiertas = comunidad activa | 217 | 66 | 2026-11-19 | EMEA |
+| [opendsm/opendsm](https://github.com/opendsm/opendsm) | **Apache-2.0** | Métodos estándar de consumo normalizado (NMEC) y ahorro medido. Linaje OpenEEmeter/CalTRACK, diez años de historia | 244 | 76 | 2026-11-14 | North America |
+| [GridProtectionAlliance/openPDC](https://github.com/GridProtectionAlliance/openPDC) | **MIT** | Concentrador de datos de sincrofasores (IEEE C37.118) de producción: observabilidad de red de alta resolución sin plataforma propietaria | 159 | 67 | 2026-11-15 | North America |
+
+**Esta fila cambia la forma de vender un proyecto de eficiencia.** El patrón habitual —"ponemos IA a
+optimizar y el cliente ahorra"— se cae en la primera auditoría porque el ahorro no es demostrable con
+un método aceptado. `FlexMeasures` (decide cuándo) + `opendsm` (certifica cuánto), ambas Apache-2.0 y
+empotrables en un entregable cerrado, convierten el ahorro en una cifra firmable. Es, de todo lo
+encontrado en los cuatro pases, la combinación con el camino más corto a facturación.
 
 ## El riesgo de licencia es el criterio de selección, no una nota al pie
 

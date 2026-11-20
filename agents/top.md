@@ -87,7 +87,62 @@ cálculo, entornos RL y servidores MCP, pero ninguna capa *human-in-the-loop*. N
 deja que un agente ejecute una maniobra: la recomendación tiene que llegar a una sala de control con
 trazabilidad y aceptación explícita. Sin ese componente, una demo agéntica de red no es desplegable.
 
-**21 agentes/entornos reales.** Ninguna fila es ejemplo ni plantilla.
+**30 agentes/entornos/modelos reales** (21 de los pases 1-3 + 9 del cuarto pase).
+Ninguna fila es ejemplo ni plantilla.
+
+## Foundation models de red: la categoría que esta KB no tenía (cuarto pase, 2026-11-20)
+
+Hasta este pase, `agents/top.md` describía **servidores MCP** (razonamiento sobre herramientas) y
+**entornos RL** (dónde entrenar). Faltaba la capa del medio: **modelos preentrenados del dominio
+eléctrico**. Ya existe, con licencia permisiva y respaldo corporativo, y cambia el punto de partida
+de un encargo: se puede hacer *fine-tuning* en lugar de entrenar desde cero.
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [microsoft/GridSFM](https://github.com/microsoft/GridSFM) | **MIT** | *Small Foundation Models for the Power Grid*. Modelos fundacionales pequeños específicos de red, de Microsoft. Creado 2026-04-23 | 177 | 41 | 2026-07-15 | North America |
+| [gridfm/gridfm-datakit](https://github.com/gridfm/gridfm-datakit) | **Apache-2.0** | Generación de datos de flujo de potencia para **entrenar** modelos ML y fundacionales de red. Es el paso previo obligatorio al fine-tuning | 170 | 40 | 2026-11-14 | Global |
+| [gridfm/gridfm-graphkit](https://github.com/gridfm/gridfm-graphkit) | **Apache-2.0** | Entrenar, hacer fine-tuning e interactuar con un foundation model de red basado en grafos. Es el par de `gridfm-datakit` | 113 | 41 | 2026-11-19 | Global |
+| [emarche/RL2Grid](https://github.com/emarche/RL2Grid) | **MIT** | Benchmark **estandarizado** para agentes RL en entornos de red realistas. Complementa Grid2Op: Grid2Op es el entorno, RL2Grid es la vara de medir | 58 | 11 | 2026-09-16 | EMEA |
+
+**Por qué importa el orden `datakit` → `graphkit`**: son dos repos de la misma organización (`gridfm`,
+ambos creados 2025-06-23) y están pensados para usarse en secuencia. `datakit` sintetiza casos de
+flujo de potencia a partir de topologías; `graphkit` consume esos datos para entrenar un GNN
+fundacional. Citar uno sin el otro deja la receta incompleta.
+
+**Lectura honesta de la tracción**: 58–177 ★. Es una categoría **naciente**, no consolidada.
+`GridSFM` no recibe push desde 2026-07-15 (cuatro meses) y tiene 11 issues abiertas — respaldo de
+Microsoft no equivale a mantenimiento activo. `gridfm-*` sí está vivo (push de esta semana). Para
+una propuesta: presentar como *vía de evaluación técnica*, no como base de producción.
+
+## Entorno RL de V2G a escala
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [StavrosOrf/EV2Gym](https://github.com/StavrosOrf/EV2Gym) | **MIT** | Entorno de simulación V2G para optimización de carga de EV **a gran escala**: flotas, no un vehículo. Cierra el hueco entre `evcc` (un hogar) y `CityLearn` (un distrito) | 248 | 57 | 2026-09-15 | EMEA |
+
+## Servidores MCP de datos de red en vivo (categoría nueva y deliberadamente incómoda)
+
+Aparecieron en 2026 varios servidores MCP que exponen **datos de red reales y en vivo** a un agente.
+Es exactamente la pieza que faltaba para un copiloto de operación o de siting. Pero hay que
+registrarlos con su tamaño real, porque es diminuto:
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [azmartone67/dchub-mcp-server](https://github.com/azmartone67/dchub-mcp-server) | **MIT** | *Data Center Power Index*: puntaje diario de dónde un datacenter puede conseguir potencia de red, en **300+ mercados**. Expuesto por MCP | 3 | 0 | 2026-11-20 | North America |
+| [pipeworx-io/mcp-neso](https://github.com/pipeworx-io/mcp-neso) | **MIT** | MCP sobre los datos abiertos de **NESO** (operador del sistema eléctrico de Gran Bretaña, `api.neso.energy`) | 0 | 0 | 2026-11-09 | EMEA |
+| [pipeworx-io/mcp-georgia-energy](https://github.com/pipeworx-io/mcp-georgia-energy) | **MIT** | MCP sobre telemetría de red y estadística del regulador de **Georgia** (el país) | 0 | 0 | 2026-11-09 | EMEA |
+| [sohamshindework/gridpulse](https://github.com/sohamshindework/gridpulse) | **MIT** | Datos abiertos de red de **Alemania + EE. UU.**, scheduling carbon-aware y contabilidad verificada; SDK y MCP. Creado 2026-11-18 | 0 | 0 | 2026-11-20 | Global |
+
+⚠️ **Cómo hay que presentar esto a un cliente.** Entre 0 y 3 ★, 0 forks, uno creado hace dos días.
+No son productos: son **demostraciones de que el patrón es implementable** y, sobre todo, código de
+referencia del que copiar el *wiring* a una API de operador de sistema. El valor para Globant no es
+adoptarlos sino que confirman que el camino "datos de TSO → MCP → agente" está trazado y es corto.
+Escribir uno propio contra el TSO del cliente es trabajo de días, no de meses, y es facturable.
+
+**La otra lectura, menos obvia**: `dchub-mcp-server` es el único de los cuatro que responde a la
+pregunta que de verdad están haciendo los clientes en 2026 — *¿dónde puedo enchufar un datacenter?*
+Ese es el cuello de botella descrito en `intel/trends.md`, convertido en una herramienta consultable
+por un agente. Categoría a vigilar en el próximo pase.
 
 ## Notas de licencia que cambian decisiones
 
@@ -163,6 +218,74 @@ Resueltas así en este pase:
 cubre LATAM y APAC de fábrica, la API no declara licencia, y la respuesta —AGPL-3.0-or-later— está
 en una línea del `README`. Tratarlo como permisivo en un SaaS de cliente habría significado
 obligación de liberar el servicio.
+
+## Hallazgos de verificación del cuarto pase (2026-11-20)
+
+### 1. Trampa nueva: repos con estrellas infladas y cero forks
+
+Dos repos de **carga eléctrica** aparecen en el top de cualquier búsqueda de forecasting con cifras
+que los pondrían primeros en esta KB. No se incluyen, a propósito:
+
+| Repo | Stars | Forks | Issues | Creado | Veredicto |
+|------|-------|-------|--------|--------|-----------|
+| `KEV0143/Comparative-analysis-of-hourly-load-forecasting-using-PatchTST-TFT-NHiTS-and-CatBoost` | 1764 | **0** | 0 | 2025-09-15 | ❌ descartado |
+| `KEV0143/Adaptive-forecasting-of-electricity-consumption-24-168-720-h-with-load-regime-conditioning` | 1627 | **0** | 0 | 2026-07-20 | ❌ descartado |
+
+Mil setecientas estrellas con **cero forks y cero issues**, dos veces, en la misma cuenta. Un repo
+técnico realmente usado genera forks: la relación fork/star del resto de esta KB va de 0.1 a 0.4.
+Una relación de **0.00** con estrellas de cuatro cifras no es adopción.
+
+**Regla de método que esta KB adopta**: ante >1000 ★, comprobar `forks_count` y `open_issues_count`
+antes de escribir la fila. `stars` es el único campo de la API que se puede comprar; `forks` e
+`issues` requieren que alguien use el código. Si la relación fork/star es ≈0, descartar.
+
+### 2. Repos sin licencia: el bloqueo más caro de este pase
+
+`NOASSERTION` se resuelve leyendo el `LICENSE` crudo. **Ausencia total de archivo de licencia** es
+distinto y peor: sin concesión expresa, el código está bajo copyright exclusivo del autor y **no es
+utilizable** en un entregable, por público que sea el repo.
+
+| Repo | Qué es | Estado de licencia | Consecuencia |
+|------|--------|--------------------|--------------|
+| `douyimin/GEM` | *Geological Everything Model 3D*: foundation model promptable para subsuelo, zero-shot | **sin archivo de licencia en ninguna rama** | ❌ el único foundation model de subsuelo encontrado, y es inutilizable |
+| `xingyuz-phd/Generic-EMT-Modeling-of-Data-Center-Load` | Modelo EMT modular de carga de datacenter con UPS centralizado | **sin licencia** | ❌ no empotrable; citable como referencia académica |
+| `ames-market/AMES-V5.0` | Test bed de mercado mayorista tipo RTO/ISO de EE. UU. | `NOASSERTION`, sin licencia localizable | ❌ tratar como no utilizable hasta aclarar |
+| `DatariusAI/AI-in-Energy` | Índice diario de investigación y código de IA para energía y utilities | **sin licencia** | ⚠️ útil como *fuente de vigilancia*, no como dependencia |
+| `pnoker/iot-dc3` | Runtime IIoT con 36 protocolos, 1273 ★ | **licencia propia**: *"IoT DC3 License Notice, Version 2026.5"* | ⚠️ no OSI, no SPDX: un gate automático de compliance la marcará |
+
+**`douyimin/GEM` es el caso que más duele**: resuelve exactamente lo que un cliente de O&G pediría
+—interpretación de subsuelo sin entrenar por campo— y no se puede tocar. Acción concreta y barata:
+abrir issue pidiendo licencia explícita. Un repo de 55 ★ y un autor académico suele responder; es la
+diferencia entre una categoría bloqueada y una disponible en el próximo pase.
+
+### 3. Licencias rescatadas leyendo el archivo crudo
+
+| Repo | API decía | Realidad verificada | Dónde estaba |
+|------|-----------|---------------------|--------------|
+| `JuliaEnergy/PowerDynamics.jl` | NOASSERTION | **MIT** | `main/LICENSE` |
+| `lbl-srg/modelica-buildings` | `null` (sin `LICENSE` en la raíz) | **BSD-3-Clause** | declarado en `README.md`, texto en `Buildings/legal.html` |
+| `OpenLEADR/openleadr-rs` | NOASSERTION | **doble MIT / Apache-2.0** (Stichting ElaadNL) | `LICENSE-MIT` + `LICENSE-APACHE` |
+| `sandialabs/quest_planning` | NOASSERTION | **BSD** (Sandia National Laboratories) | `main/LICENSE` |
+| `equinor/ecalc` | NOASSERTION | **GPL** | `main/LICENSE` |
+
+`modelica-buildings` amplía la regla del tercer pase: tras `LICENSE*`, `COPYING` y el SPDX en
+`pyproject.toml`, hay un cuarto sitio donde mirar — un **`legal.html` dentro del árbol del paquete**,
+referenciado sólo desde el README. 363 ★ de LBNL que un gate automático habría descartado.
+
+### 4. Términos de búsqueda inutilizables en GitHub (ahorro de tiempo para el próximo pase)
+
+Cuatro consultas se gastaron en ruido. Quedan registradas para no repetirlas:
+
+| Término | Qué devuelve en realidad | Alternativa que sí funciona |
+|---------|--------------------------|-----------------------------|
+| `hydrogen` | **Shopify Hydrogen** (storefronts) y la drum machine Hydrogen; ~22 de 25 resultados | buscar el electrolizador o `FESTIM`, o el nombre del proyecto |
+| `AMI` | Amiga, Amica, `amazon-eks-ami`, Amiibo | `"smart meter"`, `DLMS`, `COSEM`, `rtlamr` |
+| `utility billing` | utilidades de software (PowerToys, lodash, winutil) | `killbill`, `openmeter`, `"meter reading"` |
+| `reservoir` | **reservoir computing** (Echo State Networks, ML) | `"reservoir simulation"`, `subsurface`, `petrophysics` |
+
+Confirma la lección del pase de automotive: **buscar el estándar o el protocolo, nunca el
+sustantivo del dominio**. Las consultas productivas de este pase fueron `IEC 61850`, `OpenADR`,
+`IEEE 2030.5`, `DLMS COSEM`, `DERMS` y `"battery energy storage"`.
 
 ---
 *Verificado contra GitHub REST API el 2026-11-20. Re-verificar antes de citar en una propuesta.*

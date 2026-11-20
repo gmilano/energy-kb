@@ -9,6 +9,59 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 4 (sincrofasores MIT, medición y verificación, y simulación de protocolo)
+
+**Titular del pase: tres categorías enteras estaban ausentes, y la más valiosa comercialmente no es
+técnica — es la que hace cobrable el ahorro.**
+
+**1. PMU / sincrofasores, y es MIT.** La observabilidad de red de alta resolución se da por
+propietaria (OSI PI, e-terra). No lo es:
+[GridProtectionAlliance/openPDC](https://github.com/GridProtectionAlliance/openPDC) (**MIT**, 159 ★,
+67 forks, push 2026-11-15) es un concentrador de datos de fasores de producción, con
+[gsf](https://github.com/GridProtectionAlliance/gsf) (**MIT**, 179 ★, 76 forks) como base.
+
+**2. Medición y verificación: el repo con más valor comercial directo del pase.**
+[opendsm/opendsm](https://github.com/opendsm/opendsm) (**Apache-2.0**, 244 ★, 76 forks, creado 2016,
+linaje OpenEEmeter/CalTRACK) implementa los métodos **estándar** de consumo normalizado (NMEC) y
+ahorro medido. Sin esa capa, un piloto de optimización produce un número que nadie firma; con ella,
+produce una factura. Su par operativo:
+[FlexMeasures/flexmeasures](https://github.com/FlexMeasures/flexmeasures) (**Apache-2.0**, 217 ★,
+248 issues abiertas, LF Energy) decide *cuándo* mover la carga.
+
+**3. Simulación de protocolo sin hardware** — desbloquea el piloto cuando no hay subestación:
+[suoten/ProtoForge](https://github.com/suoten/ProtoForge) (**MIT**, 325 ★, 100 forks, creado
+2026-04-24, 28 protocolos), [Fraunhofer-FIT-DIEN/iec104-python](https://github.com/Fraunhofer-FIT-DIEN/iec104-python)
+(GPL-3.0, 106 ★, IEC 60870-5-104), [Gurux/Gurux.DLMS.Python](https://github.com/Gurux/Gurux.DLMS.Python)
+(GPL-2.0, 125 ★, **94 forks — relación 0.75, la más alta de la KB**),
+[bemasher/rtlamr](https://github.com/bemasher/rtlamr) (AGPL-3.0, 2559 ★, lectura de medidor Itron por
+radio). Defensa obligatoria: [mitre/caldera-ot](https://github.com/mitre/caldera-ot) (**Apache-2.0**,
+265 ★, push hoy).
+
+**4. Corrección de la tesis del pase 3 sobre O&G.** El pase 3 concluyó "100 % GPL-3.0". Era un
+artefacto de la muestra: [sintefmath/JutulDarcy.jl](https://github.com/sintefmath/JutulDarcy.jl)
+(**MIT**, 170 ★, simulación de yacimiento en Julia) y
+[GeoBrain-Project/GeoBrain](https://github.com/GeoBrain-Project/GeoBrain) (**Apache-2.0**, 88 ★,
+plataforma diferenciable de subsuelo) son permisivos y de primer nivel.
+
+**5. El repo con más tracción del pase, y con dos trampas:**
+[open-meteo/open-meteo](https://github.com/open-meteo/open-meteo) — 6704 ★, 485 forks, pero
+**AGPL-3.0** y su servicio público es sólo para uso no comercial. Un piloto que pega a
+`api.open-meteo.com` y pasa a producción cambia de régimen de licencia sin que nadie lo note.
+
+**6. Repos sin licencia (categoría bloqueada, no ausente):** `douyimin/GEM` — *Geological Everything
+Model 3D*, foundation model promptable de subsuelo zero-shot, **sin archivo de licencia en ninguna
+rama**. El único foundation model de subsuelo encontrado, e inutilizable. Igual
+`xingyuz-phd/Generic-EMT-Modeling-of-Data-Center-Load` (modelo EMT de carga de datacenter) y
+`ames-market/AMES-V5.0`. `pnoker/iot-dc3` (1273 ★) usa una **licencia propia** *"IoT DC3 License
+Notice v2026.5"*, ni OSI ni SPDX.
+
+**Términos de búsqueda quemados en este pase** (para no repetirlos): `hydrogen` → Shopify Hydrogen;
+`AMI` → Amiga/Amiibo; `utility billing` → utilidades de software; `reservoir` → reservoir computing.
+Las consultas que **sí** rindieron: `IEC 61850`, `OpenADR`, `IEEE 2030.5`, `DLMS COSEM`, `DERMS`,
+`"battery energy storage"`.
+
+---
+
 ## 2026-11-20 — pase 3 (los activos físicos, la categoría que faltaba entera)
 
 **Titular del pase: esta KB sabía modelar la RED y no sabía modelar los ACTIVOS. Doce repos
