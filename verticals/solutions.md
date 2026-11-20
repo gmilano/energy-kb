@@ -87,6 +87,44 @@ afuera. Presupuestar la integración, no la licencia.
 
 **23 plataformas reales** (16 del primer pase + 7 añadidas en el segundo). Ninguna fila es plantilla.
 
+## Comercial de utility: facturación, medición y gestión de cliente (añadido en el tercer pase del 2026-11-20)
+
+Esta KB tenía cubierto el lado **operativo** (SCADA, EMS, ADMS, protocolos) y nada del lado
+**comercial**. En un encargo de utility el CIS/billing suele ser la mitad del alcance. No existe un
+"Odoo de la energía" —un único sistema que cubra ERP + CRM + facturación + MDM—; lo que hay es un
+conjunto de piezas que se componen, y conviene decirlo así en una propuesta.
+
+| Plataforma | Licencia | Qué cubre | Stars | Forks | Último push | Región origen |
+|------------|----------|-----------|-------|-------|-------------|---------------|
+| [killbill/killbill](https://github.com/killbill/killbill) | **Apache-2.0** | Facturación y pagos por suscripción y por uso: catálogo de tarifas, medición de consumo, facturación, cobros. Maduro y desacoplado del sector | 5858 | 988 | 2026-11-19 | North America |
+| [openmeterio/openmeter](https://github.com/openmeterio/openmeter) | **Apache-2.0** | Medición y agregación de eventos de uso a gran escala para facturar por consumo (hoy parte de Kong) | 2457 | 245 | 2026-11-19 | EMEA |
+| [EnAccess/micropowermanager](https://github.com/EnAccess/micropowermanager) | **MIT** | Gestión completa de **utilities descentralizadas**: clientes, medidores, tarifas, prepago y cobro para mini-redes. Pensado para electrificación distribuida | 30 | 30 | 2026-11-19 | EMEA |
+| [frappe/erpnext](https://github.com/frappe/erpnext) | ⚠️ **GPL-3.0** | ERP generalista de gran tracción, base sobre la que existen apps de utility billing | 41460 | 13572 | 2026-11-20 | APAC |
+| [navariltd/utility-billing](https://github.com/navariltd/utility-billing) | ⚠️ **AGPL-3.0** | App de facturación de servicios y gestión de propiedades sobre ERPNext: lecturas de medidor, tarifas, inquilinos | 70 | 84 | 2026-11-18 | EMEA |
+
+### Cómo elegir entre ellas (la decisión real)
+
+- **Utility regulada de tamaño medio, entregable propietario** → `killbill` (Apache-2.0) como motor
+  de facturación + `openmeter` (Apache-2.0) para la agregación de consumo. Ambos permisivos: el
+  producto resultante se puede cerrar. Ninguno sabe de energía, así que la lógica tarifaria
+  regulatoria es desarrollo propio — presupuestarla, no asumirla.
+- **Mini-red, electrificación rural, prepago** → `micropowermanager` (MIT). Es el único que entiende
+  el dominio de fábrica. 30 ★: funciona, pero no hay comunidad que sostenga un incidente; evaluar
+  soporte propio.
+- **ERPNext sólo si el cliente ya lo usa.** `erpnext` es GPL-3.0 y la app de utility billing es
+  **AGPL-3.0**. Un SaaS construido sobre esa app activa la cláusula de red: hay que ofrecer el
+  código del servicio. Para un entregable de marca blanca es, casi siempre, un no.
+
+### Sala de control: la capa human-in-the-loop
+
+| Plataforma | Licencia | Qué cubre | Stars | Forks | Último push | Región origen |
+|------------|----------|-----------|-------|-------|-------------|---------------|
+| [opfab/operatorfabric-core](https://github.com/opfab/operatorfabric-core) | **MPL-2.0** | Plataforma LF Energy de sala de control: agrega y encamina tarjetas de acción al operador, con trazabilidad y aceptación explícita | 42 | 29 | 2026-11-19 | EMEA |
+
+Es el destino natural de cualquier recomendación agéntica en operación de red. Ningún TSO permite
+ejecución automática de maniobras; sin una capa de aceptación humana trazable, un piloto agéntico
+de red no pasa de demo.
+
 ## El riesgo de licencia es el criterio de selección, no una nota al pie
 
 Este vertical está dominado por **copyleft**, a diferencia de la capa de agentes (casi toda MIT):

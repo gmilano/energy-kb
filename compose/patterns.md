@@ -340,7 +340,131 @@ había cubierto, y el patrón de integración es **distinto a todo lo anterior**
 
 ---
 
-## Qué **no** proponer (gaps medidos, actualizado en el segundo pase del 2026-11-20)
+### Receta 13 — Dimensionamiento y garantía de vida de un BESS (APAC primero, aplica en las cuatro regiones)
+
+**Para**: desarrolladores de datacenter y de renovables que tienen que **demostrar** el
+comportamiento de la batería, no estimarlo. En Singapur, Malasia y Corea el plan de almacenamiento y
+vertido es condición de permiso del datacenter: esto deja de ser ingeniería de detalle y pasa a ser
+el documento que desbloquea el proyecto.
+
+- **Física de celda**: [`pybamm-team/PyBaMM`](https://github.com/pybamm-team/PyBaMM) (**BSD-3**,
+  1737 ★) — modelos DFN/SPMe para degradación por ciclado y calendario bajo el perfil de uso real.
+- **Del modelo de celda al sistema**:
+  [`pybamm-team/liionpack`](https://github.com/pybamm-team/liionpack) (MIT, 120 ★) — desbalance
+  térmico y de corriente en packs serie/paralelo; es donde aparecen los problemas que la celda sola
+  no muestra.
+- **Caso de negocio**: [`NatLabRockies/SAM`](https://github.com/NatLabRockies/SAM) (BSD-3, 498 ★)
+  para el modelo tecno-económico, o su motor [`ssc`](https://github.com/NatLabRockies/ssc) si hay
+  que embeberlo sin GUI.
+- **Perfil de operación del que salen los ciclos**:
+  [`citylearn-project/CityLearn`](https://github.com/citylearn-project/CityLearn) (MIT, 662 ★) o la
+  serie real del cliente.
+- **Efecto en red**: [`e2nIEE/pandapower`](https://github.com/e2nIEE/pandapower) (BSD-3) para el
+  punto de conexión.
+- **Cableado**: `CityLearn`/serie real genera el perfil de ciclado → `PyBaMM` lo convierte en
+  degradación año a año → `liionpack` verifica que el pack aguanta → `SAM` traduce la curva de
+  capacidad en flujo de caja y LCOS → `pandapower` confirma el punto de conexión. El agente
+  **orquesta el barrido de escenarios** (química, C-rate, profundidad de descarga, temperatura) y
+  redacta el expediente; no inventa la física.
+- **Por qué funciona comercialmente**: el entregable es una **curva de capacidad garantizada con
+  método trazable**, que es exactamente lo que piden un financiador y un regulador de permisos.
+- **Licencias**: BSD-3 + MIT en todo el camino. Entregable propietario sin fricción.
+- **Tiempo estimado**: 6–9 semanas.
+
+---
+
+### Receta 14 — Optimización de parque eólico: del recurso a la maniobra (North America y EMEA)
+
+**Para**: operadores de parques eólicos que ya tienen SCADA y quieren saber si pueden extraer más
+energía del mismo activo mediante control, antes de gastar en hardware.
+
+- **Recurso de alta resolución**:
+  [`NatLabRockies/sup3r`](https://github.com/NatLabRockies/sup3r) (BSD-3, 144 ★) — GAN de
+  super-resolución que densifica el reanálisis climático en espacio y tiempo. Aquí el modelo
+  generativo **es** el producto energético.
+- **Estelas y control**: [`NatLabRockies/floris`](https://github.com/NatLabRockies/floris) (BSD-3,
+  302 ★) — wake steering y optimización de layout; es el que dice cuánto se gana desalineando.
+- **Validación aeroelástica**: [`OpenFAST/openfast`](https://github.com/OpenFAST/openfast)
+  (**Apache-2.0**, 991 ★) — comprueba que la estrategia de control no come vida de componente.
+  Saltarse este paso es cómo se regala una garantía.
+- **Contraste con producción real**:
+  [`NatLabRockies/OpenOA`](https://github.com/NatLabRockies/OpenOA) (BSD-3, 259 ★).
+- **Emplazamiento, si hay expansión**: [`NatLabRockies/reV`](https://github.com/NatLabRockies/reV)
+  (BSD-3, 144 ★).
+- **Cableado**: `sup3r` densifica el recurso → `floris` propone la estrategia de wake steering →
+  `OpenFAST` verifica cargas y fatiga → `OpenOA` mide contra la producción histórica para cerrar el
+  lazo. El agente **gestiona la campaña de simulación y explica la recomendación por turbina**,
+  citando ganancia estimada y coste en fatiga.
+- **La honestidad que lo hace vendible**: la ganancia de wake steering es real pero de un dígito
+  bajo porcentual, y **tiene contrapartida en fatiga**. Presentar ambas cifras juntas es lo que
+  separa esta propuesta de la de un vendedor de software.
+- **Licencias**: BSD-3 + Apache-2.0. Todo permisivo.
+- **Tiempo estimado**: 8–12 semanas.
+
+---
+
+### Receta 15 — Agregador de flexibilidad que habla el protocolo de la utility (North America primero)
+
+**Para**: agregadores, retailers y grandes consumidores que quieren participar en programas de
+respuesta de demanda. La diferencia con un piloto de flexibilidad cualquiera: **este se integra con
+el programa del operador** en vez de quedarse en el dashboard del cliente.
+
+- **El protocolo**: [`OpenLEADR/openleadr-python`](https://github.com/OpenLEADR/openleadr-python)
+  (**Apache-2.0**, 161 ★) — OpenADR 2.0b, la señalización estándar utility ↔ recurso. Es la pieza
+  que esta KB no tenía y sin la cual el piloto no sale del laboratorio.
+- **Ejecución en el borde**: [`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron)
+  (Apache-2.0, 504 ★) — agentes corriendo junto al equipo, no en la nube.
+- **Política de respuesta**: [`citylearn-project/CityLearn`](https://github.com/citylearn-project/CityLearn)
+  (MIT, 662 ★) para entrenar y evaluar antes de tocar un edificio real.
+- **Carga de EV como recurso flexible**: [`evcc-io/evcc`](https://github.com/evcc-io/evcc) y
+  [`mobilityhouse/ocpp`](https://github.com/mobilityhouse/ocpp).
+- **Verificación en el edificio**: [`ugr-sail/sinergym`](https://github.com/ugr-sail/sinergym) (MIT)
+  sobre EnergyPlus.
+- **Cableado**: la utility emite un evento OpenADR → `openleadr-python` lo recibe y lo traduce a
+  objetivo de reducción → el agente reparte el objetivo entre recursos (HVAC vía `VOLTTRON`, EV vía
+  `evcc`) según una política entrenada en `CityLearn` → `openleadr-python` **reporta la entrega** de
+  vuelta a la utility, que es lo que se factura.
+- **Por qué funciona comercialmente**: el valor no está en reducir consumo sino en **poder
+  demostrar la reducción en el formato que el programa exige**. Ese reporte es el producto.
+- **Licencias**: Apache-2.0 + MIT de punta a punta.
+- **Tiempo estimado**: 10–14 semanas, más el ciclo de certificación del programa de la utility
+  (variable y fuera de control del proyecto: declararlo en la propuesta).
+
+---
+
+### Receta 16 — Stack comercial para utility descentralizada o mini-red (LATAM y mercados de acceso)
+
+**Para**: operadores de mini-redes, cooperativas y distribuidoras pequeñas que necesitan cobrar.
+Responde a la pregunta que ninguna receta anterior de esta KB respondía: *"¿cómo factura esto?"*.
+
+- **Dominio energético de fábrica**:
+  [`EnAccess/micropowermanager`](https://github.com/EnAccess/micropowermanager) (**MIT**, 30 ★) —
+  clientes, medidores, tarifas, prepago y cobro para utilities descentralizadas.
+- **Motor de facturación si se necesita escala y robustez**:
+  [`killbill/killbill`](https://github.com/killbill/killbill) (**Apache-2.0**, 5858 ★).
+- **Agregación de consumo medido**:
+  [`openmeterio/openmeter`](https://github.com/openmeterio/openmeter) (**Apache-2.0**, 2457 ★).
+- **Lectura de medidores en campo**:
+  [`volkszaehler/mbmd`](https://github.com/volkszaehler/mbmd) y, donde aplique,
+  [`riclolsen/json-scada`](https://github.com/riclolsen/json-scada) (origen Brasil).
+- **Cableado**: medidor → `mbmd`/`json-scada` → `openmeter` agrega el consumo por cliente y período
+  → `killbill` aplica catálogo tarifario y emite factura → `micropowermanager` da la capa de
+  dominio (prepago, corte, recarga). El agente **atiende la consulta del cliente sobre su factura**
+  con acceso de lectura a esa cadena, y **detecta anomalías de consumo y de cobro**.
+- **La decisión de arquitectura que hay que tomar al inicio**: `micropowermanager` solo, si la
+  escala es de mini-red (es MIT y entiende el dominio, pero 30 ★ significa sin comunidad que
+  sostenga un incidente: hay que asumir soporte propio). `killbill` + `openmeter`, si la escala lo
+  justifica — a cambio de que **toda la lógica tarifaria regulatoria es desarrollo propio**, porque
+  ninguno de los dos sabe de energía. Presupuestarla explícitamente.
+- **Lo que no se debe proponer aquí**: ERPNext + `navariltd/utility-billing`. Es **GPL-3.0 +
+  AGPL-3.0**; en un SaaS activa la cláusula de red. Sólo si el cliente ya vive en ERPNext y acepta
+  las consecuencias.
+- **Licencias**: MIT + Apache-2.0 en el camino recomendado.
+- **Tiempo estimado**: 10–16 semanas según si hay integración con medición existente.
+
+---
+
+## Qué **no** proponer (gaps medidos, actualizado en el tercer pase del 2026-11-20)
 
 Buscado y no encontrado — declarado para que nadie prometa lo que no tiene base. **Tres entradas de
 esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren:
@@ -369,6 +493,17 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
   Coordinador Eléctrico Nacional, CENACE) y por término de dominio: **cero repos institucionales con
   tracción**. La credencial LATAM verificable es **Brasil** (`json-scada`, `OSHMI`, autor individual)
   y **Colombia** (`API_XM`, institucional).
+- **"Plataforma OpenGrid" o "registro CommonGrid" como base técnica.** Son anuncios
+  institucionales de 2026 (Linux Foundation y Texture). Buscados en GitHub: **sin repo de código
+  localizable**. `CommonGrid` además está bajo **Open Database License**, que es licencia de datos y
+  obliga a un análisis legal distinto al de software. Seguirlos, no comprometerlos en alcance.
+- **Modelo de estela de DTU vía `PyWake` en GitHub.** Lo que hay allí es un **espejo** del GitLab de
+  DTU: licencia `null` y último push 2024-11-25. Usar `floris` (BSD-3) salvo que el cliente exija
+  DTU, en cuyo caso la fuente es GitLab y la licencia hay que resolverla aparte.
+- **"Un Odoo de la energía".** No existe un sistema open source único que cubra ERP + CRM +
+  facturación + gestión de datos de medición. Hay piezas componibles (Receta 16) y **la lógica
+  tarifaria regulatoria siempre es desarrollo propio**. Prometer un COTS configurable es prometer lo
+  que no hay.
 - **Upstream de O&G empotrado en producto propietario.** Todo lo encontrado es **GPL-3.0** sin
   alternativa permisiva. El límite de proceso es la condición del entregable, no una recomendación.
 - **Compromisos de cumplimiento con fecha firmada del AI Act.** La fecha (2-dic-2027, Reglamento (UE)
@@ -384,6 +519,12 @@ esta lista se cayeron hoy**; se registran como cerradas para que no se arrastren
 | `oemof-solph` (430 ★) | sin licencia (API dice `null`) | **MIT** (SPDX en `pyproject.toml`) | Se descarta un repo perfectamente usable |
 | `u9n/dlms-cosem` (124 ★) | open source | **Business Source License 1.1** | No es permisiva; pasa por open source en una revisión superficial |
 | `EnergyPlus` | BSD-3 | **BSD-3 + cláusula (4) de marca del DOE** | Prohibido usar "EnergyPlus"/"E+" en nombre de producto o promoción |
+| `GenXProject/GenX.jl` (370 ★) | universitario y muy citado → "será MIT" | **GPL-2.0** | Copyleft fuerte en el entregable de planificación |
+| `open-meteo/open-meteo` (6.703 ★) | API de clima gratuita, muy usada en forecasting renovable | **AGPL-3.0** y API pública *non-commercial use* | Dos restricciones distintas; ambas muerden en un SaaS de cliente |
+| `openmc-dev/openmc` (1.147 ★) | API dice `NOASSERTION` → "sin licencia" | **MIT** (texto verificado) | Descartarlo sería perder la única base nuclear abierta |
+| `idaholab/moose` (2.409 ★) | laboratorio nacional → "permisivo" | **LGPL-2.1** | Modificaciones al propio MOOSE deben liberarse |
+| `navariltd/utility-billing` (70 ★) | app de facturación sobre ERPNext | **AGPL-3.0** sobre ERPNext **GPL-3.0** | Cláusula de red en cualquier SaaS de utility |
+| Familia LF Energy (`Grid2Op`, `PowSyBl`, `operatorfabric-core`, `ExpertOp4Grid`, `power-grid-model-ai`) | "open source europeo" | **MPL-2.0** de forma consistente | Copyleft por archivo: integración sí, marca blanca con motor modificado no |
 
 ---
-*Verificado 2026-11-20 en dos pases. Re-verificar licencias y stars antes de comprometer alcance.*
+*Verificado 2026-11-20 en tres pases. Re-verificar licencias y stars antes de comprometer alcance.*

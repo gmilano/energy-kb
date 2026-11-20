@@ -101,6 +101,28 @@ directo de páginas falla en este entorno, ver nota de método al pie):
   trazabilidad de costo, atribución de refuerzos de red y evidencia auditable. Eso es trabajo de
   datos, y es facturable.
 
+
+#### Actualización del tercer pase (2026-11-20)
+
+- **El regulador federal se movió y creó trabajo facturable.** FERC emitió en **junio de 2026** un
+  conjunto de órdenes dirigidas a los operadores regionales (PJM, ERCOT, SPP, MISO y otros) sobre
+  interconexión de **cargas grandes**, en el expediente **RM26-4-000**. Las fuentes secundarias
+  discrepan sobre si fijó reglas nuevas o exigió a cada operador explicar su plan: lo segundo es lo
+  más repetido. Efecto práctico igual en ambos casos: **cada RTO tiene que producir y defender una
+  metodología de estudio**, y eso es análisis, datos y documentación.
+- **Precedente concreto de agentes en ese hueco**: AWS y **Duke Energy** presentaron *Agentic Grid
+  Planning*, donde los agentes reducen la preparación de datos de los estudios de interconexión de
+  **semanas a horas**, con el ingeniero tomando toda decisión final. Es exactamente la Receta 1 de
+  esta KB, ya validada por un tercero — se puede citar como precedente, no como capacidad propia.
+- **GE Vernova lanzó GridOS for Transmission (junio 2026)**: el espacio tiene producto propietario
+  consolidándose. Competir de frente es caro; integrarse o complementar es más realista.
+- **Señal de demanda**: se reporta que **78 % de las utilities de EE. UU.** despliegan al menos una
+  aplicación de IA para gestionar la demanda de interconexión de datacenters.
+- **Riesgo legislativo a vigilar**: el proyecto **DATA Act** crearía la figura de *consumer-regulated
+  electric utility*, eximiendo de buena parte de la Federal Power Act a instalaciones totalmente
+  desconectadas de la red. Es **propuesta, no ley**. Si avanzara, abre un mercado de diseño de
+  sistemas aislados; no conviene presupuestar sobre ello todavía.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -159,6 +181,28 @@ de verificación que hay que dejar de pedir:
   **3–6 meses** adicionales de plazo; el número es de vendor, el requisito es el dato. Si otro TSO
   copia el mecanismo, el cronograma de cualquier piloto de despacho cambia.
 
+
+#### Actualización del tercer pase (2026-11-20)
+
+- **Hay una política industrial europea explícita para IA en energía, con dinero asignado.** La
+  Comisión publicó el **Strategic Roadmap for Digitalisation and AI in the Energy Sector**,
+  referenciado como **COM(2026) 501, de 3 de junio de 2026**, que incluye una iniciativa insignia
+  **`AI.grids`** para un modelo de IA compartido de operación de red. Un documento del Consejo
+  (ST-10101-2026) cifra en torno a **75 M€ de Horizon Europe para 2026–2027** dirigidos a redes,
+  autoconsumo y almacenamiento, más un marco de intercambio transfronterizo de datos energéticos y
+  entrenamiento de modelos **a desarrollar desde 2027**.
+- **Por qué importa para posicionarse**: un roadmap con fondos y una iniciativa nombrada es un
+  calendario de licitaciones. El socio natural no es el cliente final sino el consorcio.
+- **Regulación nacional que ya añade plazo**: se reporta que el TSO polaco **PSE** exige aprobación
+  previa para sistemas de IA capaces de influir en el despacho, con **3–6 meses** de impacto en
+  cronograma. En Alemania aplican los requisitos de **Bundesnetzagentur** y el régimen **KRITIS** de
+  infraestructura crítica. Esto se presupuesta como fase, no como trámite.
+- **El AI Act sigue sin confirmación primaria desde este entorno** (ver "Gaps declarados"): el
+  desplazamiento del alto riesgo de Anexo III de **2-ago-2026 a 2-dic-2027** vía Digital Omnibus
+  tiene concordancia de múltiples fuentes secundarias; una de ellas data el Reglamento (UE)
+  2026/1744 como vigente desde el **27-jul-2026**, y no se pudo verificar. Sirve para planear,
+  **no para firmar un compromiso de cumplimiento**.
+
 ### APAC
 
 **Contexto regulatorio (verificado)**: en **diciembre de 2025**, la **NDRC y la NEA de China**
@@ -210,6 +254,32 @@ con aplicación desigual entre países.
   deployers**, no a desarrolladores de modelos, y lo específico del sector energético está poco
   desarrollado. Para un cliente eso significa que **la obligación cae sobre él**, no sobre el
   proveedor del modelo — argumento directo para vender gobernanza.
+
+
+#### Actualización del tercer pase (2026-11-20)
+
+- **El dato de adopción más útil del pase, y es un dato de freno**: una encuesta a operadores de red
+  de **13 países** (China, Japón y Corea incluidos) encuentra que sólo **23 % usa IA en operación en
+  tiempo real**, frente a **~70 % en mantenimiento de activos y planificación operativa**. La
+  conclusión comercial es directa: en APAC el encargo vendible hoy es **activos y planificación**,
+  no sala de control. Vender tiempo real es vender contra la evidencia.
+- **Escala de demanda**: Wood Mackenzie proyecta que los datacenters impulsen un alza de **790 TWh**
+  en los mercados de APAC, con 2026 como año bisagra. APAC se estima en torno a **9,45 B USD en
+  2025** (~28 % del mercado global de IA en energía); Japón ~**1,66 B USD en 2026**. Cifras de
+  investigación de mercado: direccionales, no exactas.
+- **China**: State Grid aplica aprendizaje por refuerzo a programación y modos de operación, y el
+  plan quinquenal **2026–2030** apunta explícitamente a IA para volatilidad de red y vertido
+  renovable. Es el mayor desplegador y el menos accesible como cliente.
+- **Japón**: la restricción es acceso a potencia de red, que se estrecha en 2026; los datacenters
+  revierten una década de caída de demanda eléctrica. Mercado de derivados eléctricos en
+  crecimiento rápido.
+- **India**: concentración en datacenters (Hyderabad como foco) con retrasos severos de entrega de
+  red; mercado spot vía **IEX** (day-ahead y term-ahead).
+- **Condicionamiento regulatorio nuevo**: se reporta que **Singapur, Malasia y Corea del Sur** exigen
+  a los desarrolladores de datacenter planificar **almacenamiento en baterías y vertido** junto con
+  la evaluación de impacto en red; **Johor** restringió ciertos proyectos por consumo de agua. Eso
+  convierte el dimensionamiento de BESS en requisito de permiso — y conecta con `PyBaMM` y `SAM`
+  (ver `repos/foundations.md`).
 
 ### LATAM
 
@@ -299,6 +369,34 @@ contexto regulatorio de fuentes secundarias:
   regulación, el permisado, la estructura de financiamiento y el riesgo de ejecución — **no** la
   capacidad. Usarla como contexto, nunca como dato propio.
 
+
+#### Actualización del tercer pase (2026-11-20)
+
+- **Brasil es el mercado con cifras oficiales y es el que hay que usar como ancla.** El Ministerio
+  de Minas y Energía reportó **205 datacenters en operación en junio de 2026** y **38 GW** en
+  solicitudes de opinión de acceso a red. Ese segundo número es la oportunidad: 38 GW de solicitudes
+  es una cola de estudios de interconexión que nadie puede procesar manualmente.
+  ⚠️ **Los conteos varían entre fuentes** (205, 206 y 225 para Brasil; 71 para México): citar el
+  dato del MME y la fecha, nunca un número suelto.
+- **Chile convirtió el datacenter en materia ambiental reglada**: el regulador ambiental adoptó un
+  **criterio de evaluación específico para datacenters, en vigor desde el 25 de febrero de 2026**, y
+  hay proyectos congelados o cancelados por licenciamiento. La Comisión Nacional de Energía advirtió
+  que la expansión de infraestructura eléctrica no sigue el ritmo de la demanda. Servicio implicado:
+  expediente ambiental y de red, no sólo diseño técnico.
+- **México es el caso de oportunidad perdida** y conviene decirlo con franqueza: permisos lentos y
+  red envejecida están desincentivando inversión pese a la ventaja geográfica; Querétaro concentra
+  lo existente con infraestructura no diseñada para cargas intensivas.
+- **PPA renovable como vía de entrada**: en marzo de 2026 **Equinix firmó un PPA con Auren Energia**
+  (eólica y solar, Brasil). Un análisis sectorial —**fuente promocional, cifra no verificada**—
+  habla de **>10 GW** de capacidad renovable lista para red que podría alcanzar grandes cargas en
+  2–3 años.
+- **Señal institucional regional**: **CAF** coordina una red regional de cómputo de alto rendimiento
+  que arranca en **Chile y República Dominicana**. Es un interlocutor multilateral, no un cliente
+  corporativo, y financia infraestructura.
+- **Contrapeso que evita sobrevender**: un informe (BISI) sostiene que la región se vende como
+  renovable pero opera con respaldo fósil. Para una propuesta de sostenibilidad, la medición de
+  factor de emisión horario es parte del alcance, no un supuesto.
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -345,4 +443,5 @@ En este pase, el fetch directo de páginas falló por completo: `arxiv.org`, `ww
 
 ---
 *Investigado 2026-11-20 (dos pases). Cifras de consultoras: re-verificar antes de usar en propuesta.*
+
 

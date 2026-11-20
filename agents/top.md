@@ -64,7 +64,30 @@ Categoría que pases anteriores declararon vacía. No lo está — pero es **mod
 ⚠️ **Límite que hay que declarar**: ninguno de los dos coloca ofertas en un mercado real. Son
 simuladores. Un agente de *ejecución* de trading mayorista sigue sin equivalente open source.
 
-**16 agentes/entornos reales.** Ninguna fila es ejemplo ni plantilla.
+## Capa agéntica europea bajo LF Energy (añadida en el tercer pase del 2026-11-20)
+
+Hay **dos** stacks agénticos energéticos, no uno. El de arriba (`Power-Agent`, Harvard SEAS) es MIT
+y nace en universidad norteamericana. Este nace en **operadores de red europeos** (RTE, Alliander) y
+es **MPL-2.0** de forma consistente. Para un encargo con un TSO europeo, es el stack pertinente.
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [opfab/operatorfabric-core](https://github.com/opfab/operatorfabric-core) | **MPL-2.0** | Plataforma LF Energy de **sala de control**: agrega y encamina tarjetas de acción al operador humano. Es donde un agente deposita una recomendación para que una persona la acepte | 42 | 29 | 2026-11-19 | EMEA |
+| [ainetus/ExpertOp4Grid](https://github.com/ainetus/ExpertOp4Grid) | **MPL-2.0** | Sistema experto que propone maniobras topológicas de red. Núcleo del asistente AINETUS (AI4REALNET, gobernanza LF Energy) | 12 | 4 | 2026-11-18 | EMEA |
+| [PowerGridModel/power-grid-model-ai](https://github.com/PowerGridModel/power-grid-model-ai) | **MPL-2.0** | Agent Skills para `power-grid-model` (Alliander): expone a un LLM el motor de cálculo de red de grado producción | 5 | 2 | 2026-11-17 | EMEA |
+| [ainetus/soft_label_gnn](https://github.com/ainetus/soft_label_gnn) | **MPL-2.0** | GNN con etiquetas blandas, del mismo programa de investigación | 4 | 3 | 2026-03-05 | EMEA |
+| [ainetus/Expert_op4grid_recommender](https://github.com/ainetus/Expert_op4grid_recommender) | **MPL-2.0** | Recomendador derivado de ExpertOp4Grid | 1 | 3 | 2026-11-18 | EMEA |
+
+**Cifras leídas con honestidad**: entre 1 y 42 ★. No hay comunidad; hay respaldo institucional y
+código publicado hace meses. Se registra por **procedencia e integrabilidad**, no por tracción, y
+así debe presentarse a un cliente.
+
+**La pieza de arquitectura que faltaba en toda la KB**: `operatorfabric-core`. Había motores de
+cálculo, entornos RL y servidores MCP, pero ninguna capa *human-in-the-loop*. Ningún operador de red
+deja que un agente ejecute una maniobra: la recomendación tiene que llegar a una sala de control con
+trazabilidad y aceptación explícita. Sin ese componente, una demo agéntica de red no es desplegable.
+
+**21 agentes/entornos reales.** Ninguna fila es ejemplo ni plantilla.
 
 ## Notas de licencia que cambian decisiones
 
@@ -81,6 +104,18 @@ simuladores. Un agente de *ejecución* de trading mayorista sigue sin equivalent
   "Alliance for Sustainable Energy, LLC"). Toda URL `NREL/...` registrada antes está rota.
 - **`CityLearn` cambió de organización**: `intelligent-environments-lab/CityLearn` ya no resuelve;
   ahora es `citylearn-project/CityLearn`.
+
+### Nota de licencia del tercer pase: MPL-2.0 es la licencia por defecto del sector eléctrico europeo
+
+`Grid2Op`, `PowSyBl`, `openSTEF`, `power-grid-model`, `operatorfabric-core`, `ExpertOp4Grid` y
+`power-grid-model-ai` son **todos MPL-2.0**. No es coincidencia: es la licencia que eligieron RTE y
+Alliander, y por arrastre LF Energy. Consecuencia práctica que hay que decir al inicio de un
+encargo, no al final:
+
+- **Se puede** enlazar desde código propietario y distribuir el producto combinado.
+- **Hay que** publicar las modificaciones hechas *a los archivos MPL* que se distribuyan.
+- **Por tanto**: entregable de integración, sí. Entregable de marca blanca con el motor modificado y
+  cerrado, no — o se asume la publicación de ese delta.
 
 ## Correcciones de datos sobre pases anteriores
 

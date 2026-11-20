@@ -110,6 +110,72 @@ mercado para Colombia sin negociar acceso.
 
 **34 repos fundacionales reales** (13 del primer pase + 21 añadidos en el segundo).
 
+## Activos físicos: baterías, eólica, solar y nuclear (categoría añadida en el tercer pase del 2026-11-20)
+
+Hasta este pase la KB modelaba **la red** y no **el activo**. Son dos preguntas distintas: una es
+cómo fluye la potencia por el sistema, otra es qué ocurre dentro de la batería, la turbina o el
+reactor. Todo lo de esta sección es permisivo salvo donde se indica.
+
+### Baterías y almacenamiento
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [pybamm-team/PyBaMM](https://github.com/pybamm-team/PyBaMM) | **BSD-3-Clause** | Modelos de batería basados en física (DFN, SPM, SPMe). Estándar de facto; respaldo de The Faraday Institution. **845 forks** — el repo con más derivación de toda esta KB | 1737 | 845 | 2026-11-19 | EMEA |
+| [pybamm-team/liionpack](https://github.com/pybamm-team/liionpack) | MIT | Del modelo de celda al **pack** completo (serie/paralelo), sobre PyBaMM | 120 | 39 | 2026-11-16 | EMEA |
+
+Punto de entrada obligado para degradación, garantía de capacidad, dimensionamiento de BESS y
+second-life. Nada de eso se responde con un modelo de flujo de potencia.
+
+### Eólica
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [OpenFAST/openfast](https://github.com/OpenFAST/openfast) | **Apache-2.0** | Simulación aeroelástica de turbina completa y de parque (FAST.Farm). Laboratorio nacional de EE. UU. (NLR, ex-NREL) | 991 | 552 | 2026-11-20 | North America |
+| [NatLabRockies/floris](https://github.com/NatLabRockies/floris) | BSD-3-Clause | Modelo de estela orientado a control: wake steering y optimización de layout | 302 | 190 | 2026-11-18 | North America |
+| [wind-python/windpowerlib](https://github.com/wind-python/windpowerlib) | MIT | Curva de potencia y salida de turbinas/parques. ⚠️ sin mantenimiento desde **2024-02-20** | 397 | 113 | 2024-02-20 | EMEA |
+
+⚠️ `DTUWindEnergy/PyWake` **no se recomienda desde aquí**: lo que hay en GitHub es un espejo del
+GitLab de DTU, con licencia `null` y último push 2024-11-25. El proyecto vivo no está en GitHub.
+
+### Solar, recurso renovable y tecno-economía
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [NatLabRockies/SAM](https://github.com/NatLabRockies/SAM) | BSD-3-Clause | **System Advisor Model**: modelo tecno-económico de referencia (FV, CSP, eólica, geotermia, almacenamiento). Responde si un proyecto cierra financieramente | 498 | 221 | 2026-11-19 | North America |
+| [NatLabRockies/ssc](https://github.com/NatLabRockies/ssc) | BSD-3-Clause | Motor de cálculo de SAM, embebible como librería sin GUI | 96 | 119 | 2026-11-19 | North America |
+| [NatLabRockies/reV](https://github.com/NatLabRockies/reV) | BSD-3-Clause | Potencial técnico geoespacial a escala de país: dónde cabe y cuánto produce | 144 | 63 | 2026-10-01 | North America |
+| [NatLabRockies/sup3r](https://github.com/NatLabRockies/sup3r) | BSD-3-Clause | **GAN de super-resolución** de datos de recurso: sube resolución espacio-temporal de reanálisis climático | 144 | 33 | 2026-11-18 | North America |
+
+### Nuclear (subsector nuevo, traído por la demanda de datacenter)
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [openmc-dev/openmc](https://github.com/openmc-dev/openmc) | **MIT** (resuelta en `LICENSE` crudo; la API dice `NOASSERTION`) | Transporte de neutrones Monte Carlo. Copyright MIT + UChicago Argonne. Base abierta para análisis de núcleo y SMR | 1147 | 704 | 2026-11-19 | North America |
+| [idaholab/moose](https://github.com/idaholab/moose) | ⚠️ **LGPL-2.1** | Multifísica de elementos finitos (Idaho National Laboratory). Copyleft débil: enlazable, **no permisivo** | 2409 | 1282 | 2026-11-19 | North America |
+
+## Respuesta de demanda: el protocolo que faltaba
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [OpenLEADR/openleadr-python](https://github.com/OpenLEADR/openleadr-python) | **Apache-2.0** | Implementación de **OpenADR 2.0b**: la señalización estándar de respuesta de demanda entre la utility y el recurso flexible | 161 | 67 | 2026-11-16 | North America |
+
+La KB ya tenía con qué **simular** DR (`CityLearn`), con qué **ejecutar** en el borde (`VOLTTRON`) y
+con qué **controlar** carga de EV (`evcc`). Faltaba la pieza que **habla el protocolo con la
+utility**. Sin ella, un piloto de flexibilidad no se integra con el programa del operador.
+
+## Planificación: añadidos del tercer pase
+
+| Repo | Licencia | Para qué sirve | Stars | Forks | Último push | Región origen |
+|------|----------|----------------|-------|-------|-------------|---------------|
+| [PyPSA/pypsa-usa](https://github.com/PyPSA/pypsa-usa) | MIT | Modelo del sistema eléctrico de EE. UU. sobre PyPSA, con datos abiertos | 153 | — | 2026-11-20 | North America |
+| [OSeMOSYS/OSeMOSYS](https://github.com/OSeMOSYS/OSeMOSYS) | Apache-2.0 | Planificación de largo plazo usada por agencias y ministerios en planes nacionales | 196 | 123 | 2025-10-22 | EMEA |
+| [switch-model/switch](https://github.com/switch-model/switch) | **Apache-2.0** (resuelta en `LICENSE` crudo) | Planificación de sistemas de alta penetración renovable | 158 | 95 | 2025-07-07 | North America |
+| [GenXProject/GenX.jl](https://github.com/GenXProject/GenX.jl) | ⚠️ **GPL-2.0** | Expansión de capacidad (Princeton). Muy citado y **no permisivo** | 370 | — | 2026-10-15 | North America |
+
+`OSeMOSYS` importa especialmente fuera de Europa: es el modelo con el que varios ministerios de
+LATAM y África han construido planes nacionales, lo que lo vuelve una credencial de conversación
+con reguladores, no sólo una herramienta.
+
 ## Notas de licencia que cambian decisiones
 
 - **`NatLabRockies/EnergyPlus` no es BSD-3 plano.** El `LICENSE.txt` crudo añade una **cláusula (4)
@@ -131,6 +197,16 @@ mercado para Colombia sin negociar acceso.
   **Business Source License 1.1** — source-available, no permisiva; la API solo dice `NOASSERTION`,
   así que es una trampa de licenciamiento fácil de pisar. `CURENT/andes` (389 ★) es **GPL-3.0**
   (también `NOASSERTION` en la API).
+
+### Añadidos del tercer pase (2026-11-20)
+
+| Repo | Trampa | Consecuencia |
+|------|--------|--------------|
+| `GenXProject/GenX.jl` | Viene de universidad y es muy citado → se asume MIT. Es **GPL-2.0** | Copyleft fuerte en un entregable de planificación: contamina el producto derivado |
+| `openmc-dev/openmc` | La API dice `NOASSERTION` → parece sin licencia | Es **MIT** (texto verificado en `LICENSE` crudo). Descartarlo sería perder la única base nuclear abierta |
+| `idaholab/moose` | Laboratorio nacional, 2.409 ★ → se asume permisivo | **LGPL-2.1**: enlazable, pero modificaciones al propio MOOSE deben liberarse |
+| `open-meteo/open-meteo` (6.703 ★) | API de clima "gratis", muy usada en forecasting renovable | **AGPL-3.0** y su API pública es *non-commercial use*. Dos restricciones distintas y ambas muerden en un SaaS de cliente |
+| `wind-python/windpowerlib` | MIT, 397 ★ | Sin mantenimiento desde **2024-02-20**: la licencia está bien, el riesgo es de soporte |
 
 ## Fuentes de descubrimiento (para el próximo pase)
 

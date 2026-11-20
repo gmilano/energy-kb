@@ -9,6 +9,57 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 3 (la capa agéntica europea y su licencia)
+
+**Titular del pase: existen DOS stacks agénticos energéticos, no uno, y se distinguen por licencia.
+El norteamericano (`Power-Agent`, Harvard SEAS) es MIT. El europeo, que esta KB no tenía registrado,
+se está consolidando bajo LF Energy y es MPL-2.0 — copyleft de archivo, no permisivo.**
+
+Los dos pases anteriores de hoy registraron el stack MIT y lo declararon "el punto de partida más
+fuerte que existe". Sigue siendo cierto para North America. Pero para un encargo con un TSO europeo
+la respuesta es otra, y es la que faltaba.
+
+### El hallazgo que cierra una pregunta abierta: la organización `ainetus` existe
+
+El pase anterior registró AINETUS a partir de prensa (Enlit, LF Energy) **sin localizar el código**.
+Está en GitHub, bajo la organización `ainetus`, activa esta semana:
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [ainetus/ExpertOp4Grid](https://github.com/ainetus/ExpertOp4Grid) | **MPL-2.0** | Sistema experto que **opera** una red eléctrica: motor de recomendación de maniobras topológicas. Núcleo del asistente de operación AINETUS (proyecto AI4REALNET, gobernanza LF Energy) | 12 | 4 | 2026-11-18 | EMEA |
+| [ainetus/Expert_op4grid_recommender](https://github.com/ainetus/Expert_op4grid_recommender) | **MPL-2.0** | Recomendador basado en los principios de ExpertOp4Grid: analiza y propone acciones al operador | 1 | 3 | 2026-11-18 | EMEA |
+| [ainetus/soft_label_gnn](https://github.com/ainetus/soft_label_gnn) | **MPL-2.0** | GNN con etiquetas blandas para el mismo programa de investigación | 4 | 3 | 2026-03-05 | EMEA |
+| [ainetus/Grid2Op_MORL](https://github.com/ainetus/Grid2Op_MORL) | **MPL-2.0** | RL multi-objetivo sobre Grid2Op | 0 | 2 | 2026-06-11 | EMEA |
+
+**Lectura honesta de las cifras**: 12 ★ es *muy* poco. No es un proyecto con comunidad; es código de
+investigación con respaldo institucional (RTE, AI4REALNET, LF Energy) publicado hace ~6 meses. Su
+valor no está en la tracción sino en **de quién viene y con qué se integra**.
+
+### La pieza que faltaba entre el agente y la sala de control
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [opfab/operatorfabric-core](https://github.com/opfab/operatorfabric-core) | **MPL-2.0** | Plataforma LF Energy de **sala de control**: agrega, prioriza y encamina notificaciones y tarjetas de acción a los operadores. Es el sitio donde un agente deposita una recomendación para que un humano la vea y la acepte | 42 | 29 | 2026-11-19 | EMEA |
+| [PowerGridModel/power-grid-model-ai](https://github.com/PowerGridModel/power-grid-model-ai) | **MPL-2.0** | **Agent Skills** para `power-grid-model` (LF Energy / Alliander): da al LLM acceso al motor de cálculo de red de grado producción | 5 | 2 | 2026-11-17 | EMEA |
+
+`operatorfabric-core` es el hallazgo de arquitectura del pase. Esta KB ya registraba motores de
+cálculo, entornos RL y servidores MCP, pero **ninguna pieza de "human-in-the-loop"**. En operación de
+red eso no es un detalle: ningún TSO deja que un agente ejecute una maniobra. La recomendación tiene
+que llegar a una sala de control, con trazabilidad y aceptación explícita. Ese es el componente.
+
+### Lo que esto cambia en una decisión concreta
+
+- **Un encargo europeo de operación de red no se arma con `Power-Agent`.** Se arma con
+  `Grid2Op` (MPL-2.0) + `ExpertOp4Grid` (MPL-2.0) + `operatorfabric-core` (MPL-2.0), que ya están
+  diseñados para integrarse entre sí y comparten gobernanza.
+- **MPL-2.0 no es un bloqueo, pero no es MIT.** El copyleft es **por archivo**: se puede enlazar
+  desde código propietario y distribuir el conjunto, pero las modificaciones *a los archivos MPL*
+  deben publicarse. Para un entregable de cliente eso es manejable; para uno de marca blanca donde
+  el cliente quiere el motor modificado y cerrado, no lo es. Hay que decidirlo al inicio, no al final.
+- **El patrón de licencia tiene geografía.** No es casualidad: la capa americana nace en universidad
+  (Harvard → MIT) y la europea en operadores de red (RTE/Alliander → MPL, la licencia de PowSyBl y
+  Grid2Op). Conviene anticiparlo al estimar cualquier encargo transatlántico.
+
 ## 2026-11-20 — pase 2 (barrido de huecos declarados)
 
 **Titular del pase: la categoría agéntica energética no se agota en `Power-Agent`. Apareció una

@@ -187,7 +187,76 @@ resultado cambia lo que la KB debe prometer:
 
 ---
 
-## Gaps declarados (estado al cierre del segundo pase, 2026-11-20)
+## T13 — La capa agéntica energética tiene dos geografías y dos licencias
+
+El hallazgo estructural del tercer pase. No hay *un* stack agéntico energético open source: hay dos,
+y la diferencia no es técnica sino de origen y de licencia.
+
+| | North America | EMEA |
+|---|---|---|
+| **Quién lo construye** | Universidad (Harvard SEAS, Power & AI Initiative) | Operadores de red (RTE, Alliander) bajo LF Energy |
+| **Licencia** | **MIT**, sin excepción | **MPL-2.0**, sin excepción |
+| **Piezas** | `PowerMCP`, `PowerSkills`, `PowerWF`, `PowerFM`, `PowerAgentBench` | `Grid2Op`, `ExpertOp4Grid`, `power-grid-model-ai`, `operatorfabric-core`, `PowSyBl`, `openSTEF` |
+| **Tracción** | 44–238 ★ | 1–494 ★ |
+| **Qué asume** | El agente razona sobre herramientas de ingeniería | El agente **propone a un operador humano** que acepta |
+
+La segunda fila es la que cambia un presupuesto. MPL-2.0 es copyleft **por archivo**: se enlaza
+desde código propietario sin contaminar el producto, pero las modificaciones a los archivos MPL que
+se distribuyan hay que publicarlas. Entregable de integración, sin problema; entregable de marca
+blanca con el motor modificado y cerrado, no.
+
+La cuarta fila es la que cambia una arquitectura. El stack europeo trae `operatorfabric-core`: una
+sala de control donde la recomendación del agente espera aceptación humana trazable. El americano no
+tiene equivalente. Para un TSO —que nunca permite ejecución automática de maniobras— esa pieza no es
+opcional, y su ausencia es la razón por la que muchas demos agénticas de red no llegan a piloto.
+
+## T14 — La KB sabía modelar la red y no sabía modelar el activo
+
+Durante dos pases esta KB barrió agentes, mercados, O&M, planificación y gemelo digital. Todas son
+capas de **sistema eléctrico**. Ninguna preguntaba qué ocurre dentro de una batería, una turbina o
+un reactor. No era un gap declarado: era un gap invisible, que es peor, porque el silencio parece
+cobertura.
+
+Doce repos permisivos lo cubren (ver `repos/foundations.md`), y el mayor —**`PyBaMM`, BSD-3,
+1.737 ★ y 845 forks**— tiene más derivación que cualquier repo que la KB tuviera en su núcleo.
+
+Por qué importa comercialmente: las preguntas que hoy traen los clientes —dimensionar un BESS,
+garantizar capacidad a 10 años, evaluar second-life, optimizar wake steering de un parque, decir si
+un proyecto cierra— **no se responden con un modelo de flujo de potencia**. Se responden con
+`PyBaMM`, `OpenFAST`, `floris` y `SAM`. Tener sólo la capa de red significaba poder conversar sobre
+la red y no sobre el activo que el cliente compró.
+
+Corolario regulatorio con efecto inmediato en APAC: si Singapur, Malasia y Corea exigen plan de
+baterías y vertido para aprobar un datacenter, el dimensionamiento de BESS deja de ser ingeniería de
+detalle y pasa a ser **requisito de permiso**. Esa es una puerta de entrada, no un entregable menor.
+
+## T15 — El open source energético se está institucionalizando, y todavía no es código
+
+Tres movimientos en un trimestre, todos de instituciones y ninguno con base de código utilizable
+hoy desde este entorno:
+
+- **OpenGrid** (Linux Foundation, oct-2026): infraestructura abierta para planificación de red, con
+  Breakthrough Energy GRIDS y Google.org. Buscado en GitHub: **no localizado un repo con código**.
+- **CommonGrid** (Texture, 25-sep-2026): registro abierto y editable de la infraestructura eléctrica
+  de EE. UU., bajo **Open Database License** — licencia de **datos**, no de software. La distinción
+  importa: ODbL impone obligaciones de *share-alike sobre la base de datos derivada*, que es un
+  análisis legal distinto al de una licencia de código.
+- **AINETUS** (LF Energy / AI4REALNET, ~jun-2026): éste **sí** tiene código, y este pase lo localizó
+  en la organización `ainetus` (MPL-2.0, activa esta semana). El pase anterior lo conocía sólo por
+  prensa.
+
+Lectura para una propuesta: anunciar que "existe OpenGrid" no es lo mismo que poder construir sobre
+él. De los tres, sólo AINETUS es hoy una dependencia real. Conviene seguir los otros dos sin
+comprometerlos en alcance.
+
+## T16 — Lo que la IA consume ya es parte del alcance de un proyecto de IA energética
+
+`mlco2/ecologits` (MPL-2.0, 363 ★) mide el consumo y la huella de las llamadas a LLM por API. Se
+registra porque cierra un círculo incómodo y cada vez más auditado: un agente que optimiza una red
+tiene a su vez un coste energético, y en un encargo de sostenibilidad el cliente va a preguntar por
+él. Tenerlo instrumentado desde el inicio es más barato que justificarlo al final.
+
+## Gaps declarados (estado al cierre del tercer pase, 2026-11-20)
 
 Buscado y **no** encontrado. Un gap declarado es información; el silencio parece cobertura. Esta
 tabla registra también **los gaps que se cerraron**, porque un gap que se arrastra cuando ya no
@@ -203,6 +272,17 @@ existe es tan dañino como uno que no se declara.
 | "Repos LATAM más allá de Brasil: ninguno" | ✅ **cerrado para Colombia** | `EquipoAnaliticaXM/API_XM` (**MIT**, 75 ★), publicado por el operador del sistema. Argentina, Chile y México siguen en cero |
 | "Acoplamiento sectorial gas/hidrógeno: no registrado" | ✅ **cerrado** | `pandapipes` (BSD-3, 247 ★): flujo en tuberías de gas, hidrógeno y calor |
 | "Planificación y expansión de capacidad: categoría ausente" | ✅ **cerrado** | `oemof-solph` (MIT, 430 ★), `calliope` (Apache-2.0, 380 ★), `temoa` (MIT, 116 ★), `PowerGenome` (MIT, 235 ★), `TIMES` (GPL-3.0, 151 ★) |
+
+### Cerrados o acotados en el tercer pase
+
+| Gap | Estado | Qué lo cambió |
+|-----|--------|---------------|
+| "AINETUS: anunciado en prensa, **código no localizado**" | ✅ **cerrado** | Organización `ainetus` en GitHub: `ExpertOp4Grid` (MPL-2.0, 12 ★), `Expert_op4grid_recommender`, `soft_label_gnn`, `Grid2Op_MORL`. Activa 2026-11-18 |
+| Modelado de **activos físicos** (no declarado antes: gap invisible) | ✅ **cerrado** | `PyBaMM` (BSD-3, 1737 ★), `liionpack` (MIT), `OpenFAST` (Apache-2.0, 991 ★), `floris` (BSD-3), `SAM`/`ssc`/`reV`/`sup3r` (BSD-3), `openmc` (MIT, 1147 ★) |
+| **Respuesta de demanda**: faltaba el protocolo con la utility | ✅ **cerrado** | `OpenLEADR/openleadr-python` (Apache-2.0, 161 ★), implementación de OpenADR 2.0b |
+| **Capa human-in-the-loop** para agentes de red (gap invisible) | ✅ **cerrado** | `opfab/operatorfabric-core` (MPL-2.0, 42 ★): sala de control con aceptación trazable |
+| **Comercial de utility** (facturación, CIS, medición): categoría ausente | 🟡 **hay piezas, no hay plataforma** | `killbill` (Apache-2.0, 5858 ★), `openmeter` (Apache-2.0, 2457 ★), `micropowermanager` (MIT, 30 ★). **No existe un "Odoo de la energía"**: la lógica tarifaria regulatoria es desarrollo propio |
+| **Nuclear / SMR**: subsector ausente | ✅ **cerrado como base abierta** | `openmc` (MIT verificada, 1147 ★), `moose` (LGPL-2.1, 2409 ★) |
 
 ### Abiertos, con el límite medido
 
@@ -230,6 +310,35 @@ existe es tan dañino como uno que no se declara.
   sigue **sin existir** una plataforma end-to-end open source. Proponerlo es presupuesto de
   integración.
 
+
+### Añadidos y precisiones del tercer pase sobre los gaps abiertos
+
+- **Verificación primaria europea: no es un problema de EUR-Lex, es de dominio.** Pases anteriores
+  registraban `eur-lex.europa.eu` → 403. Este pase midió **seis hosts distintos**:
+  `eur-lex.europa.eu`, `ec.europa.eu`, `op.europa.eu`, `data.europa.eu`,
+  `data.consilium.europa.eu` y `oeil.secure.europarl.europa.eu`. **Todos fallan en el CONNECT del
+  proxy.** La conclusión correcta no es "EUR-Lex está caído" sino que **ninguna fuente primaria de
+  la UE es alcanzable desde este entorno**. Dejar de intentarlo host por host; cualquier fecha
+  regulatoria europea de esta KB es, y seguirá siendo, secundaria mientras no cambie la política de
+  red. COM(2026) 501 y ST-10101-2026 entran con esa misma marca.
+- **Huggingface: octavo pase, y ahora con el mecanismo identificado.** `huggingface.co` falla con
+  `CONNECT tunnel failed, response 403`, tanto en la raíz como en `/api/models/...`. Es **rechazo
+  del proxy**, no DNS ni bloqueo de la aplicación. Probar otra ruta de la misma API no va a
+  funcionar. **Ninguna licencia de pesos verificada**; no afirmar nada sobre modelos descargables.
+- **Límite de método nuevo, importante para el próximo pase**: `gh api repos/{owner}/{repo}`
+  devuelve **403** para cualquier repo no adjuntado a la sesión. El **único** canal de verificación
+  que funciona es `gh api -X GET search/repositories -f q='repo:owner/name'`, que sí es la REST API
+  de GitHub y devuelve `license.spdx_id`, `stargazers_count`, `forks_count` y `pushed_at` de primera
+  mano. `raw.githubusercontent.com` responde 200 y sigue siendo la vía para resolver `NOASSERTION`.
+- **`OpenGrid` y `CommonGrid` no son todavía dependencias.** Buscados en GitHub por nombre y
+  descripción: sin repo de código localizable. Son anuncios institucionales (ver T15).
+- **Repos de origen APAC: sin cambio.** El tercer pase no añadió ninguno. Lo verificado sigue siendo
+  `MyEMS` (MIT, 763 ★) y `price_forecast` (MIT, 25 ★). Nota: `frappe/erpnext` (GPL-3.0, 41.460 ★) es
+  de origen APAC y de tracción enorme, pero es ERP generalista, no energía — no cuenta como
+  credencial sectorial.
+- **Argentina, Chile y México: sin cambio.** Cero repos institucionales con tracción. La credencial
+  LATAM verificable sigue siendo Brasil y Colombia.
+
 ---
-*Investigado 2026-11-20 en dos pases. Lo verificado de primera mano es, sin excepción, lo que vive
+*Investigado 2026-11-20 en tres pases. Lo verificado de primera mano es, sin excepción, lo que vive
 en GitHub; todo lo regulatorio y de mercado es secundario y está marcado como tal.*

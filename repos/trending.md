@@ -9,6 +9,99 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-20 — pase 3 (los activos físicos, la categoría que faltaba entera)
+
+**Titular del pase: esta KB sabía modelar la RED y no sabía modelar los ACTIVOS. Doce repos
+verificados, todos permisivos, cubren baterías, eólica, solar y nuclear — y el mayor de ellos
+(`PyBaMM`, 1.737 ★) es más grande que cualquier repo que la KB tuviera registrado en su núcleo.**
+
+Los dos pases anteriores barrieron agentes, mercados, O&M, planificación y gemelo digital. Todos son
+capas de **sistema eléctrico**. Ninguno preguntó por la física del activo: qué pasa dentro de una
+batería, de una turbina, de un reactor. Esa ausencia no estaba declarada como gap — es peor que un
+gap declarado, porque no se veía.
+
+### Baterías y almacenamiento — la ausencia más cara
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [pybamm-team/PyBaMM](https://github.com/pybamm-team/PyBaMM) | **BSD-3-Clause** | Modelos de batería **basados en física** (DFN, SPM, SPMe) en Python. El estándar de facto académico e industrial; respaldo de The Faraday Institution (Reino Unido) | 1737 | 845 | 2026-11-19 | EMEA |
+| [pybamm-team/liionpack](https://github.com/pybamm-team/liionpack) | MIT | Simulación de **packs** (celdas en serie/paralelo) sobre PyBaMM: del modelo de celda al sistema | 120 | 39 | 2026-11-16 | EMEA |
+
+Que una KB de energía con 81 repos registrados no tuviera `PyBaMM` es significativo: 845 forks es
+más que casi todo lo demás en este archivo. Cualquier conversación de BESS, degradación, garantía de
+capacidad o second-life empieza aquí.
+
+### Eólica — del recurso a la turbina
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [OpenFAST/openfast](https://github.com/OpenFAST/openfast) | **Apache-2.0** | Simulación aeroelástica de turbina completa y de parque (FAST.Farm). Respaldo del laboratorio nacional de EE. UU. (NLR, ex-NREL) | 991 | 552 | 2026-11-20 | North America |
+| [NatLabRockies/floris](https://github.com/NatLabRockies/floris) | BSD-3-Clause | Modelo de **estela** orientado a control: optimización de wake steering y layout de parque | 302 | 190 | 2026-11-18 | North America |
+| [wind-python/windpowerlib](https://github.com/wind-python/windpowerlib) | MIT | Curva de potencia y salida de turbinas/parques. ⚠️ **Último push 2024-02-20**: usable, no mantenido | 397 | 113 | 2024-02-20 | EMEA |
+
+### Solar, recurso y tecno-economía
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [NatLabRockies/SAM](https://github.com/NatLabRockies/SAM) | BSD-3-Clause | **System Advisor Model**: modelo tecno-económico de referencia para FV, CSP, eólica, geotermia y almacenamiento. Lo que se usa para decir si un proyecto cierra | 498 | 221 | 2026-11-19 | North America |
+| [NatLabRockies/ssc](https://github.com/NatLabRockies/ssc) | BSD-3-Clause | Motor de cálculo de SAM, embebible como librería sin la GUI | 96 | 119 | 2026-11-19 | North America |
+| [NatLabRockies/reV](https://github.com/NatLabRockies/reV) | BSD-3-Clause | Potencial técnico **geoespacial**: dónde cabe un parque y cuánto produciría, a escala de país | 144 | 63 | 2026-10-01 | North America |
+| [NatLabRockies/sup3r](https://github.com/NatLabRockies/sup3r) | BSD-3-Clause | **GAN de super-resolución** para datos de recurso renovable: sube la resolución espacio-temporal de reanálisis climático. Es IA generativa aplicada al recurso, no al texto | 144 | 33 | 2026-11-18 | North America |
+
+`sup3r` merece atención aparte: es de los pocos repos verificados en esta KB donde el modelo
+generativo **es** el producto energético, y no una capa de conversación sobre otro motor.
+
+### Nuclear — subsector nuevo, traído por la demanda de datacenter
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [openmc-dev/openmc](https://github.com/openmc-dev/openmc) | **MIT** (resuelta; la API dice `NOASSERTION`) | Transporte de neutrones Monte Carlo. Copyright MIT + UChicago Argonne. Base abierta para análisis de núcleo, incluidos SMR | 1147 | 704 | 2026-11-19 | North America |
+| [idaholab/moose](https://github.com/idaholab/moose) | **LGPL-2.1** | Entorno multifísica de elementos finitos (Idaho National Laboratory). ⚠️ Copyleft débil: enlazable, pero no es permisivo | 2409 | 1282 | 2026-11-19 | North America |
+
+### Respuesta de demanda: el estándar que faltaba
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [OpenLEADR/openleadr-python](https://github.com/OpenLEADR/openleadr-python) | **Apache-2.0** | Implementación de **OpenADR 2.0b**, el estándar de señalización de respuesta de demanda entre utility y recurso | 161 | 67 | 2026-11-16 | North America |
+
+La KB tenía `CityLearn` (simular DR), `VOLTTRON` (ejecutar en el borde) y `evcc` (controlar carga),
+pero **ninguna pieza que hablara el protocolo con la utility**. `openleadr-python` es ese eslabón.
+
+### Planificación: tres añadidos y una trampa de licencia
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [PyPSA/pypsa-usa](https://github.com/PyPSA/pypsa-usa) | MIT | Modelo de sistema energético de EE. UU. sobre PyPSA, con datos abiertos | 153 | — | 2026-11-20 | North America |
+| [OSeMOSYS/OSeMOSYS](https://github.com/OSeMOSYS/OSeMOSYS) | Apache-2.0 | Modelo de planificación de largo plazo usado por agencias y ministerios; base de muchos planes nacionales | 196 | 123 | 2025-10-22 | EMEA |
+| [switch-model/switch](https://github.com/switch-model/switch) | **Apache-2.0** (resuelta; la API dice `NOASSERTION`) | Planificación de sistemas de alta penetración renovable | 158 | 95 | 2025-07-07 | North America |
+| [GenXProject/GenX.jl](https://github.com/GenXProject/GenX.jl) | ⚠️ **GPL-2.0** | Expansión de capacidad configurable (Princeton). **Muy citado y NO permisivo**: no asumir MIT por venir de universidad | 370 | — | 2026-10-15 | North America |
+
+### Huella ambiental de la propia IA
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [mlco2/ecologits](https://github.com/mlco2/ecologits) | MPL-2.0 | Mide consumo energético y huella de las llamadas a LLM por API. Cierra el círculo: la IA que optimiza la red también consume | 363 | 36 | 2026-11-19 | EMEA |
+
+### Movimiento institucional de este trimestre (prensa, no verificado en GitHub)
+
+- **OpenGrid (Linux Foundation, oct-2026)**: iniciativa de infraestructura abierta para planificación
+  de red, con apoyo de Breakthrough Energy GRIDS y Google.org. **Buscado en GitHub y no localizado
+  un repo con código**; es anuncio, no todavía base de código utilizable.
+- **CommonGrid (Texture, 25-sep-2026)**: registro abierto y editable de la infraestructura eléctrica
+  de EE. UU., bajo **Open Database License** (licencia de *datos*, no de software). Tampoco
+  localizado como repo GitHub desde este entorno.
+- **Grid Protectors (OpenAI, 4-nov-2026)**: programa de flexibilidad de carga de datacenter. **No es
+  open source**; se registra como señal de mercado, no como activo técnico.
+
+### Falsos amigos detectados y descartados en este pase
+
+| Candidato | Por qué parecía relevante | Por qué se descarta |
+|-----------|---------------------------|---------------------|
+| `datamllab/OpenEBFM` | Aparece en listados de trending "energy" | **"Energy-based models"** es una técnica de ML, no el sector energético. Homonimia pura |
+| `DatariusAI/AI-in-Energy` | Se presenta como hub diario de IA en energía | **0 ★, sin licencia**, contenido autogenerado. No citable |
+| `DTUWindEnergy/PyWake` | Modelo de estela de DTU, nombre fuerte | Es un **espejo** de GitLab de DTU: licencia `null` y último push **2024-11-25**. El original no está aquí |
+| `martymcenroe/best-of-pes-ai` | Lista curada IEEE PES | 3 ★, **CC-BY-SA-4.0** (licencia de contenido). Útil como pista, no como dependencia |
+
 ## 2026-11-20 — pase 2 (barrido de huecos declarados)
 
 **Titular del pase: tres de los gaps que esta KB declaró vacíos hace una hora no estaban vacíos —
