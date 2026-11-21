@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🎯 Agentes AI — energy
@@ -971,3 +971,60 @@ siempre el **nombre propio de un artefacto técnico**: un protocolo (`IEC 62056`
 
 *Verificado contra la GitHub REST API (`search/repositories`, consulta `repo:` exacta) y contra
 `raw.githubusercontent.com` el 2026-11-20 (decimotercer pase). Re-verificar antes de citar en una propuesta.*
+
+## Decimocuarto pase (2026-11-21): la NERC escribió la restricción de arquitectura que esta KB ya exigía, y el "cero de cumplimiento" era falso
+
+**El hallazgo de agentes de este pase no es un repo: es que el regulador de referencia de NA
+publicó la regla de diseño.** La guía de **NERC** sobre IA en el sistema eléctrico establece que la
+IA debe ser **herramienta de apoyo a la decisión, no controlador autónomo**.
+
+Esa es, literalmente, la restricción que las recetas de esta KB ya imponían (*"el texto de
+razonamiento nunca llega al actuador"*). Lo que cambia es **el estatus del argumento**:
+
+| Antes de este pase | Después |
+|--------------------|---------|
+| *Human-in-the-loop* = buena práctica de ingeniería defendida por el proveedor | *Human-in-the-loop* = **lectura publicada del regulador de referencia** |
+| "Conviene no escribir en el lazo de control" | "Escribir en el lazo de control es **contrario a la guía de NERC**" |
+
+**Consecuencia para el catálogo de agentes:** el techo de los agentes energéticos en NA **no es
+técnico ni de licencia, es regulatorio**, y está donde esta KB ya lo había puesto. Todo agente de
+las tablas de este archivo se propone como **copiloto de sala de control o de ingeniería**, nunca
+como actuador — y ahora eso se puede justificar citando a NERC en lugar de argumentándolo.
+
+> **Dato que cierra el círculo:** la IEA, citada por el ADB (jun-2026), afirma que **la adopción de
+> IA sigue siendo limitada en la operación de red crítica para el sistema** incluso donde el valor es
+> claro. Esta KB midió ese mismo cero **siete u ocho pases seguidos contando repos**. Ahora hay
+> **dos mediciones independientes** —una de oferta (GitHub) y una de demanda (IEA)— que coinciden.
+> Un cero medido dos veces por canales distintos deja de ser un límite del método y pasa a ser un
+> hecho del sector, y se puede escribir así en una propuesta.
+
+### La capa de cumplimiento: el "cero de NERC CIP" era falso, pero la conclusión comercial casi no cambia
+
+El registro decía *"**cero** herramientas del sector frente al plazo de diciembre de 2026"*. Era un
+cero del instrumento: la consulta corta `topic:nerc-cip` devuelve **21 repos**. Pero medido con
+honestidad, **lo que hay son plantillas, no herramientas**:
+
+| Pieza | Licencia | Qué es realmente | ★ / forks / issues | Push |
+|-------|----------|------------------|--------------------|------|
+| [ynotbhatc/rego_policy_libraries](https://github.com/ynotbhatc/rego_policy_libraries) | **Apache-2.0** | **Política ejecutable en OPA Rego v1** (CIS, DISA STIG, NIST, incluye NERC). Lo único *ejecutable* del grupo, y **no es específico de energía** | 23 / 2 / **17** | 2026-11-20 |
+| [mizcausevic-dev/nerc-cip-readiness-evidence-bundle](https://github.com/mizcausevic-dev/nerc-cip-readiness-evidence-bundle) | **MIT** | Perfil de *evidence bundle* CIP-002→CIP-014 + TSA SD-2021-02C | 1 / — / — | 2026-05-31 |
+| [gridsafetechnology-tech/nerc-cip-checklists](https://github.com/gridsafetechnology-tech/nerc-cip-checklists) | **MIT** | Checklists en **YAML** (CIP-002, CIP-003-9 *low impact*, CIP-010) | 0 / — / — | 2026-11-07 |
+| [mizcausevic-dev/grid-decision-record-audit-stream](https://github.com/mizcausevic-dev/grid-decision-record-audit-stream) | **MIT** | **Eventos de decisión de IA encadenados por hash** para auditoría NERC | 0 / — / — | 2026-10-31 |
+
+**El último merece atención aparte** aunque tenga 0 ★, porque describe **exactamente el entregable
+que la guía de NERC vuelve obligatorio**: si la IA es apoyo a la decisión, hay que **poder demostrar
+qué decidió, cuándo y con qué datos**. Un registro de decisiones encadenado por hash es la forma
+canónica de eso. **No se recomienda el repo** (0 ★, un autor, un mes) — se recomienda **el patrón**,
+y construirlo es trabajo facturable.
+
+> **La frase honesta para una propuesta:** *"existen al menos ocho proyectos abiertos de cumplimiento
+> NERC CIP con licencia permisiva; ninguno pasa de 23 ★ y los específicos del estándar son plantillas
+> y checklists, no herramientas ejecutables. Hay material de arranque; no hay producto."* Es un hueco
+> de **producto**, no de búsqueda, y ahora está **cuantificado** en lugar de afirmado.
+
+### Precisión de licencia que afecta a cómo se compone un agente sobre un EMS
+
+`OpenEMS` **no es AGPL-3.0 a secas**: Edge y Backend son **EPL-2.0** y sólo la UI es AGPL-3.0
+(byte-read de los dos archivos; ver `verticals/solutions.md` y T55 en `intel/trends.md`). Para la
+capa agéntica eso significa que **un agente MIT puede integrarse con el Backend de `OpenEMS` sin
+que la cláusula de red entre en juego**, lo que hasta este pase esta KB daba por imposible.

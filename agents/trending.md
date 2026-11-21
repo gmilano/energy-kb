@@ -1,13 +1,54 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 📈 Agentes trending — energy
 
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
+
+## 2026-11-21 — pase 14 (el regulador publica la restricción de arquitectura; y el "cero de cumplimiento NERC CIP" resulta ser del instrumento)
+
+**Titular del pase: por primera vez el hallazgo de agentes viene del regulador, no de GitHub.** La
+guía de **NERC** establece que la IA en el sistema eléctrico debe ser **apoyo a la decisión, no
+controlador autónomo**. Es palabra por palabra la restricción que las recetas de esta KB ya
+imponían; lo que cambia es que deja de ser una buena práctica del proveedor y pasa a ser **la
+lectura publicada del regulador de referencia de NA**.
+
+**Confirmación cruzada del cero más persistente de esta KB.** La IEA, citada por el ADB (jun-2026),
+afirma que *la adopción de IA sigue siendo limitada en la operación de red crítica para el sistema*
+aun donde el valor es claro. Esta KB midió ese cero **siete u ocho pases seguidos contando repos en
+GitHub**. Ahora hay **dos mediciones independientes por canales distintos** —oferta y demanda— que
+apuntan al mismo sitio. Eso convierte el cero en un hecho del sector y no en un límite del método.
+
+**El cero que sí era del instrumento.** Aplicada la lección de la KB hermana de automotive (*las
+consultas largas de `search/repositories` devuelven un cero literal porque hacen AND de todos los
+términos sobre nombre/descripción/topics*), el registro *"cero herramientas de cumplimiento NERC CIP
+frente al plazo de diciembre de 2026"* se re-midió con `topic:nerc-cip` → **21 repos**. La
+conclusión comercial, sin embargo, apenas se mueve: **son plantillas y checklists, no herramientas**,
+y ninguno pasa de 23 ★.
+
+| Pieza | Repo | Licencia | ★ / forks / issues | Push | Qué es |
+|-------|------|----------|--------------------|------|--------|
+| Política de cumplimiento ejecutable | [ynotbhatc/rego_policy_libraries](https://github.com/ynotbhatc/rego_policy_libraries) | **Apache-2.0** (byte-read 11.357 B) | 23 / 2 / **17** | 2026-11-20 | OPA Rego v1: CIS, DISA STIG, NIST, **incluye NERC**. No específico de energía |
+| Registro de decisiones auditable | [mizcausevic-dev/grid-decision-record-audit-stream](https://github.com/mizcausevic-dev/grid-decision-record-audit-stream) | **MIT** | 0 / — / — | 2026-10-31 | **Eventos de decisión de IA encadenados por hash** para auditoría NERC. Se recomienda **el patrón**, no el repo |
+| *Evidence bundle* CIP | [mizcausevic-dev/nerc-cip-readiness-evidence-bundle](https://github.com/mizcausevic-dev/nerc-cip-readiness-evidence-bundle) | **MIT** | 1 / — / — | 2026-05-31 | Perfil CIP-002 → CIP-014 + TSA SD-2021-02C |
+| Checklists CIP | [gridsafetechnology-tech/nerc-cip-checklists](https://github.com/gridsafetechnology-tech/nerc-cip-checklists) | **MIT** | 0 / — / — | 2026-11-07 | CIP-002, CIP-003-9 *low impact*, CIP-010 en YAML |
+| *Crosswalk* regulatorio APAC | [Johnbjoseph-cybersec/india-ot-regulation-crosswalk](https://github.com/Johnbjoseph-cybersec/india-ot-regulation-crosswalk) | **MIT** | 0 / — / — | 2026-11-12 | **CEA India, *Cyber Security in Power Sector Regulations 2026*** ↔ NIST CSF 2.0 |
+
+**El último es un hallazgo de canal, no de producto, y es reutilizable:** es la primera vez que
+**texto regulatorio de APAC entra en esta KB a través de GitHub**. Con el lado demanda de la web sin
+resolver desde este entorno, **buscar la norma como artefacto de cumplimiento** (`crosswalk`,
+`mapping`, `checklist`) es una vía que funciona donde el documento no se alcanza.
+
+**Precisión de licencia con efecto en composición:** `OpenEMS` no es AGPL-3.0 a secas — **Edge y
+Backend son EPL-2.0**, sólo la UI es AGPL-3.0. Un agente MIT **puede** integrarse con el Backend sin
+activar la cláusula de red, algo que esta KB venía descartando. Ver T55.
+
+**Nada nuevo proponible en agentes de operación de red este pase.** Se mantiene el estado del pase
+12: el cero lo rompió un TSO, y sigue siendo el único.
 
 ## 2026-11-20 — pase 13 (el hallazgo es un error propio: la KB había resuelto bien una licencia y un pase posterior la "des-resolvió"; y OpenADR 3.0 deja de ser un gap)
 

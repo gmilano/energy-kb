@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🏗️ Repos fundacionales — energy
@@ -1126,3 +1126,127 @@ estrellas. Bloqueados: `UtilitechAS/amsreader-firmware` (**471 ★**, *Fair Sour
 **GPL-2.0-only**: servicio separado sí, enlazado en producto propietario no. **La API de GitHub
 informa `NOASSERTION` en todos ellos**: hay que abrir el archivo, repo por repo. Detalle completo en
 `agents/top.md`, decimotercer pase.
+
+## Decimocuarto pase (2026-11-21): la capa BESS que el cero ocultaba, los sub-repos de GridFM, y la capa del regulador LATAM
+
+Todas las filas de abajo: licencia **byte-read** en `raw.githubusercontent.com`, estrellas/forks/push
+de `search/repositories` por consulta `repo:` exacta, y **URL verificada viva** con `git ls-remote`
+(**24/24 vivas, 0 muertas**). Estrellas y forks **no se cruzan entre instrumentos** (regla del pase
+de automotive: medir una cifra con un canal distinto del que la fijó fabrica una deriva que no
+ocurrió).
+
+### Optimización de BESS: eran tres repos, no uno
+
+El cero registrado decía *"**un** repo abierto con >25 ★ en toda la categoría, gap de oferta no de
+búsqueda"*. Con `bess stars:>25` y `topic:battery-energy-storage` aparecen **tres**:
+
+| Repo | Licencia | Descripción | ★ | Forks | Issues | Último push | Región |
+|------|----------|-------------|---|-------|--------|-------------|--------|
+| [FlexPwr/bess-optimizer](https://github.com/FlexPwr/bess-optimizer) | NOASSERTION ⚠️ | Modelo *Three Market BESS Optimization* de FlexPower en Python con **pyomo** (ya en la KB) | 118 | — | — | 2025-10-02 | EMEA (Alemania) |
+| [kim-mskw/BessBidder](https://github.com/kim-mskw/BessBidder) | ⚠️ **AGPL-3.0** | Framework abierto de **puja multi-mercado** para almacenamiento, incluye *day-ahead* europeo | 29 | 9 | 1 | 2025-12-28 | EMEA |
+| [johanzander/bess-manager](https://github.com/johanzander/bess-manager) | **Apache-2.0** (byte-read 11.357 B) | Add-on de Home Assistant para gestionar inversor solar + batería. **64 issues abiertos / 14 forks: hay usuarios reales detrás** | 27 | 14 | 64 | 2026-11-17 | EMEA (Suecia) |
+
+**Lectura corregida:** el gap era **mitad de búsqueda, mitad de oferta**. Sigue sin haber un
+optimizador BESS permisivo *de grado industrial* —`bess-manager` es doméstico y `BessBidder` es AGPL
+y académico— pero **la categoría no estaba vacía**, y `bess-manager` es el repo con **más señal de
+uso real** (64 issues sobre 27 ★) de todo lo encontrado este pase.
+
+⚠️ `FlexPwr/bess-optimizer` sigue en **NOASSERTION**: queda como **open item**, pendiente de leer su
+manifiesto de paquete (T46) antes de proponerlo.
+
+### Los repos que el "cero de NERC CIP" ocultaba
+
+| Repo | Licencia | Descripción | ★ | Último push | Región |
+|------|----------|-------------|---|-------------|--------|
+| [ynotbhatc/rego_policy_libraries](https://github.com/ynotbhatc/rego_policy_libraries) | **Apache-2.0** (byte-read 11.357 B) | **Política de cumplimiento ejecutable en OPA Rego v1**: CIS Benchmarks, DISA STIGs, NIST — **incluye NERC**. 17 issues abiertos | 23 | 2026-11-20 | Global |
+| [SiteQ8/OpenICS-Atlas](https://github.com/SiteQ8/OpenICS-Atlas) | **Apache-2.0** | Inteligencia de exposición ICS/OT: 8 protocolos, modelo Purdue, inventario de activos | 2 | 2026-11-11 | EMEA |
+| [msaleme/utility-ai-mulesoft-api](https://github.com/msaleme/utility-ai-mulesoft-api) | **MIT** | Arquitectura de referencia API-led para operación de red: integra SCADA, meteorología | 2 | 2026-07-12 | North America |
+| [spinfosecurity/Energy-Grid-Protector](https://github.com/spinfosecurity/Energy-Grid-Protector) | **MIT** | Escáner de ciberseguridad para red, transmisión y subestación OT/SCADA | 1 | 2026-08-23 | Global |
+| [mizcausevic-dev/nerc-cip-readiness-evidence-bundle](https://github.com/mizcausevic-dev/nerc-cip-readiness-evidence-bundle) | **MIT** | Perfil de *evidence bundle*: NERC CIP-002 a CIP-014 + TSA SD-2021-02C | 1 | 2026-05-31 | North America |
+| [gridsafetechnology-tech/nerc-cip-checklists](https://github.com/gridsafetechnology-tech/nerc-cip-checklists) | **MIT** | Checklists NERC CIP en **YAML** (CIP-002, CIP-003-9 *low impact*, CIP-010) | 0 | 2026-11-07 | North America |
+| [Johnbjoseph-cybersec/india-ot-regulation-crosswalk](https://github.com/Johnbjoseph-cybersec/india-ot-regulation-crosswalk) | **MIT** | **CEA *Cyber Security in Power Sector Regulations, 2026* de India** mapeada contra NIST CSF 2.0 | 0 | 2026-11-12 | **APAC (India)** |
+
+⚠️ **Ninguno pasa de 23 ★ y los específicos de NERC CIP son plantillas, no herramientas.** Se
+registran por **utilidad de arranque documental**, no como producto. El último es además la vía por
+la que entró **texto regulatorio de APAC** en esta KB — ver `intel/market.md`.
+
+### GridFM: la organización es mucho mayor de lo que la KB registraba, y hay TRES "GridFM" distintos
+
+| Repo | Licencia | Descripción | ★ | Último push |
+|------|----------|-------------|---|-------------|
+| [gridfm/gridfm-datakit](https://github.com/gridfm/gridfm-datakit) | **Apache-2.0** | Generación de datos de flujo de potencia para entrenar *foundation models* (ya en la KB) | 170 | 2026-11-14 |
+| [gridfm/gridfm-graphkit](https://github.com/gridfm/gridfm-graphkit) | **Apache-2.0** | Entrenar/*finetunear* el *foundation model* de red (ya en la KB) | 113 | 2026-11-19 |
+| [gridfm/gridfm-datakit-distr](https://github.com/gridfm/gridfm-datakit-distr) | **Apache-2.0** (byte-read 11.358 B) | **Datasets de flujo en redes de DISTRIBUCIÓN trifásicas desequilibradas** | 6 | 2026-11-20 |
+| [gridfm/gridfm-app-distribution](https://github.com/gridfm/gridfm-app-distribution) | **Apache-2.0** | Aplicaciones de GridFM en distribución | 6 | 2026-11-17 |
+| [gridfm/gridfm-trustlayer](https://github.com/gridfm/gridfm-trustlayer) | **Apache-2.0** (byte-read 11.357 B) | **Cuantifica incertidumbre y fiabilidad de las predicciones de GridFM** | 5 | 2026-11-18 |
+| [IBM/GridFM-Data](https://github.com/IBM/GridFM-Data) | **Apache-2.0** | Librería de generación de datos de flujo. **Organización `IBM`.** ⚠️ sin push desde 2025-09-18 | 4 | 2025-09-18 |
+
+**Dos hallazgos de este bloque:**
+
+1. **`gridfm-trustlayer` y `gridfm-datakit-distr` son los dos añadidos que más importan.** El primero
+   es **la capa de incertidumbre** que esta KB venía señalando como ausente en todo el stack de
+   *foundation models* de red: sin cuantificación de confianza, un modelo de red no entra en una sala
+   de control. El segundo lleva GridFM a **distribución trifásica desequilibrada**, que es donde
+   están los proyectos de utility de LATAM y del sur de Europa, no en transmisión.
+2. ⚠️ **Existen al menos TRES espacios de nombres "GridFM" sin relación verificada**: `gridfm/*`
+   (Apache-2.0, citado vía arXiv:2608.09921 y arXiv:2512.14658), **`IBM/GridFM-Data`** y
+   **`argonne-gridfm/*`**. El open item *"relación DOE «GridFM 2.0» ↔ org `gridfm/*`"* **sigue sin
+   verificar**: el `README` de `gridfm-graphkit` **no nombra a IBM, ni a Argonne, ni al DOE** — sólo
+   da citas de arXiv. **No afirmar la afiliación en material de cliente.**
+
+#### Open item re-confirmado: `gridfm-graphkit` sigue sin publicar checkpoint
+
+Verificado por segunda vez y ahora con la evidencia exacta: todos los `--model_path` del `README`
+apuntan a un **artefacto local de MLflow** del propio entrenamiento
+(`mlruns/<experiment_id>/<run_id>/artifacts/model/best_model_state_dict.pt`), y el subcomando
+`finetune` exige que **tú** aportes el `.pt`. No hay URL de descarga, ni *release*, ni referencia a
+Hugging Face. **Hay framework de entrenamiento; no hay modelo listo para usar.** (T48: positivo
+previo confirmado, no sobrescrito.)
+
+### La capa de acceso al dato del regulador en LATAM
+
+Rompe el *"cero repos de origen LATAM"* registrado cuatro veces. Detalle y lectura comercial en
+`intel/market.md`; aquí las filas verificadas:
+
+| Repo | Licencia | País | Descripción | ★ / forks |
+|------|----------|------|-------------|-----------|
+| [Mcp-Brasil/mcp-brasil](https://github.com/Mcp-Brasil/mcp-brasil) | **MIT** | Brasil | Servidor MCP de **70 APIs públicas / 533 tools**; feature `aneel` con **4 tools** (SIGA, generación distribuida, tarifas, banderas). ⚠️ MIT cubre **el código, no el dato** | **1.868** ★ |
+| [eniocc/bdgd-tools](https://github.com/eniocc/bdgd-tools) | **MIT** (byte-read 1.074 B) | Brasil | **Convierte la BDGD de ANEEL a elementos OpenDSS**: el puente entre el dato regulatorio de distribución y el simulador estándar | 10 ★ / **9 forks** / 16 issues |
+| [GuilhermeBarros12/rag_aneel](https://github.com/GuilhermeBarros12/rag_aneel) | **MIT** (byte-read 1.100 B) | Brasil | RAG sobre normativa de ANEEL | 3 ★ |
+| [nightcrowsgui5-netizen/radar-curtailment-sin](https://github.com/nightcrowsgui5-netizen/radar-curtailment-sin) | **MIT** (byte-read 1.080 B) | Brasil | **Curtailment renovable por *constrained-off*** sobre datos abiertos del ONS | 0 ★ |
+| [brenoloureiro/ons-energy-viz](https://github.com/brenoloureiro/ons-energy-viz) | **MIT** | Brasil | Visualizador de generación del ONS | 0 ★ |
+
+**`bdgd-tools` es el hallazgo de ingeniería del bloque**, y no por sus 10 ★: con **9 forks y 16
+issues** sobre 10 estrellas tiene la **mejor proporción de uso real por estrella** de todo el pase.
+Convierte la base de datos geográfica de distribución del regulador brasileño (**BDGD**) en un modelo
+**OpenDSS** ejecutable — es decir, **conecta una obligación regulatoria con el simulador que esta KB
+ya cataloga**. ⚠️ Sin push desde **2024-08-16**: usable como referencia y como punto de partida de un
+*fork*, no como dependencia viva.
+
+### Otros repos verificados este pase
+
+| Repo | Licencia | Descripción | ★ | Último push | Región |
+|------|----------|-------------|---|-------------|--------|
+| [mesmo-dev/mesmo](https://github.com/mesmo-dev/mesmo) | **MIT** (byte-read 1.099 B) | *Multi-Energy System Modeling and Optimization*. Copyright **TUMCREATE (Singapur)**. ⚠️ sin push desde 2024-09 | 67 | 2024-09-03 | **APAC (Singapur)** |
+| [172629438/loomgrid](https://github.com/172629438/loomgrid) | **MIT** (byte-read 1.078 B) | Dimensionamiento de almacenamiento C&I; curva de carga, *sizing*, despacho. Descripción bilingüe zh/en | 2 | 2026-11-10 | **APAC (China)** |
+
+### Dos repos que NO se recomiendan, y por qué: la trampa de estrellas sin comunidad vuelve a aparecer
+
+La trampa que esta KB documentó (*"estrellas infladas y cero forks"*) se activa otra vez. Un único
+autor publica un grupo de repos con descripciones de la misma plantilla (*"Explore … through
+reproducible …"*):
+
+| Repo | ★ | Forks | Issues | Creado | Ratio ★/fork |
+|------|---|-------|--------|--------|--------------|
+| `mohammadrezwankhan/datacenter-twin-lab` | 101 | **3** | **0** | 2026-09-08 | **34:1** |
+| `mohammadrezwankhan/helioforge-energy-lab` | 13 | **0** | **0** | 2026-09-29 | — |
+| `mohammadrezwankhan/bess-qaqc-toolkit` | 12 | **0** | **0** | 2026-07-12 | — |
+
+**Contraste con los repos sanos medidos el mismo día:** `bess-manager` 27 ★/14 forks (**1,9:1**),
+`bdgd-tools` 10 ★/9 forks (**1,1:1**), `mesmo` 67 ★/17 forks (3,9:1), `BessBidder` 29 ★/9 forks
+(3,2:1). **101 estrellas con 3 forks y CERO issues en dos meses es un valor atípico**, y las
+licencias (Apache-2.0 / MIT) son correctas pero irrelevantes si la señal de uso no existe.
+
+> **Umbral operativo que deja este pase:** un ratio **★/forks > 10 junto con 0 issues** es motivo
+> suficiente para **no recomendar** un repo, por limpia que sea su licencia. La licencia dice si
+> *puedes* usarlo; los forks y los issues dicen si *alguien más* lo usa.

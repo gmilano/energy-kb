@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🧩 Patrones de composición — Energy
@@ -646,7 +646,9 @@ pregunta de todo encargo de energía distribuida y ahora tiene motor abierto.
 2. **Modelar el edificio si la carga es térmica** —
    [`NatLabRockies/OpenStudio`](https://github.com/NatLabRockies/OpenStudio) (BSD-3 + marca, 660 ★)
    sobre `EnergyPlus` (ya en la KB), y `sinergym` si se quiere control por RL.
-3. **Operar** — `OpenEMS` (EPL-2.0) o `FlexMeasures` (Apache-2.0), ya en la KB, con
+3. **Operar** — `OpenEMS` (**EPL-2.0 en Edge y Backend**, que son los componentes que se despliegan
+   aquí; la UI Angular es AGPL-3.0 y se sustituye o se aísla) o `FlexMeasures` (Apache-2.0), ya en
+   la KB, con
    [`Enapter/marketplace`](https://github.com/Enapter/marketplace) (**MIT**) para la integración de
    dispositivos heterogéneos.
 4. **Certificar el ahorro** — [`opendsm/opendsm`](https://github.com/opendsm/opendsm)
@@ -1998,3 +2000,86 @@ como protocolo de referencia de la región. **LATAM**: viable en Brasil **si** l
 sobre medidor inteligente se convierte en norma — hoy es consulta, no obligación. **APAC**: en Japón
 hay que contar con la fragmentación a dos frecuencias; en India el trabajo previo es de
 instrumentación y datos, no de modelo.
+
+## Recetas del decimocuarto pase (2026-11-21)
+
+### Receta 47 — Expediente auditable de IA en operación de red, contra la guía de NERC y el plazo CIP de diciembre de 2026
+
+**Para quién:** utility o ISO/RTO de **North America** que ya tiene (o quiere) IA en el lazo de
+decisión y necesita **demostrarlo ante el regulador**. Es la receta que la guía de NERC vuelve
+vendible: si la IA debe ser **apoyo a la decisión y no controlador autónomo**, entonces el entregable
+no es el modelo — **es la prueba de que el humano decidió y de que la máquina sólo recomendó.**
+
+**Restricción de diseño, no negociable y ahora respaldada por la guía:** el texto de razonamiento
+del LLM **nunca** llega al actuador. El agente escribe en el **registro de decisiones**; el operador
+escribe en el sistema.
+
+| Capa | Pieza | Licencia | Papel concreto |
+|------|-------|----------|----------------|
+| Política de cumplimiento ejecutable | [`ynotbhatc/rego_policy_libraries`](https://github.com/ynotbhatc/rego_policy_libraries) | **Apache-2.0** | Reglas CIP como **políticas OPA Rego v1** evaluables en CI. Es lo único *ejecutable* del ecosistema CIP abierto |
+| Registro de decisiones | **patrón** de [`mizcausevic-dev/grid-decision-record-audit-stream`](https://github.com/mizcausevic-dev/grid-decision-record-audit-stream) | MIT | Eventos de decisión **encadenados por hash**: qué recomendó el agente, con qué datos, quién aprobó. ⚠️ **construir el patrón, no depender del repo** (0 ★, un autor) |
+| Cuantificación de confianza | [`gridfm/gridfm-trustlayer`](https://github.com/gridfm/gridfm-trustlayer) | **Apache-2.0** | Incertidumbre de la predicción. **Sin esto no hay apoyo a la decisión**: una recomendación sin intervalo no es decidible por un operador |
+| Plantillas de evidencia | [`mizcausevic-dev/nerc-cip-readiness-evidence-bundle`](https://github.com/mizcausevic-dev/nerc-cip-readiness-evidence-bundle) + [`gridsafetechnology-tech/nerc-cip-checklists`](https://github.com/gridsafetechnology-tech/nerc-cip-checklists) | MIT | Estructura CIP-002→CIP-014 y checklists YAML como **punto de partida documental** |
+| Modelo de red | `gridfm-graphkit` + `gridfm-datakit` | **Apache-2.0** | ⚠️ **hay que entrenarlo**: no existe checkpoint publicado (verificado dos veces). Presupuestar el entrenamiento, no la descarga |
+
+**Cómo se conecta, en orden:**
+
+1. El modelo de red produce una recomendación **con intervalo de confianza** (`trustlayer`). Una
+   recomendación sin intervalo no entra en el flujo.
+2. La recomendación se evalúa contra las **políticas Rego**: si viola una regla CIP, **no se muestra
+   como accionable**, se muestra como bloqueada y con la regla que la bloquea.
+3. Todo lo anterior —entrada, recomendación, intervalo, veredicto de política, identidad del
+   aprobador— se escribe en el **registro encadenado por hash**.
+4. El operador aprueba o rechaza **en el sistema de control, fuera del agente**.
+5. El expediente para el regulador **se genera del registro**, no se redacta a mano.
+
+**Por qué se vende:** el cliente no compra un modelo, compra **la capacidad de aprobar una inversión
+en IA ante su regulador tarifario** — que es, literalmente, lo que Morningstar DBRS describe como el
+problema nuevo de las autoridades regulatorias (deben evaluar la inversión en IA, no sólo revisar el
+capex). El entregable es el expediente.
+
+⚠️ **Lo que NO se promete:** ninguna de estas piezas pasa de 23 ★. Esta receta **no es una
+integración de productos maduros**, es **trabajo de ingeniería sobre plantillas**. Cotizar en
+consecuencia y decirlo en el SOW.
+
+### Receta 48 — Tubería de distribución LATAM: del dato del regulador al modelo ejecutable, todo permisivo
+
+**Para quién:** distribuidora o regulador de **Brasil** (y, con el conector cambiado, el resto de
+LATAM). Es la primera receta de esta KB **enteramente construida con repos de origen LATAM**, y
+responde a la pregunta que abre cualquier *engagement* en la región: *"¿de dónde sale el modelo de
+red?"*
+
+| Capa | Pieza | Licencia | Papel concreto |
+|------|-------|----------|----------------|
+| Acceso al dato del regulador | [`Mcp-Brasil/mcp-brasil`](https://github.com/Mcp-Brasil/mcp-brasil) | **MIT** (⚠️ el dato, aparte) | Feature `aneel`: **4 tools** sobre el CKAN de ANEEL (SIGA, generación distribuida, tarifas, banderas). Expone el regulador **como herramientas de agente**, sin escribir el conector |
+| Modelo de red ejecutable | [`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) | **MIT** (byte-read) | **Convierte la BDGD de ANEEL en elementos OpenDSS.** Es la pieza que no hay que escribir: el salto del dato geográfico regulatorio al simulador |
+| Simulación de distribución | `dss-extensions/OpenDSSDirect.py` | BSD-3 (ya en la KB) | Estudios de alimentador sobre el modelo convertido |
+| Señal operativa | **patrón** de [`nightcrowsgui5-netizen/radar-curtailment-sin`](https://github.com/nightcrowsgui5-netizen/radar-curtailment-sin) | MIT | Cuantifica **curtailment por *constrained-off*** desde datos abiertos del ONS: el indicador que convierte el estudio en un caso de negocio |
+| Consulta normativa | [`GuilhermeBarros12/rag_aneel`](https://github.com/GuilhermeBarros12/rag_aneel) | MIT | RAG sobre normativa de ANEEL, para que el agente **cite la regla** en lugar de parafrasearla |
+
+**Cómo se conecta:**
+
+1. `mcp-brasil` da al agente las series y los registros de ANEEL **como tools**, no como scraping.
+2. `bdgd-tools` convierte la BDGD del alimentador en cuestión a **OpenDSS**.
+3. `OpenDSSDirect.py` corre los escenarios; el agente propone, **no despacha**.
+4. El indicador de *curtailment* sobre datos del ONS cuantifica **la pérdida que el proyecto evita**
+   — el número que firma el cliente.
+5. `rag_aneel` acompaña cada recomendación con **la norma que la respalda**.
+
+**Los tres avisos que hacen esta receta honesta:**
+
+- ⚠️ **`bdgd-tools` no tiene push desde 2024-08-16.** Con 9 forks y 16 issues sobre 10 ★ tiene uso
+  real, pero **se adopta como punto de partida de un fork**, con mantenimiento presupuestado, no como
+  dependencia viva.
+- ⚠️ **`mcp-brasil` separa licencia de código y de dato.** MIT cubre el código; `SOURCES.md` dice que
+  `aneel` es *"open data; atribuição"* → **utilizable comercialmente con atribución**, pero hay que
+  leer `ACCEPTABLE_USE.md` antes de uso decisorio. **Un conector permisivo no licencia el dato que
+  descarga.**
+- ⚠️ Las piezas de indicador y RAG tienen **0-3 ★**: se toman como **patrón de referencia**, no como
+  componente soportado.
+
+**Por qué importa estratégicamente:** el pase 13 definió el hueco de Globant en LATAM como
+*"distribución / capa agéntica / dossier"*. Esta receta muestra que **la capa de abajo ya existe y es
+permisiva**, y por tanto **el hueco es exactamente lo que va encima**: optimización, pronóstico
+operativo y orquestación agéntica. Un proyecto LATAM **no empieza construyendo conectores**; empieza
+donde el valor está sin capturar.

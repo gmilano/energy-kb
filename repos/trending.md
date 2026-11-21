@@ -1,13 +1,79 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 📈 Repos trending — energy
 
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
+
+## 2026-11-21 — pase 14 (tres ceros re-medidos con consultas CORTAS: dos se rompen; y "un repo, una licencia" resulta ser un supuesto)
+
+**Titular del pase: la lección llega de la KB hermana de automotive y paga a la primera.**
+`search/repositories` indexa **sólo nombre, descripción y topics** y hace **AND de todos los
+términos**, así que una frase larga exige que todas las palabras quepan en una descripción corta y
+devuelve **un cero literal, sin error**. Re-ejecutados los ceros de esta KB con consultas de una o
+dos palabras, **tres de cinco eran artefactos del instrumento** — la misma proporción que midió
+automotive, lo que confirma que el defecto **no era local a esa KB**.
+
+| Cero registrado | Consulta corta | Resultado |
+|-----------------|----------------|-----------|
+| *"BESS: **un** repo >25 ★ en toda la categoría"* | `bess stars:>25` | ❌ **tres** repos utilizables |
+| *"NERC CIP: **cero** herramientas del sector"* | `topic:nerc-cip` | ❌ **21 repos** (plantillas, 0-23 ★) |
+| *"**CERO** repos de origen LATAM"* | `aneel` / `cammesa` / `cenace` | ❌ **una capa entera** de acceso al dato del regulador |
+| *"MDM / meter-to-cash: el mejor tiene 7 ★"* | `meter-to-cash` | ✅ **confirmado** — 21 repos, todos 0-1 ★ y **sin licencia** |
+| *"`gridfm-graphkit` sin checkpoint publicado"* | lectura del `README` | ✅ **confirmado 2.ª vez** |
+
+### El hallazgo de método del pase: la licencia de un repo no siempre es un valor único
+
+Tres repos de esta KB tienen estructuras de licencia que **ningún instrumento de SPDX único puede
+expresar**, y se detectan por una señal de coste cero: **el tamaño del archivo**.
+
+| Repo | ★ / forks | Archivo(s) de licencia | Clase |
+|------|-----------|------------------------|-------|
+| [OpenEMS/openems](https://github.com/OpenEMS/openems) | 1.634 / 706 | `LICENSE-EPL-2.0` (**14.474 B**) + `LICENSE-AGPL-3.0` (**35.184 B**) | **Partida por componente**: Edge/Backend EPL-2.0, UI AGPL-3.0. La API reporta sólo `AGPL-3.0` |
+| [openremote/core](https://github.com/openremote/core) | 2.162 / — | `LICENSE.txt` (**172.958 B / 2.697 líneas**) | **Obra colectiva**: AGPL-3.0 propia **+ inventario de dependencias**. `grep LESSER` → 35 aciertos |
+| [vodikus/ha_tarifas_energia_brasil](https://github.com/vodikus/ha_tarifas_energia_brasil) | 33 / — | `LICENSE` (**715 B**) | **Aviso corto**: GPL-3.0-or-later válida que la API marca `NOASSERTION` |
+
+**`OpenEMS` es el caso con consecuencia comercial:** la cláusula de red del AGPL afecta **sólo a la
+UI**; el controlador y el servidor —las piezas que un integrador empotra— son **EPL-2.0, sin
+cláusula de red**. Esta KB lo tenía como AGPL-3.0 en seis lugares y como EPL-2.0 en una receta: las
+dos cosas mal, porque el repo lleva **las dos licencias a la vez**. Ver **T55** en `intel/trends.md`.
+
+### Repos nuevos verificados (24/24 URLs vivas por `git ls-remote`, 0 muertas)
+
+| Repo | Licencia | ★ | Forks | Push | Qué es |
+|------|----------|---|-------|------|--------|
+| [johanzander/bess-manager](https://github.com/johanzander/bess-manager) | **Apache-2.0** (byte-read) | 27 | 14 | 2026-11-17 | Gestión de inversor solar + batería en Home Assistant. **64 issues abiertos: hay usuarios reales** |
+| [kim-mskw/BessBidder](https://github.com/kim-mskw/BessBidder) | ⚠️ **AGPL-3.0** | 29 | 9 | 2025-12-28 | Puja multi-mercado para almacenamiento, *day-ahead* europeo |
+| [gridfm/gridfm-trustlayer](https://github.com/gridfm/gridfm-trustlayer) | **Apache-2.0** (byte-read) | 5 | 0 | 2026-11-18 | **Cuantificación de incertidumbre de las predicciones de GridFM** — la capa que faltaba para una sala de control |
+| [gridfm/gridfm-datakit-distr](https://github.com/gridfm/gridfm-datakit-distr) | **Apache-2.0** (byte-read) | 6 | 0 | 2026-11-20 | Datasets de flujo en **distribución trifásica desequilibrada** |
+| [gridfm/gridfm-app-distribution](https://github.com/gridfm/gridfm-app-distribution) | **Apache-2.0** | 6 | 0 | 2026-11-17 | Aplicaciones de GridFM en distribución |
+| [IBM/GridFM-Data](https://github.com/IBM/GridFM-Data) | **Apache-2.0** | 4 | 2 | 2025-09-18 | Generación de datos de flujo. ⚠️ organización **IBM**, sin push en 14 meses |
+| [eniocc/bdgd-tools](https://github.com/eniocc/bdgd-tools) | **MIT** (byte-read 1.074 B) | 10 | **9** | 2024-08-16 | **BDGD de ANEEL → OpenDSS.** Mejor proporción uso/estrella del pase (9 forks, 16 issues sobre 10 ★) |
+| [mesmo-dev/mesmo](https://github.com/mesmo-dev/mesmo) | **MIT** (byte-read 1.099 B) | 67 | 17 | 2024-09-03 | Modelado multi-vector. Copyright **TUMCREATE (Singapur)**. ⚠️ parado |
+| [GuilhermeBarros12/rag_aneel](https://github.com/GuilhermeBarros12/rag_aneel) | **MIT** (byte-read 1.100 B) | 3 | — | 2026-11-14 | RAG sobre normativa de ANEEL |
+| [nightcrowsgui5-netizen/radar-curtailment-sin](https://github.com/nightcrowsgui5-netizen/radar-curtailment-sin) | **MIT** (byte-read 1.080 B) | 0 | — | 2026-08-22 | *Curtailment* renovable por **constrained-off** sobre datos del ONS |
+| [172629438/loomgrid](https://github.com/172629438/loomgrid) | **MIT** (byte-read 1.078 B) | 2 | — | 2026-11-10 | Dimensionamiento de almacenamiento C&I (origen China) |
+| [SiteQ8/OpenICS-Atlas](https://github.com/SiteQ8/OpenICS-Atlas) | **Apache-2.0** | 2 | — | 2026-11-11 | Exposición ICS/OT: 8 protocolos, modelo Purdue |
+
+### Dos avisos que ahorran un pase entero
+
+**1. Colisión de nombres, dos casos.** [`opentap/opentap`](https://github.com/opentap/opentap)
+(262 ★, Keysight, automatización de **test de instrumentación**) **no tiene relación** con
+`opentaps/*` (ERP → smart energy): una letra. Y
+[`thliebig/openEMS`](https://github.com/thliebig/openEMS) (798 ★) es un **solver de campos
+electromagnéticos FDTD**, no un EMS — se diferencia de `OpenEMS/openems` (1.634 ★) **sólo por la
+caja de las letras**, y los dos salen en la primera página al buscar `openems`.
+
+**2. La trampa de estrellas sin comunidad, otra vez.** Un autor publica un grupo de repos con
+descripciones de plantilla: `datacenter-twin-lab` **101 ★ / 3 forks / 0 issues** (creado hace dos
+meses, ratio **34:1**), `helioforge-energy-lab` 13 ★ / 0 / 0, `bess-qaqc-toolkit` 12 ★ / 0 / 0.
+Contraste del mismo día: `bess-manager` 1,9:1, `bdgd-tools` 1,1:1, `mesmo` 3,9:1. **Umbral que deja
+este pase: ★/forks > 10 con 0 issues ⇒ no recomendar**, por limpia que sea la licencia. La licencia
+dice si *puedes* usarlo; los forks y los issues dicen si *alguien más* lo usa.
 
 ## 2026-11-20 — pase 13 (barrido por protocolo, ronda 2: se abre la capa de medición; y un falso negativo de licencia que la propia KB había resuelto bien dos pases antes)
 

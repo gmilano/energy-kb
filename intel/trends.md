@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 📡 Tendencias — energy
@@ -94,7 +94,8 @@ energético": hay cuatro regímenes, y cada uno impone una arquitectura distinta
 |------------------|--------------------|----------------------|------------|
 | Agentes y servidores MCP eléctricos | **MIT** | `Power-Agent/*`, `pypsa-mcp`, `idfkit-mcp` | Nada: empotrable en producto de cliente |
 | Modelado y análisis eléctrico | **MIT / BSD-3 / Apache-2.0** | `PyPSA`, `pandapower`, `pandapipes`, `pvlib`, `calliope`, `oemof-solph`, `OpenOA`, `rdtools` | Atribución |
-| Plataformas EMS / SCADA / IoT | **AGPL / GPL** | `OpenEMS`, `openremote`, `json-scada`, `SteVe` | Aislar detrás de API; cláusula de red en AGPL |
+| Plataformas EMS / SCADA / IoT | **AGPL / GPL** | `openremote`, `json-scada`, `SteVe` | Aislar detrás de API; cláusula de red en AGPL |
+| **EMS con licencia partida** | **EPL-2.0 (Edge/Backend) + AGPL-3.0 (UI)** | `OpenEMS` — ver pase 14 | **Lo que se empotra es EPL-2.0: sin cláusula de red.** Sustituir o aislar sólo la UI |
 | **Upstream de petróleo y gas** | **GPL-3.0, sin excepción encontrada** | `OPM/opm-simulators`, `equinor/ert`, `equinor/webviz-subsurface` | **Mismo tratamiento que SCADA: proceso aparte** |
 
 Y dos casos que no entran en ninguna casilla y por eso son los peligrosos:
@@ -1563,3 +1564,148 @@ exactamente, y lo que lo rompió no fue una búsqueda nueva sino **leer el regis
 2. Re-verificar los repos de **Rust** que esta KB o sus hermanas clasificaron "sin licencia" leyendo
    sólo `LICENSE`. Firma buscable: **`LICENSE` 404 en todas las ramas + repo vivo con tracción**.
 3. Barrer los `NOASSERTION` pendientes leyendo el **manifiesto del gestor de paquetes** primero (T46).
+
+## Decimocuarto pase (2026-11-21): "un repo, una licencia" es un supuesto, no un hecho — y el tamaño del archivo es el detector
+
+**Titular del pase: tres repos de esta KB tienen una estructura de licencia que ningún instrumento
+de SPDX único puede expresar, y uno de ellos cambia la arquitectura de un EMS de cliente.** La API
+de GitHub, un badge de licencia y cualquier `grep` de identificador devuelven **un** valor por repo.
+Este pase midió tres casos en los que **ese valor único es incompleto o engañoso**, y los tres se
+detectaron por la misma señal barata: **el tamaño en bytes del archivo de licencia.**
+
+### Las tres clases, con el caso medido
+
+| Clase | Caso medido | Qué reporta el instrumento | Qué es en realidad |
+|-------|-------------|----------------------------|--------------------|
+| **1. Partida por componente** | `OpenEMS/openems` | `AGPL-3.0` (un solo valor) | **EPL-2.0** en Edge y Backend, **AGPL-3.0** sólo en la UI. Dos archivos: `LICENSE-EPL-2.0` (14.474 B) y `LICENSE-AGPL-3.0` (35.184 B) |
+| **2. Obra colectiva con lista de materiales** | `openremote/core` | `AGPL-3.0` (correcto) | AGPL-3.0 **+ 2.697 líneas de inventario de licencias de dependencias**. `grep LESSER` → **35** aciertos, `grep "GNU GENERAL PUBLIC"` → **30**: un detector naíf la etiqueta LGPL o GPL |
+| **3. Concesión en forma de "notice" corto** | `vodikus/ha_tarifas_energia_brasil` | `NOASSERTION` | **GPL-3.0-or-later válida**, expresada como el aviso corto de 715 B en vez del texto verbatim. La API no la reconoce porque **no es el texto canónico** |
+
+A éstas se suma la clase que trajo el pase de automotive de la KB hermana —**concesión sólo en el
+manifiesto** (`Apache-2.0` en `package.json`, sin ningún `LICENSE`)— con lo que van **cuatro formas
+distintas en que la licencia real de un repo no coincide con el identificador que se publica.**
+
+### El detector, y es de coste cero
+
+**El tamaño del archivo de licencia es un discriminador de clase.** Medido repetidamente en este
+pase y en los anteriores:
+
+| Bytes | Lo que suele ser | Acción |
+|-------|------------------|--------|
+| **~1.000–1.100 B** | MIT o BSD-3 verbatim | Leer las 3 primeras líneas y listo |
+| **~700 B** | **Aviso corto de GPL/LGPL**, no el texto completo | ⚠️ Leer entero: concesión válida que la API suele marcar `NOASSERTION` |
+| **11.357 B** | Apache-2.0 verbatim | Constante delatora; aparece idéntica en repos sin relación |
+| **14.474 B** | **EPL-2.0 verbatim** | Nuevo en este pase |
+| **~35.000 B** | GPL-3.0 o **AGPL-3.0** verbatim | Distinguir con `grep -c affero` |
+| **> 50.000 B** | **No es una licencia: es una lista de materiales** | Leer la cabecera para la concesión propia, y tratar el resto como inventario de dependencias |
+
+> **Regla operativa nueva (T55), para toda la flota de KBs:**
+> **Antes de escribir la licencia de un repo, mirar cuántos archivos de licencia tiene y cuánto pesan.**
+> Un `LICENSE` de 1 KB y un `LICENSE` de 170 KB no son el mismo tipo de afirmación. Si hay **más de
+> un** archivo `LICENSE-*`, **la licencia del repo no es un valor único** y hay que leer la sección
+> *License* del `README` para saber **qué componente lleva cuál**.
+> Corolario, que es el que duele: **el `LICENSE` 404 en todas las ramas no significa "sin licencia"**
+> —regla que esta KB ya tenía— y aquí se refina: en `OpenEMS` el 404 ocurría porque **había dos
+> archivos, ninguno llamado `LICENSE`.**
+
+### Por qué esta clase de defecto es la más cara de todas
+
+Las demás trampas de licencia de esta KB producen **falsos negativos**: un repo utilizable queda
+fuera del catálogo. Ésta produce **las dos** a la vez y en la dirección peor:
+
+- `OpenEMS` etiquetado `AGPL-3.0` **descartó de facto la plataforma EMS más desplegada de EMEA**
+  (1.634 ★, utilities europeas) para cualquier producto propietario. Coste: una capability borrada.
+- Si en cambio se hubiera creído la Receta 35 (`EPL-2.0` a secas), un equipo habría puesto la **UI
+  AGPL** en un SaaS multi-tenant **sin ofrecer el código fuente**. Coste: un incumplimiento real.
+
+**El mismo dato mal resumido produce o una oportunidad perdida o una infracción, según en qué
+dirección se equivoque.** Por eso la licencia por componente se escribe por componente, con el byte-read
+de cada archivo, y nunca como un identificador suelto en una celda.
+
+## Los ceros re-medidos con consultas CORTAS: dos se rompen, uno se confirma
+
+Aplicada la lección transferida del pase de automotive de la KB hermana —**`search/repositories`
+indexa sólo nombre, descripción y topics, y hace AND de todos los términos, así que una frase larga
+devuelve un cero literal**— se re-ejecutaron los ceros registrados de esta KB con consultas de una o
+dos palabras. El resultado reproduce exactamente el patrón de la KB hermana.
+
+| Cero registrado | Consulta corta | Resultado | Veredicto |
+|-----------------|----------------|-----------|-----------|
+| *"Optimización de BESS: **un** repo abierto con >25 ★ en toda la categoría. Gap de oferta, no de búsqueda"* | `bess stars:>25` / `topic:battery-energy-storage` | **3** repos >25 ★ utilizables, no uno | ❌ **era gap de búsqueda en parte** |
+| *"Cumplimiento NERC CIP: **cero** herramientas del sector frente al plazo de diciembre de 2026"* | `topic:nerc-cip` | **21 repos**, ~8 energéticos MIT/Apache | ❌ **falso**; ver la forma del cero abajo |
+| *"MDM / meter-to-cash: el mejor repo tiene 7 ★ y dos años sin push"* | `meter-to-cash` | 21 repos, **todos 0-1 ★ y sin licencia** | ✅ **confirmado, y ahora afirmable** |
+| *"`gridfm-graphkit` no publica checkpoint preentrenado"* | lectura directa del `README` | Confirmado: todo `--model_path` es un artefacto **local de MLflow** | ✅ **confirmado por segunda vez** |
+| *"CERO repos de origen LATAM en este barrido"* | `aneel` / `cammesa` / `cenace` | **Una capa entera** de acceso al dato del regulador | ❌ **falso**; ver `intel/market.md` |
+
+**Tres de cinco ceros de esta KB eran artefactos del instrumento.** Es la misma proporción que midió
+el pase de automotive, y confirma que el defecto **no era local a esa KB**: es una propiedad del
+canal de búsqueda que afecta a toda la flota.
+
+### La forma del cero de NERC CIP, que es lo que hay que decirle al cliente
+
+El cero era falso, pero **la conclusión comercial apenas cambia**, y decirlo con precisión es más
+valioso que el cero:
+
+- `topic:nerc-cip` devuelve **21 repos**. Los energéticos relevantes van de **0 a 23 ★**.
+- El de más tracción, [`ynotbhatc/rego_policy_libraries`](https://github.com/ynotbhatc/rego_policy_libraries)
+  (**Apache-2.0** byte-read 11.357 B, 23 ★ / 2 forks / **17 issues abiertos**, push 2026-11-20), no
+  es específico de energía: es una librería de **política de cumplimiento ejecutable en OPA Rego**
+  (CIS Benchmarks, DISA STIGs, NIST) que **incluye** NERC.
+- Los específicamente NERC CIP son **plantillas y checklists**, no herramientas: `nerc-cip-checklists`
+  (MIT, 0 ★), `nerc-cip-readiness-evidence-bundle` (MIT, 1 ★), `energy-compliance-starter-kit`
+  (MIT, 1 ★).
+
+> **La frase correcta para una propuesta, que ya no es "no hay nada":** *"frente al plazo de
+> diciembre de 2026 existen al menos ocho proyectos abiertos de cumplimiento NERC CIP con licencia
+> permisiva; ninguno pasa de 23 estrellas y los específicos del estándar son plantillas, no
+> herramientas ejecutables. **Hay material de arranque y no hay producto.**"*
+
+Eso es exactamente la forma de cero que esta KB ya midió en agentes de operación de red: **el código
+existe, la comunidad no.** Y es, otra vez, un hueco de producto —no de búsqueda— pero ahora
+**cuantificado** en lugar de afirmado.
+
+## T55 — La licencia de un repo no es necesariamente un valor único, y el tamaño del archivo lo delata
+
+**Enunciado.** Un repositorio puede llevar **más de una licencia a la vez**, repartidas por
+componente, y todo instrumento que reporte un único identificador SPDX (la API de GitHub, un badge,
+cualquier `grep`) **es incapaz de expresarlo**. Antes de escribir la licencia de un repo en una
+celda, comprobar **cuántos** archivos de licencia tiene y **cuánto pesan**.
+
+**Procedimiento, en orden de coste creciente:**
+
+1. `gh api search/repositories -f q="repo:OWNER/NAME"` → identificador de partida, **nunca la
+   respuesta final** si el repo es una plataforma.
+2. Listar archivos de licencia probando también los **nombres compuestos**: `LICENSE-EPL-2.0`,
+   `LICENSE-AGPL-3.0`, `LICENSE-MIT`, `LICENSE-APACHE`. **Dos o más aciertos ⇒ licencia partida.**
+3. Mirar el **tamaño**: ~1 KB = MIT/BSD; ~700 B = aviso corto de (L)GPL; 11.357 B = Apache-2.0;
+   14.474 B = EPL-2.0; ~35 KB = GPL-3/AGPL-3; **> 50 KB = lista de materiales, no licencia.**
+4. Si hay licencia partida, **leer la sección *License* del `README`**: es el único sitio donde se
+   dice **qué componente lleva cuál**. Escribirlo por componente.
+5. `grep -c affero` para separar AGPL-3.0 de GPL-3.0, y **buscar `LESSER` antes que
+   `GNU GENERAL PUBLIC`** (el texto de LGPL contiene literalmente la cadena de GPL).
+
+> ⚠️ **Defecto de numeración medido en este pase, y conviene arreglarlo antes de que crezca.**
+> Contados los encabezados `## T<n>` de los ocho archivos: la serie llega a **T54** y **nueve
+> identificadores están usados DOS VECES** para reglas distintas — **T31, T32, T33, T34, T35, T36,
+> T46, T47 y T48**. Por ejemplo **T48** es a la vez *"el lado del activo de campo está vacío"* y
+> *"un negativo nuevo no gana a un positivo verificado"*; **T47** es a la vez *"buscar la institución,
+> no la cosa"* y *"la capa de medición concentra las licencias no-OSI"*.
+>
+> **Consecuencia inmediata: toda referencia cruzada a T31-T36 o T46-T48 en esta KB es ambigua hoy** — incluida la que aparece en las notas de rotación. Hasta reconciliar la serie, **citar
+> siempre el número JUNTO AL ENUNCIADO abreviado**, nunca el número solo. Esta regla toma **T55**,
+> el primer identificador libre, para no empeorar la colisión.
+>
+> *Tarea concreta y barata para un próximo pase:* renumerar los nueve duplicados por orden de
+> aparición y dejar un índice de reglas al principio de `intel/trends.md`. Es mecánico y evita que la
+> serie se vuelva inservible como sistema de referencia.
+
+**Casos de referencia:** `OpenEMS/openems` (EPL-2.0 Edge+Backend / AGPL-3.0 UI),
+`openremote/core` (AGPL-3.0 + 2.697 líneas de inventario de dependencias),
+`vodikus/ha_tarifas_energia_brasil` (`NOASSERTION` que es GPL-3.0-or-later en 715 B).
+
+**Coste de ignorarla, y es bidireccional —** la razón por la que esta regla es distinta de T46/T47:
+resumir mal una licencia partida produce **o una capability borrada del catálogo** (`OpenEMS`
+descartado como AGPL cuando su núcleo es EPL-2.0) **o un incumplimiento real** (la UI AGPL puesta en
+un SaaS multi-tenant creyendo que todo el repo era EPL-2.0). Las demás trampas de licencia de esta
+KB sólo producían falsos negativos; **ésta puede producir los dos, y el segundo llega con el cliente
+dentro.**

@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🏭 Verticales de partida — Energy
@@ -16,7 +16,7 @@ updated: 2026-11-20
 |------------|----------|-----|-------|-------------|-------|---------------|
 | **{json:scada}** | GPL-3.0 | [riclolsen/json-scada](https://github.com/riclolsen/json-scada) | Node.js 24, Go 1.26, .NET 8, MongoDB 8, PostgreSQL 18, TimescaleDB, Grafana 13 | SCADA/EMS/IIoT completo con IEC 61850, ICCP, IEC 60870-5-101/104, DNP3, OPC-UA, OPC-DA, Modbus, MQTT/Sparkplug B | 513 | **LATAM (Brasil)** |
 | **OSHMI** | GPL-3.0 | [riclolsen/OSHMI](https://github.com/riclolsen/OSHMI) | HMI de subestación | HMI SCADA para subestaciones y automatización | 467 | **LATAM (Brasil)** |
-| **OpenEMS** | AGPL-3.0 | [OpenEMS/openems](https://github.com/OpenEMS/openems) | Java/OSGi + Angular | Energy Management System modular; desplegado en utilities europeas | 1631 | EMEA (Alemania) |
+| **OpenEMS** | ⚠️ **DOBLE, por componente**: **EPL-2.0** (Edge + Backend) / **AGPL-3.0** (UI) — ver nota abajo | [OpenEMS/openems](https://github.com/OpenEMS/openems) | Java/OSGi + Angular | Energy Management System modular; desplegado en utilities europeas | 1634 | EMEA (Alemania) |
 | **OpenRemote** | AGPL-3.0 | [openremote/core](https://github.com/openremote/core) | Java + Angular, MQTT | Plataforma IoT/EMS: assets, reglas, dashboards, gestión de EV | 2162 | EMEA (Países Bajos) |
 | **MyEMS** | MIT | [MyEMS/myems](https://github.com/MyEMS/myems) | Python + React | EMS para edificios, fábricas, malls, hospitales y campus: electricidad, agua, gas, frío, calor | 763 | APAC (China) |
 
@@ -53,8 +53,9 @@ updated: 2026-11-20
 | **OpenDSS (vía dss-extensions)** | BSD-3 + derechos gov. EE. UU. | [dss-extensions/OpenDSSDirect.py](https://github.com/dss-extensions/OpenDSSDirect.py) | Python / C-API | Motor de análisis de distribución de EPRI, accesible desde Python: el estándar de facto para estudios de alimentadores | 119 | Global |
 
 **Por qué `VOLTTRON` importa para la arquitectura de un engagement**: resuelve el problema que las
-otras plataformas de esta página dejan abierto. `OpenEMS` y `openremote` son **AGPL** y
-`json-scada` es **GPL**; poner lógica propietaria dentro de ellas contamina. `VOLTTRON` es
+otras plataformas de esta página dejan abierto. `openremote` es **AGPL** y `json-scada` es **GPL**;
+poner lógica propietaria dentro de ellas contamina. (`OpenEMS` **ya no pertenece a ese grupo**: su
+Edge y su Backend son **EPL-2.0** y sólo la UI es AGPL — ver la nota de licencia por componente.) `VOLTTRON` es
 **Apache-2.0** y está diseñado precisamente para alojar agentes de terceros. Es el lugar donde la
 capa agéntica MIT puede *ejecutarse* sin cruzar un límite de licencia.
 
@@ -223,11 +224,103 @@ afinar en sitio. `OpenSynth` convierte un bloqueo legal en una fase de proyecto.
 **`Enapter/marketplace`** resuelve el problema aburrido y caro de todo EMS: cada inversor, contador y
 cargador habla distinto. Es un catálogo MIT de integraciones de dispositivo, no una plataforma.
 
+## Decimocuarto pase (2026-11-21): `OpenEMS` no es AGPL, y eso cambia la arquitectura de un EMS de cliente
+
+**Es la corrección más valiosa de este pase y nace de una contradicción interna de esta propia KB.**
+El catálogo decía `OpenEMS` = **AGPL-3.0** en seis lugares; la Receta 35 de `compose/patterns.md`
+decía `OpenEMS` = **EPL-2.0**. No podían ser las dos. Resuelto por byte-read: **las dos estaban mal
+tal y como estaban escritas, porque el repo tiene dos licencias a la vez.**
+
+Lo que dice el `README` de `OpenEMS/openems`, en su sección *License*:
+
+| Componente | Licencia | Archivo (rama `develop`) | Byte-read |
+|------------|----------|--------------------------|-----------|
+| **OpenEMS Edge** (el controlador) | **Eclipse Public License 2.0** | `LICENSE-EPL-2.0` | **14.474 B**, verbatim EPL-2.0 (`eclipse`×2, `affero`×0, `lesser`×0) |
+| **OpenEMS Backend** (el servidor) | **Eclipse Public License 2.0** | `LICENSE-EPL-2.0` | ídem |
+| **OpenEMS UI** (Angular) | **GNU AGPL v3** | `LICENSE-AGPL-3.0` | **35.184 B**, verbatim AGPL-3.0 (`affero`×15, `eclipse`×0) |
+
+Copyright 2016-2026 OpenEMS Association e.V.; incluye software desarrollado en FENECON GmbH.
+
+### La consecuencia comercial, que es el punto
+
+**La cláusula de red del AGPL afecta sólo a la interfaz de usuario.** El controlador y el servidor
+—que son **exactamente las piezas que un integrador empotra y extiende**— son **EPL-2.0, que no
+tiene cláusula de red.** Por tanto:
+
+> Se puede construir un **EMS comercial sobre `OpenEMS` Edge + Backend y mantener el código propio
+> cerrado**, siempre que la UI Angular se sustituya por una propia o se trate por separado.
+
+Eso **invierte** el consejo que esta KB venía dando para `OpenEMS` ("AGPL → aislar detrás de una
+API" / "o se acepta liberar o se compra licencia"). Para `openremote` el consejo **sigue siendo
+correcto** y se ha re-verificado (ver abajo); para `OpenEMS` era una restricción que no existía, y
+que descartaba de facto la plataforma EMS **más desplegada de EMEA** (1.634 ★, utilities europeas).
+
+### `openremote`: el positivo previo de la KB se confirma, y su archivo de licencia enseña otra cosa
+
+`openremote` **sí es AGPL-3.0-or-later** — confirmado en el propio archivo: *"you can redistribute
+it and/or modify it under the terms of the GNU Affero General Public License ... either version 3 ...
+or any later version"*. **El registro previo de la KB era correcto y se mantiene** (T48).
+
+Pero su `LICENSE.txt` mide **172.958 B / 2.697 líneas**, porque tras la concesión declara: *"This
+software is a collective work, it combines the following independent works"*, y enumera **el
+inventario de licencias de sus dependencias** (ANTLR BSD, aopalliance dominio público, logback
+Eclipse Distribution License, cglib Apache-2.0, …).
+
+⚠️ **Trampa de detección:** un `grep` de `LESSER` sobre ese archivo devuelve **35** coincidencias y
+uno de `GNU GENERAL PUBLIC` devuelve **30** — un verificador automático etiquetaría `openremote`
+como LGPL o GPL. **No lo es: es AGPL-3.0 y *envía* código de terceros bajo ~7 familias de licencia.**
+Para un entregable de cliente, esa lista de materiales es justo lo que pide una revisión legal, y
+está publicada: es un activo, no un problema, **si se lee como lo que es.**
+
+- Los dos slugs están vivos y sirven el **mismo** `LICENSE.txt` (172.958 B):
+  [`openremote/core`](https://github.com/openremote/core) (el que usa esta KB) y
+  [`openremote/openremote`](https://github.com/openremote/openremote). Se mantiene `core`.
+
+## ERP/CRM energético: por fin tiene nombre propio, es LGPL-3.0 y está parada
+
+**Esto NO contradice la conclusión del cuarto y sexto pase: la confirma, y explica por qué.** Esos
+pases cerraron la pregunta así: *"no existe ningún ERP/CRM open source específico de energía con
+licencia **MIT o Apache 2.0**"*. Ese enunciado **sigue siendo cierto palabra por palabra**. Lo que
+este pase añade es **el artefacto que ningún pase anterior había nombrado** —`opentaps` no aparecía
+ni una sola vez en los ocho archivos— y la razón exacta de su ausencia: **es LGPL-3.0**, así que
+**nunca podía aparecer en un barrido filtrado por MIT/Apache**. El filtro estaba bien y el hueco era
+real; lo que faltaba era saber **qué** había justo al otro lado del filtro.
+
+> **Lección de método, aplicable a todo hueco ya "cerrado" de cualquier KB:** un hueco medido con un
+> filtro de licencia se cierra para *esa* licencia, no para el sector. Vale la pena re-ejecutar la
+> consulta **sin** el filtro una vez, no para cambiar la conclusión sino para **poder nombrar lo que
+> queda fuera**. Un cliente que pregunta *"¿y no hay nada?"* merece "sí hay uno, es LGPL-3.0 y está
+> parado desde 2024" en lugar de "no hay nada permisivo".
+
+Conviene registrarlo **con sus dos defectos**, porque es lo que va a aparecer en cualquier búsqueda
+de cliente:
+
+| Plataforma | Licencia | Repo | Estado | ★ |
+|------------|----------|------|--------|---|
+| **opentaps SEAS** | ⚠️ **LGPL-3.0** | [opentaps/opentaps_seas](https://github.com/opentaps/opentaps_seas) | *Smart Energy Applications Suite*. ⚠️ **sin push desde 2024-02-07** (~2,8 años) | 88 |
+| **opentaps 1** (ERP+CRM Java original) | NOASSERTION | [opentaps/opentaps-1](https://github.com/opentaps/opentaps-1) | Histórico; sin push desde 2019 | 23 |
+
+`opentaps` hizo en 2019 la transición *"de ERP a Smart Energy"* y su trabajo energético se apoya en
+protocolos industriales estándar (**MODBUS**, **BACnet**). Es el único candidato real de "Odoo del
+sector energético" encontrado — y **no es permisivo ni está vivo**. La lectura honesta para un
+cliente: **no existe hoy un ERP/CRM energético open source permisivo y mantenido**; lo que hay es
+`Apache OFBiz` (Apache-2.0) como **framework ERP genérico** sobre el que habría que construir el
+vertical, que es un proyecto, no una adopción.
+
+> ⚠️ **COLISIÓN DE NOMBRES, y cuesta un pase entero si se cae en ella:**
+> [`opentap/opentap`](https://github.com/opentap/opentap) (**262 ★**, Keysight, automatización de
+> **test de instrumentación**) **no tiene nada que ver** con `opentaps/*` (ERP → smart energy). Una
+> sola letra de diferencia.
+> Igual de peligroso: [`thliebig/openEMS`](https://github.com/thliebig/openEMS) (**798 ★**) es un
+> **solver de campos electromagnéticos FDTD**, no un EMS; `OpenEMS/openems` (1.634 ★) es el Energy
+> Management System. **Se diferencian sólo por la caja de las letras.** Al buscar `openems` en
+> GitHub, los dos primeros resultados son proyectos de dominios distintos.
+
 ## El riesgo de licencia es el criterio de selección, no una nota al pie
 
 Este vertical está dominado por **copyleft**, a diferencia de la capa de agentes (casi toda MIT):
 
-- **AGPL-3.0** (`OpenEMS`, `openremote/core`): la cláusula de red obliga a ofrecer el código fuente
+- **AGPL-3.0** (`openremote/core`, y **sólo la UI** de `OpenEMS`): la cláusula de red obliga a ofrecer el código fuente
   a los usuarios del servicio. Para un SaaS multi-tenant de cliente esto **es** la decisión
   arquitectónica: o se acepta liberar, o se compra licencia comercial, o se aísla por API.
   OpenRemote ofrece licenciamiento comercial alternativo.

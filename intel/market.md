@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🗺️ Mapa de mercado — Energy
@@ -536,6 +536,58 @@ origen **North America**, PNNL)— de modo que una propuesta de agregador de res
 esta región **ya no tiene que ofrecerse sobre 2.0b ni presupuestar una reimplementación**. Es el
 cambio de posición comercial más concreto que produce este pase.
 
+### Actualización del decimocuarto pase (2026-11-21) — North America
+
+**El hallazgo de la región es que el regulador escribió la regla de arquitectura que esta KB ya
+exigía en sus recetas.** La guía de **NERC** sobre IA en el sistema eléctrico establece que la IA
+debe funcionar como **herramienta de apoyo a la decisión (*decision-support*), no como controlador
+autónomo**. Esa frase es exactamente la restricción que la Receta 46 de esta KB expresa como *"el
+texto de razonamiento nunca llega al actuador"*.
+
+Por qué importa comercialmente, y es un cambio de discurso: hasta este pase el *human-in-the-loop*
+se vendía como **buena práctica de ingeniería**. Con la guía de NERC encima de la mesa pasa a ser
+**la lectura del regulador de referencia de la región**. El argumento deja de ser "conviene" y pasa
+a ser "es lo que espera NERC". Un diseño agéntico que escriba en el lazo de control en NA ya no es
+sólo arriesgado: es **contrario a la guía publicada**, y conviene decirlo así en un SOW.
+
+#### El contador de actividad regulatoria que NA no tenía
+
+Los pases anteriores registraron que NA **no tiene contador de expedientes** y que por eso el
+trabajo en la región es *advisory-shaped*. Eso se corrige en parte: la **NCSL** (National Conference
+of State Legislatures) publica una serie **"AI in Energy"** (abril de 2026) cuya **Parte 3 es el
+panorama legislativo** y la **Parte 2 los desafíos**. Es un **seguimiento estado por estado** de la
+legislación de IA aplicada a energía, que es precisamente el instrumento que faltaba: en NA la
+actividad regulatoria **no está en un registro federal, está en 50 legislaturas estatales**, y hay
+quien las cuenta.
+
+- Documentos localizados: `AI-in-Energy-Part-2-Challenges-web.pdf` y
+  `AI-in-Energy-Part-3-Legislative-Landscape-web.pdf` (dominio `documents.ncsl.org`).
+- La serie recoge además la **moratoria federal propuesta** sobre reglas estatales de IA que figuró
+  en borradores iniciales de la ley presupuestaria de 2025, y que habría limitado la autoridad
+  estatal y local **al menos 10 años**. No se aprobó en esa forma: **no presentarla como vigente.**
+- ⚠️ **Snippet-sourced.** Ambos PDF se identifican por título y nombre de archivo; no se han leído
+  desde este entorno. Ver la nota de instrumento del pase.
+
+#### La cifra física citable de la región
+
+**EIA** (consumo eléctrico total de EE.UU., miles de millones de kWh):
+
+| Año | Consumo | Δ |
+|-----|---------|---|
+| 2025 | 4.195 | — |
+| 2026 | 4.268 | +1,7 % |
+| 2027 | 4.391 | +2,9 % |
+
+Es una **proyección oficial, no una estimación de consultora**, y por eso es la cifra preferible
+para abrir una conversación en NA — del mismo modo que esta KB prefiere citar adopción antes que
+tamaño de mercado. Los datacenters de IA son el principal motor del incremento.
+
+**Morningstar DBRS** añade el ángulo que le interesa a una utility: *la adopción de IA es nueva para
+las autoridades regulatorias*, que ahora deben **evaluar la inversión en IA que las utilities
+proponen**, no sólo revisar el desembolso de capex. Eso describe un entregable concreto y vendible:
+**el expediente que justifica una inversión en IA ante el regulador tarifario** — no el modelo, el
+expediente.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -1064,6 +1116,58 @@ desde el medidor hasta el motor de red** — `mbmd` / `iec62056-21` / `dsmr-p1-p
 `saref-linkml` (semántica) → `openleadr-rs` + `openadr3-client` (flexibilidad) → `pypowsybl` (red).
 Eso responde la objeción de soberanía digital **sin ningún modelo ni librería de origen estadounidense
 o chino en la ruta crítica**.
+
+### Actualización del decimocuarto pase (2026-11-21) — EMEA
+
+**Corrección de precisión, y es importante porque afecta a cómo se cita el AI Act en un entregable.**
+Esta KB venía registrando **Reg (UE) 2026/1744** (OJ 24-jul-2026) como "el AI Act para energía". Ese
+número **no es el AI Act**. Son dos instrumentos distintos y hay que nombrarlos por separado:
+
+| Instrumento | Qué es | Papel |
+|-------------|--------|-------|
+| **Reg (UE) 2024/1689** | **El AI Act propiamente dicho.** Se aplica horizontalmente, energía incluida | La norma sustantiva: define sistema de alto riesgo y sus obligaciones |
+| **Reg (UE) 2026/1744** | Instrumento **modificativo** (OJ 24-jul-2026) | Mueve las fechas: Anexo III → **2-dic-2027**, Anexo I → **2-ago-2028**, y estrecha el alcance |
+
+**Consecuencia práctica:** citar "Reg (UE) 2026/1744" a secas como fundamento de una obligación es
+un error de forma — la obligación nace de **2024/1689**; 2026/1744 dice **cuándo** empieza a
+aplicarse. En un documento de cliente van los dos, y en ese orden. La pregunta sustantiva sigue
+siendo la misma que esta KB viene registrando: **si un sistema energético concreto cae en "alto
+riesgo"**, y la Comisión tiene guías de clasificación en borrador.
+
+> **Regla de método que esto deja, y vale para toda la flota de KBs:** cuando una fecha de
+> aplicación y una obligación vienen de **números de norma distintos**, registrar los dos números y
+> cuál hace qué. Un pase que guarda sólo el instrumento modificativo pierde la base legal, y un pase
+> que guarda sólo la norma base publica una fecha equivocada.
+
+#### La hoja de ruta, ahora con el dinero desglosado
+
+La **Strategic Roadmap for Digitalisation and AI in the Energy Sector** de la Comisión
+(**3-jun-2026**, ya en la KB) es **comunicación de política, no legislación vinculante**, sobre tres
+pilares: *Energy for AI*, *Digitalisation and AI for the Energy System*, *Data for AI*. El desglose
+presupuestario localizado este pase:
+
+- **~€ 75 M** asignados a **IA en energía**.
+- **~€ 190 M** a **soluciones digitales de energía** en sentido amplio.
+- Origen: **Horizon Europe**.
+
+Eso confirma lo que el séptimo pase ya anotaba —la Comisión **financia exactamente la capa que esta
+KB cataloga**— y ahora con la cifra separada entre lo estrictamente agéntico y lo digital-general.
+
+#### Movimiento de industria, que es señal de dónde se va a contratar
+
+- **Declaración de intención firmada por 14 asociaciones industriales europeas**, con un **acuerdo
+  modelo esperado en el segundo semestre de 2026**. Un acuerdo modelo es una plantilla contractual:
+  cuando aparece, el trabajo de integración se estandariza y se licita.
+- **Alianza de utilities y tecnológicas para descarbonizar los datacenters de la UE** (jun-2026).
+- Se menciona una **propuesta de modificación del Reglamento del Mercado Eléctrico** posterior a la
+  hoja de ruta (fecha citada 17-jul-2026). ⚠️ **Fecha sin verificar** — no citarla sin comprobar.
+- Barrera de adopción recurrente en las fuentes: requisitos estrictos de seguridad de la
+  infraestructura crítica, **gobernanza fragmentada** y **datos poco compartidos**. Es la misma forma
+  de *adopción-sin-consolidación* que esta KB ya midió en otras industrias.
+
+⚠️ **Todo este bloque es snippet-sourced.** `eur-lex.europa.eu` sigue sin resolver desde este
+entorno, por lo que **el texto primario del AI Act y de su instrumento modificativo continúa sin
+leer** — el open item del pase 13 **sigue abierto**, y conviene que siga marcado como tal.
 
 ### APAC
 
@@ -1606,6 +1710,87 @@ Se mantiene lo que la KB ya registraba de las reglas de la NDRC/NEA.
 intergubernamental, no de consultora — **la mejor fuente de esta región que esta KB tiene
 identificada y aún no ha abierto**. Debería ser la primera lectura del próximo pase de APAC, por
 delante de cualquier búsqueda nueva.
+
+### Actualización del decimocuarto pase (2026-11-21) — APAC
+
+**El gap regulatorio de APAC se cierra parcialmente, y con dos instrumentos fechados y de país.**
+Los pases 12 y 13 registraron "cero texto regulatorio de nivel país alcanzable" en APAC y lo
+anotaron como **no establecido, no como cobertura**. Ese cero se rompe:
+
+| País | Instrumento | Fecha | Qué hace |
+|------|-------------|-------|----------|
+| **Vietnam** | **Tarifa de dos partes para almacenamiento en baterías** | **enero de 2026** | Separa **cargo por capacidad** y **cargo por energía** |
+| **India** | **CEA Cyber Security in Power Sector Regulations, 2026** | 2026 | Regulación de ciberseguridad del sector eléctrico; existe *crosswalk* abierto a NIST CSF 2.0 |
+
+Dos observaciones de método sobre **cómo** aparecieron, porque las dos son reutilizables:
+
+1. La tarifa vietnamita apareció en prensa sectorial de **almacenamiento**, no en búsquedas de
+   "regulación IA energía". **La regulación que importa para un proyecto de flexibilidad no se
+   publica bajo la etiqueta "IA".** Se publica como tarifa, como código de red o como norma de
+   ciberseguridad.
+2. La regulación india apareció **dentro de GitHub**, en
+   [`Johnbjoseph-cybersec/india-ot-regulation-crosswalk`](https://github.com/Johnbjoseph-cybersec/india-ot-regulation-crosswalk)
+   (MIT) — un repo que **mapea la norma del CEA contra NIST CSF 2.0**. Es la primera vez en esta KB
+   que **el canal que sí resuelve (GitHub) entrega texto regulatorio** que el canal web no entregaba.
+   **Regla nueva: cuando el lado demanda no resuelve, buscar la norma como artefacto de cumplimiento
+   en GitHub** (`crosswalk`, `mapping`, `checklist`, `compliance`), no sólo como documento.
+
+#### La restricción estructural de la región, ahora desde fuente primaria y generalizada
+
+La KB venía sosteniendo, a partir de Japón, que la **fragmentación de red** impide que los modelos
+se transfieran entre áreas (el caso de las **dos frecuencias** japonesas). El informe **IEA "Energy
+and AI in East Asia"** (anunciado **7-abr-2026**) lo eleva a rasgo **de toda la región**: *la falta
+de interconexiones transfronterizas en East Asia* implica que la IA debe resolver la gestión del
+sistema **dentro de cada país**.
+
+**Eso deja de ser una curiosidad japonesa y pasa a ser la tesis de entrada en APAC:** en esta región
+**no se vende una plataforma regional**, se vende **un despliegue por país**, porque el sistema
+eléctrico no está acoplado. Es un argumento que sube el precio del proyecto y a la vez lo hace
+defendible, y conviene decirlo literalmente en una propuesta.
+
+Otras cifras del informe, todas snippet-sourced:
+
+- El consumo eléctrico de los **datacenters de la región se espera que **más que se duplique**.
+- **~6 de cada 10 chips** del mundo (GPU o CPU) se fabrican en la región: APAC es a la vez **demanda
+  de electricidad y cuello de botella del suministro global de silicio**.
+- Uso principal de IA identificado: **integración de renovables variables** (solar y eólica).
+- Japón, Corea, China y Chinese Taipei tienen **objetivos de net zero** declarados.
+
+#### El dato de adopción, y confirma el cero más persistente de esta KB desde el lado demanda
+
+Presentación del **ADB** — *Enabling AI Implementation in the Energy Sector* (Asia Clean Energy
+Forum, jun-2026):
+
+- **33 % de adopción de IA** en el sector energético (atribuido a IEA, 2025).
+- Causas del hueco: **falta de política, gobernanza y estándares**, y disponibilidad limitada de datos.
+- **71 % de los pilotos se estancan** antes de producción (atribuido a McKinsey, 2025).
+- La IEA añade la frase que importa: **la adopción de IA sigue siendo limitada en la operación de red
+  crítica para el sistema**, aun donde el valor potencial es claro.
+
+Esa última línea es **confirmación independiente y desde el lado institucional** del cero que esta
+KB midió siete u ocho pases contando repos: no es que no se hayan encontrado los agentes de
+operación de red — **es que la operación de red es donde la IA todavía no ha entrado**, y lo dice la
+IEA. Cuando un cliente pregunte *"¿por qué no hay agentes de red open source?"*, hay ahora dos
+mediciones independientes, una de oferta (GitHub) y una de demanda (IEA), que apuntan al mismo sitio.
+
+- **ArkTerra Partners**: **24,2 GW** de capacidad de datacenter anunciada en **nueve mercados APAC**
+  para 2025-2030, con el aviso de que **sin almacenamiento de larga duración** ese pipeline arriesga
+  consolidar suministro respaldado por fósiles.
+
+#### Lado open source: dos repos de origen APAC nuevos
+
+- [`mesmo-dev/mesmo`](https://github.com/mesmo-dev/mesmo) — **MIT** (byte-read, 1.099 B), 67 ★ /
+  17 forks / 15 issues. *Multi-Energy System Modeling and Optimization*. Origen **TUMCREATE
+  (Singapur)**, según el copyright del propio `LICENSE`. ⚠️ **Sin push desde 2024-09-03**: es
+  referencia de modelado multi-vector, no base viva.
+- [`172629438/loomgrid`](https://github.com/172629438/loomgrid) — **MIT** (byte-read, 1.078 B), 2 ★.
+  Dimensionamiento de almacenamiento comercial e industrial (C&I), descripción bilingüe
+  chino/inglés. Origen **China**. Tracción nula: se registra por procedencia, no se recomienda.
+
+⚠️ **Instrumento:** `iea.blob.core.windows.net` **no resuelve** desde este entorno (sexto host
+primario confirmado muerto). El PDF del informe East Asia está **localizado pero no leído**: el open
+item del pase 13 pasa de *"identificado, no leído"* a *"identificado, ilegible desde este entorno,
+contenido snippet-sourced"*. **No es cobertura; es un gap con el límite medido.**
 
 ### LATAM
 
@@ -2301,6 +2486,79 @@ No se re-midió con vocabulario español/portugués porque **esta KB ya lo hizo 
 resultado cero**, y repetirlo no añade información. La conclusión se mantiene y se refuerza: en la
 capa de medición **no hay ecosistema abierto regional con el que competir**, y por tanto **publicar
 una pieza propia sigue siendo la jugada más barata de posicionamiento** en la región.
+
+### Actualización del decimocuarto pase (2026-11-21) — LATAM
+
+**El hallazgo del pase invierte un cero que esta KB midió cuatro veces.** El pase 13 anotó *"CERO
+repos de origen LATAM en este barrido, vocabulario es/pt NO re-ejecutado porque ya se midió cero
+4×"*. Aplicando la lección transferida del pase de automotive —**un cero medido con consultas largas
+o genéricas es una afirmación sobre el instrumento, no sobre el sector**— se re-ejecutó la búsqueda
+con **el nombre propio del operador o del regulador**, que es el discriminador que esta KB ya sabía
+que funciona (T43).
+
+Resultado: **no hay un cero. Hay una capa entera**, y tiene una forma muy definida.
+
+| Repo | Licencia | País | Qué hace | ★ / forks |
+|------|----------|------|----------|-----------|
+| [`Mcp-Brasil/mcp-brasil`](https://github.com/Mcp-Brasil/mcp-brasil) | **MIT** | Brasil | **Servidor MCP de 70 APIs públicas brasileñas, 533 tools.** Incluye sección *Energia e Infraestrutura* con feature `aneel` (**4 tools**: SIGA, generación distribuida, tarifas, banderas) | **1.868** ★ |
+| [`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) | **MIT** (byte-read 1.074 B) | Brasil | **Convierte la BDGD de ANEEL a elementos OpenDSS.** El puente entre el dato regulatorio de distribución y el simulador | 10 ★ / **9 forks** / 16 issues |
+| [`riclolsen/json-scada`](https://github.com/riclolsen/json-scada) | GPL-3.0 | Brasil | SCADA completo (ya en la KB; **slug correcto registrado este pase**) | 513 ★ |
+| [`GuilhermeBarros12/rag_aneel`](https://github.com/GuilhermeBarros12/rag_aneel) | **MIT** (byte-read 1.100 B) | Brasil | RAG sobre normativa de ANEEL. Push 2026-11-14 | 3 ★ |
+| [`nightcrowsgui5-netizen/radar-curtailment-sin`](https://github.com/nightcrowsgui5-netizen/radar-curtailment-sin) | **MIT** (byte-read 1.080 B) | Brasil | Cuantifica el **curtailment renovable por *constrained-off*** sobre datos abiertos del ONS | 0 ★ |
+| [`brenoloureiro/ons-energy-viz`](https://github.com/brenoloureiro/ons-energy-viz) | **MIT** | Brasil | Visualizador de generación del ONS | 0 ★ |
+| [`fcingolani/cammesa-api`](https://github.com/fcingolani/cammesa-api) | **MIT** | Argentina | API/CLI para series de CAMMESA (ya en la KB). ⚠️ **sin push desde 2017** | 9 ★ |
+| [`batuenergy/atlas-sen`](https://github.com/batuenergy/atlas-sen) | MIT (rescatada en pase previo) | México | Atlas del SEN. **Push de hoy, 2026-11-21** | 11 ★ |
+
+#### La caracterización, que es lo vendible
+
+**El open source energético de LATAM no es una capa de modelado ni agéntica: es una capa de
+acceso al dato del regulador.** Casi todo lo encontrado hace lo mismo —leer ANEEL, el ONS, CAMMESA,
+CENACE y volverlo consultable— y casi nada construye por encima. Eso tiene dos consecuencias
+directas y opuestas, y conviene presentar las dos:
+
+1. **A favor:** el trabajo de *plumbing* regional **ya está hecho y es permisivo**. No hay que
+   construir el conector a ANEEL: hay un MCP de 1.868 ★ con 4 tools de ANEEL y un conversor
+   BDGD→OpenDSS con 9 forks. Un proyecto LATAM arranca **por encima** del dato, no en él.
+2. **En contra, y es el hueco de Globant:** **no hay nada por encima.** La capa de optimización, de
+   pronóstico operativo y agéntica sobre ese dato **no existe en la región**. El pase 13 ya definió
+   el hueco como *"distribución / capa agéntica / dossier"*; este pase lo confirma **con el
+   inventario delante** en lugar de por ausencia de resultados.
+
+#### Dos avisos de licencia, los dos importantes
+
+- **`mcp-brasil` separa licencia de código y licencia de dato, y lo dice su propio README:** el MIT
+  cubre **sólo el código**; cada fuente tiene su licencia (`SOURCES.md`) y hay una
+  `ACCEPTABLE_USE.md` que el README pide leer **antes de uso comercial, periodístico o decisorio**.
+  Para el feature que nos ocupa, `SOURCES.md` dice: `aneel`, `antt` → *"open data; atribuição"*.
+  **Traducción operativa: utilizable comercialmente, con atribución.** Está limpio — pero la
+  comprobación había que hacerla, porque **MIT en el repo no dice nada del dato que el repo
+  descarga**.
+
+  > **Clase de riesgo nueva y general para toda la flota:** un cliente MCP permisivo sobre datos de
+  > terceros tiene **dos licencias, no una**. Verificar la del dato, no sólo la del código. Un
+  > conector MIT a una fuente con dato restringido es un problema contractual que ningún
+  > verificador de SPDX detecta.
+
+- [`vodikus/ha_tarifas_energia_brasil`](https://github.com/vodikus/ha_tarifas_energia_brasil) (33 ★,
+  tarifas y banderas de ANEEL para Home Assistant): la API reporta **NOASSERTION**, pero el byte-read
+  devuelve **GPL-3.0-or-later** (715 B, 0 coincidencias de `LESSER`). **No es permisivo: excluido**
+  de las tablas recomendadas. Ver la clase de licencia "notice corto" en `intel/trends.md`.
+
+#### Contexto de mercado de la región
+
+- **Moody's**: el **suministro eléctrico y la capacidad de red —no la demanda—** son la restricción
+  principal a la expansión de IA en América Latina. Es la misma tesis central que esta KB sostiene a
+  nivel global, y en LATAM es donde muerde antes.
+- Capacidad de datacenter de la región: **~2.340 MW a principios de 2026**, creciendo **15-20 % anual**.
+- **Eletrobras** sigue siendo el despliegue nombrado de referencia (con C3.ai, monitorización de red).
+- Chile aplica IA a **pronóstico de renovables**; Brasil, Uruguay y México a modernización de red y
+  planificación de infraestructura.
+- Huecos declarados de la región: red, regulación, talento especializado y conectividad.
+
+⚠️ Fuentes de este bloque: prensa sectorial y páginas de evento (BNamericas, Moody's vía prensa,
+DCPI-LATAM, OLADE). **No se localizó norma primaria de IA-energía de 2026 en la región**; lo que hay
+son marcos de datacenter y la consulta del MME brasileño ya registrada (**consulta, no ley** — el
+aviso del pase 13 sigue en pie).
 
 ## Posicionamiento Globant
 

@@ -1,3 +1,9 @@
+---
+industry: energy
+region: Global
+updated: 2026-11-21
+---
+
 # ⚡ Energy KB
 
 > Knowledge base de la industria **Energy** para Globant AI Studios.
