@@ -809,3 +809,59 @@ limpias. `UtilitechAS/amsreader-firmware` (471 ★) parece la elección obvia pa
 (420 ★) no tiene licencia. **Elegir por estrellas aquí rompe el entregable.** Sustitutos limpios:
 `lvzon/dsmr-p1-parser` (Apache-2.0) para firmware/edge y
 `WillCodeForCats/solaredge-modbus-multi` (Apache-2.0) para SolarEdge.
+
+---
+
+## Pase 15 (2026-11-21) — tres verticales abiertas nuevas: intercambio de modelo de red, subestación y recarga de VE
+
+### 1. Intercambio de modelos de red — CIM / CGMES (IEC 61970)
+
+Es la vertical **estructuralmente más importante** que se añade: el formato en el que los TSO y DSO
+europeos **se intercambian el modelo del sistema**. Quien sabe leer y escribir CGMES puede entrar en
+el flujo de trabajo del operador sin pedirle que cambie de herramienta.
+
+| Plataforma | Licencia | Qué es | Personalizable con IA encima |
+|------------|----------|--------|------------------------------|
+| [`sogno-platform/cimpy`](https://github.com/sogno-platform/cimpy) | Apache-2.0 | Importa/exporta CGMES / CIM IEC-61970 en XML/RDF (Python, RWTH Aachen) | Sí — es la puerta de entrada del modelo al agente |
+| [`sogno-platform/cim4j`](https://github.com/sogno-platform/cim4j) | Apache-2.0 | Clases Java para CIM / CGMES; activo | Sí |
+| [`RWTH-IAEW/cimpyorm`](https://github.com/RWTH-IAEW/cimpyorm) | BSD-3-Clause | ORM de Python sobre datasets CIM/CGMES | Sí — da esquema consultable |
+| [`SOPTIM/OpenCGMES`](https://github.com/SOPTIM/OpenCGMES) | Apache-2.0 | Suite CGMES/CIM con RDFS, SHACL y CIMXML (ya en la KB) | Sí — **SHACL es validación declarativa**: el agente propone, SHACL decide si el modelo es válido |
+
+> **El patrón que habilita esta vertical:** con CGMES + SHACL la salida de un agente **se valida
+> contra el esquema del propio sector antes de tocar nada**. Es la forma más limpia de cumplir la
+> restricción de arquitectura (apoyo a la decisión, no control) sin renunciar a automatizar: el
+> agente escribe un modelo candidato, **SHACL lo rechaza o lo acepta**, y el humano firma.
+
+### 2. Subestación — IEC 61850
+
+| Plataforma | Licencia | Qué es | Nota |
+|------------|----------|--------|------|
+| [`robidev/iec61850_open_server`](https://github.com/robidev/iec61850_open_server) | Apache-2.0 | **IED** IEC 61850 abierto sobre lib61850 | Activo (2026-03) |
+| [`beanit/iec61850bean`](https://github.com/beanit/iec61850bean) | Apache-2.0 | Pila **MMS** IEC 61850 en Java, cliente y servidor | ⚠️ Sin push desde jul-2023: referencia, no base de producto |
+
+A diferencia de la capa prosumer —densa en licencias no-OSI— **la de subestación tiene ancla
+permisiva real y en Apache-2.0**. Permite construir laboratorio y simulación de IED sin comprometer
+la propiedad del entregable.
+
+### 3. Recarga de vehículo eléctrico — OCPP
+
+| Plataforma | Licencia | Qué es | Consecuencia |
+|------------|----------|--------|--------------|
+| [`ChargeTimeEU/Java-OCA-OCPP`](https://github.com/ChargeTimeEU/Java-OCA-OCPP) | MIT | Cliente y servidor OCPP en Java | **Empotrable** |
+| [`lorenzodonini/ocpp-go`](https://github.com/lorenzodonini/ocpp-go) | MIT | OCPP 1.6 y 2.0.1 en Go | **Empotrable** |
+| `steve-community/steve` | **GPL-3.0** | SteVe: servidor OCPP de gestión de puntos de carga, el más usado | ⚠️ Copyleft fuerte: **no empotrable** en producto propietario |
+| `dallmann-consulting/OCPP.Core` | **GPL-3.0** | Servidor OCPP + UI de gestión en .NET | ⚠️ Mismo límite |
+
+> **La regla de esta vertical, y es un input directo de cotización:** en OCPP **el protocolo es
+> permisivo y el producto de gestión es copyleft fuerte**. Un encargo de "plataforma de recarga"
+> tiene por tanto dos presupuestos muy distintos según si el cliente quiere **producto propietario**
+> (hay que construir la gestión sobre las librerías MIT) o acepta **GPL-3.0** (se parte de SteVe y se
+> ahorra el núcleo, a cambio de liberar las modificaciones).
+
+### Nota de licencia para las tres verticales nuevas
+
+Aparece **EUPL-1.2** en la capa europea financiada con fondos de la UE
+([`HVDC-WISE/HVDC-Wise_lib`](https://github.com/HVDC-WISE/HVDC-Wise_lib)). Es **copyleft débil con
+compatibilidad explícita, no permisiva**, y **engaña a los detectores por palabra clave** porque su
+texto nombra GPL, LGPL, AGPL y MPL (T59). En EMEA hay que esperarla y clasificarla leyendo **la
+primera línea** del archivo.

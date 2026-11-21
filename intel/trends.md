@@ -1709,3 +1709,99 @@ descartado como AGPL cuando su núcleo es EPL-2.0) **o un incumplimiento real** 
 un SaaS multi-tenant creyendo que todo el repo era EPL-2.0). Las demás trampas de licencia de esta
 KB sólo producían falsos negativos; **ésta puede producir los dos, y el segundo llega con el cliente
 dentro.**
+
+---
+
+## Pase 15 (2026-11-21) — la coordinación red–centro de datos se consolida como el frente de investigación, y el mercado publica su política de riesgo
+
+### 1. El dato que ordena toda la conversación agéntica del sector
+
+> **23% de los operadores de red de Asia Oriental usa IA en operación en tiempo real; 54% la usa en
+> planificación del desarrollo de red.** La IEA atribuye la diferencia a **preocupaciones de
+> fiabilidad**: el rechazo al tiempo real es **deliberado**, no un retraso de madurez.
+> (IEA, *Energy and AI in East Asia*, abril 2026. ⚠️ Por snippet: `iea.blob.core.windows.net` **no
+> resuelve** desde este entorno y el informe **sigue sin leerse byte a byte**.)
+
+Es la **tercera confirmación independiente**, y la primera cuantificada, de la restricción de
+arquitectura que esta KB impone desde sus primeras recetas:
+
+| Canal | Pase | Qué dijo |
+|-------|------|----------|
+| Criterio propio de la KB | 1–13 | El agente es apoyo a la decisión; nunca controlador del lazo |
+| **Regulador** (NERC, NA) | 14 | La IA en el sistema eléctrico debe ser apoyo a la decisión, no controlador autónomo |
+| **Mercado** (IEA, Asia Oriental) + guía de práctica NA | **15** | **23% vs 54%**, por fiabilidad; y los agentes **sin credencial ni ruta de red** en la zona de control |
+
+**Deja de ser una opinión de arquitectura y pasa a ser una descripción del mercado.** Para una
+propuesta: el límite no se discute, se **cotiza** — y lo que se vende es la capa de planificación,
+estudio y expediente, que es donde está el 54%.
+
+### 2. El frente de investigación se desplazó a la coordinación red ↔ centro de datos
+
+Nueve papers localizados en un solo barrido, todos de 2026, convergen en un problema que hace un año
+no existía como categoría: **el centro de datos como recurso de red, no sólo como carga**.
+
+> ⚠️ **Estado de verificación de estas nueve referencias: listadas por buscador, NO verificadas.**
+> `arxiv.org` **está rechazado por la política de egreso de esta sesión** (403 del proxy, clase "host
+> no permitido"), así que **ni un solo identificador de abajo pudo comprobarse** ni se leyó ningún
+> resumen. Los títulos y los IDs vienen del listado del buscador. **Antes de citar cualquiera en
+> material de cliente hay que resolverlo en un entorno con acceso a arXiv** — es el open item 15-R3.
+> Se registran porque la *convergencia temática* de nueve resultados independientes es señal útil
+> aunque cada identificador esté sin confirmar; no se registran como bibliografía.
+
+| Referencia | Qué aporta |
+|------------|------------|
+| [arXiv 2607.28822](https://arxiv.org/pdf/2607.28822) | *Agentic AI for Power Systems*: estrategias para **identificar y cerrar brechas de capacidad** — el marco de madurez que faltaba |
+| [arXiv 2609.40272](https://arxiv.org/pdf/2609.40272) | Agentes **basados en skills** para estudios de sistemas de potencia |
+| [arXiv 2610.05502](https://arxiv.org/pdf/2610.05502) | Liberar capacidad de **interconexión** mediante flexibilidad **coordinada** red + centro de datos |
+| [arXiv 2609.38020](https://arxiv.org/pdf/2609.38020) | Flexibilidad de demanda por **desplazamiento temporal de cargas batch** |
+| [arXiv 2611.00462](https://arxiv.org/pdf/2611.00462) | **Localización y profundidad de recorte** como límites reales del margen de red disponible (nov-2026) |
+| [arXiv 2609.03030](https://arxiv.org/pdf/2609.03030) | Capacidad de alojamiento con **voltage ride-through** del centro de datos |
+| [arXiv 2610.09060](https://arxiv.org/pdf/2610.09060) | Revisión de desafíos de potencia y soluciones coordinadas |
+| [arXiv 2609.11649](https://arxiv.org/pdf/2609.11649) | *From Grid to Chip*: arquitectura de potencia, estabilidad y flexibilidad |
+| [arXiv 2606.09617](https://arxiv.org/pdf/2606.09617) | Compromisos para la transición energética **europea** y el net-zero |
+
+**Lectura comercial:** la investigación ya trata la flexibilidad del centro de datos como
+**producto**, y ENTSO-E (8-may-2026) publicó **quién puede venderlo**: los **hiperescala** están en
+posición de prestar flexibilidad, los de **colocation** están **limitados por el control del
+inquilino**. Ese límite es contractual y de software de coordinación, **no físico** — es un segmento
+desatendido con causa nombrada.
+
+### 3. Trampas de licencia: dos clases nuevas, y las dos nacen de leer mal un archivo que sí estaba
+
+> **T56 — el incipit de MIT no identifica una licencia.** `Zara-Toorox/Solar-Forecast-ML` (**318 ★**)
+> titula `PROPRIETARY AND NON-COMMERCIAL LICENSE` y **a continuación reproduce palabra por palabra**
+> la frase de concesión de MIT. Un detector que busque esa frase lo marca MIT. Discriminadores de
+> coste cero, en orden: **(1) primera línea no vacía; (2) tamaño** — MIT real mide ~1,05–1,09 kB, el
+> impostor medía **2.646 B**.
+>
+> **T57 — cláusula de prohibición de entrenamiento de IA.** El mismo archivo prohíbe usar el código
+> para **entrenar o afinar LLM** o sistemas de generación de código sin permiso escrito. Afecta al
+> **uso interno de un estudio de IA**, no sólo a la redistribución, y **ningún campo SPDX la
+> expresa**. Clase nueva, y previsiblemente creciente.
+>
+> **T59 — el EUPL enumera las licencias con las que es compatible.** `HVDC-Wise_lib` fue clasificado
+> **LGPL** porque la cláusula de compatibilidad del EUPL nombra GPL, LGPL, AGPL y MPL. Es la misma
+> familia que el defecto LGPL/GPL de la KB de automotive, pero el EUPL nombra **cinco o más**
+> licencias ajenas.
+
+**Y la quinta clase no-OSI de la capa de medición:** **Business Source License 1.1**
+(`u9n/dlms-cosem`, 124 ★), detectada **sólo** por T46 (leer el manifiesto primero). Es la más
+peligrosa de las cinco porque **se confunde con open source** y porque su conversión diferida hace
+que "¿puedo usarlo?" tenga **respuestas distintas hoy y en cuatro años**. Las otras cuatro, del pase
+13: fair-source con tope de usuarios, PolyForm no comercial, revocable, permisiva-bespoke no-OSI.
+
+### 4. Lo que este pase aprende sobre su propio método
+
+> **T58 — un inventario no es una cobertura.** 465 direcciones ya registradas no impidieron que **18
+> consultas cortas** devolvieran **76 repos genuinamente nuevos**. El tamaño del inventario mide
+> **esfuerzo acumulado**, no fracción del dominio cubierta. Y la proporción de nuevos **subió con el
+> lote** (17 → 25 → 34) al pasar de términos descriptivos a **nombres de protocolo y de ontología**:
+> **el vocabulario de la consulta pesa más que su número.** Toda KB de esta flota que informe un
+> "techo de descubrimiento" debe re-sondearlo con **una palabra sobre un nombre propio** antes de
+> creérselo.
+
+**Instrumento:** `iea.blob.core.windows.net` se añade a los hosts primarios que **no resuelven**
+desde este entorno. Y `gh api repos/<owner>/<repo>` **está denegado por el alcance de la sesión**
+mientras `search/repositories` y `raw.githubusercontent.com` funcionan: **la rama por defecto no se
+puede consultar**, hay que iterar `main`/`master`/`develop` a ciegas, y un `NO ARTEFACT` obtenido
+por esa vía es **un fallo de permiso disfrazado de hallazgo**.

@@ -1250,3 +1250,115 @@ licencias (Apache-2.0 / MIT) son correctas pero irrelevantes si la señal de uso
 > **Umbral operativo que deja este pase:** un ratio **★/forks > 10 junto con 0 issues** es motivo
 > suficiente para **no recomendar** un repo, por limpia que sea su licencia. La licencia dice si
 > *puedes* usarlo; los forks y los issues dicen si *alguien más* lo usa.
+
+---
+
+## Pase 15 (2026-11-21) — 76 repos nuevos contra 465 ya inventariados: el techo de descubrimiento era del instrumento
+
+Se ejecutaron **18 consultas cortas** (una o dos palabras, o un `topic:`) sobre **nombres propios de
+artefactos técnicos** del dominio. Contra un inventario de **465 direcciones ya registradas**
+aparecieron **76 repos genuinamente nuevos** (120 candidatos únicos, 44 ya en la KB).
+
+> **T58 — un inventario no es una cobertura.** El tamaño del inventario mide el **esfuerzo
+> acumulado**, no la **fracción del dominio cubierta**. La proporción de nuevos **subió con el
+> lote** (17 → 25 → 34) porque los lotes posteriores usaron nombres de **protocolo y de ontología**
+> en vez de términos descriptivos: **el vocabulario de la consulta importa más que su número.**
+
+Todas las licencias de abajo están **leídas byte a byte** (tamaño entre paréntesis), no tomadas del
+campo SPDX. Estrellas y forks fijados con un único instrumento —el índice de búsqueda de `gh`— en la
+misma hora; **no refrescar con otro canal** (fabrica deriva inexistente).
+
+### Intercambio de modelos de red — CIM / CGMES (IEC 61970), origen EMEA, permisivo
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [sogno-platform/cimpy](https://github.com/sogno-platform/cimpy) | Apache-2.0 (11.347 B) | Importa y exporta CGMES / CIM IEC-61970 en XML/RDF; Python. RWTH Aachen | 79 | 25 | 2025-03-09 | EMEA |
+| [RWTH-IAEW/cimpyorm](https://github.com/RWTH-IAEW/cimpyorm) | BSD-3-Clause (1.720 B) | ORM de Python para datasets IEC CIM y CGMES | 12 | 4 | 2024-05-15 | EMEA |
+| [sogno-platform/cim4j](https://github.com/sogno-platform/cim4j) | Apache-2.0 (11.356 B) | Clases Java para CIM / CGMES; activo | 4 | 4 | 2026-11-19 | EMEA |
+| [HVDC-WISE/HVDC-Wise_lib](https://github.com/HVDC-WISE/HVDC-Wise_lib) | **EUPL-1.2** (13.792 B) | Modelos de equipo HVDC para intercambio basado en CIM; proyecto financiado por la UE. ⚠️ Copyleft débil, **no permisiva** | 23 | 5 | 2025-02-18 | EMEA |
+
+### Subestación — IEC 61850, con ancla permisiva real
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [beanit/iec61850bean](https://github.com/beanit/iec61850bean) | Apache-2.0 (11.357 B) | Pila **MMS** IEC 61850 en Java, cliente y servidor. ⚠️ Sin push desde jul-2023 | 187 | 95 | 2023-07-06 | EMEA |
+| [robidev/iec61850_open_server](https://github.com/robidev/iec61850_open_server) | Apache-2.0 (9.188 B) | Implementación abierta de un **IED** IEC 61850 sobre lib61850; activo | 139 | 32 | 2026-03-17 | EMEA |
+
+**Contraste con la KB hermana de automotive, que es un input de cotización:** allí la capa V2X/C-ITS
+**no tiene ninguna ancla permisiva** (vanetza CC-BY-NC, artery GPL-2.0, veins GPL-2.0, OpenCDA
+licencia académica). Aquí la capa de subestación **sí la tiene, dos veces y en Apache-2.0**. El
+trabajo de subestación se cotiza como *build-on-open-source*; el de V2X exige revisión legal en el
+SOW.
+
+### OCPP / recarga de VE
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [ChargeTimeEU/Java-OCA-OCPP](https://github.com/ChargeTimeEU/Java-OCA-OCPP) | MIT (1.074 B) | Cliente y servidor OCPP en Java | 380 | 202 | 2026-06-19 | EMEA |
+| [lorenzodonini/ocpp-go](https://github.com/lorenzodonini/ocpp-go) | MIT (1.056 B) | OCPP 1.6 y 2.0.1 en Go | 376 | 174 | 2025-08-24 | EMEA |
+
+> **El patrón de licencia de esta capa es nítido y conviene tenerlo presente:** el **protocolo** es
+> permisivo y abundante, el **producto de gestión completo** es copyleft fuerte
+> (`steve-community/steve` GPL-3.0, `dallmann-consulting/OCPP.Core` GPL-3.0). Se puede **empotrar el
+> protocolo**; no se puede empotrar el producto.
+
+### Medición y prosumer — ampliación de la capa abierta en el pase 13
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [OpenInverterGateway/OpenInverterGateway](https://github.com/OpenInverterGateway/OpenInverterGateway) | MIT (1.060 B) | Firmware de reemplazo para Growatt ShineWiFi-S: libera el dato del inversor | 454 | 132 | 2026-05-16 | Global |
+| [HandyHat/ha-hildebrandglow-dcc](https://github.com/HandyHat/ha-hildebrandglow-dcc) | MIT (1.056 B) | Contadores **SMETS** del Reino Unido vía el **DCC** | 268 | 62 | 2025-05-22 | EMEA |
+| [toreamun/amshan-homeassistant](https://github.com/toreamun/amshan-homeassistant) | MIT (1.090 B) | Contadores AMS/HAN/P1 nórdicos | 179 | 15 | 2025-01-05 | EMEA |
+| [DomiStyle/esphome-dlms-meter](https://github.com/DomiStyle/esphome-dlms-meter) | MIT (1.063 B) | Contadores DLMS por M-Bus desde ESPHome | 126 | 40 | 2024-04-26 | EMEA |
+| [jannickfahlbusch/ha-ppc-smgw](https://github.com/jannickfahlbusch/ha-ppc-smgw) | Apache-2.0 (11.354 B) | **SMGW** de PPC, Theben y EMH (gateway alemán de contador inteligente) | 104 | 14 | 2026-11-20 | EMEA |
+| [aviborg/esp-smart-meter](https://github.com/aviborg/esp-smart-meter) | Apache-2.0 (11.356 B) | Contadores COSEM/DLMS suecos sobre ESP8266 | 46 | 8 | 2026-06-29 | EMEA |
+| [latonita/esphome-dlms-cosem](https://github.com/latonita/esphome-dlms-cosem) | MIT (1.070 B) | DLMS/COSEM IEC 62056-21 modo E (HDLC) y PUSH pasivo | 44 | 11 | 2026-09-04 | EMEA |
+
+⚠️ **El candidato DLMS con más tracción no entra:** [`u9n/dlms-cosem`](https://github.com/u9n/dlms-cosem)
+(124 ★) es **Business Source License 1.1** — quinta clase no-OSI de esta capa y la más peligrosa,
+porque **se confunde con open source**. Los siete de arriba son los sustitutos limpios, y —como
+predice T47— **todos tienen menos estrellas**.
+
+### Modelado, mercado y análisis
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [buds-lab/the-building-data-genome-project](https://github.com/buds-lab/the-building-data-genome-project) | MIT (1.081 B) | Dataset de edificios no residenciales para análisis de performance | 200 | 64 | 2021-03-30 | Global |
+| [renewables-ninja/gsee](https://github.com/renewables-ninja/gsee) | BSD-3-Clause (1.521 B) | *Global Solar Energy Estimator* | 148 | 51 | 2026-09-01 | EMEA |
+| [ruikelyu/Real-time-operation-strategy-of-virtual-power-plants](https://github.com/ruikelyu/Real-time-operation-strategy-of-virtual-power-plants) | MIT (1.077 B) | Operación en tiempo real de **VPP**; datos y código del paper | 65 | 17 | 2026-11-08 | APAC |
+| [vittpi/ol-ems](https://github.com/vittpi/ol-ems) | MIT (1.062 B) | Aprendizaje online para gestión de microrred basada en **MPC** | 60 | 14 | 2024-03-01 | EMEA |
+| [mzy2240/ESA](https://github.com/mzy2240/ESA) | Apache-2.0 (11.369 B) | *Easy SimAuto*: automatiza PowerWorld desde Python | 57 | 18 | 2025-12-31 | North America |
+| [dss-extensions/OpenDSSDirect.jl](https://github.com/dss-extensions/OpenDSSDirect.jl) | MIT "Expat" (4.021 B; la API decía `NOASSERTION`) | Interfaz directa a OpenDSS desde Julia | 30 | 7 | 2026-10-30 | Global |
+| [ronaldowzy/price_forecast](https://github.com/ronaldowzy/price_forecast) | MIT (1.066 B) | Pronóstico de precio spot para mercados eléctricos **de China** | 25 | 0 | 2026-06-03 | APAC |
+| [phasenexa/nexa-bidkit](https://github.com/phasenexa/nexa-bidkit) | MIT (1.066 B) | Ofertas **day-ahead** e intradiario para mercados europeos | 16 | 2 | 2026-03-27 | EMEA |
+| [idaholab/CIEMAT](https://github.com/idaholab/CIEMAT) | MIT (1.085 B) | *Cyber-Informed Engineering Microgrid Analysis Tool* — **Idaho National Laboratory** | 14 | 1 | 2026-06-18 | North America |
+| [idaholab/CIEBAT](https://github.com/idaholab/CIEBAT) | MIT (1.085 B) | *Cyber-Informed Engineering Battery Analysis Tool* — **INL** | 10 | 1 | 2026-06-18 | North America |
+| [bess-solutions/open-bess-edge](https://github.com/bess-solutions/open-bess-edge) | Apache-2.0 (`pyproject.toml`, 2.460 B) | Gateway de borde para **BESS** industrial: Modbus TCP por perfiles | 10 | 0 | 2026-11-17 | Global |
+
+### Cadena LATAM completa — del dataset del regulador al modelo simulable
+
+| Repo | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|------|----------|-------------|-------|-------|-------------|---------------|
+| [PauloRadatz/bdgd2opendss](https://github.com/PauloRadatz/bdgd2opendss) | MIT (1.069 B) | Convierte la **BDGD** de ANEEL (base geográfica de distribución de Brasil) en elementos **OpenDSS** | 20 | 9 | 2026-08-02 | LATAM |
+| [mpfarias/tarifas-energia-api](https://github.com/mpfarias/tarifas-energia-api) | **ISC** (`package.json`, 463 B) | API pública de tarifas eléctricas sobre datos de ANEEL | 6 | 4 | 2025-05-05 | LATAM |
+
+Con [`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) (MIT, ya en la KB) son **tres piezas
+permisivas de origen brasileño encadenables sobre el mismo dato regulatorio**. Primera vez que LATAM
+aporta una **cadena** y no piezas sueltas. **ISC** es permisiva aprobada por OSI y es su **primera
+aparición** en esta KB.
+
+### Dos defectos de detección de licencia que este pase deja documentados
+
+> **T59 — el EUPL contiene los nombres de las licencias con las que es compatible.**
+> `HVDC-Wise_lib` fue clasificado **LGPL** por `grep`, porque la cláusula de compatibilidad del EUPL
+> nombra GPL, LGPL, AGPL y MPL. Su primera línea es `EUROPEAN UNION PUBLIC LICENCE v. 1.2`. Misma
+> familia que "el texto de LGPL contiene *GNU GENERAL PUBLIC LICENSE*", pero peor: el EUPL nombra
+> **cinco o más** licencias ajenas. **Empezar siempre por la primera línea no vacía.**
+>
+> **Instrumento — `gh api repos/<owner>/<repo>` está denegado por el alcance de la sesión**, mientras
+> `search/repositories` y `raw.githubusercontent.com` funcionan. La **rama por defecto no se puede
+> consultar**: hay que iterar `main`/`master`/`develop` a ciegas. Un `NO ARTEFACT` obtenido por esa
+> vía es **un fallo de permiso disfrazado de hallazgo** — así se perdió un barrido entero este pase.
+
+**Verificación de este pase:** 32/32 repos nuevos **vivos** por `git ls-remote`, 0 muertos; 30/32
+licencias **leídas byte a byte** y 2 por manifiesto (`pyproject.toml`, `package.json`).

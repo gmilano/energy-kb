@@ -2083,3 +2083,149 @@ red?"*
 permisiva**, y por tanto **el hueco es exactamente lo que va encima**: optimización, pronóstico
 operativo y orquestación agéntica. Un proyecto LATAM **no empieza construyendo conectores**; empieza
 donde el valor está sin capturar.
+
+---
+
+## Recetas del decimoquinto pase (2026-11-21)
+
+### Receta 49 — Copiloto de modelo de red con compuerta de validación SHACL (EMEA, y es la forma más limpia de cumplir la restricción de arquitectura)
+
+**El problema del cliente.** Un TSO o DSO europeo quiere automatizar la preparación y revisión de
+modelos de red, pero no puede dejar que un LLM escriba en el modelo del sistema. La restricción
+—apoyo a la decisión, nunca control— parece incompatible con automatizar de verdad.
+
+**La idea.** No hace falta confiar en el agente si **el esquema del propio sector puede rechazarlo**.
+CGMES viene con **SHACL**, que es validación declarativa: el agente propone un modelo candidato y
+**SHACL lo acepta o lo rechaza antes de que nada llegue al sistema**. El humano firma sobre un
+candidato ya validado por la norma, no sobre texto de un LLM.
+
+**Las piezas, todas permisivas y todas de origen europeo:**
+
+| Capa | Pieza | Licencia |
+|------|-------|----------|
+| Lectura/escritura del modelo | [`sogno-platform/cimpy`](https://github.com/sogno-platform/cimpy) (Python) o [`cim4j`](https://github.com/sogno-platform/cim4j) (Java) | Apache-2.0 |
+| Esquema consultable | [`RWTH-IAEW/cimpyorm`](https://github.com/RWTH-IAEW/cimpyorm) | BSD-3-Clause |
+| **Compuerta de validación** | [`SOPTIM/OpenCGMES`](https://github.com/SOPTIM/OpenCGMES) — RDFS + **SHACL** + CIMXML | Apache-2.0 |
+| Cálculo eléctrico | [`PyPSA/PyPSA`](https://github.com/PyPSA/PyPSA) o [`powsybl/powsybl-core`](https://github.com/powsybl/powsybl-core) | MIT / MPL-2.0 |
+| Caso de prueba | [`entsoe/ReliCapGrid`](https://github.com/entsoe/ReliCapGrid) — modelos de test en CGMES, de ENTSO-E | ver nota de licencia en la KB |
+
+**El cableado, y el orden importa:**
+
+1. `cimpy` carga el CGMES del cliente; `cimpyorm` lo expone como esquema consultable.
+2. El agente **sólo lee** y **propone un delta** —nunca escribe en el modelo vivo.
+3. **`OpenCGMES` valida el delta con SHACL.** Si falla, el delta vuelve al agente con el error de la
+   norma como realimentación. Esto es un bucle **cerrado por el esquema**, no por el LLM.
+4. Un delta validado va a `PyPSA`/`powsybl` para el cálculo eléctrico.
+5. El humano firma el candidato validado. **El texto de razonamiento del agente nunca llega al
+   modelo** — sólo el delta que SHACL aprobó.
+
+**Por qué se vende.** Responde la objeción de fiabilidad con un mecanismo, no con una promesa: *"el
+agente no puede introducir un modelo inválido, porque lo valida la norma del sector antes que
+usted"*. Y toda la cadena es permisiva y europea, con lo que la pregunta de soberanía queda
+respondida en el mismo diagrama.
+
+---
+
+### Receta 50 — Flexibilidad en colocation: el segmento que ENTSO-E describió y nadie atiende (EMEA)
+
+**El hallazgo que la origina.** ENTSO-E (8-may-2026) dice que los centros de datos **hiperescala**
+están en posición de prestar servicios de flexibilidad, mientras los de **colocation** están
+**limitados por el control del inquilino**. Ese límite **no es físico**: el hierro es el mismo. Es
+que el operador del edificio **no controla las cargas** y los inquilinos **no tienen incentivo ni
+interfaz** para ceder flexibilidad. Es un problema de **contrato + coordinación + medición**, es
+decir, de software.
+
+**La idea.** Construir la capa de coordinación operador ↔ inquilino que convierte un colocation en
+un recurso de flexibilidad agregable: medir por inquilino, pedir desplazamiento de carga, liquidar
+el incentivo, y exponer el agregado al mercado.
+
+**Las piezas:**
+
+| Capa | Pieza | Licencia |
+|------|-------|----------|
+| Medición por inquilino | [`volkszaehler/mbmd`](https://github.com/volkszaehler/mbmd) (Modbus) + [`sunspec/models`](https://github.com/sunspec/models) | BSD-3 / Apache-2.0 |
+| Señal de demanda | [`openadr3-client`](https://github.com/ElaadNL/openadr3-client) u [`openleadr-rs`](https://github.com/OpenLEADR/openleadr-rs) (OpenADR 3.0) | Apache-2.0 / MIT-o-Apache |
+| Esquema del dato | SAREF vía [`Twin4Build`](https://github.com/JBjoernskov/Twin4Build) / `saref-linkml` | MIT / BSD-3 |
+| Mecanismo de incentivo | [`TU-Delft-AI-Energy-Lab/MARL-iDR`](https://github.com/TU-Delft-AI-Energy-Lab/MARL-iDR-Multi-Agent-Reinforcement-Learning-for-Incentive-based-Residential-Demand-Response) — RL multiagente de DR **basada en incentivos**: el esquema, no el código | MIT |
+| Desplazamiento de carga batch | patrón de [arXiv 2609.38020](https://arxiv.org/pdf/2609.38020) (*batch workload temporal shifting*) ⚠️ **id sin verificar** (arxiv.org rechazado por el proxy) |
+| Oferta al mercado | [`phasenexa/nexa-bidkit`](https://github.com/phasenexa/nexa-bidkit) (day-ahead / intradiario europeo) | MIT |
+| Simulación previa | [`dos-group/vessim`](https://github.com/dos-group/vessim) — simula sistemas energéticos de centro de datos | MIT |
+
+**El cableado.** `mbmd` da consumo por inquilino sobre SAREF → `vessim` simula cuánta flexibilidad
+existe realmente antes de prometer nada → OpenADR 3.0 transporta la señal al inquilino → el esquema
+de incentivos de `MARL-iDR` fija el pago → `nexa-bidkit` oferta el agregado. **El agente propone el
+plan de desplazamiento; el despacho real lo ejecuta el sistema del inquilino.** La frontera se
+dibuja en el contrato antes que en el código.
+
+**Por qué este encargo existe.** El propio operador de transmisión europeo publicó que este segmento
+**no puede** prestar flexibilidad por una causa nombrada. Llegar con la causa resuelta es la
+propuesta.
+
+---
+
+### Receta 51 — Expediente NERC CIP con herramientas de un laboratorio nacional (NA) — extiende la receta 47
+
+**Lo que cambia respecto a la 47.** La receta 47 (pase 14) definió el expediente auditable pero **no
+tenía ninguna pieza permisiva de origen norteamericano**. Este pase la encuentra: el **Idaho National
+Laboratory** publica en **MIT** sus herramientas de *Cyber-Informed Engineering*, que es precisamente
+el marco con el que se argumenta ciberseguridad de OT ante el regulador.
+
+| Capa | Pieza | Licencia |
+|------|-------|----------|
+| Análisis CIE de microrred | [`idaholab/CIEMAT`](https://github.com/idaholab/CIEMAT) | MIT |
+| Análisis CIE de baterías | [`idaholab/CIEBAT`](https://github.com/idaholab/CIEBAT) | MIT |
+| Dato público federal, para agente | [`maxoliverbr/eia-api-ts`](https://github.com/maxoliverbr/eia-api-ts) — wrapper de EIA API v2 **para uso agéntico** | MIT |
+| Automatización de estudio | [`mzy2240/ESA`](https://github.com/mzy2240/ESA) (PowerWorld desde Python) | Apache-2.0 |
+| Registro de decisiones | patrón de cadena por hash (receta 47) |
+
+**El gancho normativo, con su advertencia.** Dos afirmaciones concurrentes de fuente secundaria,
+⚠️ **sin verificar contra documento primario de NERC** (open item 15-R1): (1) **NERC CIP asume un
+sistema de control operado por humanos y no aborda agentes autónomos**; (2) **una herramienta de IA
+que toca un BES Cyber System categorizado hereda las obligaciones de ese sistema**.
+
+Si (2) se sostiene, el encargo se formula solo: la pregunta del cliente deja de ser *"¿puedo usar
+IA?"* y pasa a ser *"¿qué obligaciones hereda lo que acabo de conectar?"* — una pregunta de **alcance
+y evidencia**, que es exactamente el entregable. **Verificar (1) y (2) antes de ponerlas en una
+propuesta.**
+
+**La frontera, no negociable y ahora triplemente respaldada:** los agentes **no entran en la zona de
+control** —SCADA, EMS, control de ADMS, despacho DERMS, automatización de subestación, PLC—: sin
+herramienta, sin credencial, **sin ruta de red**; sólo lectura por defecto y rutas de revocación.
+
+---
+
+### Receta 52 — Agente de planificación de red para APAC, deliberadamente sin tiempo real
+
+**El dato que la dicta.** **23% de los operadores de red de Asia Oriental usa IA en operación en
+tiempo real; 54% en planificación del desarrollo de red**, y la IEA atribuye la diferencia a
+**fiabilidad** (abril 2026; ⚠️ por snippet). El 23% no es inmadurez del cliente: **es su política de
+riesgo**. La receta renuncia al tiempo real **a propósito** y lo dice en la primera página de la
+propuesta.
+
+**Y la segunda restricción, también de la IEA:** la **falta de interconexiones transfronterizas** en
+Asia Oriental hace que el valor sea **intra-país**, y los modelos **no transfieren entre países**
+(generaliza el hallazgo de las dos frecuencias de Japón de los pases 13–14). Por tanto: **un
+despliegue por país, nunca una plataforma regional**. Quien ofrezca "una plataforma para APAC" está
+ofreciendo algo que no funciona.
+
+**Las piezas:**
+
+| Capa | Pieza | Licencia |
+|------|-------|----------|
+| Modelado del sistema | [`PyPSA/PyPSA`](https://github.com/PyPSA/PyPSA) | MIT |
+| Red de distribución | [`dss-extensions/OpenDSSDirect.py`](https://github.com/dss-extensions/OpenDSSDirect.py) / [`.jl`](https://github.com/dss-extensions/OpenDSSDirect.jl) | MIT |
+| Agente de estudios | [`Power-Agent/PowerMCP`](https://github.com/Power-Agent/PowerMCP) + [`PowerSkills`](https://github.com/Power-Agent/PowerSkills) | MIT |
+| Marco de madurez | [arXiv 2607.28822](https://arxiv.org/pdf/2607.28822) — brechas de capacidad de IA agéntica en sistemas de potencia. ⚠️ **id sin verificar** (arxiv.org rechazado por el proxy) |
+| VPP (origen APAC) | [`ruikelyu/Real-time-operation-strategy-of-virtual-power-plants`](https://github.com/ruikelyu/Real-time-operation-strategy-of-virtual-power-plants) | MIT |
+| Precio spot de China | [`ronaldowzy/price_forecast`](https://github.com/ronaldowzy/price_forecast) | MIT |
+| Solar | [`renewables-ninja/gsee`](https://github.com/renewables-ninja/gsee) + [`pvlib/pvlib-python`](https://github.com/pvlib/pvlib-python) | BSD-3 |
+
+**El cableado.** El agente opera **sobre el modelo, no sobre la red**: toma el caso de planificación,
+ejecuta estudios con `PowerMCP` sobre `PyPSA`/OpenDSS, y entrega **escenarios comparados con su
+trazabilidad**. Ninguna credencial del agente alcanza un sistema de operación — lo que además
+encaja con la *AI Basic Act* coreana (en vigor **22-ene-2026**), que obliga a **notificar uso de IA
+de alto impacto y etiquetar salidas generativas**: un entregable de planificación con trazabilidad
+y etiquetado es **más fácil de declarar** que un sistema que toca el despacho.
+
+**La frase de apertura de la propuesta:** *"no le vamos a proponer IA en tiempo real, por la misma
+razón por la que el 77% de los operadores de su región no la usa."*

@@ -9,6 +9,138 @@ updated: 2026-11-21
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-21 — pase 15 (76 repos nuevos contra una KB de 465 direcciones: el "techo de descubrimiento" de esta KB también era del instrumento; y el EUPL se disfraza de LGPL)
+
+**Titular del pase: la lección de automotive se aplicó a fondo y el resultado es peor —o mejor— de
+lo esperado.** El pase 14 re-midió **cinco ceros concretos** con consultas cortas y rompió tres.
+Este pase hizo la pregunta de orden superior: *¿y si el problema no son los ceros registrados, sino
+que el inventario entero se construyó con consultas demasiado largas?* Se ejecutaron **18 consultas
+cortas** —una o dos palabras, o un `topic:`— sobre nombres propios de artefactos técnicos del
+dominio. Resultado contra un inventario de **465 direcciones ya registradas**:
+
+| Lote | Consultas | Candidatos únicos | Ya en la KB | **Genuinamente nuevos** |
+|------|-----------|-------------------|-------------|-------------------------|
+| 1 | `topic:smart-grid`, `topic:energy-management`, `opendss`, `iec61850`, `topic:power-systems`, `topic:demand-response` | 30 | 13 | **17** |
+| 2 | `topic:ocpp`, `dlms cosem`, `topic:photovoltaic`, `topic:electricity-market`, `aneel`, `topic:bess` | 45 | 20 | **25** |
+| 3 | `topic:energy topic:llm`, `topic:smart-meter`, `entso-e`, `topic:microgrid`, `cim cgmes` | 45 | 11 | **34** |
+| | **Total** | **120** | **44** | **76** |
+
+> **T58 — UN INVENTARIO NO ES UNA COBERTURA.** 465 direcciones registradas no impiden que **76
+> repos nuevos** aparezcan en 18 consultas cortas. El tamaño del inventario mide el **esfuerzo
+> acumulado**, no la **fracción del dominio cubierta**, y las dos cosas se confunden
+> sistemáticamente. Toda KB de esta flota que informe un "techo de descubrimiento" debe re-sondear
+> con consultas de **una palabra sobre nombres propios** antes de creerse el techo. La proporción
+> de nuevos **sube con el lote** (17 → 25 → 34) porque los lotes posteriores usaron nombres de
+> protocolo y de ontología en vez de términos descriptivos: **el vocabulario de la consulta importa
+> más que el número de consultas.**
+
+### El trap de licencia de este pase: el EUPL enumera a las demás licencias y los detectores lo leen mal
+
+[`HVDC-WISE/HVDC-Wise_lib`](https://github.com/HVDC-WISE/HVDC-Wise_lib) (23 ★) fue clasificado
+**LGPL** por el detector de esta KB. Su primera línea es **`EUROPEAN UNION PUBLIC LICENCE v. 1.2`**
+y el índice de GitHub dice `EUPL-1.2`. La causa: **la cláusula de compatibilidad del EUPL nombra
+GPL, LGPL, AGPL, MPL y otras**, así que cualquier detector por palabra clave encuentra "Lesser
+General Public License" dentro de un archivo que **no es** LGPL.
+
+> **T59 — EL EUPL CONTIENE LOS NOMBRES DE LAS LICENCIAS CON LAS QUE ES COMPATIBLE.** Es el mismo
+> defecto de familia que "el texto de LGPL contiene la cadena *GNU GENERAL PUBLIC LICENSE*" (KB de
+> automotive), pero peor: el EUPL nombra **cinco o más** licencias ajenas. El orden de coincidencia
+> correcto empieza por **la primera línea no vacía**, no por `grep` sobre todo el archivo. Y el
+> EUPL-1.2 importa en energía europea: es copyleft débil con **compatibilidad explícita**, no es
+> permisiva, y aparece en proyectos financiados por la UE (`HVDC-Wise`, `tools.eeb.eurac.edu`).
+
+### Capa nueva 1 — intercambio de modelos de red CIM / CGMES (IEC 61970), de origen EMEA y permisiva
+
+Es el hallazgo estructural del pase: la KB ya tenía una **capa de medición de origen EMEA completa**
+(pase 13) y ahora tiene la de **modelo de red**. La respuesta de soberanía se extiende del contador
+al **modelo del sistema**.
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [sogno-platform/cimpy](https://github.com/sogno-platform/cimpy) | Apache-2.0 (leída, 11.347 B) | Importa y exporta CGMES / CIM IEC-61970 en XML/RDF. Python. RWTH Aachen | 79 | 25 | 2025-03-09 | EMEA |
+| [sogno-platform/cim4j](https://github.com/sogno-platform/cim4j) | Apache-2.0 (leída, 11.356 B) | Clases Java para CIM / CGMES. Activo | 4 | 4 | 2026-11-19 | EMEA |
+| [RWTH-IAEW/cimpyorm](https://github.com/RWTH-IAEW/cimpyorm) | BSD-3-Clause (leída, 1.720 B) | ORM de Python para datasets IEC CIM y CGMES | 12 | 4 | 2024-05-15 | EMEA |
+| [HVDC-WISE/HVDC-Wise_lib](https://github.com/HVDC-WISE/HVDC-Wise_lib) | **EUPL-1.2** (leída, 13.792 B — ver T59) | Librería de modelos de equipo HVDC para intercambio basado en CIM. Proyecto financiado por la UE | 23 | 5 | 2025-02-18 | EMEA |
+
+### Capa nueva 2 — IEC 61850 (subestación), con ancla permisiva real
+
+A diferencia del V2X en automotive —que **no tiene ancla permisiva** (KB hermana, hallazgo 7)—, la
+capa de subestación **sí la tiene**, y eso cambia cómo se cotiza el trabajo:
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [robidev/iec61850_open_server](https://github.com/robidev/iec61850_open_server) | Apache-2.0 (leída, 9.188 B) | Implementación abierta de un **IED** IEC 61850 sobre lib61850 | 139 | 32 | 2026-03-17 | EMEA |
+| [beanit/iec61850bean](https://github.com/beanit/iec61850bean) | Apache-2.0 (leída, 11.357 B) | Pila **MMS** IEC 61850 en Java, cliente y servidor | 187 | 95 | 2023-07-06 | EMEA |
+
+⚠️ `iec61850bean` no recibe push desde **jul-2023**: es la referencia de protocolo, no una base de
+producto. `iec61850_open_server` sí está vivo.
+
+### Capa nueva 3 — OCPP / recarga de VE, permisiva y con mucha tracción
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [ChargeTimeEU/Java-OCA-OCPP](https://github.com/ChargeTimeEU/Java-OCA-OCPP) | MIT (leída, 1.074 B) | Cliente y servidor OCPP en Java | 380 | 202 | 2026-06-19 | EMEA |
+| [lorenzodonini/ocpp-go](https://github.com/lorenzodonini/ocpp-go) | MIT (leída, 1.056 B) | OCPP 1.6 y 2.0.1 en Go | 376 | 174 | 2025-08-24 | EMEA |
+
+**Contraste de licencia por capa, que es un input de planificación:** en OCPP el ancla permisiva
+abunda (`evcc`, `mobilityhouse/ocpp`, `MicroOcpp`, los dos de arriba), mientras el **servidor de
+gestión completo** es copyleft fuerte (`steve-community/steve` GPL-3.0, `OCPP.Core` GPL-3.0). Es
+decir: **el protocolo se puede empotrar, el producto de gestión no.**
+
+### Capa nueva 4 — acceso al dato del regulador, y la cadena LATAM se completa
+
+El pase 14 encontró que el "cero LATAM" era del instrumento. Este pase **cierra la cadena**: del
+dataset del regulador al modelo de red ejecutable.
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [PauloRadatz/bdgd2opendss](https://github.com/PauloRadatz/bdgd2opendss) | MIT (leída, 1.069 B) | Convierte la **BDGD** de ANEEL (base geográfica de distribución de Brasil) en elementos **OpenDSS** | 20 | 9 | 2026-08-02 | LATAM |
+| [mpfarias/tarifas-energia-api](https://github.com/mpfarias/tarifas-energia-api) | **ISC** (`package.json`, 463 B) | API pública de tarifas eléctricas sobre datos de ANEEL | 6 | 4 | 2025-05-05 | LATAM |
+
+Con [`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) (MIT, ya en la KB) son **tres**
+piezas permisivas de origen brasileño sobre el mismo dato regulatorio. ISC es permisiva y aprobada
+por OSI — equivalente funcional de MIT, y **primera aparición de ISC en esta KB**.
+
+### Capa nueva 5 — APAC deja de ser cero de oferta por segunda vez, ahora con licencia leída
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [ruikelyu/Real-time-operation-strategy-of-virtual-power-plants](https://github.com/ruikelyu/Real-time-operation-strategy-of-virtual-power-plants) | MIT (leída, 1.077 B) | Estrategia de operación en tiempo real de **VPP**; datos y código del paper | 65 | 17 | 2026-11-08 | APAC |
+| [ronaldowzy/price_forecast](https://github.com/ronaldowzy/price_forecast) | MIT (leída, 1.066 B) | Pronóstico de precio spot para los mercados eléctricos **de China** | 25 | 0 | 2026-06-03 | APAC |
+
+### Resto de lo verificado y aceptado este pase
+
+| Repo | Licencia | Descripción | ★ | Forks | Push | Región origen |
+|------|----------|-------------|---|-------|------|---------------|
+| [OpenInverterGateway/OpenInverterGateway](https://github.com/OpenInverterGateway/OpenInverterGateway) | MIT (leída, 1.060 B) | Firmware de reemplazo para Growatt ShineWiFi-S: libera el dato del inversor | 454 | 132 | 2026-05-16 | Global |
+| [HandyHat/ha-hildebrandglow-dcc](https://github.com/HandyHat/ha-hildebrandglow-dcc) | MIT (leída, 1.056 B) | Lee contadores **SMETS** del Reino Unido vía el **DCC** | 268 | 62 | 2025-05-22 | EMEA |
+| [buds-lab/the-building-data-genome-project](https://github.com/buds-lab/the-building-data-genome-project) | MIT (leída, 1.081 B) | Dataset de edificios no residenciales para análisis de performance | 200 | 64 | 2021-03-30 | Global |
+| [toreamun/amshan-homeassistant](https://github.com/toreamun/amshan-homeassistant) | MIT (leída, 1.090 B) | Contadores AMS/HAN/P1 nórdicos | 179 | 15 | 2025-01-05 | EMEA |
+| [renewables-ninja/gsee](https://github.com/renewables-ninja/gsee) | BSD-3-Clause (leída, 1.521 B) | **G**lobal **S**olar **E**nergy **E**stimator | 148 | 51 | 2026-09-01 | EMEA |
+| [DomiStyle/esphome-dlms-meter](https://github.com/DomiStyle/esphome-dlms-meter) | MIT (leída, 1.063 B) | Lee contadores DLMS por M-Bus desde ESPHome | 126 | 40 | 2024-04-26 | EMEA |
+| [jannickfahlbusch/ha-ppc-smgw](https://github.com/jannickfahlbusch/ha-ppc-smgw) | Apache-2.0 (leída, 11.354 B) | Integra **SMGW** de PPC, Theben y EMH (gateway de contador inteligente alemán) | 104 | 14 | 2026-11-20 | EMEA |
+| [vittpi/ol-ems](https://github.com/vittpi/ol-ems) | MIT (leída, 1.062 B) | Aprendizaje online para gestión energética de microrred basada en **MPC** | 60 | 14 | 2024-03-01 | EMEA |
+| [mzy2240/ESA](https://github.com/mzy2240/ESA) | Apache-2.0 (leída, 11.369 B) | *Easy SimAuto*: automatiza PowerWorld desde Python | 57 | 18 | 2025-12-31 | North America |
+| [aviborg/esp-smart-meter](https://github.com/aviborg/esp-smart-meter) | Apache-2.0 (leída, 11.356 B) | Lee contadores COSEM/DLMS suecos sobre ESP8266 | 46 | 8 | 2026-06-29 | EMEA |
+| [latonita/esphome-dlms-cosem](https://github.com/latonita/esphome-dlms-cosem) | MIT (leída, 1.070 B) | DLMS/COSEM IEC 62056-21 modo E (HDLC) y PUSH pasivo | 44 | 11 | 2026-09-04 | EMEA |
+| [dss-extensions/OpenDSSDirect.jl](https://github.com/dss-extensions/OpenDSSDirect.jl) | MIT "Expat" (leída, 4.021 B — la API decía `NOASSERTION`) | Interfaz directa a OpenDSS desde Julia | 30 | 7 | 2026-10-30 | Global |
+| [HVDC-WISE/HVDC-Wise_lib](https://github.com/HVDC-WISE/HVDC-Wise_lib) | EUPL-1.2 (leída, 13.792 B) | Modelos de equipo HVDC sobre CIM | 23 | 5 | 2025-02-18 | EMEA |
+| [phasenexa/nexa-bidkit](https://github.com/phasenexa/nexa-bidkit) | MIT (leída, 1.066 B) | Construye ofertas para subastas **day-ahead e intradiario** de mercados europeos | 16 | 2 | 2026-03-27 | EMEA |
+| [idaholab/CIEMAT](https://github.com/idaholab/CIEMAT) | MIT (leída, 1.085 B) | *Cyber-Informed Engineering Microgrid Analysis Tool* — **INL** | 14 | 1 | 2026-06-18 | North America |
+| [idaholab/CIEBAT](https://github.com/idaholab/CIEBAT) | MIT (leída, 1.085 B) | *Cyber-Informed Engineering Battery Analysis Tool* — **INL** | 10 | 1 | 2026-06-18 | North America |
+| [bess-solutions/open-bess-edge](https://github.com/bess-solutions/open-bess-edge) | Apache-2.0 (`pyproject.toml`, 2.460 B) | Gateway de borde para **BESS** industrial: Modbus TCP por perfiles | 10 | 0 | 2026-11-17 | Global |
+
+**`CIEMAT` y `CIEBAT` del Idaho National Laboratory son el hallazgo con mejor encaje comercial del
+lote**: *Cyber-Informed Engineering* es el marco con el que se argumenta ciberseguridad de OT ante
+NERC CIP, son **MIT**, y son de un laboratorio nacional de EE. UU. Enganchan directamente con la
+receta 47 (expediente auditable NERC CIP), que hasta ahora no tenía **ninguna** pieza permisiva de
+origen NA.
+
+**Nota de tracción, regla ya establecida:** las estrellas y forks de estas filas se fijaron **todas
+con el índice de búsqueda de `gh`** en la misma hora. No refrescar ninguna con `WebFetch` sobre
+`github.com` —el otro canal mide distinto y fabrica una deriva que no ocurrió (KB de automotive,
+hallazgo 5).
+
 ## 2026-11-21 — pase 14 (tres ceros re-medidos con consultas CORTAS: dos se rompen; y "un repo, una licencia" resulta ser un supuesto)
 
 **Titular del pase: la lección llega de la KB hermana de automotive y paga a la primera.**

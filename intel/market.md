@@ -588,6 +588,64 @@ proponen**, no sólo revisar el desembolso de capex. Eso describe un entregable 
 **el expediente que justifica una inversión en IA ante el regulador tarifario** — no el modelo, el
 expediente.
 
+
+#### Actualización del decimoquinto pase (2026-11-21) — North America
+
+**El hallazgo regulatorio es una distinción, y es la que decide la forma del encargo:** la FERC está
+interviniendo la IA **por el lado de la carga**, no por el de la operación. Lo que ha hecho es
+**ordenar a NERC que redacte reglas de fiabilidad para la integración de grandes cargas
+computacionales** —centros de datos de IA y minería de criptoactivos— con **objetivo de cierre a
+finales de 2026**; las propuestas en borrador salieron a comentario público en agosto y las
+recomendaciones finales van a la FERC antes de fin de año. ⚠️ Fuentes secundarias (análisis
+sectorial y blogs de cumplimiento); **no verificado contra documento primario de FERC o NERC desde
+este entorno**.
+
+> **La FERC no ha emitido guía específica sobre IA operativa de la utility.** Esa es la frase
+> comercialmente relevante. Significa que en NA el trabajo de **agentes en operación sigue sin
+> regulación propia**, y por tanto es **de forma asesora** —exactamente el mismo patrón que la KB
+> hermana de automotive midió para NA (sin lista enumerada de alto riesgo y sin contador de
+> expedientes). Lo que **sí** tiene fecha es la **interconexión de la carga grande**: ahí hay un
+> plazo de 2026 y, con él, una ventana con vencimiento.
+
+**El gancho de cumplimiento que necesitaba la receta 47.** Dos afirmaciones concurrentes, ambas
+secundarias y ambas ⚠️ **sin verificar contra los documentos de NERC**:
+
+- **NERC CIP asume un sistema de control operado por humanos** y **no aborda agentes autónomos**.
+- Una herramienta de IA que toca un **BES Cyber System categorizado hereda las obligaciones de ese
+  sistema**.
+
+Si la segunda se sostiene, es el argumento de venta entero del expediente auditable: la pregunta del
+cliente deja de ser "¿puedo usar IA?" y pasa a ser "¿qué obligaciones hereda lo que acabo de
+conectar?", que es una pregunta de **alcance y evidencia** —el tipo de entregable que esta KB ya
+tiene recetado. Verificar contra NERC primario es el **open item 15-R1**.
+
+**Despliegues con nombre** (⚠️ todos de guía de práctica o material de proveedor, no de la utility):
+
+- **Duke Energy** — planificación de red **agéntica** sobre AWS; se reporta que la preparación de
+  datos para estudios de interconexión bajó **de semanas a horas** en 2026. La misma fuente advierte
+  que sus cifras de reducción de cortes vienen de **automatización de red, no de IA**: no cruzar los
+  dos números.
+- **National Grid** — acuerdo de IA operativa con **Air Space Intelligence** para localización de
+  DER, mapeo de cortes y despliegue de almacenamiento.
+
+**La frontera de arquitectura, ahora también como guía de práctica de NA.** Los agentes **no entran
+en la zona de control** —SCADA, EMS, funciones de control de ADMS, despacho DERMS, automatización de
+subestación, PLC y sistemas de seguridad—: **sin herramienta, sin credencial y sin ruta de red**,
+credenciales de sólo lectura por defecto y rutas de revocación explícitas. Tercera vía independiente
+que llega a la misma frontera (ver `agents/trending.md`, pase 15).
+
+**Primera oferta abierta permissiva de origen NA que engancha con el expediente CIP.** Hasta este
+pase, la receta 47 no tenía **ninguna** pieza permisiva norteamericana:
+
+- [`idaholab/CIEMAT`](https://github.com/idaholab/CIEMAT) — MIT, *Cyber-Informed Engineering
+  Microgrid Analysis Tool*, **Idaho National Laboratory**.
+- [`idaholab/CIEBAT`](https://github.com/idaholab/CIEBAT) — MIT, el equivalente para baterías.
+- [`maxoliverbr/eia-api-ts`](https://github.com/maxoliverbr/eia-api-ts) — MIT, wrapper de la **EIA
+  API v2** construido **para uso agéntico**: la pieza de acceso al dato público federal.
+- [`mzy2240/ESA`](https://github.com/mzy2240/ESA) — Apache-2.0, automatiza PowerWorld desde Python.
+
+*Cyber-Informed Engineering* es el marco con el que se argumenta ciberseguridad de OT ante el
+regulador, y que venga de un laboratorio nacional con licencia MIT lo hace citable en una propuesta.
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -1169,6 +1227,63 @@ KB cataloga**— y ahora con la cifra separada entre lo estrictamente agéntico 
 entorno, por lo que **el texto primario del AI Act y de su instrumento modificativo continúa sin
 leer** — el open item del pase 13 **sigue abierto**, y conviene que siga marcado como tal.
 
+
+#### Actualización del decimoquinto pase (2026-11-21) — EMEA
+
+**El operador de transmisión europeo publicó la segmentación comercial del producto de
+flexibilidad, y es la mejor noticia del pase para EMEA.** ENTSO-E publicó el **8 de mayo de 2026**
+*"Data centres and the power system: expected trends, challenges and opportunities"*. Lo sustantivo:
+
+- Pide **actualizar los códigos de conexión** para que los centros de datos **sostengan** la
+  seguridad y fiabilidad de la red, en vez de limitarse a consumir de ella.
+- **Aconseja explícitamente no restringir la integración de renovables** para acomodar centros de
+  datos, y en cambio **dirigir a los promotores a regiones con menos tensión de red**.
+- Define una **ruta por etapas**: primero los sistemas de control garantizan operación segura para
+  la red; **sólo después** la instalación puede ofrecer **servicios de flexibilidad**. La
+  participación depende del **diseño de mercado de cada país**.
+
+> **La frase que vale dinero:** los centros de datos **hiperescala** están en la mejor posición para
+> prestar flexibilidad, mientras que los de **colocation** están **limitados por el control del
+> inquilino**. Eso convierte la flexibilidad en colocation en un problema de **contrato y de
+> software de coordinación entre operador e inquilinos** — no de hardware ni de red. Es precisamente
+> la clase de problema que un estudio de software puede resolver, y define un segmento desatendido
+> con una causa nombrada.
+
+**Instrumento nuevo en el horizonte: la *Cloud and AI Development Act*.** El informe urge a los
+legisladores a actuar **antes** de ella; se le atribuye el objetivo de **potencialmente triplicar el
+tamaño del mercado europeo de centros de datos en 5–7 años**. ⚠️ **Estado de adopción no verificado
+desde este entorno** — citarla como instrumento *en preparación*, nunca como derecho vigente.
+
+**Corrección que se mantiene y se repite porque es la que más veces se ha torcido en esta KB:** el
+AI Act es el **Reg. (UE) 2024/1689**; el **Reg. (UE) 2026/1744** es el instrumento que **mueve las
+fechas**. No son el mismo texto y no se conflatan. El registro primario sigue **sin leerse** desde
+este entorno (open item heredado del pase 13).
+
+**La capa de oferta EMEA se extiende del contador al modelo de red.** La KB ya tenía una capa de
+**medición** de origen europeo casi completa; este pase añade la de **intercambio de modelos de red
+CIM/CGMES (IEC 61970)** y la de **subestación IEC 61850**, ambas permisivas y ambas europeas:
+
+- [`sogno-platform/cimpy`](https://github.com/sogno-platform/cimpy) (Apache-2.0, RWTH Aachen),
+  [`cim4j`](https://github.com/sogno-platform/cim4j) (Apache-2.0, activo),
+  [`RWTH-IAEW/cimpyorm`](https://github.com/RWTH-IAEW/cimpyorm) (BSD-3-Clause).
+- [`robidev/iec61850_open_server`](https://github.com/robidev/iec61850_open_server) (Apache-2.0,
+  IED abierto) y [`beanit/iec61850bean`](https://github.com/beanit/iec61850bean) (Apache-2.0, pila
+  MMS; ⚠️ sin push desde jul-2023).
+- [`phasenexa/nexa-bidkit`](https://github.com/phasenexa/nexa-bidkit) (MIT) para ofertas
+  *day-ahead* e intradiario en mercados europeos.
+- [`jannickfahlbusch/ha-ppc-smgw`](https://github.com/jannickfahlbusch/ha-ppc-smgw) (Apache-2.0,
+  SMGW alemán) y [`HandyHat/ha-hildebrandglow-dcc`](https://github.com/HandyHat/ha-hildebrandglow-dcc)
+  (MIT, SMETS/DCC británico).
+
+**Consecuencia de posicionamiento:** con medición + modelo de red + subestación + oferta de mercado
+todos disponibles en licencia permisiva y **de origen europeo**, una propuesta en EMEA puede
+responder la pregunta de soberanía **sin una sola dependencia estadounidense en la capa de datos**.
+Eso era un argumento parcial en el pase 13 y ahora es un **stack completo**.
+
+⚠️ **Nota de licencia europea, nueva:** aparece **EUPL-1.2** en proyectos financiados por la UE
+(`HVDC-Wise_lib`). Es **copyleft débil con compatibilidad explícita**, no permisiva, y **engaña a
+los detectores por palabra clave** porque su texto nombra GPL, LGPL, AGPL y MPL (ver T59 en
+`repos/trending.md`). En EMEA hay que esperar encontrarla y clasificarla a mano.
 ### APAC
 
 **Contexto regulatorio (verificado)**: en **diciembre de 2025**, la **NDRC y la NEA de China**
@@ -1792,6 +1907,71 @@ primario confirmado muerto). El PDF del informe East Asia está **localizado per
 item del pase 13 pasa de *"identificado, no leído"* a *"identificado, ilegible desde este entorno,
 contenido snippet-sourced"*. **No es cobertura; es un gap con el límite medido.**
 
+
+#### Actualización del decimoquinto pase (2026-11-21) — APAC
+
+**El *open item* más antiguo de esta KB queda parcialmente cerrado, y el número que entrega es el
+más importante de toda la serie para la capa agéntica.** El informe de la IEA **"Energy and AI in
+East Asia"** —identificado pero sin leer desde el pase 13— sigue **sin poder leerse byte a byte**
+(`iea.blob.core.windows.net` **no resuelve** desde este entorno; es otro host primario muerto
+confirmado). Pero sus cifras llegaron por snippet de la propia comunicación de la IEA y de cobertura
+secundaria:
+
+> **Sólo el 23% de los operadores de red de Asia Oriental usa IA en operación en tiempo real,
+> frente al 54% que la usa en planificación del desarrollo de la red.** La IEA atribuye la
+> diferencia a **preocupaciones de fiabilidad**: muchos operadores **evitan deliberadamente** el uso
+> en tiempo real.
+
+**Por qué esto reorienta la propuesta en APAC.** La KB venía imponiendo la restricción de
+arquitectura por criterio propio; el pase 14 la encontró publicada por NERC. Este dato la mide
+**desde el lado de la demanda y con dos cifras comparables**: el mercado ya eligió, y eligió
+planificación por más del doble. La consecuencia es direccional y se puede decir sin matizar: **en
+APAC se vende agente de planificación, estudio y desarrollo de red; no agente de control en tiempo
+real.** Y el 23% no es inmadurez del cliente a la que convencer — **es su política de riesgo**, que
+coincide con la del regulador de NA. Discutirla es perder la reunión.
+
+**Resto de lo que entrega el informe** (todo por snippet, ⚠️ sin lectura directa):
+
+- Publicado en **abril de 2026**. Se reporta coproducción con el **Korea Energy Economics
+  Institute** ⚠️ sin verificar.
+- El consumo eléctrico de los centros de datos de la región **se espera que más que se duplique**.
+- **Casi 6 de cada 10 chips** del mundo —GPU o CPU— se fabrican en la región: la exposición de APAC
+  a la IA es **industrial además de eléctrica**.
+- **KEPCO** (Corea, estatal) está desarrollando un modelo de IA para **optimización de red**: un
+  incumbente regional con nombre, es decir un competidor y a la vez un comprador potencial de capa.
+- **La falta de interconexiones transfronterizas** en Asia Oriental hace que el valor de la IA sea
+  **intra-país**. Esto **generaliza a toda la región** lo que la KB tenía medido sólo para Japón (las
+  dos frecuencias de red, pases 13–14): **los modelos no transfieren entre países**, y por tanto
+  **se vende despliegue país por país, nunca una plataforma regional**.
+
+**El gap regulatorio de APAC se cierra con un instrumento vinculante y fechado** —era el déficit
+admitido de la región durante varios pases:
+
+- **Corea del Sur** tiene el marco más duro de la región: la *Framework Act on the Development of
+  Artificial Intelligence and the Creation of a Foundation for Trust* (**"AI Basic Act"**) **entró
+  en vigor el 22 de enero de 2026**. Obliga a quien provee IA **de alto impacto** o generativa a
+  **notificar al usuario con antelación** y a **etiquetar las salidas generativas**. Si la IA de red
+  se lee como de alto impacto, **es el primer deber con forma de expediente de toda APAC** — y
+  Corea es además donde está KEPCO.
+- **Japón**: la *AI Promotion Act* sigue siendo de mano ligera. El **segundo AI Basic Plan** se
+  aprobó en **julio de 2026**, pero es **documento de estrategia, no ley**.
+- **India**: en **julio de 2026** el gobierno señaló que puede ir a **legislación de IA dedicada**,
+  con modelo **basado en riesgo** esperado. Su presupuesto 2026 adoptó **incentivos fiscales para
+  centros de datos**. ⚠️ Las fuentes se contradicen sobre el estado actual: una dice que no hay ley
+  dedicada, otra reporta el giro. Registrar como **en transición**, no como régimen.
+- Restricción física citable: las **esperas de conexión a red llegan a 5–10 años** en muchos
+  mercados.
+
+⚠️ **Lo que sigue sin establecerse:** no se encontró **ninguna regla específica de IA en sistemas de
+energía** en Japón ni en Corea. La regulación que existe es **transversal de IA**, no sectorial
+eléctrica. Eso es un hueco de conocimiento declarado, no cobertura.
+
+**La oferta de origen APAC se mueve por segunda vez, ahora con licencia leída byte a byte:**
+[`ruikelyu/Real-time-operation-strategy-of-virtual-power-plants`](https://github.com/ruikelyu/Real-time-operation-strategy-of-virtual-power-plants)
+(MIT, 65 ★, push 2026-11-08) y
+[`ronaldowzy/price_forecast`](https://github.com/ronaldowzy/price_forecast) (MIT, 25 ★, mercados
+eléctricos de China). Sigue siendo una capa delgada y académica, pero el "cero de oferta APAC" ya no
+se puede escribir.
 ### LATAM
 
 **Hallazgo de oferta — se rompe el patrón "LATAM no produce repos"**: pases anteriores de esta
@@ -2560,6 +2740,61 @@ DCPI-LATAM, OLADE). **No se localizó norma primaria de IA-energía de 2026 en l
 son marcos de datacenter y la consulta del MME brasileño ya registrada (**consulta, no ley** — el
 aviso del pase 13 sigue en pie).
 
+
+#### Actualización del decimoquinto pase (2026-11-21) — LATAM
+
+**El mejor gancho comercial de la región es una cifra de desperdicio.** Se reporta que Brasil
+**recortó (curtailment) el 20,6% de su producción solar y eólica en 2025**. ⚠️ Fuente de análisis
+sectorial, no del operador; verificar contra ONS antes de usarla con cliente. Si se sostiene, es el
+argumento más directo que existe en LATAM para el stack que esta KB cataloga: un recorte de ese
+tamaño **no es un problema de generación sino de pronóstico, despacho y flexibilidad**, que es
+exactamente la capa abierta y permisiva que la KB tiene inventariada. Se vende como reducción de
+desperdicio medible, no como "transformación digital".
+
+**Movimiento de mercado y de regulación** (⚠️ todo de comentario sectorial; el pase no alcanzó
+documento de regulador):
+
+- **Brasil** — **subasta de capacidad de reserva récord de 19,5 GW**, orientada a fiabilidad en un
+  sistema **hidro-dominante y muy expuesto al clima**. Las **aprobaciones municipales** siguen
+  siendo un riesgo recurrente de localización para hiperescaladores. Se referencia una ley de
+  incentivos a centros de datos, **REDATA**; ⚠️ una fuente fecha su promulgación en **septiembre de
+  2026**, lo que es **inconsistente** con otras — **no citar la fecha**.
+- **Chile** — se consolida como **líder regional en almacenamiento en baterías**, y a la vez su
+  **licenciamiento ambiental ha congelado o cancelado proyectos** de alto perfil. Otra fuente lo
+  describe como destino de **menor volatilidad** para capital de infraestructura de IA de larga
+  duración, por estabilidad política y previsibilidad regulatoria. Las dos cosas son compatibles:
+  **riesgo de permisos alto, riesgo de régimen bajo**. Se reporta que Chile ya integró **pronóstico
+  renovable con IA**.
+- **México** — reformas regulatorias amplias, pero el **proceso de interconexión sigue siendo opaco
+  en coste y en plazo**, y el crecimiento en **Querétaro** ha traído retrasos de expansión del
+  sistema y de energización de edificios de centro de datos.
+- **Brasil, Uruguay y México** aplicando IA a modernización de red y planificación de
+  infraestructura.
+- "**Más de 10 GW** de capacidad lista para conectar en 2–3 años en mercados latinoamericanos":
+  ⚠️ **análisis interno de un desarrollador** (Atlas Renewable). Atribuir siempre; no adoptar como
+  dato de mercado.
+
+**La cadena de oferta LATAM se completa, y es el cambio estructural del pase para la región.** El
+pase 14 descubrió que el "cero de repos LATAM" era un artefacto del instrumento y encontró una capa
+de **acceso al dato del regulador**. Este pase cierra el eslabón siguiente: **del dataset del
+regulador al modelo de red ejecutable**.
+
+| Pieza | Licencia | Qué resuelve |
+|-------|----------|--------------|
+| [`mpfarias/tarifas-energia-api`](https://github.com/mpfarias/tarifas-energia-api) | **ISC** (manifiesto, 463 B) | Tarifas eléctricas de ANEEL como API |
+| [`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) | MIT (ya en la KB) | Utilidades sobre la BDGD de ANEEL |
+| [`PauloRadatz/bdgd2opendss`](https://github.com/PauloRadatz/bdgd2opendss) | MIT (leída, 1.069 B) | **Convierte la BDGD de ANEEL en elementos OpenDSS**: el dato del regulador se vuelve modelo simulable |
+
+Tres piezas permisivas de origen brasileño sobre el **mismo dato regulatorio**, encadenables. Es la
+primera vez que LATAM aporta una **cadena** y no piezas sueltas, y permite proponer un piloto de
+distribución en Brasil **sin dependencia de proveedor y sin dato propietario**. **ISC** es permisiva
+aprobada por OSI (equivalente funcional de MIT) y es su **primera aparición** en esta KB.
+
+⚠️ **Gap que sigue abierto, declarado:** **ningún repo de origen LATAM en la capa agéntica/LLM**. La
+oferta regional es de **acceso a datos y modelado**, no de agentes. El vocabulario agéntico en
+español y portugués **no se re-ejecutó en este pase** —se midió cero cuatro veces en pases
+anteriores, pero **eso fue con el instrumento largo** y T58 obliga a re-sondearlo corto: es el
+**open item 15-R2** y hoy es el candidato más probable a falso cero de toda la KB.
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa

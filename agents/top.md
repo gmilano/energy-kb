@@ -1028,3 +1028,51 @@ y construirlo es trabajo facturable.
 (byte-read de los dos archivos; ver `verticals/solutions.md` y T55 en `intel/trends.md`). Para la
 capa agéntica eso significa que **un agente MIT puede integrarse con el Backend de `OpenEMS` sin
 que la cláusula de red entre en juego**, lo que hasta este pase esta KB daba por imposible.
+
+---
+
+## Pase 15 (2026-11-21) — cuatro agentes nuevos, y el incipit de MIT deja de servir como identificador
+
+Las cuatro filas siguientes se añaden con **licencia leída byte a byte** (no por campo SPDX de la
+API) y con estrellas/forks fijados **todos con el índice de búsqueda de `gh`** en la misma hora.
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [RedaElMakroum/agentic-ai-hems](https://github.com/RedaElMakroum/agentic-ai-hems) | MIT (leída, 1.071 B) | *Agentic AI Home Energy Management System*: framework de LLM para gestión energética residencial. Primer agente **doméstico** explícito de la KB | 18 | 4 | 2025-11-05 | EMEA |
+| [IBM/OpenDsStar](https://github.com/IBM/OpenDsStar) | Apache-2.0 (leída, 11.356 B) | Implementación abierta del agente **DS-Star**: sustituye el paso por archivos del agente de ciencia de datos. Capa de análisis sobre datos de red | 25 | 3 | 2026-05-10 | North America |
+| [maxoliverbr/eia-api-ts](https://github.com/maxoliverbr/eia-api-ts) | MIT (leída, 1.066 B) | Wrapper tipado de la **EIA API v2** construido **explícitamente para uso agéntico**; acceso al dato público federal de EE. UU. | 11 | 2 | 2026-11-19 | North America |
+| [TU-Delft-AI-Energy-Lab/MARL-iDR](https://github.com/TU-Delft-AI-Energy-Lab/MARL-iDR-Multi-Agent-Reinforcement-Learning-for-Incentive-based-Residential-Demand-Response) | MIT (leída, 1.078 B) | RL multiagente para respuesta a la demanda residencial **basada en incentivos**; paper + código. ⚠️ Sin push desde 2023: referencia del esquema, no base de producto | 50 | 9 | 2023-08-02 | EMEA |
+
+**Son cuatro, y se dicen cuatro.** De 120 candidatos únicos en 18 consultas, éstos son los que
+pasaron el filtro de licencia **y** el de pertinencia agéntica. El resto de los 76 repos nuevos del
+pase es infraestructura, no agentes, y está en `repos/trending.md`.
+
+### El dato de adopción que ordena la propuesta agéntica en APAC
+
+**23% de los operadores de red de Asia Oriental usa IA en operación en tiempo real; 54% la usa en
+planificación del desarrollo de red** (IEA, *Energy and AI in East Asia*, abril 2026; ⚠️ por snippet
+—`iea.blob.core.windows.net` no resuelve desde este entorno). La IEA atribuye la brecha a
+**fiabilidad**: el rechazo al tiempo real es **deliberado**.
+
+Es la tercera confirmación independiente de la restricción de arquitectura de esta KB, y la primera
+**cuantificada desde el lado de la demanda**: receta propia → guía de NERC (pase 14) → 23%/54% +
+guía de práctica de NA (este pase). Para una propuesta: **agente de planificación y estudio, no de
+control**; y el 23% no es inmadurez a vencer, es **política de riesgo del cliente**.
+
+### Exclusiones por licencia — las tres llegaron como `NOASSERTION` y las tres tienen tracción
+
+| Repo | ★ | La API dice | El archivo dice | Veredicto |
+|------|---|-------------|-----------------|-----------|
+| [Zara-Toorox/Solar-Forecast-ML](https://github.com/Zara-Toorox/Solar-Forecast-ML) | 318 | `NOASSERTION` | `PROPRIETARY AND NON-COMMERCIAL LICENSE` (2.646 B) — **contiene la frase literal de MIT** en su cláusula de concesión, y prohíbe uso comercial **y entrenamiento de IA** | ❌ Exclusión dura |
+| [u9n/dlms-cosem](https://github.com/u9n/dlms-cosem) | 124 | `NOASSERTION` | **Business Source License 1.1** (`pyproject.toml`) + `License :: Other/Proprietary`; el *Additional Use Grant* veta "exponer las API del Licensed Work" | ❌ No es open source |
+| [GreatTM/PowerBiMIP](https://github.com/GreatTM/PowerBiMIP) | 42 | `NOASSERTION` | Aviso de 1.067 B: "academic and non-commercial research only", Southeast University | ❌ No utilizable |
+| [ValentinRigoni/Open-DSOPF](https://github.com/ValentinRigoni/Open-DSOPF) | 80 | `NOASSERTION` | **Ningún artefacto** de licencia (6 nombres × 3 ramas) | ❌ Sin concesión expresa |
+
+> **T56 — el incipit de MIT no identifica una licencia.** *"Permission is hereby granted, free of
+> charge…"* puede aparecer dentro de una licencia propietaria. Discriminadores de coste cero, en
+> este orden: **(1) la primera línea no vacía del archivo; (2) el tamaño** (MIT real mide
+> ~1,05–1,09 kB; el impostor medía 2.646 B). Nunca buscar la frase de concesión en todo el archivo.
+>
+> **T57 — cláusula de prohibición de entrenamiento de IA: clase nueva.** Prohíbe usar el código para
+> entrenar o afinar LLM. Afecta al **uso interno de un estudio de IA**, no sólo a la redistribución,
+> y **ningún campo SPDX la expresa**.

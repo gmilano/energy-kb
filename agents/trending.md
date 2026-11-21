@@ -9,6 +9,94 @@ updated: 2026-11-21
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-21 — pase 15 (una licencia propietaria que empieza con la frase literal de MIT, y el número que la KB llevaba ocho pases pidiendo: 23% vs 54%)
+
+**Titular del pase: el incipit de MIT no identifica una licencia.**
+[`Zara-Toorox/Solar-Forecast-ML`](https://github.com/Zara-Toorox/Solar-Forecast-ML) (**318 ★**, el
+repo de pronóstico solar con más tracción aparecido en el barrido) devuelve `NOASSERTION` por API.
+Su archivo `LICENSE` arranca con **`PROPRIETARY AND NON-COMMERCIAL LICENSE`** y, dos líneas después,
+contiene **palabra por palabra** la frase con la que abre MIT: *"Permission is hereby granted, free
+of charge, to any person obtaining a copy of this software and associated documentation files (the
+'Software')"*. El detector de esta KB —que busca esa frase— **lo clasificó como MIT**. Lo era todo
+menos MIT: uso comercial prohibido, y una **cláusula 4 de restricción de entrenamiento de IA** que
+prohíbe usar el código para entrenar o afinar modelos sin permiso escrito.
+
+> **T56 — EL INCIPIT DE MIT NO ES UN IDENTIFICADOR DE LICENCIA.** Una licencia propietaria puede
+> abrir su cláusula de concesión con la frase exacta de MIT y restringir todo después. Los dos
+> discriminadores de coste cero, **en este orden**: (1) **la primera línea no vacía** del archivo;
+> (2) **el tamaño** —MIT real mide ~1,05–1,09 kB; este medía **2.646 B**. Buscar la frase de
+> concesión *en cualquier parte* del archivo es el error; hay que leer **el título**.
+>
+> **T57 — CLÁUSULA DE PROHIBICIÓN DE ENTRENAMIENTO DE IA: clase nueva.** Aparece una licencia que
+> prohíbe explícitamente usar el código para entrenar o afinar LLM o sistemas de generación de
+> código. No es un problema de redistribución sino **de uso interno de un estudio de IA**, y ningún
+> campo SPDX la expresa. Hay que leerla.
+
+### Lo que sí entra: cuatro agentes nuevos, los cuatro con licencia leída byte a byte
+
+| Nombre | Licencia | Descripción | Stars | Forks | Último push | Región origen |
+|--------|----------|-------------|-------|-------|-------------|---------------|
+| [RedaElMakroum/agentic-ai-hems](https://github.com/RedaElMakroum/agentic-ai-hems) | MIT (leída, 1.071 B) | *Agentic AI Home Energy Management System*: framework de LLM para gestión energética residencial. El primer agente **doméstico** explícito de la KB | 18 | 4 | 2025-11-05 | EMEA |
+| [IBM/OpenDsStar](https://github.com/IBM/OpenDsStar) | Apache-2.0 (leída, 11.356 B) | Implementación abierta del agente **DS-Star**: sustituye el paso por archivos del agente de ciencia de datos. Útil como capa de análisis sobre datos de red | 25 | 3 | 2026-05-10 | North America |
+| [maxoliverbr/eia-api-ts](https://github.com/maxoliverbr/eia-api-ts) | MIT (leída, 1.066 B) | Wrapper tipado de la **EIA API v2** construido **explícitamente para uso agéntico**. Es la pieza de acceso al dato público de energía de EE. UU. que faltaba | 11 | 2 | 2026-11-19 | North America |
+| [TU-Delft-AI-Energy-Lab/MARL-iDR](https://github.com/TU-Delft-AI-Energy-Lab/MARL-iDR-Multi-Agent-Reinforcement-Learning-for-Incentive-based-Residential-Demand-Response) | MIT (leída, 1.078 B) | RL multiagente para respuesta a la demanda residencial **basada en incentivos**. Paper + código; no mantenido desde 2023 pero es la referencia del esquema | 50 | 9 | 2023-08-02 | EMEA |
+
+### El dato de adopción que esta KB llevaba ocho pases pidiendo
+
+El *open item* de la IEA **"Energy and AI in East Asia"** —abierto desde el pase 13— queda
+**parcialmente cerrado, por snippet y no por lectura directa** (`iea.blob.core.windows.net` **no
+resuelve** desde este entorno; ver "Instrumento"). El número:
+
+> **Sólo el 23% de los operadores de red de Asia Oriental usa IA en operación en tiempo real,
+> frente al 54% en planificación del desarrollo de la red** — y la IEA atribuye la diferencia
+> explícitamente a **preocupaciones de fiabilidad**.
+
+Por qué es el dato más útil de la serie para la capa agéntica: la KB venía **imponiendo** la
+restricción de arquitectura (agente como apoyo a la decisión, nunca controlador) y el pase 14 la
+encontró **publicada por NERC**. Esto la **cuantifica desde el lado de la demanda**: el mercado ya
+eligió, y eligió planificación. La consecuencia comercial es direccional y se puede decir en una
+reunión: **en APAC se vende agente de planificación, no de control en tiempo real**, y el 23% no es
+un techo de madurez del cliente sino **su política de riesgo**.
+
+### Confirmación de tercer canal de la restricción de arquitectura
+
+Guía de práctica para utilities (NA, secundaria): los agentes **no entran en la zona de control**
+—SCADA, EMS, funciones de control de ADMS, despacho DERMS, automatización de subestación, PLC y
+sistemas de seguridad—, y ahí **no tienen herramienta, ni credencial, ni ruta de red**;
+credenciales de **sólo lectura** por defecto y rutas de revocación. Es la tercera vía independiente
+que llega a la misma frontera: receta de la KB (propia) → NERC (regulador, pase 14) → guía de
+práctica + 23% de la IEA (mercado, este pase). **Deja de ser una opinión de arquitectura.**
+
+### Exclusiones de este pase (las tres llegaron como `NOASSERTION` y las tres tienen tracción)
+
+| Repo | ★ | La API dice | El archivo dice | Veredicto |
+|------|---|-------------|-----------------|-----------|
+| [u9n/dlms-cosem](https://github.com/u9n/dlms-cosem) | 124 | `NOASSERTION` | **Business Source License 1.1** en `pyproject.toml` + clasificador `License :: Other/Proprietary`. El *Additional Use Grant* prohíbe el "Competing Use", que incluye **"exponer las API del Licensed Work"** | ❌ **No es open source.** Y era el candidato DLMS/COSEM con más tracción: para una consultoría que construya producto de medición para una utility, "competing use" es exactamente el riesgo |
+| [Zara-Toorox/Solar-Forecast-ML](https://github.com/Zara-Toorox/Solar-Forecast-ML) | 318 | `NOASSERTION` | `PROPRIETARY AND NON-COMMERCIAL LICENSE` (2.646 B) + prohibición de entrenamiento de IA | ❌ **Exclusión dura** (ver T56/T57) |
+| [GreatTM/PowerBiMIP](https://github.com/GreatTM/PowerBiMIP) | 42 | `NOASSERTION` | Aviso corto de 1.067 B: "academic and non-commercial research purposes only", Southeast University. Push **de hoy** | ❌ Misma forma que OpenCDA en la KB de automotive: activo, reciente, **no utilizable** |
+| [ValentinRigoni/Open-DSOPF](https://github.com/ValentinRigoni/Open-DSOPF) | 80 | `NOASSERTION` | **Ningún artefacto de licencia** (6 nombres × 3 ramas, todos 404) | ❌ Sin concesión expresa: no se puede construir sobre él |
+
+**Nota sobre T46 (manifest-first), que paga por tercera vez:** `dlms-cosem` sólo se delata leyendo
+`pyproject.toml`. La BSL 1.1 es la **quinta** clase no-OSI que esta KB encuentra en la capa
+prosumer/medición, después de fair-source, PolyForm no comercial, revocable y permisiva-bespoke
+(T47). Es la más peligrosa de las cinco porque **se confunde con open source** y porque su
+conversión diferida hace que "hoy" y "en cuatro años" tengan respuestas distintas.
+
+### Instrumento
+
+- `iea.blob.core.windows.net` **no resuelve** desde este entorno: el informe de la IEA sigue **sin
+  leerse byte a byte** y todo número suyo es **de snippet por construcción**. El *open item* se
+  degrada de "sin leer" a "resumido por fuente secundaria", no a "cerrado".
+- **`gh api repos/<owner>/<repo>` está denegado por el alcance de la sesión**, mientras
+  `gh api search/repositories` y `raw.githubusercontent.com` **sí funcionan**. Consecuencia
+  práctica: **la rama por defecto no se puede consultar**, así que el sondeo de licencia debe
+  iterar `main`/`master`/`develop` a ciegas. Un `NO ARTEFACT` obtenido por la vía de `gh api repos`
+  es un fallo de permiso disfrazado de hallazgo — así se perdió un barrido entero este pase.
+- **Término de búsqueda inutilizable, clase ya conocida:** `agentic grid` → **3.425 resultados** de
+  sensores de Unity, tarjetas "bento grid" y bots de *grid trading*. "grid" sin contexto de dominio
+  no discrimina. Confirma T47: **el discriminador que funciona es el nombre propio de un artefacto
+  técnico** (`entso-e`, `cim cgmes`, `opendss`, `aneel`, `iec61850`), no el adjetivo "agentic".
+
 ## 2026-11-21 — pase 14 (el regulador publica la restricción de arquitectura; y el "cero de cumplimiento NERC CIP" resulta ser del instrumento)
 
 **Titular del pase: por primera vez el hallazgo de agentes viene del regulador, no de GitHub.** La
