@@ -1432,3 +1432,74 @@ Reconfirmados vivos como base de la receta 54:
 [`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron) es `NOASSERTION` (504 ★). VOLTTRON (PNNL)
 es el framework de automatización de edificios y DER más citado del sector: **la versión utilizable
 es la de Eclipse, y un barrido por estrellas encuentra la inutilizable primero** (T64).
+
+## Pase 17 (2026-11-24) — el núcleo de optimización en Julia: el ecosistema fundacional que el inventario en Python no veía
+
+Esta sección añade una **capa fundacional**, no una novedad coyuntural: son los paquetes sobre los
+que se construye la optimización de red del sector. Estaban ausentes al **100 %** (`lanl-ansi`: 0 de
+93; `NLR-Sienna`: 0 de 32; `csiro`+`csiro-energy-systems`: 0 de 75) porque el inventario de esta KB
+se construyó con vocabulario **Python y de protocolo**: de 524 direcciones, sólo 7 eran `.jl`.
+Detalle del barrido, de la medición y de la taxonomía de licencias en `repos/trending.md` (pase 17).
+
+### Núcleo de optimización — Julia / JuMP
+
+| Repo | Licencia (byte-read) | ★ | Push | Papel fundacional |
+|------|----------------------|---|------|-------------------|
+| [lanl-ansi/PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) | ⚠️ BSD-3 + reserva federal + deber de marcado | 488 | 2026-10-28 | Optimización de red AC/DC sobre JuMP; familia completa de formulaciones de OPF. **La referencia del campo** |
+| [lanl-ansi/PowerModelsDistribution.jl](https://github.com/lanl-ansi/PowerModelsDistribution.jl) | 🚨 BSD-3 + **indemnidad** | 162 | 2026-11-23 | OPF **desbalanceado trifásico** de distribución |
+| [lanl-ansi/InfrastructureModels.jl](https://github.com/lanl-ansi/InfrastructureModels.jl) | 🚨 BSD-3 + **indemnidad** | 43 | 2026-05-06 | **Dependencia común** de la familia PowerModels / Gas / Water |
+| [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) | ⚠️ BSD-3 + reserva federal (sin indemnidad) | 90 | 2026-08-27 | Empotra predictores de ML entrenados **dentro** del problema de optimización |
+| [lanl-ansi/GasModels.jl](https://github.com/lanl-ansi/GasModels.jl) | ⚠️ BSD-3 + reserva + marcado | 82 | 2026-11-16 | Red de **gas**; acoplamiento gas–electricidad con `GasPowerModels.jl` |
+| [lanl-ansi/Juniper.jl](https://github.com/lanl-ansi/Juniper.jl) | **MIT limpio** (byte-read, 1.067 B; sin *riders*) | 189 | 2026-10-02 | Solver MINLP sobre JuMP |
+| [Sienna-Platform/PowerSystems.jl](https://github.com/Sienna-Platform/PowerSystems.jl) | **BSD-3-Clause** | 373 | 2026-11-20 | **El modelo de datos** del ecosistema Sienna (ya inventariado; se reconfirma como base) |
+| [Sienna-Platform/PowerSimulations.jl](https://github.com/Sienna-Platform/PowerSimulations.jl) | **BSD-3-Clause** (1.588 B) | 319 | 2026-11-20 | *Unit commitment* y despacho económico secuencial |
+| [Sienna-Platform/PowerSimulationsDynamics.jl](https://github.com/Sienna-Platform/PowerSimulationsDynamics.jl) | **BSD-3-Clause** (1.588 B) | 225 | 2026-11-07 | **Dinámica** y estabilidad, no sólo régimen permanente |
+| [Sienna-Platform/PowerSystemsInvestments.jl](https://github.com/Sienna-Platform/PowerSystemsInvestments.jl) | BSD-3-Clause | 22 | 2026-11-23 | Expansión e inversión sobre el mismo modelo de datos |
+| [NatLabRockies/PRAS](https://github.com/NatLabRockies/PRAS) | **MIT «modificado»** (descargo extendido; concesión MIT verbatim) | 79 | 2026-11-16 | Adecuación de recursos probabilística: **LOLE / EUE / NEUE** |
+
+⚠️ **Frontera de licencia, en el diagrama.** El bloque **Sienna** (`Sienna-Platform/*`) es
+**BSD-3-Clause limpio** y el bloque **LANL** (`lanl-ansi/*`) **no lo es**. Donde el diseño admita
+las dos, **preferir Sienna como base y LANL como dependencia revisada**. `InfrastructureModels.jl`
+arrastra indemnidad **por transitividad** a toda la familia PowerModels (T74): la revisión legal
+debe correr sobre el **árbol de dependencias**, no sobre el repo de entrada.
+
+### Modelos del mercado eléctrico australiano publicados por la agencia científica nacional
+
+El duodécimo pase cubrió Australia por **universidad** (`UNSW-CEEM`) y por **proyecto ISP**
+(`Open-ISP`), ambas capas mayoritariamente **GPL-3.0**. Faltaba la agencia nacional, que es
+**permisiva**:
+
+| Repo | Licencia (byte-read) | ★ | Push | Papel |
+|------|----------------------|---|------|-------|
+| [csiro/ensys-NEMX.jl](https://github.com/csiro/ensys-NEMX.jl) | **BSD-3-Clause** (1.647 B) | 12 | 2026-11-21 | Reconstruye el despacho de **5 min de AEMO** y lo re-resuelve como OPF de red. DOI `10.25919/v33w-8011` |
+| [csiro/ensys-iPASA.jl](https://github.com/csiro/ensys-iPASA.jl) | **BSD-3-Clause** (1.647 B) | 9 | 2026-08-25 | Adecuación del sistema sobre datos del **ISP 2024**. DOI `10.25919/7j2y-c896` |
+| [csiro-energy-systems/Synthetic-NEM-2000bus-Data](https://github.com/csiro-energy-systems/Synthetic-NEM-2000bus-Data) | **CC-BY-4.0** (dato) | 36 | 2025-02-25 | Red sintética del NEM de 2.000 nodos, formato Matpower |
+| [csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl](https://github.com/csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl) | CSIRO OSS Licence Agreement (permisivo) | 24 | 2025-05-27 | OPF con restricciones de seguridad **AC/DC** |
+| [csiro-energy-systems/RepresentativeLVNetworks](https://github.com/csiro-energy-systems/RepresentativeLVNetworks) | `NOASSERTION` — **sin leer**, no proponer aún | 7 | 2024-03-07 | Redes de **baja tensión** representativas de CSIRO |
+| [csiro-energy-systems/Dieter.jl](https://github.com/csiro-energy-systems/Dieter.jl) | `NOASSERTION` — **sin leer** | 4 | 2025-01-19 | *Dispatch and Investment Evaluation Tool* en Julia |
+
+### Acceso a datos del mercado australiano (NEM), capa permisiva
+
+| Repo | Licencia (byte-read) | ★ | Push | Papel |
+|------|----------------------|---|------|-------|
+| [opennem/opennem](https://github.com/opennem/opennem) | **MIT** (1.088 B) | 137 | 2026-11-05 | Plataforma de datos del NEM |
+| [opennem/nemweb](https://github.com/opennem/nemweb) | **MIT** (1.063 B) | 37 | 2023-04-04 | Descarga directa de los ficheros **NEMWEB de AEMO** |
+| [opennem/openelectricity-python](https://github.com/opennem/openelectricity-python) | **MIT** (1.077 B) | 12 | 2026-10-07 | Cliente **oficial** Python de la API de OpenElectricity |
+| [opennem/IspParser](https://github.com/opennem/IspParser) | **MIT** (1.088 B) | 1 | 2026-06-24 | *Workbooks* del ISP de AEMO → JSON |
+| [ampere-ventures/NEM_constraints](https://github.com/ampere-ventures/NEM_constraints) | **MIT** (1.070 B) | 16 | 2026-05-22 | Ecuaciones de restricción de **NEMDE** |
+| [akxen/nemde](https://github.com/akxen/nemde) | **MIT** (1.072 B) | 7 | 2026-09-27 | Ingeniería inversa del motor de despacho **NEMDE** |
+
+⛔ **Excluidos por licencia, con tracción:** `opennem/opennempy` (41 ★) y `ercot/api-specs` (43 ★,
+especificaciones **oficiales** de la API de ERCOT) **no tienen artefacto de licencia** en `main` ni
+en `master`. Séptima y octava confirmación de T47: en esta KB **el filtro de licencia corre antes
+que el de popularidad**, y un repo oficial de operador no es excepción.
+
+#### Open items de esta sección
+
+- **17-R1** — *slugs* reales de las organizaciones de operadores de sistema (CAISO, PJM, MISO,
+  Energinet, EirGrid, National Grid, Elia, TenneT, Terna, REE, Fingrid, KEPCO, AEMO): **sin medir**,
+  no en cero. Recuperarlos por **nombre de repo**, nunca adivinando el *slug*.
+- **17-R2** — `csiro-energy-systems/RepresentativeLVNetworks` y `Dieter.jl`: leer licencia byte a
+  byte antes de proponerlos. CSIRO usa **al menos dos** licencias distintas, así que no se puede
+  inferir del hermano.
+- Heredado y **sin cerrar**: `FlexPwr/bess-optimizer` sigue en `NOASSERTION` sin leer.

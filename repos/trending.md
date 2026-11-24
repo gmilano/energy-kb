@@ -9,6 +9,191 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 17 (el núcleo de optimización en Julia que esta KB no tenía: 0 de 93 repos de Los Alamos; y la indemnidad escondida en la dependencia común)
+
+**Titular del pase: esta KB barrió el sector por protocolo, por ontología, por institución
+operadora y por idioma, y seguía sin ver un ecosistema entero porque estaba escrito en otro
+lenguaje de programación.** Medición exacta contra el inventario de 524 direcciones:
+
+| Organización | Qué es | Repos | Ya en la KB | **Nuevos** |
+|--------------|--------|-------|-------------|------------|
+| [`lanl-ansi`](https://github.com/lanl-ansi) | Grid science del **Los Alamos National Laboratory** | 93 | **0** | 93 |
+| [`NLR-Sienna`](https://github.com/NLR-Sienna) | Extensiones del ecosistema **Sienna** | 32 | **0** | 32 |
+| [`Sienna-Platform`](https://github.com/Sienna-Platform) | Núcleo **Sienna** (ex NREL-Sienna) | ~20 | **1** | ~19 |
+| [`csiro`](https://github.com/csiro) + [`csiro-energy-systems`](https://github.com/csiro-energy-systems) | **CSIRO**, agencia científica nacional australiana | 75 | **0** | 75 |
+| [`opennem`](https://github.com/opennem) | Plataforma **OpenNEM / OpenElectricity** del mercado australiano | 17 | **0** | 17 |
+
+Y la medición que lo explica: de **524 direcciones inventariadas, sólo 7 son paquetes `.jl`**. El
+sector hace su optimización seria en **Julia/JuMP**; esta KB la tenía casi toda en Python.
+
+> **T72 — EL INSTRUMENTO DE DESCUBRIMIENTO TIENE SESGO DE *LENGUAJE DE PROGRAMACIÓN*, NO SÓLO DE
+> IDIOMA.** El pase 16 descubrió que el cero agéntico de LATAM era del idioma (es/pt). Este pase
+> encuentra el mismo mecanismo un nivel más abajo: consultas sobre `topic:power-systems`,
+> `opendss`, `cim cgmes` o `pandapower` devuelven el ecosistema **Python** del sector y **no**
+> devuelven `PowerModels.jl` (488 ★, probablemente el paquete de AC-OPF abierto más citado del
+> mundo), porque el nombre propio del artefacto y el del paquete **no coinciden con el vocabulario
+> con el que se construyó el inventario**. El discriminador que funciona aquí no es el tema:
+> es **el sufijo `.jl` y el nombre de la organización del laboratorio**.
+
+### La capa nueva: núcleo de optimización de red en Julia
+
+| Repo | Licencia (byte-read) | ★ | Push | Qué añade |
+|------|----------------------|---|------|-----------|
+| [lanl-ansi/PowerModels.jl](https://github.com/lanl-ansi/PowerModels.jl) | ⚠️ BSD-3 + reserva federal + **deber de marcado** (2.286 B) | 488 | 2026-10-28 | **El** paquete de optimización de red AC/DC sobre JuMP: familia completa de formulaciones de OPF |
+| [lanl-ansi/PowerModelsDistribution.jl](https://github.com/lanl-ansi/PowerModelsDistribution.jl) | 🚨 BSD-3 + reserva federal + marcado + **INDEMNIDAD** (3.196 B) | 162 | 2026-11-23 | OPF **desbalanceado** de distribución — la pieza trifásica que falta en la capa Python |
+| [lanl-ansi/InfrastructureModels.jl](https://github.com/lanl-ansi/InfrastructureModels.jl) | 🚨 BSD-3 + reserva federal + marcado + **INDEMNIDAD** (3.198 B) | 43 | 2026-05-06 | **La dependencia común** de toda la familia PowerModels/Gas/Water |
+| [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) | ⚠️ BSD-3 + reserva federal (2.293 B, **sin indemnidad ni marcado**) | 90 | 2026-08-27 | Empotra predictores de ML **dentro** de JuMP — ver `agents/trending.md` de este pase |
+| [lanl-ansi/GasModels.jl](https://github.com/lanl-ansi/GasModels.jl) | ⚠️ BSD-3 + reserva federal + marcado (2.782 B, MICOT `LA-CC-13-108`) | 82 | 2026-11-16 | Optimización de red de **gas**; con `GasPowerModels.jl`, acoplamiento gas–electricidad |
+| [lanl-ansi/Juniper.jl](https://github.com/lanl-ansi/Juniper.jl) | **MIT limpio, sin un solo *rider*** (byte-read, 1.067 B) | 189 | 2026-10-02 | Solver MINLP sobre JuMP |
+| [Sienna-Platform/PowerSimulations.jl](https://github.com/Sienna-Platform/PowerSimulations.jl) | **BSD-3-Clause** (1.588 B, limpio) | 319 | 2026-11-20 | Simulación de operación: *unit commitment* y despacho económico secuencial |
+| [Sienna-Platform/PowerSimulationsDynamics.jl](https://github.com/Sienna-Platform/PowerSimulationsDynamics.jl) | **BSD-3-Clause** (1.588 B, limpio) | 225 | 2026-11-07 | **Dinámica** del sistema: estabilidad, no sólo régimen permanente |
+| [Sienna-Platform/PowerSystemsInvestments.jl](https://github.com/Sienna-Platform/PowerSystemsInvestments.jl) | **BSD-3-Clause** (byte-read, 1.535 B) | 22 | 2026-11-23 | Expansión/inversión sobre el mismo modelo de datos |
+| [NatLabRockies/PRAS](https://github.com/NatLabRockies/PRAS) | **MIT «modificado»** (1.273 B — ver taxonomía) | 79 | 2026-11-16 | *Probabilistic Resource Adequacy Suite*: LOLE / EUE / NEUE por Monte Carlo secuencial |
+
+### 🚨 El hallazgo de riesgo del pase: la familia de licencias de laboratorio nacional, y **los *riders* difieren entre repos de la MISMA organización**
+
+Las nueve licencias de arriba se leyeron **byte a byte**. Ninguna de las de `lanl-ansi` es
+BSD-3-Clause a secas, **todas** devuelven `NOASSERTION` en la API de GitHub, y **los términos
+añadidos no son los mismos dentro de la misma organización**:
+
+| Repo (`lanl-ansi`) | Cláusulas BSD-3 | Reserva de derechos del Gobierno | Deber de marcar modificaciones | **Indemnidad / *hold harmless*** |
+|--------------------|-----------------|----------------------------------|--------------------------------|----------------------------------|
+| `MathOptAI.jl` | 3 | sí | — | **no** |
+| `PowerModels.jl` | 3 | — | sí | **no** |
+| `GasModels.jl` | estructura MICOT | sí | sí | **no** |
+| `PowerModelsDistribution.jl` | 3 | sí | sí | **SÍ** |
+| `InfrastructureModels.jl` | 3 | sí | sí | **SÍ** |
+
+> **T73 — EN UN LABORATORIO NACIONAL, LA LICENCIA NO SE HEREDA DEL HERMANO: SE LEE POR REPO.** Dos
+> de cinco repos de `lanl-ansi` imponen al licenciatario **renunciar a toda reclamación contra el
+> Gobierno de EE. UU. e indemnizarlo y mantenerlo indemne**. Eso es una **obligación contractual de
+> responsabilidad**, de otra naturaleza que BSD-3: no limita la responsabilidad del autor, **crea
+> una del usuario**. Ningún campo SPDX la expresa, y por eso `NOASSERTION` **no es ruido aquí: es
+> la señal correcta**. La prueba más limpia de que la licencia **no se hereda del hermano** está en
+> la misma organización: `lanl-ansi/Juniper.jl` (189 ★) es **MIT a secas, 1.067 B, sin reserva
+> federal, sin deber de marcado y sin indemnidad** — cinco repos del mismo laboratorio, cuatro
+> regímenes distintos.
+
+> **T74 — LA OBLIGACIÓN MÁS GRAVE ESTÁ EN LA DEPENDENCIA COMÚN, NO EN EL PAQUETE QUE SE ELIGE.**
+> `InfrastructureModels.jl` es la base compartida de `PowerModels.jl`, `GasModels.jl` y
+> `WaterModels.jl`. Un estudio puede revisar la licencia de `PowerModels.jl` (sin indemnidad),
+> aprobarla, y **arrastrar la indemnidad por transitividad**. La revisión de licencia debe correr
+> sobre **el árbol de dependencias**, no sobre el repo de entrada. Es el primer caso en esta KB en
+> que el riesgo de licencia es **transitivo y no visible en el repo citado**.
+
+⚠️ **Defecto documental, para que no sorprenda al abogado del cliente:** la cláusula de indemnidad
+de `PowerModelsDistribution.jl` y de `InfrastructureModels.jl` nombra literalmente **«THE NUFLOOD
+SOFTWARE»** —un modelo de inundaciones de LANL que nada tiene que ver—. Es un copia-pega del
+laboratorio. **No invalida la cláusula** y no conviene presentarlo como si lo hiciera, pero sí hay
+que anticiparlo: es la primera pregunta que hará cualquier revisión legal.
+
+### Taxonomía de `NOASSERTION` institucional: cuatro clases, y sólo una es un riesgo real
+
+Esta KB llevaba **seis falsos negativos** de `NOASSERTION` documentados (T46, T55, T56, T61, T64).
+Este pase añade dos mecanismos nuevos y, sobre todo, **el contraejemplo**: a veces `NOASSERTION`
+está protegiendo al estudio.
+
+| Clase | Caso medido en este pase | Veredicto |
+|-------|--------------------------|-----------|
+| **1. Falso negativo ortográfico** (nuevo) | `csiro/ensys-NEMX.jl` y `ensys-iPASA.jl`: texto BSD-3 **verbatim**, pero titulado `BSD 3 Clause Licence` —ortografía británica y **sin guion**—, que el emparejador SPDX no reconoce | ✅ **plenamente usable** |
+| **2. MIT con descargo extendido** (nuevo) | `NatLabRockies/PRAS`: se autodescribe «modified MIT Expat». La *modificación* sólo **extiende el descargo de responsabilidad** a EE. UU. y el DOE; la concesión de derechos es **MIT verbatim** | ✅ **usable como MIT** |
+| **3. Acuerdo institucional propio, permisivo en sustancia** | `csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl`: *CSIRO Open Source Software Licence Agreement (variation of the BSD / MIT License)* — concesión BSD-3 + exclusión de responsabilidad ampliada + remedios de la **Australian Consumer Law** | ✅ usable; **anotar jurisdicción** |
+| **4. BSD de laboratorio nacional con *riders* federales** | `lanl-ansi/*` (tabla anterior) | ⚠️ usable **sólo tras revisión legal** si hay indemnidad |
+
+> **T75 — `NOASSERTION` NO ES SISTEMÁTICAMENTE UN FALSO NEGATIVO.** De las nueve licencias
+> institucionales leídas en este pase, **siete** eran permisivas mal detectadas y **dos** ocultaban
+> una obligación que el estudio debe revisar. La regla operativa no es «`NOASSERTION` suele ser
+> MIT disfrazado» —que es la conclusión que esta KB venía acumulando y que es **peligrosa**— sino:
+> **`NOASSERTION` significa «el emparejador no pudo decidir», y hay que leer el texto completo,
+> porque la mitad de las veces el que no puede decidir tiene razón.** La clase 1 se detecta por la
+> **primera línea**; la clase 4, sólo **leyendo el cuerpo hasta el final** (la indemnidad de
+> `InfrastructureModels.jl` está en el **último párrafo**).
+
+### La plataforma australiana que faltaba, y es MIT: `opennem` / OpenElectricity
+
+El duodécimo pase declaró el stack del mercado australiano cubierto —«la región que esta KB tenía
+con dos repos y tiene treinta»— barriendo **universidades** (`UNSW-CEEM`) y el **proyecto ISP**
+(`Open-ISP`). Medición de hoy: `opennem`, `OpenElectricity` y `nemweb` tenían **cero menciones** en
+toda la KB.
+
+| Repo | Licencia (byte-read) | ★ | Push | Qué es |
+|------|----------------------|---|------|--------|
+| [opennem/opennem](https://github.com/opennem/opennem) | **MIT** (1.088 B, `pyproject.toml` → `LICENSE`) | 137 | 2026-11-05 | La plataforma de datos del mercado eléctrico australiano (NEM) |
+| [opennem/opennem-fe](https://github.com/opennem/opennem-fe) | **MIT** (byte-read, 1.070 B) | 81 | 2026-10-16 | *Front-end* de la plataforma |
+| [opennem/nemweb](https://github.com/opennem/nemweb) | **MIT** (1.063 B) | 37 | 2023-04-04 | Descarga y procesa directamente los ficheros **NEMWEB de AEMO** |
+| [opennem/openelectricity](https://github.com/opennem/openelectricity) | **MIT** (1.077 B) | 14 | 2026-11-22 | **OpenElectricity**, la evolución activa del proyecto |
+| [opennem/openelectricity-python](https://github.com/opennem/openelectricity-python) | **MIT** (1.077 B, `pyproject.toml` → `license = {text = "MIT"}`) | 12 | 2026-10-07 | Cliente **oficial** en Python de la API |
+| [opennem/openelectricity-typescript](https://github.com/opennem/openelectricity-typescript) | **MIT** (byte-read, 1.088 B + `package.json`) | 4 | 2026-10-07 | Cliente oficial TypeScript |
+| [opennem/IspParser](https://github.com/opennem/IspParser) | **MIT** (1.088 B) | 1 | 2026-06-24 | Parsea los *workbooks* del ISP de AEMO a JSON |
+| ⛔ [opennem/opennempy](https://github.com/opennem/opennempy) | **sin artefacto de licencia** en `main` ni `master` (41 ★) | 41 | 2025-02-17 | Inutilizable pese a la tracción |
+
+**Y aquí está la correlación que cambia cómo se cotiza un *engagement* australiano.** Las dos capas
+australianas de esta KB tienen licencias **sistemáticamente distintas**:
+
+- capa **académica / de modelado de mercado** (`Open-ISP/*`, `UNSW-CEEM/NEMSEER`): **GPL-3.0**;
+- capa **de agencia científica nacional** (`csiro/ensys-*`): **BSD-3-Clause**;
+- capa **de plataforma de datos operativos** (`opennem/*`): **MIT**.
+
+> **T76 — EN AUSTRALIA, LA LICENCIA CORRELACIONA CON EL TIPO DE INSTITUCIÓN, Y LA CAPA QUE ESTA KB
+> TENÍA ERA LA COPYLEFT.** El inventario previo de ~30 repos australianos era mayoritariamente
+> GPL-3.0, de modo que la respuesta de esta KB a un cliente australiano era, sin saberlo, «hay
+> stack abierto pero es copyleft». Las dos capas añadidas hoy son **permisivas** y cubren justo los
+> dos extremos útiles: **los datos operativos (MIT)** y **los modelos de adecuación y despacho de
+> la agencia nacional (BSD-3)**. La respuesta comercial se invierte.
+
+### Los modelos del NEM de la agencia científica nacional
+
+| Repo | Licencia (byte-read) | ★ | Push | Qué es |
+|------|----------------------|---|------|--------|
+| [csiro/ensys-NEMX.jl](https://github.com/csiro/ensys-NEMX.jl) | **BSD-3-Clause** (1.647 B, título `BSD 3 Clause Licence`) | 12 | 2026-11-21 | **NEMX.jl**: reconstruye el despacho regional de **5 minutos de AEMO** desde datos publicados «lo bastante cerca para reproducir sus precios», y lo re-resuelve como OPF con red física. DOI `10.25919/v33w-8011` |
+| [csiro/ensys-iPASA.jl](https://github.com/csiro/ensys-iPASA.jl) | **BSD-3-Clause** (1.647 B) | 9 | 2026-08-25 | **iPASA.jl**: adecuación del sistema (LOLE/EUE/NEUE) por Monte Carlo secuencial sobre datos del **ISP 2024 de AEMO**. DOI `10.25919/7j2y-c896` |
+| [csiro-energy-systems/Synthetic-NEM-2000bus-Data](https://github.com/csiro-energy-systems/Synthetic-NEM-2000bus-Data) | **CC-BY-4.0** (dato, no código) | 36 | 2025-02-25 | Modelo de red sintético del NEM de 2.000 nodos en formato Matpower |
+| [csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl](https://github.com/csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl) | CSIRO OSS Licence Agreement (3.850 B, permisivo — clase 3) | 24 | 2025-05-27 | OPF con restricciones de seguridad para redes **AC/DC** |
+| [csiro/connectivity](https://github.com/csiro/connectivity) | **MIT** (1.124 B) | 19 | 2026-11-20 | Análisis de conectividad |
+
+`iPASA.jl` es además **la pieza de arquitectura más reutilizable del pase**, porque es un
+*engagement* entero ya montado y documentado: acopla el **modelo de red sintético** (CC-BY-4.0) +
+**datos del ISP de AEMO** + **PRAS** (MIT modificado) + el ecosistema **Sienna**
+(`PowerSystems.jl` / `PowerSimulations.jl`, BSD-3) + parseo de **PowerModels.jl**. Es la receta 57
+de este pase, y está **validada por una agencia nacional con DOI**.
+
+### Repos sueltos del NEM, verificados
+
+| Repo | Licencia (byte-read) | ★ | Push | Qué es |
+|------|----------------------|---|------|--------|
+| [ampere-ventures/NEM_constraints](https://github.com/ampere-ventures/NEM_constraints) | **MIT** (1.070 B) | 16 | 2026-05-22 | Manipulación de las **ecuaciones de restricción de NEMDE** publicadas |
+| [akxen/nemde](https://github.com/akxen/nemde) | **MIT** (1.072 B + `pyproject.toml`) | 7 | 2026-09-27 | Ingeniería inversa del **NEMDE**, el motor de despacho de AEMO |
+| [prakaa/mms-monthly-cli](https://github.com/prakaa/mms-monthly-cli) | **GPL-3.0-or-later** (35.149 B + manifiesto) | 7 | 2026-11-16 | CLI de consulta y descarga del **MMS** de AEMO |
+| ⛔ [ercot/api-specs](https://github.com/ercot/api-specs) | **sin artefacto de licencia** en `main` ni `master` | 43 | 2026-10-06 | Especificaciones **oficiales** de la API de **ERCOT**. Repo oficial de un operador, y aun así inutilizable |
+
+### Nota de instrumento, importante y que costó un barrido
+
+**`user:<org>` devuelve `total_count: 0` para una organización RENOMBRADA, y eso es indistinguible
+de «la organización no tiene repos».** Medición: `user:NREL` → **0 resultados**, mientras
+`https://github.com/NREL/PRAS` responde **HTTP 200** y `raw.githubusercontent.com/NREL/PRAS/...`
+sirve el fichero. GitHub atiende las rutas antiguas **de forma transparente, sin cabecera
+`Location`**, de modo que:
+
+1. **un `200` no prueba que el propietario citado siga siendo el canónico** —la verificación de URL
+   de esta KB **no puede** detectar un renombrado—; y
+2. **el barrido por organización pierde la institución entera en silencio.**
+
+El propietario canónico se recupera buscando **por nombre de repo** (`"<repo>" in:name`), no por
+organización. Así se localizaron `Sienna-Platform/*` (ex `NREL-Sienna`) y `NatLabRockies/*` (ex
+`NREL`). ⚠️ Esta KB **ya había migrado** a los propietarios nuevos en un pase anterior
+(`NatLabRockies/EnergyPlus`, `citylearn-project/CityLearn`, `Sienna-Platform/PowerSystems.jl` están
+correctamente citados): **el renombrado no es un hallazgo nuevo, la consecuencia para el
+instrumento sí.** Y explica el agujero de Julia: las referencias a Sienna apuntaban a direcciones
+que sólo viven como redirección, por lo que ningún barrido por organización las enumeró nunca.
+
+⚠️ **Falsos ceros propios, declarados.** En este pase adiviné *slugs* de organización para
+operadores de sistema y **diecisiete de diecinueve devolvieron 0**: `caiso`, `energinet`,
+`EirGrid`, `nationalgrideso`, `pjm-eis`, `MISO-Energy`, `elia-group`, `tennet-drtm`,
+`terna-energy`, `ree-rd`, `fingridopendata`, `kepco-ai`, `DTUComputeEnergy`, `AEMOEnergy`. **Un
+*slug* adivinado que devuelve 0 no es una medición**: no distingue «no existe», «se llama de otra
+manera» y «fue renombrada». Esos operadores quedan **sin medir**, no en cero. Ítem abierto 17-R1:
+recuperar los *slugs* reales por nombre de repo antes de volver a afirmar nada sobre ellos.
+
 ## 2026-11-24 — pase 16 (una organización de 13 repos del operador nacional brasileño ausente de un inventario de 500; y el `LICENSE` de 45 bytes que sí es MIT)
 
 ### El hallazgo: `ONSBR`, la organización del ONS

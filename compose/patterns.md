@@ -2374,3 +2374,124 @@ donde el caso sea de red y no de sistema. **Ningún componente escribe en un sis
 45 y 95 B); documentar ese hallazgo en la propuesta, porque una revisión legal superficial los leerá
 como «sin licencia» (T61). ⛔ **`ONSBR/DadosAbertos` (43 ★) no tiene licencia**: es el repo más
 visible de la organización y el único inutilizable.
+
+### Receta 57
+
+**Nombre:** *Engagement* de mercado eléctrico australiano (NEM) con stack permisivo de extremo a extremo
+**Región:** APAC · **Licencia resultante:** MIT + BSD-3-Clause + CC-BY-4.0 (sin copyleft, sin indemnidad)
+
+**Por qué esta receta existe.** Hasta este pase, la respuesta de esta KB a un cliente australiano
+era —sin saberlo— «hay stack abierto pero es **GPL-3.0**», porque el inventario australiano era
+académico (`UNSW-CEEM`, `Open-ISP`). Las capas añadidas en el pase 17 son **permisivas** y cubren los
+dos extremos útiles: datos operativos y modelos de la agencia nacional.
+
+**Piezas, todas con licencia leída byte a byte:**
+
+| Capa | Pieza | Licencia |
+|------|-------|----------|
+| Ingesta primaria | [opennem/nemweb](https://github.com/opennem/nemweb) — ficheros **NEMWEB de AEMO** | MIT |
+| Plataforma + API | [opennem/opennem](https://github.com/opennem/opennem) + [openelectricity-python](https://github.com/opennem/openelectricity-python) (cliente **oficial**) | MIT |
+| Supuestos de planificación | [opennem/IspParser](https://github.com/opennem/IspParser) — *workbooks* del ISP de AEMO → JSON | MIT |
+| Red física | [csiro-energy-systems/Synthetic-NEM-2000bus-Data](https://github.com/csiro-energy-systems/Synthetic-NEM-2000bus-Data) — 2.000 nodos, Matpower | CC-BY-4.0 (**dato**: exige atribución) |
+| Despacho y precios | [csiro/ensys-NEMX.jl](https://github.com/csiro/ensys-NEMX.jl) — reconstruye el despacho de **5 min** y lo re-resuelve como OPF | BSD-3 |
+| Adecuación | [csiro/ensys-iPASA.jl](https://github.com/csiro/ensys-iPASA.jl) — LOLE/EUE/NEUE | BSD-3 |
+| Motores | [Sienna-Platform/PowerSimulations.jl](https://github.com/Sienna-Platform/PowerSimulations.jl) + [NatLabRockies/PRAS](https://github.com/NatLabRockies/PRAS) | BSD-3 + MIT modificado |
+| Restricciones de mercado | [ampere-ventures/NEM_constraints](https://github.com/ampere-ventures/NEM_constraints) — ecuaciones de **NEMDE** | MIT |
+
+**Cómo se cablea.** `nemweb` descarga los ficheros de AEMO → `opennem` normaliza y expone API →
+`IspParser` aporta los supuestos del ISP → `iPASA.jl` monta el caso acoplando la **red sintética**,
+los **datos del ISP** y **PRAS** sobre el ecosistema **Sienna**, y `NEMX.jl` resuelve el despacho y
+los precios nodales. La capa agéntica se sitúa **sólo en consulta y preparación de casos**, nunca en
+despacho.
+
+**Lo que hace esta receta distinta de las demás de este archivo: no hay que diseñarla.** `iPASA.jl`
+**ya es** ese acoplamiento, publicado por la **agencia científica nacional** australiana, con **DOI
+(`10.25919/7j2y-c896`)** y documentación. Se reutiliza la arquitectura, no se inventa; el trabajo
+del estudio es el caso del cliente, no la integración.
+
+⚠️ **Cláusulas que hay que respetar:** `Synthetic-NEM-2000bus-Data` es **CC-BY-4.0**, es decir
+**dato con obligación de atribución** —no código permisivo— y la atribución debe aparecer en el
+entregable. ⚠️ **No transfiere a otro mercado**: el valor está en que los *parsers* hablan el idioma
+de AEMO. Para otro país, se reescribe la capa de ingesta (restricción APAC del pase 15: **país por
+país, nunca plataforma regional**).
+
+### Receta 58
+
+**Nombre:** La compuerta dentro de la formulación — el modelo aprendido como restricción, no como actuador
+**Región:** Global · **Licencia resultante:** BSD-3 + *rider* de reserva de derechos del Gobierno de EE. UU. (**sin indemnidad si se respeta el límite de dependencias**)
+
+**El problema que resuelve.** Las recetas 49 y 53 de esta KB construyen la compuerta como **dos
+sistemas y un contrato**: el agente propone un delta, y una validación externa (**SHACL**, **ODCS**)
+lo acepta o lo rechaza antes de que toque el modelo vivo. Funciona, pero tiene una costura: el
+agente **puede** proponer un punto infactible, y la seguridad depende de que la compuerta esté bien
+construida y nadie la rodee.
+
+**La receta.** [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) **empotra el
+predictor entrenado dentro del problema de optimización** de JuMP. El modelo de ML deja de ser un
+sistema que propone y pasa a ser **una restricción más**, junto a las de red y de mercado. El
+*solver* devuelve un punto **factible por construcción** o declara **infactible**: no hay un estado
+intermedio en el que una propuesta inválida exista y haya que interceptarla.
+
+**Cableado concreto:**
+
+1. Entrenar el predictor donde ya se entrena (p. ej. pronóstico de demanda o de renovable con
+   [openSTEF](https://github.com/OpenSTEF/openstef), MPL-2.0 — **dependencia, no base a forkear**).
+2. Exportar el predictor e importarlo con `MathOptAI.jl` **dentro** del modelo JuMP.
+3. Añadir las restricciones del sistema en el **mismo** modelo: límites de rampa, reserva,
+   capacidad, y la formulación de red.
+4. Resolver con un solver MINLP ([lanl-ansi/Juniper.jl](https://github.com/lanl-ansi/Juniper.jl),
+   **MIT**) o el que corresponda a la formulación.
+5. **La capa agéntica se queda fuera del lazo**: compone el caso, explica el resultado y redacta el
+   expediente. **El texto de razonamiento del LLM nunca llega a un actuador** — restricción
+   invariante de esta KB desde la receta 46.
+
+**Por qué es el mejor argumento comercial que tiene esta KB.** Dieciséis pases de confirmaciones
+externas dicen **qué no vender** (NERC: *decision-support*; IEA: 23 % en tiempo real frente a 54 %
+en planificación; NIST: comportamiento determinista, degradación elegante, operación a prueba de
+fallos). Esta receta dice **cómo construir lo que sí se vende**, en el lenguaje que el sector ya
+audita: **restricciones en un problema de optimización**. Frente a un comité de operación, el
+enunciado pasa de «pondremos una validación delante del modelo» a **«el modelo no puede proponer un
+punto infactible, porque vive dentro del despacho»**. Y encaja con el *sandbox* de **Ofgem**
+(pase 17, EMEA), donde la compuerta deja de ser argumento de venta y pasa a ser **el entregable que
+el regulador examina**.
+
+🚨 **Límite de licencia que forma parte de la receta, no es una nota al pie.** `MathOptAI.jl` es la
+variante **más limpia** de `lanl-ansi` (BSD-3 + reserva federal, **sin** indemnidad y **sin** deber
+de marcado). Úsese **con JuMP directamente**. Si se acopla a la familia `PowerModels.jl`, arrastra
+`InfrastructureModels.jl`, que **impone indemnidad al licenciatario** frente al Gobierno de EE. UU.
+(T73/T74): en ese caso, **revisión legal antes de la propuesta**. Donde el diseño admita las dos
+opciones, preferir **Sienna** (`PowerSimulations.jl`, BSD-3 limpio) como base de modelado.
+
+### Receta 59
+
+**Nombre:** Diligencia de licencia sobre el **árbol de dependencias**, no sobre el repo de entrada
+**Región:** Global · **Entregable:** anexo de licencias de la propuesta
+
+**Por qué es una receta y no una advertencia.** El pase 17 encontró el primer caso de esta KB en que
+**el riesgo de licencia no está donde se mira**: `PowerModels.jl` no impone indemnidad, pero su
+dependencia común `InfrastructureModels.jl` **sí**. Revisar el repo de entrada, aprobarlo y heredar
+la obligación por transitividad es el modo de fallo **por defecto**, y ninguna herramienta SPDX lo
+señala porque **ningún campo SPDX expresa una indemnidad**.
+
+**Procedimiento, en el orden que funciona:**
+
+1. **Manifiesto primero** (T46): `Project.toml`, `pyproject.toml`, `Cargo.toml`, `package.json`,
+   `DESCRIPTION`, `pom.xml`. Una expresión SPDX en el manifiesto gana a la adivinanza.
+2. **Enumerar el árbol**, no el repo. Para cada dependencia directa e indirecta, repetir el paso 1.
+3. **Leer el texto completo de toda licencia que devuelva `NOASSERTION`**, y leerlo **hasta el
+   final**: la clase ortográfica se resuelve en la **primera línea** (`BSD 3 Clause Licence` de
+   CSIRO), pero la indemnidad de `InfrastructureModels.jl` está en el **último párrafo** (T75).
+4. **Buscar cuatro términos** que ningún SPDX expresa y que cambian la propuesta:
+   *indemnify* / *hold harmless*; prohibición de **entrenar modelos** con el código (T57);
+   **deber de marcar** las modificaciones; y **conversión diferida** (BSL 1.1 — «hoy» y «en cuatro
+   años» son respuestas distintas).
+5. **Antes de excluir** un repo insignia por licencia, buscar su **fork de fundación** (T64:
+   VOLTTRON `NOASSERTION` en el repo histórico, **Apache-2.0** en `eclipse-volttron/volttron-core`).
+6. **Clasificar** cada pieza en: base a forkear / dependencia / dependencia con revisión legal /
+   excluida. La frontera **MPL-2.0** (copyleft **por archivo**: `openSTEF`, familia `powsybl`) es
+   «dependencia», nunca «base a forkear en silencio».
+
+**Entregable.** Una tabla por *engagement* con: pieza · licencia **leída** (con tamaño en bytes y
+primera línea) · obligaciones no-SPDX · clasificación. Es el anexo que evita que una obligación
+contractual entre en un contrato de cliente sin que nadie la haya visto, y se construye **una vez
+por stack**, no una vez por propuesta.

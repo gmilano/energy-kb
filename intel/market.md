@@ -700,6 +700,55 @@ financiación y de credibilidad, no un cliente.
 ⛔ **No citar `micro-ark.com`** (afirma que la FERC exige trazas de auditoría de IA «100 %
 transparentes»): no verificable contra fuente primaria y contradictorio con el resto.
 
+### Actualización del pase 17 (2026-11-24) — North America
+
+**La fecha accionable del trimestre: los estándares de *carga computacional* de la NERC vencen en
+diciembre de 2026.** El pase 15 registró que la FERC había ordenado a la NERC escribir reglas de
+fiabilidad para **grandes cargas computacionales** con cierre a finales de 2026. Este pase lo fecha:
+**diciembre de 2026**, es decir **el mes que viene**. Y la FERC emitió además **órdenes de gran
+carga a los RTO/ISO en junio de 2026**. Para el estudio esto es una ventana de expediente, no una
+tendencia: cualquier cliente con un centro de datos en interconexión tiene una obligación
+documental con fecha, y la obligación es **de carga**, no de operación con IA.
+
+**Lo que sigue sin existir, y es la buena noticia del posicionamiento:** la FERC **no ha emitido
+guía sobre IA operativa de *utility***. El marco que sí avanza es de **normalización**, no de
+regulación: el **NIST** desarrolla un *Trustworthy AI in Critical Infrastructure Profile* del AI RMF
+que una fuente jurídica de este pase espera que se convierta en **estándar de facto** de la
+operación energética estadounidense, y que **nombra energía** como foco. Es la **segunda fuente
+independiente** sobre ese borrador (cierre parcial del ítem 16-R1) y mantiene la forma comercial que
+esta KB viene recetando para NA: **trabajo con forma de asesoría y de expediente, no de control**.
+
+**Capa legislativa estatal, nueva en esta KB.** La **NCSL** (*National Conference of State
+Legislatures*) documenta que **al menos cinco estados** tienen legislación pendiente sobre IA y
+energía en la sesión de **2026**, y que **Colorado y Virginia** tramitan proyectos sobre **eficiencia
+energética de centros de datos**. En el plano federal, los proyectos del 119.º Congreso varían
+mucho, incluyendo alguno que impondría **requisitos de generación propia** a las empresas de centros
+de datos; y un proyecto de *permitting* de 2026 instruiría a la FERC para que las *utilities*
+**cobren a los clientes de centros de datos de IA los costes de transmisión** (Brookings).
+
+> **Lectura comercial de NA, afinada.** El dinero regulatorio de NA está **en el lado de la carga**
+> (interconexión, coste atribuible, eficiencia del centro de datos, fiabilidad de gran carga), no en
+> el lado de la operación con IA. El producto que se vende aquí es **el expediente**: estudio de
+> interconexión, atribución de costes, y cumplimiento de un estándar NIST que todavía no es
+> obligatorio pero que conviene anticipar. Duke Energy (planificación agéntica en AWS, estudios de
+> interconexión de semanas a horas) sigue siendo el precedente a citar.
+
+**Oferta abierta nueva para NA en este pase, y es sustancial.** El núcleo de optimización de red del
+sector es **de origen norteamericano** y entra hoy en la KB: `lanl-ansi/*` (Los Alamos),
+`Sienna-Platform/*` y `NatLabRockies/PRAS`. Eso da a un *engagement* de NA un stack de
+planificación, adecuación y dinámica con **licencias permisivas**, con una condición que hay que
+poner por escrito en la propuesta: **dos repos de `lanl-ansi` imponen indemnidad al licenciatario
+frente al Gobierno de EE. UU.**, y uno de ellos, `InfrastructureModels.jl`, es la **dependencia
+común** de la familia (T73/T74). Preferir **Sienna** (BSD-3 limpio) como base.
+
+⚠️ `micro-ark.com` volvió a aparecer en el barrido de NA de este pase y **sigue descartado** (T71):
+sus afirmaciones sobre cumplimiento NERC CIP de la IA no se verifican contra fuente primaria y
+contradicen al resto de las fuentes sobre la ausencia de guía de la FERC.
+⚠️ Todo lo regulatorio de esta actualización es **secundario de calidad jurídica o institucional**
+(Baker Botts, NCSL, Brookings, NewGen), no texto primario: los *open items* **15-R1** (NERC) y
+**16-R1** (NIST) siguen abiertos.
+
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -1401,6 +1450,63 @@ documento, pilares y umbral (Legal500, Eversheds Sutherland, EUREC, Eurelectric,
 FSR-EUI). **Secundario convergente, no bibliografía primaria** (ítem 16-R2).
 ⚠️ Sin verificar: una consultora sitúa a las utilities polacas **12-18 meses por detrás** de sus
 pares de Europa occidental en madurez de IA. Atribuible, no adoptable.
+
+### Actualización del pase 17 (2026-11-24) — EMEA
+
+**El hallazgo regulatorio del pase, y corrige el error más repetido de esta KB.** Hay por fin un
+mecanismo que explica las dos fechas contradictorias del AI Act que esta KB arrastra desde el pase
+13, y hace compatibles las dos fuentes que el pase 16 registró como opuestas (**T67 → T77**):
+
+- **acuerdo político** sobre el *Digital Omnibus* en IA: **7 de mayo de 2026**;
+- ese acuerdo mueve el plazo de los sistemas de **alto riesgo del Anexo III** —que captura la mayor
+  parte de la IA operativa de energía e infraestructura crítica— de **2-ago-2026** a **2-dic-2027**;
+- **hasta la adopción y publicación en el Diario Oficial, los plazos originales siguen en vigor.**
+
+> **Cómo se dice esto a un cliente de EMEA, y conviene decirlo así literalmente:** «el plazo
+> **acordado** es diciembre de 2027; el plazo **vigente** es agosto de 2026». Dar sólo el primero
+> hace que el cliente planifique sobre una norma que **todavía no existe**; dar sólo el segundo le
+> hace gastar de más. Y recordar la distinción que esta KB se repite: el AI Act es el
+> **Reg(UE) 2024/1689**; el **2026/1744** es lo que **mueve las fechas**. No confundirlos.
+
+**Instrumento regulatorio sectorial nuevo, y es un regulador eléctrico: Ofgem (Reino Unido).**
+Primera vez que esta KB puede nombrar en EMEA una **guía de IA de un regulador de energía** y no
+sólo derecho horizontal de IA: **Ofgem publicó guía de IA ética en mayo de 2025 y una segunda
+edición en mayo de 2026**, y planea un **piloto de *sandbox* de IA de 12 meses**.
+
+> **Por qué el *sandbox* es la pieza comercial y no la guía.** Un *sandbox* regulatorio es una vía
+> **nombrada y con plazo** para pilotar IA sobre un sistema regulado **con el regulador dentro**.
+> Para el estudio es la mejor forma posible del producto que esta KB lleva dieciséis pases
+> recetando —la **compuerta** auditable, no el control autónomo—: en un *sandbox* la compuerta deja
+> de ser un argumento de venta y pasa a ser **el entregable que el regulador examina**. El Reino
+> Unido se convierte así en la jurisdicción de EMEA donde antes se puede colocar un piloto de
+> operación asistida. ⚠️ Fechas y alcance del piloto **de *snippet***, sin leer el documento de
+> Ofgem: verificar antes de usarlo en propuesta.
+
+**Dinero público europeo, con cifras.** Para **2026-2027**, **Horizon Europe** destina del orden de
+**75 M€** a tecnologías de IA en energía —redes, autoconsumo y almacenamiento—, dentro de una
+inversión total de I+I que una fuente jurídica sitúa en torno a **265 M€**. Esto confirma con cifra
+la señal que el pase 16 registró cualitativamente (**AI.grids**): **hay financiación pública europea
+detrás de la capa de modelos fundacionales de red** que esta KB inventaría (`gridfm`, `PowerFM`).
+
+**Marco regulatorio aplicable, consolidado** (lista útil para un expediente de EMEA): AI Act, más
+**NIS2** —que trata la energía como servicio esencial—, **RGPD** para datos de contador inteligente
+y **REMIT** para negociación de energía dirigida por IA.
+
+**Jugadores nombrados por los informes de mercado:** Schneider Electric, Siemens, GE, ABB,
+Honeywell, IBM, Microsoft, Oracle, C3.ai y Vestas; IBM reforzó en **marzo de 2026** sus plataformas
+de previsión de demanda y optimización energética. Del lado institucional: Comisión Europea, ENISA,
+reguladores nacionales (p. ej. **URE** en Polonia) y los operadores de red.
+
+⚠️ **Procedencia, declarada otra vez y sin mejora.** `data.consilium.europa.eu` (donde está el
+documento primario **ST-10101-2026-INIT**, Consejo de la UE, **4-jun-2026**), `www.bakerbotts.com` y
+`www.twobirds.com` **no resuelven DNS desde el egress de esta sesión**. La hoja de ruta de la
+Comisión (**3-jun-2026**, tres pilares, **siete acciones emblemáticas**, esquema de calificación de
+centros de datos, intercambio transfronterizo de datos de energía) queda **corroborada por fuentes
+secundarias convergentes**, nunca como bibliografía primaria. Ítem **16-R2 sigue abierto**, ahora
+con el documento **localizado e ilegible desde aquí**.
+⚠️ **No citar** la afirmación de que las empresas energéticas polacas van «12-18 meses por detrás»
+de sus pares de Europa Occidental: fuente única de guía comercial, no verificada.
+
 
 ### APAC
 
@@ -2143,6 +2249,61 @@ pase 15 por otra fuente.
    **expediente de riesgo** para Vietnam: **dos jurisdicciones con fecha y con deber de forma**.
 3. **Despliegue país por país, nunca plataforma regional** — sin interconexiones transfronterizas,
    el valor es intra-país y los modelos no transfieren (pase 15, se mantiene).
+
+### Actualización del pase 17 (2026-11-24) — APAC
+
+**APAC pasa de dos instrumentos vinculantes a cuatro, y uno es de un país que esta KB no tenía.**
+El pase 15 cerró el hueco regulatorio de APAC con Corea; el 16 lo amplió. Este pase añade **Vietnam**
+con una ley de IA **en vigor y con decreto de desarrollo**, que es el estado más avanzado posible:
+
+| País | Instrumento | Estado y fecha |
+|------|-------------|----------------|
+| **Corea** | AI Framework Act / AI Basic Act | **En vigor 22-ene-2026**, con decreto de aplicación simultáneo. Alto impacto y IA generativa: aviso previo al usuario |
+| **Vietnam** | **Primera ley de IA**, marco basado en riesgo | **En vigor 1-mar-2026**, con **decreto 142/2026/ND-CP** de desarrollo (abril de 2026) |
+| **China** | Enfoque sectorial: recomendación algorítmica, *deepfakes*, IA generativa | Vigente; descrito por un despacho como el marco más completo de la región |
+| **Singapur** | **MAS** en consulta sobre gestión de riesgo de IA | Consulta, **no ley** |
+| **Indonesia** | Hoja de ruta nacional de IA | En tramitación como **Reglamento Presidencial** |
+
+**Capa blanda regional, con el documento primario identificado.** El ítem **16-R3 queda mejorado**:
+el documento se llama exactamente ***APEC Policy Recommendations on the Mutual Enhancement Between AI
+and Energy in the Asia-Pacific (2026-2030)***, es de la **APEC Energy Ministerial Meeting de 2026**,
+y se confirma **voluntario**. Cubre **planificación coordinada de infraestructura de cómputo y de
+energía** e **interconexión energética regional**. ⚠️ `www.apec.org` **no resuelve DNS** desde este
+entorno: el ítem **sigue abierto** (localizado, no leído).
+
+**Australia entra como mercado regulatorio, no sólo como origen de repos.** La **AEMC** está
+reformando el mercado eléctrico para la era de la IA, con una **regla de contador inteligente
+universal para 2030**; **Singapur** apunta a medición avanzada nacional **en 2026**; y **Tailandia**
+tramita reglas que permitirían a los centros de datos promovidos por la **BOI** contratar
+**directamente** con generadores renovables, con la energía **transportada por la red nacional**.
+Vietnam fija además mecanismos especiales de energía para **2026-2030** (Resolución 253/2025/QH15).
+
+> **La restricción estructural de APAC se confirma y ahora tiene su contrapartida de oferta.** IBM
+> sitúa el desfase en su forma más clara: **la infraestructura de IA se construye en 1-2 años y la
+> red tarda 5-10**, y califica la brecha de **aguda en APAC**. Súmese lo que esta KB ya midió —sin
+> interconexiones transfronterizas, los modelos **no transfieren** entre países; IEA: **23 %** de
+> operadores de Asia Oriental usan IA en **tiempo real** frente al **54 %** en **planificación**— y
+> la receta comercial no cambia, se refuerza: **vender agentes de planificación, nunca control en
+> tiempo real, y desplegar país por país, nunca una plataforma regional.** La **medición avanzada
+> con fecha** (Singapur 2026, Australia 2030) es el mandato que **crea la base instalada** que la
+> capa de medición permisiva de esta KB sabe leer.
+
+**Oferta abierta nueva de origen APAC en este pase:** `csiro/ensys-NEMX.jl` y `ensys-iPASA.jl`
+(**BSD-3-Clause**, agencia científica nacional australiana, con **DOI**), la plataforma
+`opennem/*` (**MIT**) y `csiro-energy-systems/gen_agents_localLLM_on_Setonix` (**Apache-2.0**,
+agentes con **LLM local** en el supercomputador nacional **Setonix**). Esto último es el patrón de
+**soberanía** que la región pide —Malasia enmarca la nube «segura y soberana» como base de la
+adopción de IA—: **el modelo no sale de la infraestructura nacional.** Australia pasa así de
+«región con repos académicos copyleft» a **región con stack permisivo de agencia nacional**.
+
+**Jugadores:** gobiernos y reguladores (MAS, AEMC, Asamblea Nacional de Vietnam, BOI de Tailandia,
+ministros de energía de APEC), **KEPCO** construyendo su propia IA de optimización de red
+(incumbente nombrado, y Corea es donde está la ley), más IBM, hiperescalares y *utilities*.
+
+⚠️ **Sigue sin establecerse** —tercer pase consecutivo— que exista **regulación de IA específica del
+sector energético** en Japón o Corea: lo que hay es **derecho de IA transversal**. El expediente de
+un cliente de APAC se construye contra la **ley de IA del país**, no contra el regulador eléctrico.
+
 
 ### LATAM
 
@@ -3057,6 +3218,64 @@ de ambos hechos es la propuesta LATAM más fuerte que esta KB ha podido formular
 rellenar** donde deberían ir sus estadísticas de adopción.
 ⚠️ **WEF**: la adopción creciente **todavía no produce impacto medible**, y muchas organizaciones no
 alcanzan escala. Contrapeso honesto a los puntos anteriores.
+
+### Actualización del pase 17 (2026-11-24) — LATAM
+
+**La cifra regulatoria que LATAM no tenía, y reencuadra la región entera.** Un estudio de la
+**Universidad de los Andes** (2026) cuenta **716 instrumentos regulatorios, normas y propuestas
+legislativas relacionadas con IA en 23 países y territorios** de la región. El dato importa por lo
+que corrige: esta KB venía describiendo LATAM como región de **vacío regulatorio**, y la medición
+dice que el problema no es la ausencia de normas sino su **fragmentación**. Para el estudio eso
+cambia el producto: no es «aquí todavía no hay que cumplir nada», es **«hay que cumplir 23 cosas
+distintas»**, y eso es trabajo de expediente multijurisdiccional, que se cotiza.
+
+**Madurez por país, con la cautela de la fuente:** Perú y El Salvador destacan con legislación
+activa; Colombia, México y Brasil siguen construyendo o debatiendo sus marcos; **México sigue sin
+ley específica de IA** y algunas empresas usan los principios del **AI Act europeo como estándar de
+facto** —lo que convierte el expediente de EMEA de esta KB en **material reutilizable en México**.
+
+**Adopción energética, por caso y no por agregado:**
+
+- **Brasil** sigue siendo el caso más claro: el auge de la **generación distribuida** arrastró
+  adopción de **contadores inteligentes** y plataformas en nube de gestión energética en tiempo
+  real. Se conecta directamente con lo que esta KB ya tiene: la cadena
+  *dato del regulador → modelo ejecutable* (`tarifas-energia-api` ISC + `bdgd-tools` MIT +
+  `bdgd2opendss` MIT) y, desde el pase 16, **los modelos de previsión de carga y afluencia
+  hidrológica del propio ONS** más su **servidor MCP**, todo permisivo.
+- **Chile** usa IA para **despacho** y **pronóstico de irradiancia solar** — que es exactamente la
+  capa de pronóstico de esta KB (`openSTEF`, `CityLearn`) aplicada al problema que Chile ya tiene.
+- **Petrobras** empezó por **mantenimiento predictivo en áreas no críticas** — la misma forma
+  conservadora (*empezar fuera del lazo de control*) que esta KB recomienda, aquí ya ejecutada por
+  el mayor operador de la región.
+
+**El número que condiciona cualquier propuesta en LATAM:** un informe de 2026 sostiene que **el
+45 % de los modelos de ML de LATAM nunca llega a producción**. Tómese como orden de magnitud y no
+como medición fina, pero la consecuencia de diseño es sólida y coincide con lo que IDC dice a escala
+global (**el cuello de botella es el entorno de datos, no el modelo**): en LATAM **el entregable no
+puede ser un modelo**, tiene que ser **la vía de puesta en producción** —ingesta, contrato de datos
+(**ODCS**), compuerta de validación y operación—. Es la receta 53 de esta KB, y este dato es su
+mejor argumento de venta.
+
+**Jugadores y foros:** **ECLAC/CEPAL** con grupo de trabajo de IA bajo la agenda **eLAC**, el **BID**
+publicando encuestas de adopción de **más de 2.200 empresas** latinoamericanas, Quorum (Colombia,
+Brasil, Argentina) y SLB en digitalización de yacimientos. Brasil y Colombia se citan como líderes
+regulatorios; Brasil se posiciona como **hub** de IA.
+
+**Lo que este pase NO aporta a LATAM, y hay que decirlo.** **Cero repos nuevos de origen LATAM.** El
+barrido de este pase fue de **lenguaje de programación y de institución científica**, dos ejes en
+los que la región no apareció: no hay agencia científica nacional latinoamericana publicando modelos
+de red permisivos al modo de **CSIRO**, ni ecosistema Julia regional. La cadena LATAM de esta KB
+sigue siendo la del pase 16 (**ONS + reguladores**), que es sólida y es **la única región donde el
+operador del sistema publica a la vez sus modelos y su capa de acceso agéntica**, pero **no creció
+hoy**. Ítem abierto **17-R3**: barrer agencias científicas y laboratorios nacionales de LATAM
+(INPE, CEPEL, CONICET, IPN, Fiocruz-equivalentes del sector) por **nombre de institución**, que es
+el eje que hoy dio todo el rendimiento en APAC y NA.
+
+⚠️ `nivelics.com` volvió a aparecer en el barrido de LATAM y **sigue descartado** (T71): su texto
+publicado contiene marcadores **`[VERIFY]` sin rellenar** donde deberían ir sus estadísticas de
+adopción. Las cifras de esta sección provienen de otras fuentes. La mayor parte del barrido de LATAM
+sigue devolviendo **blogs de proveedor**: trátense los números como indicativos.
+
 
 ## Posicionamiento Globant
 

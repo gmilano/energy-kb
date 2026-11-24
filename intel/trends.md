@@ -1983,3 +1983,99 @@ git diff -U0 | grep '^+' | grep -ohE 'github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]
 **35 URLs nuevas, 33 vivas, 2 muertas — y las 2 muertas eran las únicas no descubiertas en este
 pase.** Verificar sólo los hallazgos deja pasar precisamente las citas de memoria, que son las que
 fallan. **El diff es el alcance correcto de la verificación, no la lista de hallazgos.**
+
+## Pase 17 (2026-11-24) — `NOASSERTION` deja de ser sinónimo de falso negativo, y el sesgo del instrumento baja un nivel: del idioma al lenguaje de programación
+
+### La tendencia de método: esta KB estaba a punto de institucionalizar un error
+
+Tras seis falsos negativos documentados de `NOASSERTION` (T46, T55, T56, T61, T64), la regla que
+esta KB venía acumulando —casi explícita— era *«`NOASSERTION` suele ser una licencia permisiva mal
+detectada; leer y recuperar»*. Este pase leyó **trece licencias institucionales byte a byte** y el
+resultado obliga a corregir la regla antes de que se convierta en doctrina:
+
+| Resultado | Nº | Casos |
+|-----------|----|-------|
+| Permisiva mal detectada (**falso negativo**) | 11 | `csiro/ensys-*` (BSD-3 con título en ortografía británica), `NatLabRockies/PRAS` (MIT con descargo extendido), `csiro-energy-systems/PowerModelsACDCsecurityconstrained.jl` (acuerdo CSIRO permisivo), `lanl-ansi/{PowerModels,GasModels,MathOptAI}.jl` (permisivas con *riders* soportables), `lanl-ansi/Juniper.jl` (**MIT a secas, sin *riders***), `Sienna-Platform/PowerSystemsInvestments.jl`, `opennem/opennem-fe` y `opennem/openelectricity-typescript` |
+| Obligación real que el emparejador **no podía** expresar (**verdadero positivo**) | 2 | `lanl-ansi/{PowerModelsDistribution,InfrastructureModels}.jl` — **indemnidad al Gobierno de EE. UU.** |
+
+> **T75 — `NOASSERTION` significa «el emparejador no pudo decidir», y en una fracción material de
+> los casos el que no puede decidir tiene razón.** La asimetría de coste cambia de signo respecto de
+> T48: un falso negativo **borra una capacidad** (y nadie vuelve a buscar), pero un falso *positivo*
+> aquí **mete una obligación contractual en un *engagement*** sin que nadie la vea. Por eso la
+> lectura ya no puede detenerse en la primera línea: la clase ortográfica se resuelve con **la
+> primera línea**, pero la indemnidad de `InfrastructureModels.jl` está **en el último párrafo**.
+
+> **T76 — EL RIESGO DE LICENCIA PUEDE SER TRANSITIVO E INVISIBLE EN EL REPO CITADO.**
+> `InfrastructureModels.jl` es la dependencia común de `PowerModels.jl`, `GasModels.jl` y
+> `WaterModels.jl`. Revisar `PowerModels.jl` (sin indemnidad), aprobarlo y arrastrar la indemnidad
+> por transitividad es el modo de fallo por defecto. **La revisión de licencia corre sobre el árbol
+> de dependencias.** Primer caso de esta KB en que el riesgo no está donde se mira.
+
+### La tendencia de instrumento: el sesgo bajó del idioma natural al lenguaje de programación
+
+El pase 16 estableció que el «cero agéntico de LATAM» era del **idioma** (es/pt). Este pase
+encuentra el mismo mecanismo un nivel más abajo y con un hueco mayor: **de 524 direcciones
+inventariadas, 7 eran paquetes `.jl`**, y las organizaciones `lanl-ansi` (93 repos), `NLR-Sienna`
+(32) y `csiro`+`csiro-energy-systems` (75) estaban al **0 %**. El sector hace su optimización seria
+en **Julia/JuMP** y esta KB la tenía casi toda en Python, porque las consultas eran de **tema y de
+protocolo** (`topic:power-systems`, `opendss`, `cim cgmes`) y ésas devuelven el ecosistema Python.
+
+**La generalización, para cualquier KB de esta flota:** un inventario hereda el **vocabulario** con
+que se construyó, y ese vocabulario tiene al menos tres ejes de sesgo medidos ya —**idioma natural**
+(pase 16), **lenguaje de programación** (este pase) y **tipo de institución** (pases 8, 16 y 17)—.
+Declarar saturación en uno de los ejes **no dice nada** de los otros dos.
+
+### Correlación nueva: la licencia correlaciona con el tipo de institución
+
+Medición en Australia, donde esta KB tiene ahora tres capas de origen distinto:
+
+| Capa | Origen institucional | Licencia dominante |
+|------|----------------------|--------------------|
+| Modelado de mercado | universidad (`UNSW-CEEM`), proyecto ISP (`Open-ISP`) | **GPL-3.0** |
+| Modelos de adecuación y despacho | **agencia científica nacional** (`csiro`) | **BSD-3-Clause** |
+| Datos operativos de mercado | proyecto/plataforma cívica (`opennem`) | **MIT** |
+| Optimización de red (EE. UU.) | **laboratorio nacional** (`lanl-ansi`) | BSD-3 **+ *riders* federales** |
+
+Esto da una heurística de prospección utilizable: **si hace falta una pieza permisiva, buscar
+primero la agencia nacional o la plataforma cívica; si la pieza viene de una universidad, esperar
+copyleft; si viene de un laboratorio nacional de EE. UU., esperar *riders* contractuales.**
+
+### Regulación: el estado legal de una norma y su fecha de acuerdo político son dos hechos distintos
+
+Cierre parcial del **T67** del pase 16, que registró dos fuentes dando el estado legal opuesto del
+mismo reglamento. Una fuente jurídica de este pase (**Baker Botts**, *AI Regulatory Update for
+Energy: New Timelines in the EU, New Standards in the U.S.*, mayo de 2026) da el mecanismo:
+
+- hubo **acuerdo político** sobre el *Digital Omnibus* en IA el **7 de mayo de 2026**;
+- ese acuerdo mueve el plazo de los sistemas de alto riesgo del **Anexo III** —que captura la mayor
+  parte de la IA operativa de energía e infraestructura crítica— de **2-ago-2026** a **2-dic-2027**;
+- y, literalmente, **hasta su adopción y publicación en el Diario Oficial los plazos originales
+  siguen en vigor**.
+
+> **T77 — LAS DOS FUENTES CONTRADICTORIAS DEL PASE 16 ERAN AMBAS CORRECTAS, SOBRE HECHOS DISTINTOS.**
+> «El plazo se movió a dic-2027» (acuerdo político) y «el plazo sigue siendo ago-2026» (derecho
+> vigente) son compatibles. Para material de cliente esta KB debe dar **siempre los dos** con su
+> naturaleza marcada, porque un cliente que planifique sobre la fecha de 2027 mientras la de 2026
+> sigue vigente **planifica sobre una norma que todavía no existe**. Es la forma precisa del error
+> más repetido de esta KB (las fechas del AI Act), y por fin con su mecanismo.
+> ⚠️ Procedencia: `www.bakerbotts.com` **no resuelve DNS desde el egress de esta sesión**, de modo
+> que esto es **de *snippet* de buscador**, no lectura del texto. Secundario de calidad jurídica,
+> no bibliografía primaria.
+
+### Estado de los open items heredados
+
+| Ítem | Estado tras este pase |
+|------|----------------------|
+| **16-R1** — borrador del **NIST** *Trustworthy AI in Critical Infrastructure Profile* | **Parcialmente cerrado: segunda fuente independiente.** Dos fuentes jurídicas distintas (Baker Botts; NewGen) lo describen ahora, una de ellas esperando que se convierta en **estándar de facto** de la operación energética de EE. UU., y **nombran energía** como foco. Sigue **sin texto primario leído** |
+| **16-R2** — *Strategic Roadmap for Digitalisation and AI in the Energy Sector* de la Comisión | **Sigue abierto, y ahora con el documento primario localizado y sin poder leerse**: `data.consilium.europa.eu/doc/document/ST-10101-2026-INIT/en/pdf` (Consejo de la UE, **4-jun-2026**). El host **no resuelve DNS** desde este entorno. Fecha de publicación de la hoja de ruta corroborada como **3-jun-2026**, tres pilares y **siete acciones emblemáticas** |
+| **16-R3** — recomendaciones **APEC** IA-energía | **Mejorado, no cerrado.** El documento primario queda **identificado con título exacto**: *APEC Policy Recommendations on the Mutual Enhancement Between AI and Energy in the Asia-Pacific (2026–2030)*, de la **APEC Energy Ministerial Meeting de 2026**, y se confirma su carácter **voluntario**. `www.apec.org` **no resuelve DNS** desde este entorno |
+| **15-R3** — referencias de arXiv | **Sigue abierto.** `arxiv.org` sigue rechazado por el proxy de egress |
+| **15-R1** — NERC primario | **Sigue abierto.** Nueva fuente secundaria aporta una fecha accionable: estándares de **carga computacional** de la NERC con vencimiento en **diciembre de 2026** |
+
+⛔ **Fuentes descartadas, reconfirmadas de forma independiente (T71 funciona).** Los dos dominios
+que el pase 16 puso en la lista negra **volvieron a aparecer** en los barridos mandatados de este
+pase, cada uno con el mismo defecto: `micro-ark.com` (afirmaciones sobre cumplimiento NERC CIP de IA
+no verificables contra fuente regulatoria primaria) y `nivelics.com` (marcadores `[VERIFY]` sin
+rellenar donde deberían ir sus estadísticas de adopción en LATAM). **Siguen sin citarse.** Que
+reaparezcan en primera página confirma que la lista negra hay que mantenerla, no que el barrido
+falle.

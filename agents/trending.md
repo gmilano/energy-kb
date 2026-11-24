@@ -9,6 +9,48 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 17 (el puente ML→optimización que *es* la compuerta de esta KB, escrito en código; y el agente energético de una agencia científica nacional)
+
+**Titular del pase: la restricción de arquitectura de esta KB —«no se vende control autónomo, se
+vende la compuerta»— tiene desde este pase una *implementación de referencia* y no sólo recetas
+propias.** `MathOptAI.jl` del Los Alamos National Laboratory **empotra un predictor de ML ya
+entrenado dentro de un problema de optimización** de JuMP/ExaModels. El modelo aprendido deja de
+ser un actuador que propone acciones y pasa a ser **una restricción más dentro del modelo físico y
+de mercado**, que el *solver* satisface o declara infactible. Es la receta 49 de esta KB
+(«el agente propone un delta, la compuerta lo acepta o lo rechaza contra el esquema del sector»)
+pero resuelta **en la misma formulación matemática**, no con dos sistemas y un contrato entre ellos.
+
+| Agente / puente | Licencia | ★ | Push | Región de origen | Qué hace |
+|-----------------|----------|---|------|------------------|----------|
+| [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) | ⚠️ BSD-3 + *riders* de contrato federal (byte-read, 2.293 B — ver taxonomía abajo) | 90 | 2026-08-27 | North America | Empotra predictores de ML entrenados **dentro** de JuMP/ExaModels: la salida del modelo queda sujeta a las restricciones del sistema |
+| [csiro-energy-systems/gen_agents_localLLM_on_Setonix](https://github.com/csiro-energy-systems/gen_agents_localLLM_on_Setonix) | **Apache-2.0** (byte-read, 11.334 B) | 2 | 2025-04-24 | APAC | Agentes generativos con **LLM local** sobre **Setonix**, el supercomputador del Pawsey Centre. Primer repo agéntico de una **agencia científica nacional** en esta KB |
+
+**Por qué `MathOptAI.jl` importa más que sus 90 ★.** Esta KB lleva dieciséis pases acumulando
+confirmaciones *externas* de que el sector no comprará control autónomo (criterio propio → NERC →
+IEA con número, 23 % vs 54 % → NIST, borrador de norma → ONS, producto embarcado → PSR). Todas esas
+confirmaciones dicen **qué no vender**. `MathOptAI.jl` es la primera pieza inventariada que dice
+**cómo construir lo que sí se vende**, y lo dice en la forma que el sector ya sabe auditar: un
+problema de optimización con restricciones. Para un *engagement*, el argumento cambia de
+«pondremos una validación delante del modelo» a «el modelo **no puede** proponer un punto
+infactible, porque vive dentro del despacho».
+
+⚠️ **Y aquí está la trampa del pase, que es de licencia y no de ingeniería.** `MathOptAI.jl` es de
+`lanl-ansi`, y la familia de licencias de ese laboratorio **no es BSD-3 limpio**: ver la sección de
+`repos/trending.md` de este mismo pase. `MathOptAI.jl` es la variante **más limpia** de la familia
+(BSD-3 + reserva de derechos del Gobierno de EE. UU., **sin** obligación de indemnidad y **sin**
+deber de marcado), de modo que es la pieza del ecosistema LANL **que mejor se propone**. Pero su
+dependencia natural dentro de la familia PowerModels, `InfrastructureModels.jl`, **sí** lleva
+indemnidad. Proponer `MathOptAI.jl` con JuMP directamente: sí. Proponerlo acoplado a PowerModels
+sin revisión legal: no.
+
+### El cero que este pase NO rompe, y conviene decirlo
+
+No aparecieron **agentes de operación de red** nuevos y proponibles. El sexto cero consecutivo en
+esa categoría se mantiene, y por primera vez con una explicación que no es del instrumento sino
+**del mercado**: el 23 % de operadores de Asia Oriental que usan IA en tiempo real (IEA, pase 15),
+la guía de la NERC que la fija como *decision-support* (pase 14) y el borrador del NIST (pase 16)
+describen un sector que **no está comprando ese agente**. El cero es coherente con la demanda.
+
 ## 2026-11-24 — pase 16 (el servidor MCP oficial de un operador nacional, y es Apache-2.0; el cero agéntico de LATAM era del idioma)
 
 **Titular del pase: el ONS brasileño publica el servidor MCP de su portal de datos abiertos, con

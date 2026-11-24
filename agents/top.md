@@ -1137,3 +1137,33 @@ Los barridos agénticos de este pase (cuatro consultas con filtro de recencia, `
 `TimeCopilot/timecopilot` (643 ★), `idfkit/idfkit-mcp`. **El techo agéntico global de esta KB es
 real.** Lo que no era real era el cero regional de LATAM, y lo rompió una consulta de cuatro palabras
 en portugués (T63, ver `agents/trending.md`).
+
+## Pase 17 (2026-11-24): el puente ML→optimización, que es la compuerta de esta KB escrita en código
+
+Dos piezas nuevas, ambas verificadas vivas y con licencia **leída byte a byte**. Ninguna es un
+«agente de operación de red»: ese cero sigue en pie por sexto pase consecutivo y este pase lo
+explica por **demanda del mercado**, no por fallo del instrumento (ver `agents/trending.md`).
+
+| Pieza | Repo | Licencia (byte-read) | ★ | Push | Origen | Papel en una arquitectura agéntica |
+|-------|------|----------------------|---|------|--------|-------------------------------------|
+| **MathOptAI.jl** | [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) | ⚠️ BSD-3 + reserva de derechos del Gobierno de EE. UU. (2.293 B; **sin indemnidad, sin deber de marcado** — la variante más limpia de `lanl-ansi`) | 90 | 2026-08-27 | North America | **La compuerta, en la misma formulación matemática.** Empotra un predictor de ML entrenado dentro de un problema JuMP/ExaModels: el modelo aprendido es **una restricción más**, no un actuador. El *solver* lo satisface o declara infactible |
+| **Agentes generativos con LLM local sobre Setonix** | [csiro-energy-systems/gen_agents_localLLM_on_Setonix](https://github.com/csiro-energy-systems/gen_agents_localLLM_on_Setonix) | **Apache-2.0** (11.334 B) | 2 | 2025-04-24 | APAC | Agentes generativos con **LLM local** en el supercomputador **Setonix** (Pawsey). Primer repo agéntico de una **agencia científica nacional** en esta KB; patrón de **soberanía de datos**: el modelo no sale de la infraestructura nacional |
+
+**Por qué `MathOptAI.jl` es la entrada más importante de este pase pese a tener 90 ★.** Esta KB
+tiene dieciséis pases de confirmaciones externas de que el sector **no comprará control autónomo**
+(criterio propio → NERC, *decision-support* → IEA, 23 % en tiempo real vs 54 % en planificación →
+NIST, borrador de perfil de infraestructura crítica → ONS, producto embarcado → PSR). Todas dicen
+**qué no vender**. `MathOptAI.jl` es la primera pieza inventariada que dice **cómo construir lo que
+sí se vende**, y en el lenguaje que el sector ya audita: restricciones en un problema de
+optimización. El argumento de *engagement* pasa de «pondremos una validación delante del modelo» a
+**«el modelo no puede proponer un punto infactible, porque vive dentro del despacho»**.
+
+⚠️ **Condición de uso, no decorativa.** `MathOptAI.jl` se propone **con JuMP directamente**. Si se
+acopla a la familia `PowerModels.jl`, arrastra `InfrastructureModels.jl`, que **impone indemnidad
+al licenciatario** (T73/T74): entonces exige revisión legal previa. La frontera no está en el
+paquete que se elige sino en **el árbol de dependencias**.
+
+**Nota de alcance, para no inflar la categoría.** `gen_agents_localLLM_on_Setonix` tiene 2 ★ y su
+último *push* es de abril de 2025: se inventaría por **patrón y procedencia institucional** (LLM
+local en infraestructura nacional, Apache-2.0), **no** como componente maduro. No proponerlo como
+base de producto.

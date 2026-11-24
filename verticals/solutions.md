@@ -922,3 +922,54 @@ es `NOASSERTION`. Para proponer VOLTTRON como plataforma de automatización de e
 citar **la de Eclipse**. Complemento ya inventariado:
 [`eclipse-volttron/volttron-openadr-ven`](https://github.com/eclipse-volttron/volttron-openadr-ven)
 (Apache-2.0), el nodo **OpenADR** sobre esa plataforma.
+
+## Pase 17 (2026-11-24) — la plataforma de datos de mercado como vertical, y la sexta confirmación de que no hay ERP de utility abierto
+
+### `OpenElectricity` / `OpenNEM`: plataforma de datos de mercado eléctrico, personalizable y MIT
+
+Vertical nueva en esta KB, y del tipo que el estudio puede tomar como **base de producto** y no
+sólo como librería: una plataforma completa —ingesta, API, clientes oficiales y *front-end*— del
+mercado eléctrico australiano (**NEM**), toda **MIT** y en desarrollo activo.
+
+| Pieza | Repo | Licencia (byte-read) | ★ | Push | Qué aporta a la vertical |
+|-------|------|----------------------|---|------|--------------------------|
+| Plataforma | [opennem/opennem](https://github.com/opennem/opennem) | **MIT** (1.088 B) | 137 | 2026-11-05 | Ingesta y normalización de datos del NEM |
+| Producto activo | [opennem/openelectricity](https://github.com/opennem/openelectricity) | **MIT** (1.077 B) | 14 | 2026-11-22 | **OpenElectricity**, la evolución viva del proyecto |
+| API, cliente oficial | [opennem/openelectricity-python](https://github.com/opennem/openelectricity-python) | **MIT** (1.077 B) | 12 | 2026-10-07 | Cliente Python oficial — la vía de integración soportada |
+| API, cliente oficial | [opennem/openelectricity-typescript](https://github.com/opennem/openelectricity-typescript) | **MIT** | 4 | 2026-10-07 | Cliente TypeScript oficial |
+| Ingesta del operador | [opennem/nemweb](https://github.com/opennem/nemweb) | **MIT** (1.063 B) | 37 | 2023-04-04 | Lee directamente **NEMWEB de AEMO**: la fuente primaria |
+| *Front-end* | [opennem/opennem-fe](https://github.com/opennem/opennem-fe) | **MIT** | 81 | 2026-10-16 | Interfaz de visualización ya construida |
+
+**Cómo se personaliza con IA encima** —el patrón «Odoo» de esta KB aplicado aquí—: la plataforma ya
+resuelve lo caro y aburrido (ingesta de NEMWEB, normalización, API estable, clientes oficiales,
+*front-end*). El estudio **no reconstruye** nada de eso: añade por encima la capa de pronóstico y la
+capa agéntica de consulta, con la compuerta de validación del pase 16 (**ODCS**) declarando unidades
+y agregaciones válidas por *dataset*. Es exactamente la forma del portal de datos abiertos del pase
+16, ahora con **cliente oficial mantenido por el proyecto**, que es lo que faltaba.
+
+⚠️ **Límite de la vertical, declarado.** Es **específica del NEM australiano**: su valor está en que
+el modelo de datos y los *parsers* ya hablan el idioma de AEMO. No es una plataforma de mercado
+genérica y **no transfiere** a otro mercado sin reescribir la capa de ingesta — el mismo límite que
+esta KB midió para APAC en el pase 15 («vender despliegue país por país, nunca una plataforma
+regional»).
+
+### Sexta confirmación: sigue sin existir un ERP/CRM de *utility* abierto
+
+El barrido mandatado de plataformas verticales (`open source platform energy ERP CRM MIT Apache`)
+volvió a devolver **ERP/CRM genéricos** y ninguna suite de *utility*:
+
+- **Apache OFBiz** (Apache-2.0, proyecto *top-level* de Apache desde 2006) — automatización
+  empresarial con módulos de CRM, **genérico**, no de *utility*.
+- **Krayin**, **iDURAR**, **Huly** (MIT / Apache-2.0) — CRM/ERP genéricos.
+- **Odoo** y **ERPNext** — **GPL-3.0**, lo que los deja fuera del criterio permisivo de esta KB como
+  base a forkear (sí como despliegue).
+- Lo específico del sector sigue siendo **piezas separadas**, no una suite: facturación
+  ([killbill/killbill](https://github.com/killbill/killbill)), gestión de energía
+  ([OpenEMS/openems](https://github.com/OpenEMS/openems)), IoT/telemetría
+  ([openremote/openremote](https://github.com/openremote/openremote)) — las tres ya inventariadas.
+
+> **Conclusión reconfirmada por sexta vez, y ya es una conclusión de mercado y no una medición
+> fallida: no existe un ERP/CRM de *utility* abierto y permisivo.** El hueco es estructural. Para un
+> *engagement* eso significa que **la integración es el producto**: el estudio compone facturación +
+> gestión de energía + telemetría + datos de mercado, y ese ensamblaje es precisamente lo que no se
+> puede comprar hecho.
