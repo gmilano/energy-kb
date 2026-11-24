@@ -27,16 +27,24 @@ energy-kb/
 2. **Proponer solución AI**: `agents/top.md` + `compose/patterns.md`
 3. **Mantenerse al día**: correr `ingest/update.sh` semanalmente
 
-## Estado (pase 18 — 2026-11-24)
+## Estado (pase 19 — 2026-11-24)
 
-- **618 direcciones** inventariadas, licencia leída byte a byte, estrellas/forks/push medidos.
-- Último pase: **la capa meteorológica** que alimenta todo pronóstico renovable (ECMWF `anemoi` +
-  `earthkit`, `graphcast`, `neuralgcm`, NVIDIA `earth2studio`/`physicsnemo`, `Herbie`, Open Climate
-  Fix, sustrato Zarr/Icechunk).
-- **Lectura obligatoria antes de proponer un modelo entrenado:** `intel/trends.md` **T78** — la
-  licencia que obliga cubre los **pesos** y está en el README, no en el fichero de licencia.
-- **Señal de aptitud para producción**: `intel/trends.md` **T82** — ECMWF publica el nivel de
-  madurez por repo (`graduated` / `incubating` / `emerging` / `sandbox` / `archived`).
+- **636 direcciones** inventariadas, licencia leída byte a byte, estrellas/forks/push medidos.
+  **Cobertura por forja, medida por primera vez en el pase 19:** 625 `github.com`, 9 `gitlab.com`,
+  1 `sourceforge.net`, 1 PyPI.
+- Último pase: **el plano de forja**. El inventario estaba sesgado por **forja**, no por
+  vocabulario: `grep -o "gitlab.com/..."` sobre 618 direcciones devolvía **0**. Detrás había 9
+  proyectos verificados —7 permisivos— de **DLR**, **DIW Berlin** y **OFFIS**: `AMIRIS`, `REMix`,
+  la familia `FAME`, `DIETERpy`, y `mosaik`, el par europeo de `HELICS` que llevaba 18 pases
+  ausente.
+- **Lectura obligatoria antes de aceptar un veredicto de licencia:** `intel/trends.md` **T84** — un
+  `other` / `NOASSERTION` de una API **no informa en ninguna de las dos direcciones**. En un mismo
+  barrido, uno resolvió a Apache-2.0 y otro a LGPL-3.0-only.
+- **Antes de declarar que algo no existe:** `compose/patterns.md` **Receta 66** (auditoría de forja)
+  y `intel/trends.md` **T88** — cuatro sondas de hueco en inglés contra esta KB en español
+  produjeron **cuatro falsos huecos**.
+- **Trampa de categoría:** `AMIRIS` y `FAME` son modelos **basados en agentes** (agentes económicos),
+  **no agentes LLM**. Ver `agents/top.md`.
 
 ---
 *Red de KBs Globant AI Studios → [globant-kb](../globant-kb/)*

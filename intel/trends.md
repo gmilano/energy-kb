@@ -2199,3 +2199,113 @@ Acción para los próximos pases: **buscar la taxonomía equivalente en los dem�
 institucionales ya inventariados** (LF Energy, NREL/`natlabrockies`, EPRI, Eclipse, `onsbr`). Un
 nivel de madurez publicado es una columna nueva en todas las tablas de esta KB, y hoy sólo ECMWF la
 tiene rellena.
+
+## T83 — El sesgo del inventario era de *forja*, no de vocabulario (pase 19, 2026-11-24)
+
+Dieciocho pases midieron este sector con un instrumento que interrogaba **una sola forja**. La
+medida: `grep -o "gitlab.com/..."` sobre 15.932 renglones y 618 direcciones devolvía **0**.
+
+Al abrir la segunda forja aparecieron **9 proyectos verificados, 7 permisivos** (Apache-2.0 ×5,
+BSD-3-Clause, MIT) y 2 LGPL, todos de autoría institucional EMEA —**DLR**, **DIW Berlin**,
+**OFFIS**— y **4 con *push* en los nueve días previos**. Entre ellos `mosaik`, el par europeo de
+`HELICS`, que esta KB incorporó en el pase 11 sin notar que le faltaba el otro.
+
+**Por qué este sesgo es de una clase distinta y más tratable que el de T10/pase 16.** El sesgo de
+vocabulario se mide sobre **palabras**, así que depende del idioma del que mide y del que escribe.
+El sesgo de forja se mide sobre **URLs**: es una consulta de una línea, reproducible, y su resultado
+no cambia si el inventario está en español o en inglés. **Cualquier KB de esta flota debe correr su
+propio `grep -o "gitlab.com/"` antes de declarar un techo de descubrimiento**, porque un cero ahí no
+es evidencia de ausencia de suministro sino de ausencia de sonda.
+
+**Forjas confirmadas como pobladas en este sector**: `gitlab.com` (DLR, DIW, OFFIS, mosaik),
+`sourceforge.net` (OpenREiD, UNSJ-CONICET Argentina), y PyPI como oráculo de metadatos
+independiente de ambas. Alcanzables desde esta sesión las tres.
+
+## T84 — Un veredicto `other` / `NOASSERTION` de una API no informa en ninguna de las dos direcciones
+
+Es el **espejo exacto de T56**, y juntos cierran la regla. T56: un *incipit* permisivo puede ocultar
+una licencia propietaria (`Solar-Forecast-ML`, titulada *«PROPRIETARY AND NON-COMMERCIAL»*,
+reproduciendo la frase de concesión de MIT). T84: una licencia **permisiva** puede quedar oculta por
+una disposición **conforme**.
+
+| Proyecto | API GitLab | Realidad | Cómo se resolvió |
+|----------|------------|----------|------------------|
+| `dlr-ve/esy/amiris/amiris-py` | `other` | **Apache-2.0** | `LICENSES/Apache-2.0.txt` (10.212 B, disposición **REUSE**) + `pyproject.toml` r3 `# SPDX-License-Identifier: Apache-2.0` y r12 `license = "Apache-2.0"` + encabezado SPDX del `README.md` |
+| `midas-mosaik/midas` | `other` | **LGPL-3.0-only** | `LICENSE` (7.648 B, *«GNU LESSER GENERAL PUBLIC LICENSE»*) + `pyproject.toml` `license = "LGPL-3.0-only"` |
+
+Dos casos `other` en un mismo barrido: uno resuelve a permisivo, el otro a copyleft. **Resolver un
+`other` por defecto —en cualquiera de los dos sentidos— acierta la mitad de las veces.**
+
+**Orden de desempate para este sector, confirmado contra cuatro oráculos:** (1) `SPDX-License-Identifier`
+en el manifiesto (`pyproject.toml`, `README`) — es legible por máquina y es lo que el autor declara;
+(2) directorio `LICENSES/<SPDX>.txt`, convención **REUSE**, frecuente en código institucional
+europeo y **la causa directa del falso negativo**, porque la API no indexa esa ruta; (3) lectura
+cruda del fichero de licencia con su tamaño (T56); (4) clasificadores de PyPI. **Ninguno de los
+cuatro es completo por sí solo**: `remix-framework` declara `License :: OSI Approved :: BSD License`
+en PyPI, pero `fameio` y `amirispy` —Apache-2.0 verificado— traen el campo `license` **vacío** en
+PyPI. Un escáner de un solo oráculo produce datos falsos con la confianza de un dato medido.
+
+## T85 — Las estrellas no son transferibles entre forjas
+
+`AMIRIS` tiene **21 estrellas** en `gitlab.com`. Es el modelo insignia de mercados eléctricos del
+Centro Aeroespacial Alemán, en desarrollo desde **2008**, abierto desde 2021, con DOI en **JOSS** y
+*push* el 2026-11-20. Un umbral de estrellas calibrado en GitHub —donde esta KB maneja repos de
+6.000 ★— lo descartaría como abandonado.
+
+La población de usuarios de cada forja es distinta, así que **la estrella no mide lo mismo a los dos
+lados** y no admite comparación ni ranking cruzado. Criterios que **sí** transfieren:
+`last_activity_at`, **autoría institucional**, DOI (JOSS / Zenodo), y la razón **forks/estrellas** —
+`fame-io` tiene 7 forks y 5 estrellas, perfil de uso real, no de vitrina.
+
+⚠️ **Consecuencia operativa:** en material comercial, de las piezas de GitLab se citan **la
+institución y la fecha de actividad**, nunca la estrella. Citar «21 ★» junto a repos de GitHub de
+cuatro cifras invita a la comparación equivocada y desprestigia una pieza sólida.
+
+## T86 — La rama por defecto no es `main`, y contra GitLab deja de ser una adivinanza
+
+De los 9 proyectos del plano de forja: `dev` ×5, `develop` ×1, `development` ×1, `main` ×2. La
+iteración ciega `main`/`master`/`develop` que esta KB usa contra GitHub —obligada por el alcance de
+sesión, que deniega `gh api repos/<owner>/<repo>`— **habría fallado con MIDAS** (`development`) y
+habría registrado «sin artefacto de licencia» donde hay LGPL-3.0.
+
+`GET /api/v4/projects/<path-urlencoded>?license=true` devuelve `license.key`, `default_branch`,
+`star_count`, `forks_count` y `last_activity_at` **en una sola llamada**. Contra esta forja, el fallo
+de permisos disfrazado de hallazgo que el pase 15 documentó **no puede ocurrir**.
+
+## T87 — En un consorcio financiado por la UE la licencia es por entregable, no por organización
+
+`AI4REALNET` —origen de **AINETUS**, en la cartera de LF Energy desde junio de 2026— tiene **16
+repositorios y 5 con licencia utilizable** (MPL-2.0 ×4, MIT ×1). Los otros **11 no llevan fichero de
+licencia** o declaran `NOASSERTION`, incluidos entregables nombrados (`risk-sensitive-inverse-rl`
+D3.2, `network-distributed-q-learning` D2.4, `T3.3-3.4-HMI`).
+
+**«Está en LF Energy» es una afirmación sobre la gobernanza del proyecto paraguas, no sobre la
+licencia del repositorio que se va a importar.** La fracción permisiva de una organización de
+consorcio se mide **repo por repo**, siempre, y la pertenencia a una fundación no la sustituye. Los
+11 sin licencia son **registro de investigación citable**; no entran en un árbol de dependencias.
+
+## T88 — Las auditorías de hueco también tienen sesgo de idioma, y es más peligroso que el de los hallazgos
+
+**T10** estableció que los huecos de esta KB eran en parte huecos de vocabulario. El pase 16 lo
+confirmó sobre hallazgos (*«el cero agéntico de LATAM era del idioma»*). Este pase lo descubre
+**sobre el instrumento de auditoría**, y se lo aplicó a sí mismo.
+
+La sonda inicial de huecos de este pase corrió en **inglés** contra una KB escrita en **español**:
+
+| Sonda (inglés) | Veredicto inicial | Realidad |
+|----------------|-------------------|----------|
+| `district heating` | 0 → «hueco» | Cubierto: `DHNx` (MIT) y `idiap/pydhn` en `repos/foundations.md`, como **«redes de calor de distrito»** |
+| `carbon accounting` | 0 → «hueco» | Cubierto como **«intensidad de carbono»** (3 ficheros) y «factor de emisión» |
+| `subsurface` | 0 → «hueco» | Cubierto: sección entera de **upstream** de O&G, «subsuelo» y «yacimiento» |
+| `battery-degradation` | 0 → «hueco» | `PyBaMM` y `liionpack` ya inventariados |
+
+**Cuatro falsos huecos de cuatro sondas.** Y la KB era **más precisa que el buscador**: ya
+clasificaba `idiap/pydhn` como *«bloqueado por licencia, no por calidad»*, matiz que el resultado de
+búsqueda no traía.
+
+**Por qué esto es peor que el sesgo de hallazgo.** Un hallazgo perdido por idioma es una omisión:
+cuesta un pase encontrarlo. Un **hueco falso** se publica como novedad, se compila como entidad y
+contradice contenido correcto que ya está en la KB — **degrada datos buenos**. Regla: **una sonda de
+hueco se corre en el idioma en que la KB está escrita, o se corre sobre URLs** (T83), que no tienen
+idioma. El único hueco de este pase que sobrevivió a su propia auditoría fue el de forja,
+precisamente porque se midió sobre URLs.

@@ -1676,3 +1676,60 @@ exactamente lo que la propia ECMWF pide por escrito para `incubating`.
   `license={file="LICENCE"}` (ortografía británica) mientras el repo sirve `LICENSE` (americana,
   1.076 B, MIT). `LICENCE` devuelve **404**. Un escáner que siga la ruta del manifiesto no encuentra
   licencia en un repo que sí la tiene.
+
+## El plano de forja: 9 repos permisivos o LGPL que no estaban porque no están en GitHub (pase 19, 2026-11-24)
+
+**Qué midió este pase y por qué es distinto de los dieciocho anteriores.** Las 618 direcciones que
+esta KB tenía inventariadas estaban **todas** en `github.com`: `grep -o "gitlab.com/..."` sobre los
+15.932 renglones del repo devolvía **0 resultados**. El instrumento de inventario no estaba sesgado
+por vocabulario —el sesgo que el pase 16 encontró y corrigió— sino por **forja**. La diferencia
+importa porque un sesgo de forja **se mide sobre URLs, no sobre palabras**, y por lo tanto es
+inmune al artefacto de idioma que invalidó cuatro de los huecos que este mismo pase creyó encontrar
+al principio (ver **T88**).
+
+Lo que había del otro lado es la familia institucional alemana de modelado energético: **DLR**
+(Centro Aeroespacial Alemán), **DIW Berlin** y **OFFIS**. Siete de las nueve piezas son
+permisivas; cuatro tuvieron *push* en los nueve días previos a este pase.
+
+| Nombre | Licencia | Descripción | ★ | Forks | Último push | Rama por defecto | Región origen |
+|--------|----------|-------------|---|-------|-------------|------------------|---------------|
+| [AMIRIS](https://gitlab.com/dlr-ve/esy/amiris/amiris) | **Apache-2.0** | Modelo **basado en agentes** de mercados eléctricos: simula cómo pujan los actores bajo distintas condiciones regulatorias. DLR, en desarrollo desde 2008, abierto desde 2021, publicado en JOSS | 21 | 12 | **2026-11-20** | `dev` | EMEA |
+| [REMix](https://gitlab.com/dlr-ve/esy/remix/framework) | **BSD-3-Clause** | Marco de **optimización** de sistemas energéticos para evaluación tecno-económica de diseños futuros. El complemento de AMIRIS: AMIRIS pregunta «cómo se comportan los actores», REMix pregunta «cuál es el óptimo de coste» | 13 | 1 | **2026-11-18** | `dev` | EMEA |
+| [FAME-Core](https://gitlab.com/fame-framework/fame-core) | **Apache-2.0** | Núcleo Java del marco agéntico **FAME** sobre el que corre AMIRIS. Es la pieza reutilizable: un marco ABM energético genérico, no un modelo de mercado concreto | 5 | 1 | **2026-11-20** | `dev` | EMEA |
+| [FAME-Io](https://gitlab.com/fame-framework/fame-io) | **Apache-2.0** | Configuración y lectura/escritura de escenarios para FAME (paquete `fameio` en PyPI). Es el envoltorio Python de la pila Java | 5 | 7 | **2026-11-17** | `dev` | EMEA |
+| [AMIRIS-Py](https://gitlab.com/dlr-ve/esy/amiris/amiris-py) | **Apache-2.0** ⚠️ ver nota | Interfaz Python para ejecutar AMIRIS (`amirispy` en PyPI). **La API de GitLab la reporta como `other`**: es un falso negativo de disposición REUSE, no una restricción | 4 | 2 | 2026-11-05 | `dev` | EMEA |
+| [FAME-Gui](https://gitlab.com/fame-framework/fame-gui) | **Apache-2.0** | Interfaz gráfica para FAME. ⚠️ *Push* 2025-11-29: un año sin movimiento mientras el núcleo se mueve cada semana. Usar el núcleo, no la GUI | 2 | 0 | 2025-11-29 | `main` | EMEA |
+| [DIETERpy](https://gitlab.com/diw-evu/dieter_public/dieterpy) | **MIT** | Envoltorio Python de **DIETER** (*Dispatch and Investment Evaluation Tool with Endogenous Renewables*), modelo de sector eléctrico del **DIW Berlin**. ⚠️ *Push* 2024-08-23 | 4 | 0 | 2024-08-23 | `main` | EMEA |
+| [mosaik](https://gitlab.com/mosaik/mosaik) | **LGPL-2.1** | Marco de **co-simulación** de smart grids de **OFFIS**: acopla simuladores heterogéneos por una API común. Es el par europeo de `HELICS`, que esta KB ya tenía — y llevaba dieciocho pases ausente | 19 | 12 | **2026-11-11** | `develop` | EMEA |
+| [MIDAS](https://gitlab.com/midas-mosaik/midas) | **LGPL-3.0-only** ⚠️ ver nota | Conjunto de escenarios y simuladores listos para `mosaik`: baja la barrera de entrada a la co-simulación. **La API lo reporta como `other`**; resuelto por lectura de fichero: es copyleft, no permisivo | 6 | 3 | 2026-10-23 | `development` | EMEA |
+
+**Cómo se verificó cada fila (cuatro oráculos, ninguno suficiente por sí solo).** La API de GitLab
+(`/api/v4/projects/<path>?license=true`) da `license.key`, estrellas, forks, `last_activity_at` y
+—a diferencia de la API de GitHub bajo el alcance de esta sesión— **`default_branch` en la misma
+llamada**. Encima de eso se leyó el fichero de licencia crudo
+(`gitlab.com/<path>/-/raw/<rama>/LICENSE[.txt]`): AMIRIS 10.217 B con *«Apache License / Version
+2.0, January 2004»* en los renglones 3-4, FAME-Core 10.212 B, REMix 1.542 B con *«BSD 3-Clause
+License»* en el primer renglón no vacío, DIETERpy 1.151 B con *«MIT License»*, `mosaik` 24.436 B y
+MIDAS 7.648 B, ambos encabezados *«GNU LESSER GENERAL PUBLIC LICENSE»*. Para los dos casos `other`
+se usó un tercer oráculo, el identificador SPDX dentro del manifiesto, y un cuarto, los
+clasificadores de PyPI. Ver **T84**.
+
+⚠️ **Trampa analítica de esta tabla, y es la más importante: «agente» aquí no significa lo mismo.**
+AMIRIS y FAME son **modelos basados en agentes** (ABM): agentes económicos que pujan en un mercado
+simulado. **No son agentes LLM**, no llaman herramientas y no hay un modelo de lenguaje en el lazo.
+Son el motor de simulación *sobre el que* un agente LLM podría razonar — exactamente el papel que
+`assume-framework/assume` (MIT, Fraunhofer IEE) ya ocupa en esta KB. Proponer AMIRIS como «agente
+de IA» en material comercial sería una tergiversación verificable por el cliente en treinta
+segundos de lectura del README.
+
+⚠️ **Lo que NO se afirma.** Las estrellas de esta tabla (21, 19, 13, 5, 5, 4, 4, 2) **no son
+comparables con las de GitHub** y no significan abandono: la población de usuarios de `gitlab.com`
+es otra. AMIRIS con 21 ★ es el modelo insignia de mercados eléctricos del DLR, con DOI en JOSS y
+diecisiete años de desarrollo. El criterio de vitalidad en esta tabla es `last_activity_at` +
+autoría institucional + DOI, nunca la estrella. Ver **T85**.
+
+⚠️ **Exclusión medida en esta misma barrida.** **GENESYS** (RWTH Aachen, modelo del sistema
+eléctrico europeo, LGPLv2.1) aparece listado como abierto en el wiki de la openmod-initiative, pero
+su acceso es *«on application»*: no hay repositorio descargable. Un modelo con licencia libre y
+acceso bajo solicitud **no es una base sobre la que presupuestar**. ⚠️ Dato de `WebSearch`, sin
+verificar contra fuente primaria (el wiki de openmod no es alcanzable desde esta sesión).

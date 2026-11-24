@@ -1068,3 +1068,36 @@ plataforma**: los motores reales viven acoplados dentro de WRF-Fire y código de
 un PSPS o un plan de vegetación esto es **desarrollo a medida con componentes sueltos**, no
 integración de una vertical existente, y hay que presupuestarlo como tal. Se declara como
 delgadez medida, no como gap desconocido.
+
+## Decimonoveno pase (2026-11-24): la plataforma de co-simulación que faltaba, y el motor de mercado que se customiza en vez de escribirse
+
+Esta KB tiene desde el pase 11 a `HELICS` (co-simulación, Apache-2.0, laboratorios nacionales de
+EE.UU.) y desde el pase 4 a `assume` (ABM de mercados, MIT, Fraunhofer). Lo que faltaba es el lado
+europeo de las dos categorías, ausente por **forja** y no por vocabulario (**T83**).
+
+| Plataforma | Licencia | Qué es y qué se customiza encima | Región origen |
+|------------|----------|----------------------------------|---------------|
+| [mosaik](https://gitlab.com/mosaik/mosaik) | **LGPL-2.1** | Plataforma de **co-simulación** de smart grids (OFFIS): acopla simuladores heterogéneos —red, mercado, edificio, movilidad— por una API común y un planificador de eventos. Se customiza **escribiendo adaptadores de simulador**, no tocando el núcleo | EMEA |
+| [MIDAS](https://gitlab.com/midas-mosaik/midas) | **LGPL-3.0-only** | Conjunto de escenarios y simuladores **ya integrados** para `mosaik`. Es el «paquete de arranque»: baja el coste de la primera demo de semanas a días | EMEA |
+| [AMIRIS](https://gitlab.com/dlr-ve/esy/amiris/amiris) | **Apache-2.0** | Motor de **escenario de mercado eléctrico** del DLR: actores que pujan bajo reglas regulatorias configurables. Se customiza **por fichero de escenario** (vía `fameio`), no por código | EMEA |
+| [REMix](https://gitlab.com/dlr-ve/esy/remix/framework) | **BSD-3-Clause** | Plataforma de **optimización** tecno-económica de sistemas: la pregunta de coste mínimo. Complemento, no sustituto, de la anterior | EMEA |
+| [FAME-Core](https://gitlab.com/fame-framework/fame-core) | **Apache-2.0** | El marco ABM genérico bajo AMIRIS. Si el cliente necesita un mercado que AMIRIS no modela, **esto es la base permisiva sobre la que construirlo** en vez de empezar de cero | EMEA |
+
+**La distinción de licencia que decide la arquitectura, y es la misma lección que `OpenEMS` enseñó
+en el pase 14.** Las dos plataformas de co-simulación son **copyleft débil**: `mosaik` LGPL-2.1,
+`MIDAS` LGPL-3.0-only. Eso permite **enlazarlas desde código propietario** —un adaptador o un
+producto que las invoque puede permanecer cerrado— pero obliga a publicar las modificaciones **del
+propio `mosaik`**. Arquitectura correcta: `mosaik` como **dependencia enlazada y sin forkear**, con
+toda la lógica de cliente en los adaptadores. Arquitectura que crea una obligación no presupuestada:
+forkear `mosaik` para «adaptarlo al cliente». La pila **AMIRIS + REMix + FAME** no tiene esa
+restricción (Apache-2.0 / BSD-3), así que **si el proyecto exige un motor embebible y cerrado, el
+camino es FAME, no `mosaik`**.
+
+⚠️ **Y lo que no son.** AMIRIS y FAME son **modelos basados en agentes**, no agentes LLM: agentes
+económicos pujando, sin modelo de lenguaje en el lazo. Son el simulador **sobre el que** un copiloto
+podría razonar. Venderlos como «agentes de IA» es una tergiversación que el cliente verifica leyendo
+el README.
+
+⚠️ **Madurez desigual dentro de la misma familia.** `FAME-Gui` lleva un año sin *push* (2025-11-29)
+mientras `FAME-Core` y `FAME-Io` se mueven cada semana. La interfaz gráfica **no** entra en una
+propuesta; el núcleo sí. Mismo criterio que esta KB aplicó a `solarforecastarbiter-dashboard`.

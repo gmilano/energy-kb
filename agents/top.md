@@ -1226,3 +1226,43 @@ no ve la restricción que realmente aplica. El sustituto correcto está inventar
 - **`198808xc/Pangu-Weather` queda excluido** (1.402 ★, el más traccionado de origen APAC): sus pesos
   son CC BY-NC-SA 4.0 y su README dice, en negrita, *«The commercial use of these models is
   forbidden.»* No hay fichero de licencia en el repo.
+
+## La organización detrás de AINETUS, enumerada repo por repo (pase 19, 2026-11-24)
+
+El pase 12 cerró el hueco *«AINETUS: anunciado en prensa, código no localizado»* localizando
+`ainetus/ExpertOp4Grid` (MPL-2.0). Lo que **no** se había hecho es enumerar la organización
+`AI4REALNET` —el proyecto europeo de investigación del que AINETUS procede— y el resultado cambia
+cómo se cita el conjunto.
+
+**16 repositorios medidos** (`gh api search/repositories -f q='org:AI4REALNET'`). **5 llevan
+licencia utilizable; 11 no llevan ninguna** (`NONE`) o declaran `NOASSERTION`.
+
+| Nombre | Licencia | Descripción | ★ | Forks | Último push | Región origen |
+|--------|----------|-------------|---|-------|-------------|---------------|
+| [AI4REALNET/grid2evaluate](https://github.com/AI4REALNET/grid2evaluate) | **MPL-2.0** | Evaluación de agentes sobre `Grid2Op`. El más reciente de la organización y el de encaje más directo: es el arnés con el que se mide un agente de red antes de proponerlo | 0 | 0 | **2026-11-03** | EMEA |
+| [AI4REALNET/XLLM](https://github.com/AI4REALNET/XLLM) | **MPL-2.0** | *«Bridging Optimization and Operator Insight»*: LLM asistiendo el acoplamiento entre optimización y criterio del operador. Es la pieza **LLM** de la familia, frente al resto que es RL | 1 | 0 | 2026-05-24 | EMEA |
+| [AI4REALNET/distributed-rl-gnn](https://github.com/AI4REALNET/distributed-rl-gnn) | **MIT** | RL distribuido con redes neuronales de grafo sobre la topología de red. La licencia más permisiva de la organización | 0 | 0 | 2026-10-30 | EMEA |
+| [AI4REALNET/distributed_rl](https://github.com/AI4REALNET/distributed_rl) | **MPL-2.0** | Entregable D2.2, Politecnico di Milano: RL distribuido para operación de red | 0 | 1 | 2026-04-14 | EMEA |
+| [AI4REALNET/T2.3_explaining_action_alternatives](https://github.com/AI4REALNET/T2.3_explaining_action_alternatives) | **MPL-2.0** | Explicabilidad: por qué el agente propone una maniobra y no otra. Es la mitad *exigible por el regulador* del patrón de operación asistida | 0 | 0 | 2026-02-20 | EMEA |
+
+⚠️ **Cómo citar esto sin sobrevenderlo, y es un patrón nuevo que conviene nombrar.** En un consorcio
+financiado por la UE **la licencia se aplica por repositorio-entregable, no por organización**: las
+mismas siglas cubren `risk-sensitive-inverse-rl`, `network-distributed-q-learning`, `Tokener`,
+`flatland-commnet` y `T3.3-3.4-HMI`, todos **sin fichero de licencia**, y `Human-Assessment-Module`
+y `flatland-blackbox` con `NOASSERTION`. «Está en LF Energy» **no** convierte los repos de paquete
+de trabajo en dependencias utilizables. Las cinco filas de arriba son las utilizables; las otras
+once son **registro de investigación citable**, no software proponible. Ver **T87**.
+
+⚠️ **Y el techo de tracción es real:** ninguna de las cinco pasa de **1 estrella**. Se inventarían
+porque son el arnés y la explicabilidad de una pila —`Grid2Op` + `ExpertOp4Grid` + `OperatorFabric`—
+que esta KB ya tiene y que **sí** tiene autoría de operador. Son complemento de esa pila, nunca su
+punto de partida.
+
+## El motor ABM de mercados que vivía en otra forja (pase 19, 2026-11-24)
+
+Esta sección existe para prevenir un error de categoría, no para añadir un agente. **AMIRIS**
+(Apache-2.0, DLR) y el marco **FAME** sobre el que corre son **modelos basados en agentes**: agentes
+económicos que pujan bajo reglas regulatorias, sin LLM en el lazo. Se inventarían en
+`repos/foundations.md`, no aquí, y se proponen como **motor de escenario de mercado** —el papel que
+`assume-framework/assume` ya cumple en esta KB— nunca como «agente de IA». La novedad verificable
+del pase es que vivían en `gitlab.com` y por eso faltaban: ver **T83** y la tabla del plano de forja.

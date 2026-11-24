@@ -2643,3 +2643,108 @@ componente que las recetas 60 y 61 necesitan para que un agente consulte meteoro
 | `ecmwf/earthkit-regrid` en ruta crítica | **`emerging`**, sin fichero `LICENSE` (Apache-2.0 sólo en el manifiesto), rama por defecto `develop` | Re-mallado con `earthkit-data` + `xarray`, o aceptar el riesgo por escrito |
 | Una vertical de riesgo de incendio / vegetación «existente» | Techo medido de **17 ★**; los motores viven acoplados dentro de WRF-Fire y código de investigación | Presupuestarlo como **desarrollo a medida** sobre `NCAR/fire-indices` (MIT) y `NCAR/fire_behavior` (Apache-2.0) |
 | `SolarArbiter/solarforecastarbiter-core` como marco de evaluación vivo | MIT, pero *push* **2023-05-22**; `-dashboard` 2023-05-01 | `weatherbenchX` (Apache-2.0) para atmósfera + arnés propio para potencia (es el hueco de NA) |
+
+## Receta 63 — Banco de pruebas de mercado eléctrico soberano europeo (AMIRIS + REMix + FAME)
+
+**Para quién.** Regulador, TSO, ministerio o gran consumidor en EMEA que necesita responder «¿qué
+pasa con los precios y el despacho si cambio esta regla?» con una herramienta **auditable y de
+autoría europea** — el requisito de soberanía que la UE declara prioridad estratégica.
+
+**Piezas, todas verificadas en el pase 19:**
+- **Motor de comportamiento**: [`AMIRIS`](https://gitlab.com/dlr-ve/esy/amiris/amiris) (**Apache-2.0**,
+  DLR) — actores que pujan bajo reglas regulatorias configurables.
+- **Motor de óptimo**: [`REMix`](https://gitlab.com/dlr-ve/esy/remix/framework) (**BSD-3-Clause**, DLR)
+  — el coste mínimo del sistema, como contraste.
+- **Configuración y E/S**: [`FAME-Io`](https://gitlab.com/fame-framework/fame-io) (**Apache-2.0**) +
+  [`AMIRIS-Py`](https://gitlab.com/dlr-ve/esy/amiris/amiris-py) (**Apache-2.0**) — escenarios por
+  fichero, ejecución desde Python.
+- **Base para mercados no modelados**: [`FAME-Core`](https://gitlab.com/fame-framework/fame-core)
+  (**Apache-2.0**) — si el mercado del cliente no está en AMIRIS, se construye aquí.
+- **Contraste independiente**: [`assume-framework/assume`](https://github.com/assume-framework/assume)
+  (MIT, Fraunhofer IEE) — segundo ABM, ya en esta KB.
+
+**Cómo se cablea.** El escenario se escribe como configuración de `fameio`; `amirispy` lo ejecuta;
+la misma frontera de sistema se resuelve en `REMix` como óptimo de coste. **El entregable no es un
+número, es la distancia entre los dos**: AMIRIS dice qué harán los actores, REMix dice qué sería
+óptimo, y **la brecha entre ambos es el valor de la intervención regulatoria**. Dos ABM
+independientes (AMIRIS y `assume`) sobre el mismo escenario dan la banda de incertidumbre.
+
+⚠️ **Lo que esta receta no es.** No hay LLM en el lazo: son **modelos basados en agentes**, agentes
+económicos, no agentes de IA. Si el cliente quiere un copiloto conversacional, **el copiloto va
+encima** (Receta 65), y esta receta es su simulador.
+
+## Receta 64 — Piloto de co-simulación sin tocar la subestación, con la licencia correcta de entrada
+
+**Para quién.** Utility o DSO que quiere evaluar una estrategia de control —flexibilidad, carga de
+VE, almacenamiento— **antes** de instalar nada, y cuyo contrato exige que el producto final
+permanezca cerrado.
+
+**Piezas:**
+- **Plataforma**: [`mosaik`](https://gitlab.com/mosaik/mosaik) (**LGPL-2.1**, OFFIS) — acopla
+  simuladores heterogéneos por una API común.
+- **Arranque rápido**: [`MIDAS`](https://gitlab.com/midas-mosaik/midas) (**LGPL-3.0-only**) —
+  escenarios y simuladores ya integrados.
+- **Alternativa / contraste**: `HELICS` (Apache-2.0, laboratorios nacionales de EE.UU.), ya en esta KB.
+- **Red bajo prueba**: `OpenDSS` / `pandapower`, ya inventariados.
+
+**La decisión de arquitectura, y hay que tomarla el primer día.** `mosaik` y `MIDAS` son **copyleft
+débil**: se pueden **enlazar** desde código propietario, de modo que los adaptadores y la lógica de
+cliente permanecen cerrados, **pero toda modificación de `mosaik` mismo es publicable**. Por lo
+tanto:
+
+| Si el proyecto necesita… | Camino correcto | Camino que crea obligación no presupuestada |
+|---|---|---|
+| Acoplar simuladores y conservar la lógica cerrada | `mosaik` **como dependencia enlazada**, todo lo propio en adaptadores | Forkear `mosaik` «para adaptarlo al cliente» |
+| Un motor **embebido** en producto cerrado y modificable | `HELICS` (Apache-2.0) o **FAME-Core** (Apache-2.0) | `mosaik` modificado dentro del producto |
+
+**Es la misma lección que `OpenEMS` enseñó en el pase 14**: la licencia no se mira al final, decide
+la topología del producto.
+
+## Receta 65 — Copiloto de escenarios de mercado con compuerta de validación (el LLM encima, no dentro)
+
+**Para quién.** Equipo de regulación o de *trading* que quiere preguntar en lenguaje natural «¿y si
+el cargo de capacidad sube un 10 %?» sin que nadie confíe en que el LLM calcule el resultado.
+
+**Piezas:** `AMIRIS` (Apache-2.0) como **única autoridad numérica**; `fameio` (Apache-2.0) como
+**esquema de escenario**; `timecopilot` (MIT) o la pila MCP de `Power-Agent` (MIT) como capa
+conversacional; [`AI4REALNET/grid2evaluate`](https://github.com/AI4REALNET/grid2evaluate) (**MPL-2.0**)
+y [`T2.3_explaining_action_alternatives`](https://github.com/AI4REALNET/T2.3_explaining_action_alternatives)
+(**MPL-2.0**) como arnés de evaluación y explicabilidad.
+
+**El patrón, que es el mismo de la Receta 49 con otra compuerta.** El LLM **no calcula y no decide**:
+traduce la pregunta a un **fichero de escenario `fameio`**, y ese fichero se **valida contra el
+esquema** antes de ejecutarse. Si no valida, se rechaza y el LLM reintenta. El número lo produce
+AMIRIS, siempre; el LLM produce **la configuración y la explicación**. Así la automatización y la
+restricción de «nada de control autónomo» —confirmada ya por **cuatro** fuentes independientes en NA
+(T-NA del pase 19)— dejan de estar en conflicto: lo que se automatiza es la **preparación del
+escenario**, no la operación.
+
+⚠️ **Honestidad de madurez:** `grid2evaluate` y la pieza de explicabilidad tienen **0-1 estrellas** y
+son entregables de consorcio. Entran como **arnés propio copiable**, no como dependencia con
+comunidad detrás. Y 11 de los 16 repos de `AI4REALNET` **no tienen licencia** (T87): importar sólo
+los cinco que sí la tienen.
+
+## Receta 66 — Auditoría de forja antes de declarar un techo de descubrimiento (receta de método)
+
+**Para quién.** Cualquier KB de esta flota —o cualquier *due diligence* técnica— que esté por
+afirmar «no existe base abierta para esto».
+
+**Los cuatro pasos, en orden de coste creciente:**
+
+1. **Medir la forja, no el vocabulario.** `grep -roh "gitlab.com/[A-Za-z0-9_./-]*" --include="*.md" . | sort -u | wc -l`
+   En esta KB daba **0** sobre 618 direcciones, y detrás había 9 proyectos (7 permisivos) de DLR, DIW
+   Berlin y OFFIS. Se mide **sobre URLs**, así que **no tiene idioma** — la propiedad que lo hace
+   confiable. Repetir con `sourceforge.net`, `codeberg.org`, `git.*.edu`.
+2. **Correr la sonda de huecos en el idioma de la KB.** Cuatro sondas en inglés contra esta KB en
+   español produjeron **cuatro falsos huecos** (T88). Un falso hueco es peor que un hallazgo
+   perdido: se publica como novedad y contradice datos correctos.
+3. **No resolver un `other` por defecto.** Orden: SPDX en el manifiesto → `LICENSES/<SPDX>.txt`
+   (REUSE) → lectura cruda con tamaño → clasificadores de PyPI. En un mismo barrido, un `other`
+   resultó **Apache-2.0** y otro **LGPL-3.0-only** (T84).
+4. **Pedir `default_branch` en la misma llamada que la licencia.** `dev` ×5, `develop` ×1,
+   `development` ×1, `main` ×2 entre nueve proyectos: adivinar la rama produce «sin artefacto de
+   licencia» donde hay licencia (T86).
+
+**Entregable.** Una tabla de **cobertura por forja** junto a la de cobertura por región. Esta KB
+tuvo durante dieciocho pases una cobertura regional excelente y una cobertura de forja del 100 % en
+una sola forja, **sin saberlo**, porque nunca lo midió.

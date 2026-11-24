@@ -9,6 +9,77 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 19 (0 de 618 direcciones estaban en GitLab: el sesgo del inventario era de *forja*, no de vocabulario; y `mosaik` llevaba dieciocho pases ausente teniendo a `HELICS` dentro)
+
+**Cuarto pase del día sobre `energy`.** Los pases 16, 17 y 18 empujaron contenido hoy (03:56Z,
+04:59Z, 06:01Z) y **ninguno avanzó `rotation.json`**, que seguía leyendo `next: 10`. Este pase
+avanza la rotación en el mismo turno que el *push*.
+
+### La medida que abre el pase
+
+```
+$ grep -roh "gitlab.com/[A-Za-z0-9_./-]*" --include="*.md" . | sort -u | wc -l
+0
+```
+
+**Cero**, sobre 15.932 renglones y 618 direcciones inventariadas. Dieciocho pases de esta KB
+midieron vocabulario, licencias, ramas, manifiestos y regiones — y todos interrogaron **una sola
+forja**. Es un sesgo distinto del que el pase 16 corrigió: se mide **sobre URLs**, así que es inmune
+al artefacto de idioma que en este mismo pase produjo cuatro falsos huecos (**T88**).
+
+### Repos nuevos: el plano de forja (9 verificados, 7 permisivos)
+
+| Repo | Licencia | ★ | Forks | Push | Rama | Novedad |
+|------|----------|---|-------|------|------|---------|
+| [AMIRIS](https://gitlab.com/dlr-ve/esy/amiris/amiris) | **Apache-2.0** | 21 | 12 | **2026-11-20** | `dev` | Modelo **ABM** de mercados eléctricos del DLR. Desarrollo desde 2008, abierto desde 2021, DOI en JOSS |
+| [REMix](https://gitlab.com/dlr-ve/esy/remix/framework) | **BSD-3-Clause** | 13 | 1 | **2026-11-18** | `dev` | Optimización tecno-económica de sistemas. El complemento de coste mínimo de AMIRIS |
+| [FAME-Core](https://gitlab.com/fame-framework/fame-core) | **Apache-2.0** | 5 | 1 | **2026-11-20** | `dev` | Núcleo Java del marco agéntico sobre el que corre AMIRIS. **La pieza reutilizable** |
+| [FAME-Io](https://gitlab.com/fame-framework/fame-io) | **Apache-2.0** | 5 | 7 | **2026-11-17** | `dev` | Escenarios y E/S para FAME (`fameio` en PyPI). Más forks que estrellas: señal de uso, no de vitrina |
+| [mosaik](https://gitlab.com/mosaik/mosaik) | **LGPL-2.1** | 19 | 12 | **2026-11-11** | `develop` | Co-simulación de smart grids de **OFFIS**. **El par europeo de `HELICS`**, que esta KB tiene desde el pase 11 |
+| [MIDAS](https://gitlab.com/midas-mosaik/midas) | **LGPL-3.0-only** | 6 | 3 | 2026-10-23 | `development` | Escenarios listos para `mosaik`. La API decía `other`; es copyleft |
+| [AMIRIS-Py](https://gitlab.com/dlr-ve/esy/amiris/amiris-py) | **Apache-2.0** | 4 | 2 | 2026-11-05 | `dev` | Interfaz Python (`amirispy`). La API decía `other`; es permisiva |
+| [DIETERpy](https://gitlab.com/diw-evu/dieter_public/dieterpy) | **MIT** | 4 | 0 | 2024-08-23 | `main` | Envoltorio de **DIETER**, modelo de sector eléctrico del **DIW Berlin**. ⚠️ 15 meses sin *push* |
+| [FAME-Gui](https://gitlab.com/fame-framework/fame-gui) | **Apache-2.0** | 2 | 0 | 2025-11-29 | `main` | GUI de FAME. ⚠️ Un año sin movimiento mientras el núcleo se mueve cada semana |
+
+**Cuatro de las nueve tuvieron *push* en los nueve días previos al pase.** No es un depósito
+arqueológico: es una familia institucional activa (DLR, DIW Berlin, OFFIS) que el instrumento no
+podía ver.
+
+### El hallazgo de licencia, y corrige a T56 en la dirección contraria
+
+**T56** (pase 15) advertía que un incipit permisivo puede ocultar una licencia propietaria:
+`Solar-Forecast-ML` reproducía la frase de concesión de MIT bajo un título *«PROPRIETARY AND
+NON-COMMERCIAL»*. Este pase encuentra el **espejo**: una licencia permisiva oculta por una
+disposición **conforme**.
+
+`amiris-py` no tiene `LICENSE` ni `LICENSE.txt` en la raíz, así que la API de GitLab la reporta
+`other`. Es Apache-2.0, y lo dice **tres veces**: `LICENSES/Apache-2.0.txt` (10.212 B, disposición
+**REUSE**), `pyproject.toml` renglón 3 `# SPDX-License-Identifier: Apache-2.0` y renglón 12
+`license = "Apache-2.0"`, y el encabezado SPDX del propio `README.md`. En el mismo barrido, MIDAS
+—también `other`— resultó **LGPL-3.0-only** por `pyproject.toml`. Es decir: **el veredicto `other`
+no informa en ninguna de las dos direcciones**, y resolverlo a favor o en contra sin leer el
+manifiesto es un error con un 50 % de acierto. Ver **T84**.
+
+⚠️ **Y la rama por defecto no es `main`.** De las nueve: `dev` ×5, `develop` ×1, `development` ×1,
+`main` ×2. La iteración ciega `main`/`master`/`develop` que esta KB usa contra GitHub por falta de
+permisos **habría fallado con MIDAS** (`development`). La API de GitLab devuelve `default_branch` en
+la misma llamada que la licencia: contra esta forja se deja de adivinar. Ver **T86**.
+
+### Exclusión medida
+
+**GENESYS** (RWTH Aachen, sistema eléctrico europeo, LGPLv2.1): listado como abierto, acceso *«on
+application»*, sin repositorio descargable. Licencia libre + acceso bajo solicitud **no es una base
+presupuestable**. ⚠️ Dato de `WebSearch`; el wiki de openmod no es alcanzable desde esta sesión.
+
+### Hueco informado, no silencio
+
+**El espejo de GitHub de AMIRIS no se pudo comparar.** `github.com/dlr-ve-esy/amiris` existe según
+el registro Zenodo v4.0.0, pero `api.github.com/repos/...` está **denegado por el alcance de esta
+sesión** y `github.com` en HTML devuelve 403 por el proxy. Por lo tanto **no se afirma que el espejo
+esté obsoleto**: se afirma que el primario de GitLab tuvo *push* el 2026-11-20 y que la frescura del
+espejo queda **sin verificar** (ítem abierto 19-R1). Un «espejo obsoleto» no medido es exactamente
+el tipo de dato que esta KB documenta como falso hallazgo desde el pase 15.
+
 ## 2026-11-24 — pase 18 (la capa meteorológica entera estaba ausente: 0 repos de ECMWF en un inventario de 555; y la licencia que obliga no está en el fichero de licencia, está en el README y cubre los PESOS)
 
 **Tercer pase del día sobre `energy`** (los pases 16 y 17 ya empujaron contenido hoy a las 03:56Z y

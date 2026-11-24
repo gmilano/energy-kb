@@ -9,6 +9,62 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 19 (el inventario estaba sesgado por *forja*, no por vocabulario: 0 de 618 direcciones en GitLab; y un veredicto `other` de la API no es un hallazgo de licencia en ninguna de las dos direcciones)
+
+**Cuarto pase del día sobre `energy`** (los pases 16, 17 y 18 empujaron contenido hoy a las 03:56Z,
+04:59Z y 06:01Z). El control remoto-contra-rotación se ejecutó primero, por **octava vez con
+rédito**: `rotation.json` leía `next: 10` mientras `energy-kb` ya tenía **tres** *commits* del
+2026-11-24, así que los tres pases anteriores empujaron contenido y **ninguno avanzó la rotación**.
+Este pase avanza la rotación en el mismo turno que el *push* de contenido.
+
+### Lo agéntico nuevo de la semana en esta capa
+
+| Pieza | Licencia | ★ | Push | Novedad |
+|-------|----------|---|------|---------|
+| [AI4REALNET/grid2evaluate](https://github.com/AI4REALNET/grid2evaluate) | **MPL-2.0** | 0 | **2026-11-03** | Arnés de **evaluación** de agentes sobre `Grid2Op`. Lo que faltaba entre «tenemos un agente de red» y «podemos medirlo antes de proponerlo» |
+| [AI4REALNET/distributed-rl-gnn](https://github.com/AI4REALNET/distributed-rl-gnn) | **MIT** | 0 | 2026-10-30 | RL distribuido con GNN sobre la topología. La licencia más permisiva de la organización |
+| [AI4REALNET/XLLM](https://github.com/AI4REALNET/XLLM) | **MPL-2.0** | 1 | 2026-05-24 | La única pieza **LLM** de la familia AINETUS: acopla optimización con criterio del operador |
+| [AI4REALNET/T2.3_explaining_action_alternatives](https://github.com/AI4REALNET/T2.3_explaining_action_alternatives) | **MPL-2.0** | 0 | 2026-02-20 | Explicabilidad de la maniobra propuesta: la mitad exigible por el regulador |
+| [AI4REALNET/distributed_rl](https://github.com/AI4REALNET/distributed_rl) | **MPL-2.0** | 0 | 2026-04-14 | Entregable D2.2, Politecnico di Milano |
+
+**El hallazgo agéntico del pase no es una pieza, es una proporción.** La organización `AI4REALNET`
+tiene **16 repositorios y sólo 5 con licencia utilizable**: once no llevan fichero de licencia o
+declaran `NOASSERTION`. En un consorcio financiado por la UE la licencia se aplica **por
+repositorio-entregable, no por organización**, y «está en LF Energy» no convierte un repo de paquete
+de trabajo en dependencia (**T87**). Ninguna de las cinco pasa de 1 estrella: son el **arnés y la
+explicabilidad** de la pila `Grid2Op` + `ExpertOp4Grid` + `OperatorFabric` que esta KB ya tiene, no
+su punto de partida.
+
+### El cero agéntico de LATAM: era de forja, y sigue bloqueado por licencia
+
+El pase 16 encontró que *«el cero agéntico de LATAM era del idioma»*. Este pase midió la otra
+hipótesis —**que era de forja**— y la respuesta es **sí, y no sirve**. Fuera de GitHub hay
+suministro de origen LATAM:
+
+| Pieza | Forja | Veredicto de licencia | Estado |
+|-------|-------|-----------------------|--------|
+| [OpenREiD](https://sourceforge.net/projects/openreid/) | **SourceForge** | **Ninguna declarada** (`licenses: []` en la REST de SourceForge) | Activo: creado 2025-10-21, ficheros al 2026-10-05. Instituto de Energía Eléctrica, **UNSJ-CONICET, San Juan, Argentina**. *Plugin* QGIS para modelar y analizar redes de distribución sobre OpenDSS. **No proponible** |
+| [openpy-dsse](https://pypi.org/project/openpy-dsse/) | **PyPI** | `License :: Other/Proprietary License`; el campo `license` contiene literalmente la cadena `"LICENSE"` | v0.1.4. Estimación de estado de red de distribución modelada en OpenDSS. **No proponible** |
+| [jlara6/OpenPy-DSSE](https://github.com/jlara6/OpenPy-DSSE) | GitHub | `NOASSERTION` | 14 ★, *push* **2023-04-27**. Tres años y medio sin movimiento |
+
+**La conclusión comercial no cambia; cambia la razón.** Durante varios pases esta KB registró
+«cero repos agénticos de origen LATAM» como una medida de **ausencia de suministro**. Es más preciso
+decir: hay suministro, está en SourceForge y PyPI, y está **bloqueado por licencia** — igual que
+`idiap/pydhn`, bloqueado por licencia y no por calidad. Para un *engagement* LATAM el efecto
+práctico es idéntico (no hay base sobre la que presupuestar), pero el camino de salida es otro: **es
+una conversación con un instituto identificable —el IEE de la UNSJ-CONICET— sobre relicenciar, no un
+desarrollo desde cero.** Eso es accionable; «no existe» no lo era.
+
+### Advertencia de método que este pase se aplicó a sí mismo
+
+Este pase empezó buscando huecos con vocabulario **inglés** (`district heating`, `carbon
+accounting`, `subsurface`, `nuclear`) y produjo **cuatro falsos huecos**: los cuatro están cubiertos
+en esta KB, que está escrita **en español** (`redes de calor de distrito`, `intensidad de carbono`,
+`subsuelo`, `nuclear`). La KB ya clasificaba `idiap/pydhn` con más precisión que el buscador. El
+pase 16 descubrió que los hallazgos tienen un sesgo de idioma; este pase descubre que **las
+auditorías también lo tienen**, y es más peligroso, porque un falso hueco se publica como novedad.
+Ver **T88**.
+
 ## 2026-11-24 — pase 18 (el cero agéntico de la capa meteorológica, medido con cuatro consultas; y el envoltorio MCP permisivo que no sanea una fuente restringida)
 
 **Tercer pase del día.** El pase abrió la capa de modelo meteorológico completa

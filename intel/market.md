@@ -791,6 +791,41 @@ been developed nor tested for non-academic purposes»*. **No ponerlo en una prop
 red** (T80). El sustituto permisivo y sin esa advertencia es `graphcast` (código Apache-2.0, pesos
 **CC BY 4.0**) o la familia `anemoi` de ECMWF.
 
+### Actualización del pase 19 (2026-11-24) — North America
+
+**La superficie de revisión regulatoria se corrió al *cost recovery*, y la restricción de
+arquitectura recibió su cuarta confirmación independiente.**
+
+- **Lo nuevo y lo más vendible: el regulador ya no sólo revisa el capex, revisa la inversión en IA.**
+  Según análisis de **Morningstar DBRS**, las autoridades regulatorias deben ahora *«mirar más allá
+  de la revisión del desembolso de capex»* para evaluar las inversiones en IA que las *utilities*
+  proponen. Eso convierte el expediente de recuperación tarifaria en un **entregable**: una utility
+  que quiere poner IA en base tarifaria necesita justificarla ante la comisión estatal, y eso es
+  documentación de método, trazabilidad de datos y evaluación — no un modelo. Encaja exactamente con
+  el perfil «asesor, no controlador» que esta KB sostiene para NA desde el pase 12.
+- **Cuarta confirmación de la restricción de arquitectura, y la primera por vía de consultora:**
+  la guía de **NERC** trata la IA como **herramienta de apoyo a la decisión, no como sistema
+  autónomo** (vía Deloitte). Las tres anteriores fueron el criterio propio de esta KB, NERC directo
+  (pase 14) y la medida de mercado de la IEA (23 % en tiempo real). **Cuatro fuentes no equivalentes
+  coinciden**: en NA no se vende control autónomo, se vende asistencia con registro de auditoría.
+- **Marco legislativo, con nombre y dividido en partes:** la **NCSL** (Conferencia Nacional de
+  Legislaturas Estatales) publica una serie de tres partes *«AI in Energy»* —entre ellas
+  *Legislative Landscape* y *Challenges*— cuyo hallazgo central es que la política federal de IA
+  aborda la energía **sólo indirectamente**, incentivando la adopción de IA en todos los sectores.
+  También registra que un **moratorio federal de 10 años** sobre normas estatales de IA figuró en
+  borradores iniciales del paquete de reconciliación de 2025 y habría invadido la autoridad estatal.
+  ⚠️ **No fue promulgado**: citarlo como riesgo histórico de borrador, nunca como derecho vigente.
+- **Demanda, con cifra de la agencia:** la **EIA** proyecta consumo eléctrico de **4.195 TWh (2025)
+  → 4.268 TWh (2026) → 4.391 TWh (2027)**, con los centros de datos de IA como motor principal.
+  Es una serie de la propia agencia federal, el tipo de número que esta KB prefiere al informe de
+  consultora.
+
+⚠️ **Fuentes de este bloque: NCSL, Morningstar DBRS, Deloitte, EIA y KPMG vía `WebSearch`,
+**todas a nivel de fragmento**. Los dominios `documents.ncsl.org`, `morningstar.com` y `iea.org`
+**no son alcanzables desde esta sesión** (fuera de los dominios permitidos de red). Se registran
+como **listadas en búsqueda y sin verificar**, igual que esta KB hizo con arXiv en el pase 15 —
+nunca como bibliografía. Ítem abierto **19-R2**.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -1596,6 +1631,47 @@ que la Comisión quiere para la red ya funciona en meteorología, y éstos son l
 primer entregable en algo muy vendible y muy acotado: **una distribución pinneada y validada de la
 pila `anemoi` + `earthkit` para un TSO o DSO europeo**, con la matriz de madurez como anexo de
 riesgo. `gridpp` entra como **dependencia LGPL enlazada**, nunca como base a forkear.
+
+### Actualización del pase 19 (2026-11-24) — EMEA
+
+**El *Roadmap* de junio tiene un artefacto contractual con fecha, y es el gancho comercial que
+faltaba.**
+
+Esta KB ya tiene inventariado el *Strategic Roadmap for Digitalisation and AI in the Energy Sector*
+de la Comisión (**3 de junio de 2026**) y sus tres pilares — *Energy for AI*, *Digitalisation and AI
+for the Energy System*, *Data for AI and the Energy System*. Lo que este pase añade es **lo que se
+mueve detrás**:
+
+- **Un acuerdo modelo entre asociaciones industriales, esperado en el segundo semestre de 2026.** El
+  *Roadmap* se ancla en una **declaración de intenciones de 14 asociaciones industriales europeas**,
+  con un **acuerdo modelo** previsto para H2-2026. **Esto es un artefacto contractual, no una
+  política**: un acuerdo modelo de intercambio de datos es precisamente lo que destraba los
+  *engagements* de datos que el propio *Roadmap* dice que están bloqueados por «gobernanza
+  fragmentada y escaso intercambio de datos». Para un estudio, **el entregable es la implementación
+  de referencia de ese acuerdo** — espacios de datos, control de acceso, procedencia — y la ventana
+  es ahora, antes de que el acuerdo se publique.
+- **Propuesta de modificación del Reglamento del Mercado Eléctrico, 17 de julio de 2026**, vinculada
+  al *Roadmap*. ⚠️ **Estado de tramitación sin verificar**: se registra la fecha de la propuesta, no
+  su adopción. Esta KB ya documenta que confundir el instrumento con su fecha de aplicación es su
+  error más repetido (Reg. (UE) 2024/1689 vs 2026/1744): **no repetirlo aquí**.
+- **ACER** trabaja con la Comisión en **indicadores de red inteligente**: métrica comunitaria, es
+  decir, el criterio contra el que un DSO tendrá que reportar.
+- **Soberanía como prioridad declarada:** la UE enmarca el control soberano sobre *«soluciones
+  digitales, modelos de IA y algoritmos»* como prioridad estratégica. **La tabla del plano de forja
+  de este pase es la respuesta operativa a eso**: AMIRIS, REMix, FAME, `mosaik` y DIETER son
+  modelado energético **de autoría institucional europea y licencia permisiva o LGPL** (DLR, DIW
+  Berlin, OFFIS). Un *engagement* EMEA que necesite argumentar soberanía ya no depende sólo de la
+  pila `anemoi` de ECMWF: **hay motor de mercado, de sistema y de co-simulación, todo europeo y todo
+  auditable**. Ése es el aporte comercial directo del hallazgo de forja.
+- **Freno declarado, en palabras de la fuente:** la adopción sigue siendo **desigual** por los
+  requisitos estrictos de seguridad de la infraestructura crítica, la gobernanza fragmentada y el
+  escaso intercambio de datos. Las tres son condiciones de proyecto, no objeciones.
+
+⚠️ **Fuentes: resumen de firma legal (Conventus Law) y documentos de política de la Comisión vía
+`WebSearch`, a nivel de fragmento.** `conventuslaw.com` **no resuelve desde esta sesión** (fuera de
+los dominios permitidos); se verificó explícitamente y se registra como tal. El número «14
+asociaciones» y la fecha del acuerdo modelo son **de fuente secundaria**: confirmar contra el texto
+de la Comisión antes de usarlos en una propuesta. Ítem abierto **19-R3**.
 
 ### APAC
 
@@ -2431,6 +2507,46 @@ las cifras difieren entre informes. **Lo que la capa de este pase aporta a ese p
 emparejamiento renovable-carga que Australia quiere exigir **es un problema de pronóstico de
 generación y de carga sobre el mismo cubo meteorológico**, y la pila para resolverlo es permisiva
 —pero no es de origen APAC, con la única excepción utilizable de `WindFM`.
+
+### Actualización del pase 19 (2026-11-24) — APAC
+
+**Un banco multilateral de desarrollo puso número a la brecha piloto→producción, y Vietnam puso
+fecha a una tarifa de almacenamiento.**
+
+- **El número que acompaña al 23 % de la IEA, ahora desde el BAsD.** El **Banco Asiático de
+  Desarrollo** publicó *«Enabling AI Implementation in the Energy Sector»* (junio de 2026), que cita
+  **33 % de adopción de IA** (atribuido a datos de la IEA de 2025) y **71 % de pilotos atascados
+  antes de producción** (atribuido a McKinsey, 2025). ⚠️ **La diapositiva viene con el texto
+  desordenado en la fuente recuperada**: ambas cifras se registran **atribuidas, no adoptadas**.
+  Encajan con lo que esta KB ya midió —la IEA sostiene que la adopción *«sigue siendo limitada en
+  operaciones de red críticas para el sistema»*— y refuerzan la tesis regional: **en APAC se vende
+  planificación, no control en tiempo real**.
+- **Lo accionable del 71 %:** si dos de cada tres pilotos mueren antes de producción, el producto
+  vendible no es otro piloto — es **industrialización**: MLOps, gobierno del dato, evaluación y el
+  expediente que permite a un operador aceptar el sistema. Es el mismo entregable que el *cost
+  recovery* norteamericano, con otra justificación.
+- **Vietnam: tarifa de almacenamiento de dos partes, enero de 2026** — cargos de **capacidad** y de
+  **energía** separados. Es el **primer instrumento tarifario de almacenamiento con fecha** que esta
+  KB registra en la región, y cambia el caso de negocio de un activo de baterías: con cargo de
+  capacidad separado, **el pronóstico y el despacho optimizado tienen un ingreso identificable al
+  que atarse**. Complementa lo que la KB ya tiene de almacenamiento en LATAM (ANEEL, CREG).
+- **China:** la iniciativa **«AI Plus»** y el **Plan Quinquenal 2026-2030** apuntan explícitamente a
+  **volatilidad de red y vertido (*curtailment*) de renovables**. Es la misma clase de problema que
+  esta KB tiene como gancho comercial en Brasil, con un plan estatal detrás.
+- **Política certidumbre > coste:** en decisiones de inversión en baterías en APAC, la certidumbre
+  regulatoria ya pesa **más que el coste** (entrevista sectorial). Y el desfase estructural se
+  mantiene: un centro de datos se construye en **1-2 años**, una mejora de red tarda **5-10**.
+- **Riesgo de encadenamiento fósil, con cifra:** modelización de ArkTerra Partners cuenta **24,2 GW**
+  de capacidad de centro de datos anunciada en **nueve mercados APAC** para 2025-2030; sin
+  almacenamiento de larga duración, ese *pipeline* arriesga fijar generación fósil. ⚠️ Análisis
+  privado: atribuir, nunca adoptar.
+
+⚠️ **Fuentes: presentación del BAsD, eco-business, Energy-Storage.news, Manila Times y Temasek vía
+`WebSearch`, a nivel de fragmento.** `asiacleanenergyforum.adb.org` **no es alcanzable desde esta
+sesión**; el PDF del BAsD se registra como **listado en búsqueda y sin verificar** (ítem abierto
+**19-R4**). **Sigue sin establecerse** —cuarto pase consecutivo— que exista regla de IA
+**específica del sector energético** en Japón o Corea: lo que hay es derecho transversal de IA
+(Ley Marco de IA de Corea, en vigor desde el 22-ene-2026, ya inventariada).
 
 ### LATAM
 
@@ -3447,6 +3563,52 @@ red.
 ⚠️ **Lo que NO se afirma.** `MateusFPavan/ons-carga-eda` tiene **1 estrella**: se inventaría como
 **señal de que el problema se está atacando en la región**, no como componente. Proponerlo como base
 de producto sería exactamente el error que esta KB documenta desde el pase 10.
+
+### Actualización del pase 19 (2026-11-24) — LATAM
+
+**La restricción regional tiene cifra de agencia de calificación, y apareció un contraejemplo
+nombrado a la tesis de «nada en tiempo real».**
+
+- **La energía es la restricción, no la demanda — y ahora con número.** Según análisis de
+  **Moody's**, la región tenía a comienzos de 2026 unos **2.340 MW** de capacidad instalada de
+  centros de datos, creciendo **15-20 % anual**, y el crecimiento de la IA estará limitado **más por
+  suministro eléctrico, expansión de red e inversión que por demanda**. Esto invierte el argumento
+  comercial habitual: **el cuello de botella es vendible**, porque interconexión, pronóstico y
+  flexibilidad son exactamente la pila abierta que esta KB tiene inventariada.
+- **La ventaja estructural, para la misma conversación:** América Latina y el Caribe genera cerca
+  del **70 % de su electricidad con fuentes limpias**, muy por encima del promedio mundial (WEF).
+  Combinado con lo anterior: **la región tiene la energía limpia y le falta la red** — y la red es
+  software antes que acero.
+- ⚠️ **Contraejemplo nombrado, y hay que registrarlo con honestidad.** **Eletrobras** planeaba usar
+  sistemas de **C3.ai** para monitorear y responder a fallas de red **en tiempo real** (Reuters, vía
+  The Dialogue). Esta KB sostiene desde el pase 12 que el trabajo vendible es de planificación y no
+  de control en tiempo real. Este caso **no refuta la tesis**: es **propietario** (C3.ai, no pila
+  abierta), está descrito como **plan/anuncio y no como operación medida**, y la fuente es
+  secundaria. Pero es el **primer contraejemplo nombrado** y se inventaría como tal — un *incumbent*
+  regional moviéndose hacia tiempo real con proveedor cerrado. **Si el cliente lo cita, la respuesta
+  honesta no es negarlo: es distinguir piloto anunciado de sistema en operación.**
+- **Chile** aplica IA a **despacho** y **pronóstico de irradiancia solar**; **Brasil** tiene un auge
+  de generación distribuida que arrastra medición inteligente y gestión energética en nube. Ambos
+  casos de uso están cubiertos por piezas permisivas que esta KB ya tiene.
+- **Lo que encarece el capital, y conviene decirlo en la propuesta:** riesgo cambiario, ciclos
+  políticos e incertidumbre de permisos afectan cómo prestamistas e hiperescaladores **tasan el
+  riesgo** de la región frente a mercados consolidados. Es contexto de financiación, no objeción
+  técnica.
+- **Suministro de origen LATAM: el cero era de forja, y sigue bloqueado por licencia.** Fuera de
+  GitHub hay código argentino real —**OpenREiD**, del Instituto de Energía Eléctrica de la
+  **UNSJ-CONICET** (San Juan), *plugin* QGIS sobre OpenDSS, activo en SourceForge con ficheros al
+  2026-10-05— pero **sin licencia declarada** (`licenses: []` en la REST de SourceForge), igual que
+  `openpy-dsse` en PyPI (`Other/Proprietary`) y `jlara6/OpenPy-DSSE` en GitHub (`NOASSERTION`,
+  *push* 2023-04-27). **El efecto práctico para un *engagement* es el mismo que un cero —no hay base
+  presupuestable— pero la salida es distinta y es accionable: hay un instituto identificable con
+  quien hablar de relicenciamiento**, no un desarrollo desde cero. Ver el pase 19 en
+  `agents/trending.md`.
+
+⚠️ **Fuentes: Moody's vía prensa brasileña (`opovo.com.br`, `datacenterdynamics.com/br`), WEF,
+BNamericas (**de pago, no consultado**) y The Dialogue, todo vía `WebSearch` a nivel de fragmento.**
+La cifra de 2.340 MW es **de agencia de calificación citada por prensa**, no de fuente primaria.
+**No se encontró** ningún reglamento LATAM de IA en energía de 2026: se declara como hueco medido,
+no como ausencia de búsqueda.
 
 ## Posicionamiento Globant
 
