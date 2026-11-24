@@ -1,13 +1,104 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 📈 Repos trending — energy
 
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
+
+## 2026-11-24 — pase 16 (una organización de 13 repos del operador nacional brasileño ausente de un inventario de 500; y el `LICENSE` de 45 bytes que sí es MIT)
+
+### El hallazgo: `ONSBR`, la organización del ONS
+
+Las **13 direcciones** de [`ONSBR`](https://github.com/ONSBR) —el Operador Nacional do Sistema
+Elétrico de Brasil— estaban **todas ausentes** del inventario de 500 direcciones de esta KB. Es la
+repetición literal de la lección del pase 8, ahora en LATAM y en el operador del sistema. Tabla
+completa con licencias leídas byte a byte en `agents/trending.md` (pase 16); lo que corresponde a
+este archivo es la **capa de modelos**, que es foundational y no agéntica:
+
+| Repo | Licencia (byte-read) | ★ | Push | Capa |
+|------|----------------------|---|------|------|
+| [ONSBR/smapOnsR](https://github.com/ONSBR/smapOnsR) | **MIT** (vía `DESCRIPTION`) | 13 | 2026-07-22 | Modelo **hidrológico SMAP/ONS** en R — el modelo de afluencias del operador |
+| [ONSBR/PrevCargaDESSEM](https://github.com/ONSBR/PrevCargaDESSEM) | **MIT** (vía `DESCRIPTION`) | 7 | 2025-03-27 | **Previsión de carga** para DESSEM. Copyright **CEPEL + ONS-DPL-PE-PEC** |
+| [ONSBR/prevcarga](https://github.com/ONSBR/prevcarga) | **Apache-2.0** (11.374 B) | 3 | **2026-11-23** | PrevCarga-DESSEM en reescritura activa |
+| [ONSBR/HidrViewer](https://github.com/ONSBR/HidrViewer) | **MIT** (1.069 B) | 7 | 2026-07-16 | Visualización/detección de formas en series hidrológicas |
+| [ONSBR/deck-api](https://github.com/ONSBR/deck-api) | **MIT** (1.069 B) | 1 | 2023-10-05 | API REST sobre los *decks* de los modelos de planificación |
+| [ONSBR/ONS.Hidrologia.Dadosabertos.API](https://github.com/ONSBR/ONS.Hidrologia.Dadosabertos.API) | MIT | 3 | 2024-08-20 | API de hidrología sobre datos abiertos |
+| [ONSBR/DadosAbertos](https://github.com/ONSBR/DadosAbertos) | ⛔ **sin licencia** | 43 | 2026-08-06 | El más estrellado de la org y el único inutilizable |
+
+**Por qué esto cambia el mapa de oferta de LATAM.** Hasta el pase 15 la cadena LATAM de esta KB era
+*dato del regulador → modelo ejecutable* (`tarifas-energia-api` ISC + `bdgd-tools` MIT +
+`bdgd2opendss` MIT, receta 48), toda de **distribución** y toda de **terceros**. `ONSBR` añade una
+capa distinta y de mayor valor: **los modelos de previsión de carga y de afluencia hidrológica del
+propio operador del sistema, permisivos**, más el servidor MCP que los consulta. Brasil pasa de
+«región con piezas sueltas de terceros» a **la única región de esta KB donde el operador del sistema
+publica a la vez sus modelos y su capa de acceso agéntica, todo permisivo.**
+
+> **T61 — UN `LICENSE` DE 45 BYTES ES LA CONVENCIÓN DE R, NO UNA LICENCIA AUSENTE.** `smapOnsR`
+> (45 B) y `PrevCargaDESSEM` (95 B) devuelven `NOASSERTION` y contienen **sólo** `YEAR:` y
+> `COPYRIGHT HOLDER:`. Es el idioma `License: MIT + file LICENSE` de R, que **exige** ese archivo
+> mínimo. La licencia está en `DESCRIPTION` y en ambos casos es **MIT**. Resolver en el manifiesto
+> del lenguaje antes de descartar. Sexto falso negativo de `NOASSERTION` en esta KB, mecanismo nuevo.
+
+### La capa de contratos de datos entra en la KB
+
+[`bitol-io/open-data-contract-standard`](https://github.com/bitol-io/open-data-contract-standard) —
+**Apache-2.0** (11.356 B), el **ODCS**, estándar de contrato de datos que TIAGO usa en su versión
+**v3.1.0** para declarar schema, unidades y agregaciones válidas por dataset. Capa nueva en esta KB
+y transversal: es el formato en el que se escribe la **compuerta de validación** de la receta 53.
+
+### El stack de red de RTE: la familia `powsybl` estaba inventariada a tercios
+
+Esta KB tenía `powsybl-core`, `pypowsybl` y `powsybl-diagram`. Faltaban las piezas que hacen el
+trabajo de cálculo y de mercado, las tres **MPL-2.0** y verificadas vivas:
+
+| Repo | Licencia | ★ | Push | Qué añade |
+|------|----------|---|------|-----------|
+| [powsybl/powsybl-open-loadflow](https://github.com/powsybl/powsybl-open-loadflow) | MPL-2.0 | 84 | 2026-11-23 | **El motor de flujo de carga** AC/DC. Sin esto, `powsybl-core` es sólo el modelo de datos |
+| [powsybl/powsybl-open-rao](https://github.com/powsybl/powsybl-open-rao) | MPL-2.0 | 34 | 2026-11-23 | **Remedial Action Optimisation**: optimización de acciones correctivas, la pieza de gestión de congestión del mercado europeo |
+| [powsybl/powsybl-entsoe](https://github.com/powsybl/powsybl-entsoe) | MPL-2.0 | 10 | 2026-11-12 | Adaptadores a los procesos y formatos **ENTSO-E** |
+
+⚠️ **Frontera de licencia, en el diagrama.** `MPL-2.0` es copyleft **por archivo**: permite enlazar
+desde código propietario, pero cualquier modificación de un archivo MPL vuelve MPL. Para un
+*engagement* es proponible como **dependencia**, no como base a forkear en silencio. Es la misma
+frontera que ya está anotada para `OpenSTEF` (MPL-2.0).
+
+### Hallazgo de licencia: el fork de fundación limpia lo que el repo canónico ensucia
+
+| Repo | Licencia | ★ | Lectura |
+|------|----------|---|---------|
+| [VOLTTRON/volttron](https://github.com/VOLTTRON/volttron) | `NOASSERTION` | 504 | El canónico, el que tiene la tracción |
+| [eclipse-volttron/volttron-core](https://github.com/eclipse-volttron/volttron-core) | **Apache-2.0** | 20 | El sucesor bajo gobernanza **Eclipse**, con licencia limpia |
+
+> **T64 — ANTES DE EXCLUIR UN REPO INSIGNIA POR LICENCIA, BUSCAR SU FORK DE FUNDACIÓN.** VOLTTRON
+> (PNNL, el framework de automatización de edificios y DER más citado del sector) es `NOASSERTION`
+> en su repo histórico de 504 ★ y **Apache-2.0** en `eclipse-volttron/volttron-core`. Las estrellas
+> se quedan en el repo viejo y la licencia utilizable está en el nuevo: **un barrido ordenado por
+> estrellas encuentra sistemáticamente la versión inutilizable primero.** Aplicar a cualquier
+> proyecto que haya entrado en Eclipse, Linux Foundation o Apache.
+
+### Capa DER/inversor: confirmaciones y una pieza institucional
+
+Verificadas vivas y ya inventariadas, se reconfirman por ser la base de la receta 54:
+[`epri-dev/IEEE-2030.5-Client`](https://github.com/epri-dev/IEEE-2030.5-Client) (**BSD-3-Clause**,
+96 ★ — cliente de **IEEE 2030.5/CSIP** del **EPRI**) y [`sunspec/models`](https://github.com/sunspec/models)
+(**Apache-2.0**, 135 ★ — los modelos de datos **SunSpec** de inversores). Nuevas del barrido:
+[`sunspec/pysunspec`](https://github.com/sunspec/pysunspec) (MIT, 90 ★, **archivado de hecho**:
+último push 2022-08-18 — usar `pysunspec2`, Apache-2.0) y
+[`eclipse-volttron/volttron-core`](https://github.com/eclipse-volttron/volttron-core) arriba.
+
+### Medición de saturación: la capa de protocolo está cubierta
+
+28 candidatos de ocho barridos sobre nombres propios de protocolo (`2030.5 der`, `sunspec`,
+`gridlab-d`, `openfast wind`, `energyplus openstudio`, `iec 62325`, `powsybl`, `volttron`):
+**16 ya estaban inventariados, 12 nuevos y la mayoría hermanos de bajo valor.** Contra el 17–34 % de
+fracción nueva del pase 15, la capa de protocolo de esta KB está **cerca de saturación real**. El
+rendimiento se movió a **institución + idioma**, no a más protocolos.
+
+---
 
 ## 2026-11-21 — pase 15 (76 repos nuevos contra una KB de 465 direcciones: el "techo de descubrimiento" de esta KB también era del instrumento; y el EUPL se disfraza de LGPL)
 

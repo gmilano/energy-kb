@@ -1,13 +1,175 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 📈 Agentes trending — energy
 
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
+
+## 2026-11-24 — pase 16 (el servidor MCP oficial de un operador nacional, y es Apache-2.0; el cero agéntico de LATAM era del idioma)
+
+**Titular del pase: el ONS brasileño publica el servidor MCP de su portal de datos abiertos, con
+licencia Apache-2.0, y la arquitectura es exactamente la que esta KB propuso como receta 49.**
+
+[`ONSBR/TIAGO-Dados-Abertos`](https://github.com/ONSBR/TIAGO-Dados-Abertos) — **Apache-2.0**
+(`LICENSE` leído byte a byte: **11.357 B**, el tamaño canónico exacto del texto completo de Apache
+2.0), **29 ★**, último push **2026-11-20**, publicado en PyPI como `mcp-tiago-dados-abertos`, con
+workflow de tests en CI. Es el **servidor MCP oficial de `dados.ons.org.br`**, el portal de datos
+abiertos del Operador Nacional do Sistema Elétrico.
+
+Lo que importa no es que exista: es **cómo está construido**. Del propio README:
+
+- Una **capa semántica en YAML** declara, por dataset, el schema, las unidades y las agregaciones
+  válidas. El estándar es **ODCS v3.1.0** (Open Data Contract Standard, de `bitol-io`).
+- **El servidor rutea, valida y ejecuta; el modelo del cliente escribe el SQL.**
+- **«Nenhum modelo de linguagem roda no servidor»** — ningún LLM corre en el servidor. Entrega
+  catálogo y contratos, valida, ejecuta, y *«tudo o que devolve é determinístico e rastreável ao
+  contrato»*.
+- Cuando no puede probar un dato, **declara desconocido en vez de deducir**.
+- Motor de ejecución: **DuckDB**.
+
+> **ESTO ES LA RECETA 49 DE ESTA KB, EN PRODUCCIÓN, ESCRITA POR UN TSO.** En el pase 15 esta KB
+> propuso —como diseño propio, sin precedente— un copiloto de modelo de red con una **compuerta de
+> validación** que acepta o rechaza la propuesta del agente contra el esquema del propio sector
+> antes de que toque nada vivo, para que «automatización» y «no control» dejaran de estar en
+> conflicto. Tres pases después aparece el mismo patrón implementado, con otro estándar
+> (**ODCS en vez de SHACL**) y otro motor (**DuckDB**), por el operador del sistema brasileño.
+> **Es la séptima confirmación independiente de la restricción de arquitectura de esta KB y la
+> primera que está EMBARCADA en un producto, no en un análisis, una norma o un paper.**
+
+Los cinco modos de fallo que el README nombra son el argumento de venta de la compuerta, y son
+citables tal cual ante un cliente: elegir el dataset equivocado (el portal publica recortes
+parecidos con granularidades distintas, «la consulta corre, devuelve un número plausible, y responde
+otra pregunta»), escribir SQL contra un schema imaginado, **errar la unidad (`MWmed` no es `MWh`, y
+la diferencia no aparece en el resultado)**, agregar lo que no se agrega (sumar una columna que ya es
+promedio duplica el valor «sin error ninguno»), y perder la procedencia.
+
+### Cierra el ítem abierto 15-R2, y lo cierra el vocabulario, no el esfuerzo
+
+El pase 15 dejó anotado: *«sigue habiendo CERO repos agénticos/LLM de origen LATAM, y el vocabulario
+agéntico es/pt NO se re-corrió en corto»*, marcándolo como **el cero falso más probable de la KB**.
+Lo era. La consulta que lo rompió tiene **cuatro palabras en portugués sobre nombres propios**:
+
+```
+gh api -X GET search/repositories -f q="ons dados abertos mcp"
+→ total_count: 1
+```
+
+Un resultado. El correcto. **El cero anterior era del instrumento, no del mundo** — tercera vez que
+T58 se confirma en esta KB y la primera en que el idioma, no la longitud, era la variable.
+
+> **T63 — PARA LATAM, LA CONSULTA CORTA TIENE QUE SER EN EL IDIOMA DE LA INSTITUCIÓN.** Los barridos
+> agénticos anteriores de esta KB se corrieron en inglés sobre términos descriptivos. El activo
+> estaba publicado por una institución que nombra sus cosas en portugués (`dados abertos`). Antes de
+> declarar un cero regional: **probar el nombre propio del artefacto en el idioma del regulador o
+> del operador.**
+
+### Y detrás del MCP había una organización entera de 13 repos, ninguno inventariado
+
+Repetición literal de la lección del pase 8 («había una organización entera de ~30 repos permisivos
+catalogada en uno solo»), ahora en LATAM y en el operador del sistema. **Las 13 direcciones de
+`ONSBR` estaban ausentes de un inventario de 500.** Licencias leídas byte a byte:
+
+| Repo | Licencia (byte-read) | ★ | Último push | Qué es |
+|------|----------------------|---|-------------|--------|
+| [ONSBR/TIAGO-Dados-Abertos](https://github.com/ONSBR/TIAGO-Dados-Abertos) | **Apache-2.0** (11.357 B) | 29 | 2026-11-20 | Servidor MCP oficial del portal de datos abiertos |
+| [ONSBR/smapOnsR](https://github.com/ONSBR/smapOnsR) | **MIT** (vía `DESCRIPTION`) | 13 | 2026-07-22 | Implementación en R del modelo hidrológico **SMAP/ONS** |
+| [ONSBR/PrevCargaDESSEM](https://github.com/ONSBR/PrevCargaDESSEM) | **MIT** (vía `DESCRIPTION`) | 7 | 2025-03-27 | Modelo de **previsión de carga**; copyright **CEPEL + ONS** |
+| [ONSBR/HidrViewer](https://github.com/ONSBR/HidrViewer) | **MIT** (1.069 B) | 7 | 2026-07-16 | Visualización y detección de formas en series hidrológicas |
+| [ONSBR/prevcarga](https://github.com/ONSBR/prevcarga) | **Apache-2.0** (11.374 B) | 3 | **2026-11-23** | PrevCarga-DESSEM, reescritura activa (push de anteayer) |
+| [ONSBR/TIAGO-Transcricao](https://github.com/ONSBR/TIAGO-Transcricao) | **Apache-2.0** (11.373 B) | 3 | 2026-09-09 | Rama de transcripción de la familia TIAGO |
+| [ONSBR/ONS.Hidrologia.Dadosabertos.API](https://github.com/ONSBR/ONS.Hidrologia.Dadosabertos.API) | MIT | 3 | 2024-08-20 | API de hidrología sobre datos abiertos |
+| [ONSBR/deck-api](https://github.com/ONSBR/deck-api) | **MIT** (1.069 B) | 1 | 2023-10-05 | API REST sobre los *decks* de los modelos de planificación |
+| [ONSBR/DadosAbertos](https://github.com/ONSBR/DadosAbertos) | ⛔ **sin licencia** | 43 | 2026-08-06 | El repo con **más estrellas de la organización, y el único inutilizable** |
+
+Las 13 direcciones están verificadas vivas con `git ls-remote`.
+
+> **T61 — UN `LICENSE` DE 45 BYTES NO ES UNA LICENCIA AUSENTE: ES LA CONVENCIÓN DE R.** `smapOnsR`
+> (45 B) y `PrevCargaDESSEM` (95 B) devuelven `NOASSERTION` por API y su `LICENSE` contiene
+> **únicamente** `YEAR:` y `COPYRIGHT HOLDER:`. No falta nada: es el idioma `License: MIT + file
+> LICENSE` de los paquetes de R, que **exige** que ese archivo contenga sólo eso. La licencia real
+> está en `DESCRIPTION`, y en los dos casos es **MIT**. Un archivo de licencia sospechosamente
+> diminuto hay que resolverlo en `DESCRIPTION` (R) o en el manifiesto del lenguaje, no descartarlo.
+> Sexta vez que `NOASSERTION` resulta falso negativo en esta KB, y la primera por este mecanismo.
+
+### La confirmación LATAM que no es un repo: PSR describe la misma arquitectura
+
+Un artículo de **PSR** (`psr-inc.com`, julio de 2026) propone un agente que interactúa con un modelo
+hidrotérmico **únicamente a través de capacidades de dominio controladas y tipadas**, y deja escrito
+que **el agente no reemplaza al solver de optimización**. Es la misma frontera que TIAGO implementa y
+que esta KB sostiene desde el pase 1, formulada por una consultora brasileña del sector. Nota de
+procedencia: es un **artículo de opinión técnica**, no una norma ni un despliegue — vale como
+precedente citable de que el patrón es el consenso regional, no como referencia normativa.
+
+### Exclusiones duras de este pase (ambas con tracción)
+
+- ⛔ [`lhg96/smartEMS-MultiAgent-Demo`](https://github.com/lhg96/smartEMS-MultiAgent-Demo)
+  (`NOASSERTION` por API, 6 ★, origen **Corea**). `LICENSE` de **2.699 B** cuya primera línea no
+  vacía es **`Custom License Agreement`**: uso personal, educativo y de investigación permitido,
+  **uso comercial prohibido sin licencia comercial separada** (contacto por email), explícitamente
+  incluyendo *«integración en productos o servicios comerciales»*, *«uso en producción para
+  operaciones de negocio»* y *«despliegue como parte de actividades generadoras de ingresos»*.
+  **Inutilizable para Globant.**
+- ⛔ [`d2rojas/LLMs-Agents-For-SmartGrids-Code`](https://github.com/d2rojas/LLMs-Agents-For-SmartGrids-Code)
+  (5 ★): código del caso de estudio *«LLMs and Agentic AI Systems for Smart Grids»*. **Sin ningún
+  artefacto de licencia** en `main`/`master`/`develop` × 4 nombres de archivo. Citable como paper,
+  no incorporable.
+
+> **T62 — LA FRASE DE CONCESIÓN DE MIT NO SÓLO SE PREFIJA: SE MUTA POR DENTRO.** El pase 15 (T56)
+> encontró una licencia propietaria que **precedía** la frase de MIT con su propio título. Esta
+> **la reescribe**: *«Permission is hereby granted, free of charge, to any person obtaining a copy of
+> this software and associated documentation files (the "Software"), to use, copy, modify, and
+> distribute the Software **for personal, educational, and non-commercial purposes**»*. Es la frase
+> de MIT con la cláusula comercial insertada en el medio, de modo que **un detector por similitud de
+> frase la puntúa aún más alto que el impostor del pase 15**. Los dos discriminadores de T56
+> siguieron funcionando sin cambios: primera línea no vacía (`Custom License Agreement`) y tamaño
+> (**2.699 B** frente a ~1,07 kB de MIT; el impostor del pase 15 medía 2.646 B, **53 bytes de
+> diferencia** — la familia tiene un tamaño característico).
+
+### El techo agéntico de esta KB es real, y esta vez se midió con el instrumento correcto
+
+El pase 15 dejó la regla de que **cualquier KB de esta flota que reporte un techo de descubrimiento
+debe re-probar primero con UNA PALABRA sobre un nombre propio**. Se hizo: seis barridos sobre nombres
+propios de artefactos y protocolos (`2030.5 der`, `sunspec`, `gridlab-d`, `openfast wind`,
+`energyplus openstudio`, `iec 62325`, `powsybl`, `volttron`) más cuatro con filtro de recencia
+(`pushed:>2026-06-01`/`>2026-08-01`/`>2026-09-01`) sobre la capa agéntica.
+
+**Resultado: los cinco ancla agénticos que devolvieron los barridos ya estaban todos inventariados**
+— `Power-Agent/PowerMCP` (242 ★), `Power-Agent/PowerFM`, `LBNL-ETA/EnergyPlus-MCP` (132 ★),
+`TimeCopilot/timecopilot` (643 ★), `idfkit/idfkit-mcp`. En la capa de protocolo, **16 de 28
+candidatos ya estaban held**. Lo nuevo en agéntico es cola larga de 0–6 ★, consistente con la
+medición del pase 10 (33 repos en siete semanas, el mejor con 7 ★).
+
+> **El techo agéntico global de esta KB está confirmado; el que era falso era el regional.** La
+> conclusión operativa no es «buscar más», es **buscar en otro idioma y por institución**: el único
+> hallazgo de primer orden del pase salió de una consulta de cuatro palabras en portugués.
+
+### Cola larga agéntica nueva, con licencia leída byte a byte
+
+| Repo | Licencia (byte-read) | ★ | Push | Nota |
+|------|----------------------|---|------|------|
+| [cyanheads/eia-energy-mcp-server](https://github.com/cyanheads/eia-energy-mcp-server) | **Apache-2.0** (10.846 B) | 3 | 2026-11-15 | MCP sobre la **EIA API v2**. `NOASSERTION` por API, Apache por byte-read |
+| [HPML6998-S26-Team13/hpml-assetopsbench-smart-grid-mcp](https://github.com/HPML6998-S26-Team13/hpml-assetopsbench-smart-grid-mcp) | **MIT** (1.111 B) | 1 | 2026-07-01 | **SmartGridBench**: benchmark de mantenimiento de transformadores con *tool-calling*. Categoría nueva: **banco de pruebas agéntico sectorial** |
+| [alanmossinger/ai-enablement-proof](https://github.com/alanmossinger/ai-enablement-proof) | **MIT** (1.071 B) | 1 | 2026-11-11 | Agente autónomo **«gobernado»** para fiabilidad de red en EE. UU. El encuadre de gobernanza es el dato, no el código |
+| [lubosstrejcek/victron-vrm-mcp](https://github.com/lubosstrejcek/victron-vrm-mcp) | **MIT** | 5 | 2026-11-13 | MCP sobre la API cloud **Victron VRM** (solar, batería, red) |
+| [lubosstrejcek/victron-tcp](https://github.com/lubosstrejcek/victron-tcp) | **MIT** (1.070 B) | 7 | 2026-11-02 | MCP sobre dispositivos **Victron GX** en tiempo real |
+| [KoshiirRa/midgley](https://github.com/KoshiirRa/midgley) | **Apache-2.0** (10.172 B) | 2 | 2026-11-23 | Multi-agente LLM de pronóstico de precio de combustible (RBOB mayorista y retail) |
+
+Patrón nuevo y útil: **el MCP de dispositivo de fabricante** (Victron ×2, `emporiaenergy/emporia-mcp`
+sin licencia). Es la vía de entrada agéntica al activo doméstico que no pasa por la nube del
+fabricante, y complementa la receta 46.
+
+> **T60 — `OR` EN UNA CONSULTA DE `search/repositories` LA DETONA.** `substation OR scada llm
+> pushed:>2026-06-01` devolvió **422.652 resultados** encabezados por `ollama`, `firecrawl`,
+> `langchain` y `transformers`: el `OR` disuelve el anclaje de dominio y la consulta cae en el corpus
+> agéntico global. La misma intención en dos consultas separadas devuelve 9 y 59 resultados, todos
+> del dominio. **`OR` no es un ensanchador, es un destructor de precisión** — mismo fallo de clase
+> que el término `agentic grid` del pase 15, por otra causa.
+
+---
 
 ## 2026-11-21 — pase 15 (una licencia propietaria que empieza con la frase literal de MIT, y el número que la KB llevaba ocho pases pidiendo: 23% vs 54%)
 

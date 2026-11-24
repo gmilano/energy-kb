@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 🏗️ Repos fundacionales — energy
@@ -1362,3 +1362,73 @@ aparición** en esta KB.
 
 **Verificación de este pase:** 32/32 repos nuevos **vivos** por `git ls-remote`, 0 muertos; 30/32
 licencias **leídas byte a byte** y 2 por manifiesto (`pyproject.toml`, `package.json`).
+
+## Pase 16 (2026-11-24) — los modelos del operador brasileño, el motor de cálculo de RTE y la capa de contratos de datos
+
+Todo verificado el **2026-11-24**: liveness con `git ls-remote`, licencias leídas byte a byte en
+`raw.githubusercontent.com`, y las de convención R resueltas en `DESCRIPTION`.
+
+### Modelos del Operador Nacional do Sistema Elétrico (Brasil) — capa nueva y de origen LATAM
+
+Trece repos de [`ONSBR`](https://github.com/ONSBR) estaban ausentes de un inventario de 500
+direcciones. Los foundational son los **modelos de previsión del propio operador**:
+
+| Repo | Licencia (byte-read) | ★ | Último push | Qué es |
+|------|----------------------|---|-------------|--------|
+| [ONSBR/smapOnsR](https://github.com/ONSBR/smapOnsR) | **MIT** (vía `DESCRIPTION`) | 13 | 2026-07-22 | Implementación en **R** del modelo **SMAP/ONS** de afluencias. El modelo hidrológico con el que el operador del sistema brasileño pronostica la entrada de agua |
+| [ONSBR/PrevCargaDESSEM](https://github.com/ONSBR/PrevCargaDESSEM) | **MIT** (vía `DESCRIPTION`) | 7 | 2025-03-27 | Modelo de **previsión de carga** para DESSEM (despacho de corto plazo). Copyright **CEPEL + ONS-DPL-PE-PEC** |
+| [ONSBR/prevcarga](https://github.com/ONSBR/prevcarga) | **Apache-2.0** (11.374 B) | 3 | **2026-11-23** | PrevCarga-DESSEM en reescritura activa — push de anteayer |
+| [ONSBR/HidrViewer](https://github.com/ONSBR/HidrViewer) | **MIT** (1.069 B) | 7 | 2026-07-16 | Visualización y detección de formas en series hidrológicas |
+| [ONSBR/deck-api](https://github.com/ONSBR/deck-api) | **MIT** (1.069 B) | 1 | 2023-10-05 | API REST sobre los *decks* de los modelos de planificación |
+| [ONSBR/ONS.Hidrologia.Dadosabertos.API](https://github.com/ONSBR/ONS.Hidrologia.Dadosabertos.API) | MIT | 3 | 2024-08-20 | API de hidrología sobre el portal de datos abiertos |
+
+⚠️ [`ONSBR/DadosAbertos`](https://github.com/ONSBR/DadosAbertos) es el repo **más estrellado de la
+organización (43 ★)** y **el único sin licencia**: inutilizable. Patrón ya conocido en esta KB —la
+tracción y la licencia utilizable no coinciden.
+
+**Lectura estratégica.** Brasil queda como **la única región de esta KB en la que el operador del
+sistema publica, permisivamente y a la vez, sus modelos de previsión (carga e hidrología) y su capa
+de acceso agéntica** (el servidor MCP, ver `agents/top.md`). Hasta el pase 15 la oferta LATAM de esta
+KB era de distribución y de terceros (receta 48); ahora hay capa de operador.
+
+### El motor de cálculo del stack `powsybl` (RTE, Francia) — la KB lo tenía a tercios
+
+| Repo | Licencia | ★ | Último push | Qué añade |
+|------|----------|---|-------------|-----------|
+| [powsybl/powsybl-open-loadflow](https://github.com/powsybl/powsybl-open-loadflow) | **MPL-2.0** | 84 | 2026-11-23 | **Motor de flujo de carga** AC/DC. Sin él, `powsybl-core` es sólo modelo de datos |
+| [powsybl/powsybl-open-rao](https://github.com/powsybl/powsybl-open-rao) | **MPL-2.0** | 34 | 2026-11-23 | **Remedial Action Optimisation**: optimización de acciones correctivas y gestión de congestión |
+| [powsybl/powsybl-entsoe](https://github.com/powsybl/powsybl-entsoe) | **MPL-2.0** | 10 | 2026-11-12 | Adaptadores a procesos y formatos **ENTSO-E** |
+
+⚠️ **MPL-2.0 es copyleft por archivo**: se enlaza desde código propietario sin contaminarlo, pero
+**modificar un archivo MPL devuelve ese archivo a MPL**. Proponible como **dependencia**, no como
+base a forkear. Misma frontera que `OpenSTEF`.
+
+### Capa de contratos de datos — nueva y transversal
+
+| Repo | Licencia | Qué es |
+|------|----------|--------|
+| [bitol-io/open-data-contract-standard](https://github.com/bitol-io/open-data-contract-standard) | **Apache-2.0** (11.356 B) | **ODCS**: estándar de contrato de datos. Declara schema, unidades, aditividad de cada columna y agregaciones válidas. Es el formato en el que TIAGO (ONS) escribe su compuerta de validación, en **v3.1.0** |
+
+Capa nueva en esta KB. Importa porque es **el lenguaje en el que se escribe la restricción de
+arquitectura**: la aditividad declarada por columna es lo que impide que un agente sume una columna
+que ya es un promedio. Base de la **receta 53**.
+
+### DER e inversores: una corrección de inventario
+
+[`sunspec/pysunspec`](https://github.com/sunspec/pysunspec) (**MIT**, 90 ★) aparece en los barridos
+con tracción, pero su **último push es 2022-08-18**: está archivado de hecho. El mantenido es
+[`sunspec/pysunspec2`](https://github.com/sunspec/pysunspec2) (**Apache-2.0**, 76 ★, push
+2026-10-21), ya inventariado. **No proponer `pysunspec` por sus estrellas.**
+
+Reconfirmados vivos como base de la receta 54:
+[`epri-dev/IEEE-2030.5-Client`](https://github.com/epri-dev/IEEE-2030.5-Client) (**BSD-3-Clause**,
+96 ★, **EPRI** — cliente de IEEE 2030.5/CSIP) y
+[`sunspec/models`](https://github.com/sunspec/models) (**Apache-2.0**, 135 ★).
+
+### Corrección de licencia por fork de fundación
+
+[`eclipse-volttron/volttron-core`](https://github.com/eclipse-volttron/volttron-core) es
+**Apache-2.0** (20 ★) mientras el canónico
+[`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron) es `NOASSERTION` (504 ★). VOLTTRON (PNNL)
+es el framework de automatización de edificios y DER más citado del sector: **la versión utilizable
+es la de Eclipse, y un barrido por estrellas encuentra la inutilizable primero** (T64).

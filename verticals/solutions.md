@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 🏭 Verticales de partida — Energy
@@ -865,3 +865,60 @@ Aparece **EUPL-1.2** en la capa europea financiada con fondos de la UE
 compatibilidad explícita, no permisiva**, y **engaña a los detectores por palabra clave** porque su
 texto nombra GPL, LGPL, AGPL y MPL (T59). En EMEA hay que esperarla y clasificarla leyendo **la
 primera línea** del archivo.
+
+## Pase 16 (2026-11-24) — el portal de datos abiertos como plataforma, y la quinta confirmación de que no hay ERP de utility abierto
+
+### Nueva categoría de plataforma: el portal de datos del operador con capa semántica y MCP
+
+Hasta ahora este archivo trataba los portales de datos como **fuente**, no como **plataforma**. El
+ONS brasileño convierte el suyo en plataforma, y publica las dos mitades permisivamente:
+
+| Plataforma | Licencia | Qué es | Personalizable con IA |
+|------------|----------|--------|------------------------|
+| **Portal de Dados Abertos del ONS** + [TIAGO-Dados-Abertos](https://github.com/ONSBR/TIAGO-Dados-Abertos) | **Apache-2.0** (servidor) | `dados.ons.org.br`: **85 datasets** del sistema eléctrico brasileño, con un **servidor MCP oficial** y una capa semántica **ODCS v3.1.0** que declara schema, unidades y aditividad por columna. Motor DuckDB | **Es ya la capa de IA.** Lo personalizable es el conjunto de contratos: añadir datasets propios del cliente al mismo patrón de validación |
+| [bitol-io/open-data-contract-standard](https://github.com/bitol-io/open-data-contract-standard) (ODCS) | **Apache-2.0** | El estándar de contrato de datos que hace posible lo anterior | Es el formato de la compuerta: la personalización **es** escribir contratos |
+
+**Por qué esto es una vertical y no un repo.** El patrón es replicable sobre **cualquier portal de
+datos de regulador u operador** —ANEEL, CAMMESA, CEN de Chile, EIA, ENTSO-E— y el trabajo facturable
+es exactamente el que el ONS ya hizo y publicó: **escribir los contratos ODCS del dominio del
+cliente**. El servidor es Apache-2.0 y reutilizable; el valor está en el modelado semántico, que es
+consultoría de dominio. Detalle de ingeniería que lo hace vendible: **ningún LLM corre en el
+servidor**, así que el despliegue no arrastra una decisión de soberanía de modelo. Receta 53.
+
+### Previsión de carga y de afluencia como producto, con el modelo del operador dentro
+
+| Plataforma | Licencia | Qué permite montar |
+|------------|----------|--------------------|
+| [ONSBR/prevcarga](https://github.com/ONSBR/prevcarga) / [PrevCargaDESSEM](https://github.com/ONSBR/PrevCargaDESSEM) | **Apache-2.0** / **MIT** | Previsión de carga para despacho de corto plazo (DESSEM), con copyright **CEPEL + ONS**: es el modelo del operador, no una aproximación académica |
+| [ONSBR/smapOnsR](https://github.com/ONSBR/smapOnsR) | **MIT** | **SMAP/ONS** en R: afluencias. En un sistema hidrotérmico como el brasileño, la previsión de agua es la variable de la que cuelga el resto |
+
+Para un *engagement* en Brasil esto cambia el punto de partida: no se propone construir un modelo de
+previsión, se propone **operacionalizar, validar y poner interfaz al modelo que el operador ya
+publica** — y eso es defendible ante el regulador precisamente porque es el modelo del operador.
+
+### ⚠️ Quinta confirmación externa: sigue sin haber ERP ni CIS de utility open source
+
+El barrido obligatorio de verticales (`open source platform energy ERP CRM MIT Apache`) devolvió,
+una vez más, **suites generalistas y ningún sistema de utility**: Apache OFBiz (Apache-2.0), Krayin
+(MIT), EPESI (MIT), ERPNext (**GPL-3.0**), Odoo (edición comunitaria + enterprise). El único hilo
+energético es **opentaps**, que abandonó el ERP y se reorientó a construir aplicaciones de negocio
+sobre datos de energía:
+
+| Repo | Licencia | Nota |
+|------|----------|------|
+| [opentaps/opentaps_seas](https://github.com/opentaps/opentaps_seas) | ⚠️ **LGPL-3.0** | *Smart Energy Applications Suite*: el pivote de un ERP open source hacia datos de energía, sobre **VOLTTRON**. 88 ★, **último push 2024-02-07** |
+
+Dos advertencias para no venderlo mal: **LGPL-3.0** es copyleft (enlazable, no forkeable en
+silencio), y **lleva 21 meses sin push**. Vale como **precedente de arquitectura** —que el camino
+ERP→energía se recorrió— no como base de producto. La conclusión de los pases 8, 9, 11 y 12 se
+mantiene intacta: **el hueco de ERP/CIS de utility es real y es la oportunidad de producto más
+grande y más vacía de este archivo.**
+
+### VOLTTRON como plataforma de edificios y DER: usar la versión de Eclipse
+
+[`eclipse-volttron/volttron-core`](https://github.com/eclipse-volttron/volttron-core) es
+**Apache-2.0**; el canónico [`VOLTTRON/volttron`](https://github.com/VOLTTRON/volttron) (504 ★, PNNL)
+es `NOASSERTION`. Para proponer VOLTTRON como plataforma de automatización de edificios/DER hay que
+citar **la de Eclipse**. Complemento ya inventariado:
+[`eclipse-volttron/volttron-openadr-ven`](https://github.com/eclipse-volttron/volttron-openadr-ven)
+(Apache-2.0), el nodo **OpenADR** sobre esa plataforma.

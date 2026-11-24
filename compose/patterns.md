@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 🧩 Patrones de composición — Energy
@@ -2229,3 +2229,148 @@ y etiquetado es **más fácil de declarar** que un sistema que toca el despacho.
 
 **La frase de apertura de la propuesta:** *"no le vamos a proponer IA en tiempo real, por la misma
 razón por la que el 77% de los operadores de su región no la usa."*
+
+## Recetas del pase 16 (2026-11-24)
+
+Contexto que cambia estas cuatro recetas respecto de las anteriores: la **restricción de arquitectura
+de esta KB dejó de ser una tesis propia**. Está en un **borrador de norma del NIST** (comportamiento
+determinista, explicabilidad, degradación elegante, *fail-safe*) y está **embarcada en el producto de
+un operador de sistema nacional** (el servidor MCP del ONS brasileño). Eso permite, por primera vez,
+proponer la compuerta **citando a quien ya la construyó** en vez de argumentándola.
+
+### Receta 53 — Compuerta de contratos de datos sobre el portal de un regulador u operador (replica lo que el ONS ya publicó)
+
+**Es la receta 49 (compuerta de validación) con el precedente dentro.** En el pase 15 esta KB la
+propuso como diseño propio con SHACL. El ONS la embarcó con **ODCS + DuckDB** y la publicó
+**Apache-2.0**. Ahora se vende mostrando el repo.
+
+**Piezas (todas verificadas vivas el 2026-11-24, licencias leídas byte a byte):**
+
+| Pieza | Licencia | Rol |
+|-------|----------|-----|
+| [ONSBR/TIAGO-Dados-Abertos](https://github.com/ONSBR/TIAGO-Dados-Abertos) | **Apache-2.0** (11.357 B) | **El servidor, reutilizable tal cual.** MCP + enrutado + validación + ejecución |
+| [bitol-io/open-data-contract-standard](https://github.com/bitol-io/open-data-contract-standard) | **Apache-2.0** (11.356 B) | **ODCS**: el formato del contrato. Declara schema, unidades, **aditividad por columna** y agregaciones válidas |
+| DuckDB | MIT | Motor de ejecución analítica embebido |
+| Cliente MCP (Claude, o cualquier host MCP) | — | Donde corre el modelo. **Nunca en el servidor** |
+
+**Cómo se cablea, y por qué cada paso existe.** El modelo del cliente recibe **el catálogo y los
+contratos**, no los datos. Escribe SQL contra un schema **declarado**, no imaginado. El servidor
+valida ese SQL contra el contrato antes de ejecutarlo, ejecuta en DuckDB, y devuelve el dato **con su
+unidad y su fuente probadas por el contrato**. Si el contrato no sostiene una afirmación, el servidor
+**marca el campo como desconocido en vez de deducirlo**.
+
+**Los cinco modos de fallo que el contrato elimina** (del README del ONS, citables ante cliente):
+elegir el dataset equivocado entre recortes de distinta granularidad —«la consulta corre, devuelve un
+número plausible, y responde otra pregunta»—; escribir SQL contra un schema inventado; **errar la
+unidad (`MWmed` no es `MWh`, y la diferencia no aparece en el resultado)**; **agregar lo que no se
+agrega** (sumar una columna que ya es promedio duplica el valor sin arrojar ningún error); y perder
+la procedencia.
+
+**Qué es lo facturable.** El servidor es Apache-2.0: **no se factura construirlo**. Se factura
+**escribir los contratos ODCS del dominio del cliente**, que es modelado semántico y consultoría de
+dominio, y es exactamente el trabajo que no se puede copiar de un repo. Portales objetivo
+inmediatos: **ANEEL** (sobre `tarifas-energia-api`, receta 48), **CAMMESA**, **CEN de Chile**,
+**EIA** (donde ya hay `eia-api-ts` MIT y `cyanheads/eia-energy-mcp-server` Apache-2.0), **ENTSO-E**
+(donde ya existe la capa CIM/CGMES de los pases 13-15).
+
+**Por qué pasa el filtro de arquitectura.** Es la forma más limpia que esta KB conoce de cumplirlo:
+el agente **no toca nada operativo**, consulta datos publicados; la determinación la da el contrato,
+no el modelo; y **ningún LLM corre en el servidor**, así que el despliegue no arrastra una decisión
+de soberanía de modelo — argumento directo en EMEA y en APAC.
+
+⚠️ **Límite declarado.** TIAGO es un servidor de **consulta de datos abiertos**, no de operación: su
+alcance es el portal público, no el SIN ni el despacho. Proponer el **patrón** y la **autoría
+institucional**, no un alcance operativo que el repo no tiene.
+
+### Receta 54 — Expediente de calificación de centro de datos ≥ 500 kW para el esquema delegado de la UE
+
+**Tiene umbral, criterios y un reglamento delegado en curso: hay contraparte que paga y hay fecha.**
+El **21-sep-2026** la Comisión propuso, dentro del *Data Centre Energy Efficiency Package*, un
+**reglamento delegado** con un **esquema común de calificación** para centros de datos de **potencia
+TI instalada ≥ 500 kW**, más consulta sobre **estándares mínimos de rendimiento**. Califica
+eficiencia energética, **eficiencia hídrica**, uso de renovables, **reutilización de calor residual**
+y **flexibilidad**.
+
+**Dónde está la ventaja de esta KB: dos de los cinco criterios son stack que ya tiene inventariado.**
+
+| Criterio del esquema | Piezas proponibles | Licencia |
+|----------------------|--------------------|----------|
+| **Flexibilidad** | Stack de flexibilidad y DER de las recetas 46 y 50; [`eclipse-volttron/volttron-core`](https://github.com/eclipse-volttron/volttron-core) + [`volttron-openadr-ven`](https://github.com/eclipse-volttron/volttron-openadr-ven) | Apache-2.0 |
+| **Reutilización de calor residual** | Stack de calor de distrito del décimo pase: `DHNx`, `topotherm`, `tespy` | MIT |
+| Eficiencia energética (medición y verificación) | Capa M&V y de medición de los pases 4 y 13 | MIT / permisivas |
+| Modelado del edificio/instalación | [`LBNL-ETA/EnergyPlus-MCP`](https://github.com/LBNL-ETA/EnergyPlus-MCP) + [`NatLabRockies/OpenStudio`](https://github.com/NatLabRockies/OpenStudio) | ⚠️ ver nota |
+| Compuerta de evidencia | Receta 53 (contratos ODCS sobre los datos de medición) | Apache-2.0 |
+
+**El gancho comercial preciso:** el esquema convierte **flexibilidad y calor residual en atributos
+calificados y declarables**, no en buenas intenciones. Eso los vuelve **trabajo de evidencia
+auditable**, que es un entregable con fecha. Y conecta con el **acuerdo tripartito modelo** de la
+hoja de ruta (COM(2026) 501): la UE reconoce que integrar un centro de datos en la red es un problema
+**contractual y de coordinación** — el mismo diagnóstico que ENTSO-E hizo del *colocation* en la
+receta 50, ahora con respaldo de la Comisión. **La receta 50 y esta se venden juntas.**
+
+⚠️ `NatLabRockies/OpenStudio` devuelve `NOASSERTION` y **no se le leyó la licencia byte a byte en
+este pase**: resolver antes de incluirlo en una propuesta (ítem 16-R4).
+⚠️ Toda la base regulatoria de esta receta es **secundaria convergente** (seis fuentes), porque los
+hosts primarios de la UE no resuelven DNS desde esta sesión. Verificar el reglamento delegado contra
+EUR-Lex antes de comprometer alcance con un cliente.
+
+### Receta 55 — Arnés de conformidad contra el perfil de infraestructura crítica del NIST (NA) — extiende las recetas 47 y 51
+
+**Se vende antes de que el perfil se publique, porque el borrador ya dice qué va a pedir.** El NIST
+desarrolla un **Trustworthy AI in Critical Infrastructure Profile** del AI RMF cuyas necesidades
+declaradas son **comportamiento determinista, explicabilidad, degradación elegante y operación
+*fail-safe***. Hay **community of interest abierta a comentarios** — vía de entrada barata y de alta
+credibilidad: participar en el comentario público es posicionamiento.
+
+**Los cuatro requisitos, y con qué se demuestra cada uno:**
+
+| Requisito del perfil | Cómo se evidencia | Piezas |
+|----------------------|-------------------|--------|
+| **Comportamiento determinista** | La compuerta de la receta 53: la respuesta la determina el contrato, no el muestreo del modelo. Registro de contrato aplicado por consulta | ODCS + servidor Apache-2.0 |
+| **Explicabilidad** | Traza de procedencia: cada número con su dataset y su URL de origen | Receta 53 |
+| **Degradación elegante** | El caso «no puedo probarlo» devuelve **desconocido** en vez de un número plausible. Es un requisito de diseño, y ya hay implementación de referencia | TIAGO como precedente |
+| **Operación *fail-safe*** | El agente **no tiene ruta de escritura** al sistema de control. Es arquitectura, no política | Recetas 47 y 51 |
+| Ingeniería informada por ciber | `idaholab/CIEMAT` + `CIEBAT` (**MIT**, *Cyber-Informed Engineering*, laboratorio nacional) | MIT |
+
+**Encuadre comercial.** Apilar con la **receta 47** (expediente auditable contra la guía NERC, plazo
+CIP de diciembre de 2026) y la **51** (herramientas de laboratorio nacional). El argumento de venta
+es que **los cuatro requisitos son auditables y el cliente no tiene hoy cómo demostrarlos**, y que
+**Deloitte y la NERC coinciden** en que la IA es apoyo a la decisión y no controlador autónomo: el
+expediente no es una concesión, es la forma del producto. Canal adicional: el **MOU NIST–DOE** de
+agosto de 2026 y los **Centers for AI in Manufacturing and Critical Infrastructure** (con MITRE).
+
+⚠️ **Estado del borrador no verificado**, cobertura secundaria, y **ninguna fuente lo vincula a la
+Genesis Mission** (ítem 16-R1). Proponer como **tendencia de normalización bien fundada**, nunca como
+requisito vigente. ⛔ **No citar `micro-ark.com`** ni su afirmación de que la FERC exige trazas
+«100 % transparentes».
+
+### Receta 56 — Operacionalizar los modelos que el operador ya publica (LATAM, Brasil primero)
+
+**La inversión del punto de partida.** Hasta este pase, una propuesta de pronóstico en Brasil
+empezaba por construir un modelo. Ya no: **el ONS publica los suyos con licencia permisiva**, así que
+lo que se propone es **operacionalizarlos, validarlos y ponerles interfaz** — y eso es defendible
+ante el regulador precisamente porque es el modelo del operador.
+
+| Pieza | Licencia (byte-read) | Rol |
+|-------|----------------------|-----|
+| [ONSBR/smapOnsR](https://github.com/ONSBR/smapOnsR) | **MIT** (vía `DESCRIPTION`) | **SMAP/ONS** de afluencias en R. En un sistema hidrotérmico, la variable de la que cuelga el resto |
+| [ONSBR/prevcarga](https://github.com/ONSBR/prevcarga) | **Apache-2.0** | PrevCarga-DESSEM, reescritura activa (push 2026-11-23) |
+| [ONSBR/PrevCargaDESSEM](https://github.com/ONSBR/PrevCargaDESSEM) | **MIT** (vía `DESCRIPTION`) | Previsión de carga, copyright **CEPEL + ONS** |
+| [ONSBR/TIAGO-Dados-Abertos](https://github.com/ONSBR/TIAGO-Dados-Abertos) | **Apache-2.0** | Capa de acceso con compuerta (receta 53) |
+| [`bdgd-tools`](https://github.com/eniocc/bdgd-tools) + [`bdgd2opendss`](https://github.com/PauloRadatz/bdgd2opendss) | MIT | Cadena de distribución de la receta 48, para bajar del sistema a la red |
+| [`TimeCopilot/timecopilot`](https://github.com/TimeCopilot/timecopilot) | MIT | *Challenger* agéntico: compara el modelo del operador contra TSFM y **explica** la diferencia |
+
+**El caso de negocio, con el número.** Brasil **curtailed el 20,6 % de su solar+eólica en 2025**
+(análisis sectorial; ⚠️ verificar contra ONS). Ese desperdicio es un problema de **pronóstico,
+despacho y flexibilidad** — y ahora los modelos de pronóstico del operador están disponibles en MIT.
+**La combinación de esos dos hechos es la propuesta LATAM más fuerte que esta KB ha podido formular.**
+
+**Cómo se cablea.** `smapOnsR` produce afluencias; `prevcarga` produce carga; `timecopilot` corre como
+*challenger* y explica divergencias; la receta 53 expone todo por MCP con contratos ODCS de modo que
+cada número salga con unidad y procedencia; `bdgd2opendss` baja a modelo de distribución ejecutable
+donde el caso sea de red y no de sistema. **Ningún componente escribe en un sistema de control.**
+
+⚠️ `smapOnsR` y `PrevCargaDESSEM` resuelven **MIT en `DESCRIPTION`** (convención de R, `LICENSE` de
+45 y 95 B); documentar ese hallazgo en la propuesta, porque una revisión legal superficial los leerá
+como «sin licencia» (T61). ⛔ **`ONSBR/DadosAbertos` (43 ★) no tiene licencia**: es el repo más
+visible de la organización y el único inutilizable.

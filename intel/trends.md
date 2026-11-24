@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 📡 Tendencias — energy
@@ -1805,3 +1805,181 @@ desde este entorno. Y `gh api repos/<owner>/<repo>` **está denegado por el alca
 mientras `search/repositories` y `raw.githubusercontent.com` funcionan: **la rama por defecto no se
 puede consultar**, hay que iterar `main`/`master`/`develop` a ciegas, y un `NO ARTEFACT` obtenido
 por esa vía es **un fallo de permiso disfrazado de hallazgo**.
+
+## Pase 16 (2026-11-24) — la restricción de arquitectura pasa de tesis a norma escrita y a producto embarcado
+
+Este pase mueve la tendencia central de esta KB de «lo sostenemos nosotros y lo confirman terceros» a
+**«está escrito en un borrador de norma de EE. UU. y está embarcado en el producto de un operador»**.
+
+### T66 — La arquitectura «el agente propone, una compuerta determinista valida» dejó de ser una propuesta de esta KB
+
+Dos confirmaciones nuevas, de naturalezas distintas, en un mismo pase:
+
+**1. Embarcada en producto, por un operador de sistema (LATAM).**
+[`ONSBR/TIAGO-Dados-Abertos`](https://github.com/ONSBR/TIAGO-Dados-Abertos) (Apache-2.0) implementa
+exactamente la **receta 49** de esta KB con otro estándar: capa semántica **ODCS** en YAML que
+declara schema, unidades y **aditividad por columna**; el servidor rutea, valida y ejecuta; el modelo
+del cliente escribe el SQL; **ningún LLM corre en el servidor**; y cuando no puede probar un dato,
+**declara desconocido en vez de deducir**. Séptima confirmación independiente de la restricción, y la
+primera que está en un producto y no en un análisis.
+
+**2. Escrita en un borrador de norma federal (NA).** El **NIST** está desarrollando un
+**Trustworthy AI in Critical Infrastructure Profile** del AI RMF, y las necesidades que la cobertura
+le atribuye son, literalmente, la restricción de esta KB: **comportamiento determinista,
+explicabilidad, degradación elegante (*graceful degradation*) y operación a prueba de fallos
+(*fail-safe*)**. NIST abrió una *community of interest* para comentarios. Es la primera vez que esta
+KB puede citar un **organismo de normalización** y no un analista.
+⚠️ **Estado del borrador no verificado**: la cobertura es secundaria (`industrialcyber.co`), no se
+localizó texto publicado, y **ninguna fuente lo vincula a la Genesis Mission**. Ítem abierto 16-R1.
+
+Cadena completa de confirmaciones de esta restricción, por orden y naturaleza — criterio propio
+(pase 1) → NERC (pase 14) → mercado/IEA con número, 23 % vs 54 % (pase 15) → **NIST, borrador de
+norma (pase 16)** → **ONS, producto embarcado (pase 16)** → PSR, consenso técnico regional (pase 16).
+**La conclusión comercial no cambia, se endurece: no se vende control autónomo. Se vende la
+compuerta.**
+
+### T67 — Dos fuentes de distinta fecha dieron el estado legal opuesto del mismo reglamento, dentro de un solo pase
+
+El caso más instructivo de método de este pase, y toca **el error más repetido de esta KB** (las
+fechas del AI Act):
+
+- Una fuente de bufete fechada **mayo de 2026** afirmaba que el acuerdo del **Digital Omnibus** sobre
+  IA *«todavía requiere adopción formal, y hasta su publicación en el Diario Oficial siguen vigentes
+  los plazos originales»*.
+- Fuentes de **noviembre de 2026** establecen que **ya es derecho vigente**: **Reglamento (UE)
+  2026/1744**, aprobado por el Parlamento el **16-jun-2026** y por el Consejo el **29-jun-2026**,
+  publicado en el DOUE el **24-jul-2026** y en vigor desde el **27-jul-2026**.
+
+Las dos eran correctas **en su fecha**. Una búsqueda que mezcla cosechas devuelve la respuesta
+obsoleta con la misma confianza que la vigente.
+
+> **REGLA: toda afirmación regulatoria de esta KB lleva la fecha de su fuente, y ante conflicto gana
+> la más reciente verificada — no la más autorizada.** Un bufete de mayo no es menos fiable que un
+> blog de noviembre: está desactualizado, que es otra cosa. Corolario para el AI Act, que esta KB ha
+> escrito mal más veces que ninguna otra cosa: **2024/1689 es el AI Act; 2026/1744 es el Digital
+> Omnibus que mueve sus fechas, y ya está en vigor.**
+
+### T68 — El plazo que importa para IA energética operativa en la UE se movió 16 meses
+
+Consecuencia comercial directa de lo anterior, y es el dato EMEA más vendible del pase:
+
+| Obligación | Fecha anterior | Fecha vigente |
+|------------|----------------|---------------|
+| Alto riesgo **Anexo III** autónomo (incluye infraestructura crítica: electricidad, gas, calor, agua) | 2-ago-2026 | **2-dic-2027** |
+| Alto riesgo **Anexo I** (IA embarcada en producto regulado) | — | **2-ago-2028** |
+| **Artículo 50**, transparencia | 2-ago-2026 | **NO se aplazó** — vigente desde el 2-ago-2026 |
+| Período de gracia de marcado de agua (sistemas ya en mercado) | — | 2-dic-2026 |
+
+El aplazamiento cubre el **Capítulo III, secciones 1-3**, salvo el artículo 6(5).
+
+**Lectura para un *engagement* EMEA:** la IA que gestiona u opera suministro eléctrico cae en el
+Anexo III, así que **el expediente de alto riesgo vence el 2-dic-2027, no en agosto de 2026**. Hay
+dieciséis meses más de los que esta KB tenía anotados. Pero **la transparencia del artículo 50 ya
+rige**: si el sistema interactúa con personas o genera contenido, esa obligación es de hoy. Vender
+«tiene tiempo» en bloque es un error; lo correcto es **«tiene tiempo para el expediente de alto
+riesgo, no para la transparencia»**.
+
+### T69 — La UE publicó la arquitectura de política de IA en energía, y una sola pieza es vinculante
+
+**Strategic Roadmap for Digitalisation and AI in the Energy Sector**, **COM(2026) 501**, lanzada el
+**3-jun-2026**. Tres pilares —*Energy for AI*, *Digitalisation and AI for the energy system*, *Data
+for AI and the energy system*— y **siete acciones faro**. Inversión en I+i referida ~**265 M€**, más
+~**75 M€** de Horizon Europe para IA en energía 2026-2027.
+
+**Es una comunicación de política, NO legislación vinculante.** Lo vinculante va por separado y ya se
+movió: el **21-sep-2026**, dentro del *Data Centre Energy Efficiency Package*, la Comisión propuso un
+**reglamento delegado** que establece un **esquema común de calificación de centros de datos** con
+potencia TI instalada **≥ 500 kW**, y abrió consulta sobre **estándares mínimos de rendimiento**. El
+esquema califica eficiencia energética, eficiencia hídrica, uso de renovables, **reutilización de
+calor residual y flexibilidad**.
+
+Dos piezas más de las acciones faro, relevantes para esta KB:
+- **Acuerdo tripartito modelo** para integrar centros de datos en la red — es decir, la UE reconoce
+  que la integración es un problema **contractual y de coordinación**, lo mismo que ENTSO-E dijo del
+  *colocation* en el pase 15 (receta 50).
+- **AI.grids**: marco piloto para **modelos fundacionales de IA paneuropeos para gestión y
+  planificación de red**. Conecta directamente con la capa de *grid foundation models* que esta KB
+  inventaría (`gridfm`, `PowerFM`): **hay dinero público europeo detrás de esa capa**.
+
+⚠️ **Procedencia, declarada.** `energy.ec.europa.eu`, `data.consilium.europa.eu` y `www.twobirds.com`
+**no resuelven DNS desde el egress de esta sesión** (`ENOTFOUND`), de modo que **no se leyó el texto
+primario**. Lo anterior está corroborado por **seis fuentes secundarias independientes** (Legal500,
+Eversheds Sutherland, EUREC, Eurelectric, Conventus Law, FSR-EUI) que coinciden en fecha, número de
+documento, pilares y umbral de 500 kW. Se registra como **secundario convergente**, no como
+bibliografía primaria. Ítem abierto 16-R2.
+
+### T70 — APAC pasa de un instrumento vinculante a dos, y uno nombra al sector energético
+
+El pase 15 cerró el hueco regulatorio de APAC con un solo instrumento (Corea). Ahora hay dos:
+
+- **Corea — AI Framework Act / AI Basic Act**, en vigor **22-ene-2026**. Novedad de este pase:
+  **cubre a desarrolladores y a implementadores (*deployers*)**, y los sectores que enumera incluyen
+  **energía**, agua potable, salud y nuclear. **Energía está nombrada en el texto.**
+- **Vietnam — primera ley de IA, en vigor 1-mar-2026**, de enfoque basado en riesgo, con **decreto de
+  implementación del 30-abr-2026**. Vietnam además aprobó la **Resolución 253/2025/QH15** con
+  mecanismos especiales para el desarrollo energético nacional 2026-2030.
+
+> **Matiz que hay que mantener, porque es el que se vende.** Sigue sin existir una norma de IA
+> **específica del sector** energético en Japón o Corea: lo que existe es **ley transversal de IA que
+> nombra la energía como sector cubierto**. No es lo mismo y la diferencia es facturable: la
+> obligación llega por la vía horizontal, de modo que el expediente se construye contra la ley de IA
+> del país, no contra el regulador eléctrico.
+
+Capa blanda regional, nueva: **APEC AI Initiative (2026-2030)**, adoptada en la Cumbre de Líderes de
+**Gyeongju (2025)**; los ministros de Energía reunidos en **Pekín** bajo presidencia china de 2026
+respaldaron recomendaciones de cooperación IA-energía con **tres hojas de ruta de consenso hasta
+2030** y encargaron al **Energy Working Group** crear un grupo específico de IA y energía. Metas
+reafirmadas: **duplicar la cuota de renovables respecto de 2010 para 2030** y **-45 % de intensidad
+energética respecto de 2005 para 2035**. En abril de 2026 el foro **EGNRET** reunió a siete economías
+APEC con APERC, IEA e IRENA sobre IA en pronóstico, optimización de red y energía inteligente.
+⚠️ El texto completo de las recomendaciones AI-energía **no se localizó**; fecha de la reunión de
+Pekín y contenido de las hojas de ruta **sin confirmar**. Ítem abierto 16-R3.
+
+### T71 — Fuentes que este pase descarta explícitamente (un negativo es información)
+
+- ⛔ **`micro-ark.com`**: afirma que la FERC exige pistas de auditoría de IA *«100 % transparentes»*.
+  **No verificable contra fuente regulatoria primaria** y contradice el hecho, sostenido por el resto
+  de las fuentes, de que **la FERC no ha emitido guía sobre IA operativa de utility**. **No citar.**
+- ⛔ **`nivelics.com`** (adopción empresarial LATAM): el texto publicado contiene **marcadores
+  `[VERIFY]` sin rellenar** donde deberían ir sus estadísticas. **No citar sus cifras.**
+- ⚠️ **Dispersión de tamaño de mercado, otra vez**: un comunicado sitúa el mercado de IA en energía en
+  **22,82 B USD en 2025** y Coherent Market Insights en **6,04 B USD en 2026**. **3,8× de dispersión
+  entre cifras del mismo fenómeno en años contiguos**, consistente con las mediciones de los pases
+  4, 5, 7 y 9. La dispersión sigue siendo el dato; no se adopta ninguna de las dos.
+- ⚠️ Claim sin verificar: una consultora afirma que las utilities polacas están **12-18 meses por
+  detrás** de sus pares de Europa occidental en madurez de IA. Atribuible, no adoptable.
+
+### T72 — Un slug recordado no es un slug verificado: este pase fabricó un nombre de organización
+
+**Autocorrección, registrada porque el detector la cazó y porque el modo de fallo es nuevo.**
+
+Al escribir la receta 56 se citó la cadena de distribución LATAM de la receta 48 como
+`pablodiegoss/bdgd-tools` y `pablodiegoss/bdgd2opendss`. **Esa organización no existe.** Los repos
+son reales y correctos, y **esta KB ya los tenía bien escritos** desde el pase que los incorporó:
+[`eniocc/bdgd-tools`](https://github.com/eniocc/bdgd-tools) (**MIT**, 10 ★) y
+[`PauloRadatz/bdgd2opendss`](https://github.com/PauloRadatz/bdgd2opendss) (**MIT**, 20 ★).
+
+El nombre del propietario **se recordó, no se consultó**. El repo correcto estaba a un `grep` de
+distancia en este mismo repositorio. No fue un dato obsoleto ni una fuente mala: fue una
+**confabulación de un identificador** en una cita de segunda mano, y las dos URLs resultantes
+devolvían 404.
+
+> **REGLA: el nombre del propietario de un repo se copia del registro o de la API, nunca de la
+> memoria — incluso cuando el repo ya está en esta KB, y sobre todo entonces.** El nombre del
+> artefacto (`bdgd2opendss`) se recuerda bien porque es descriptivo; **el del propietario es
+> arbitrario y es exactamente lo que se inventa sin notarlo.** Al citar una pieza de un pase
+> anterior: `grep` en la KB antes de escribir, y `git ls-remote` después.
+
+**Lo que funcionó, y por eso se deja escrito como instrumento.** La comprobación de liveness de este
+pase no se hizo sobre la lista de repos *descubiertos* —esos estaban todos verificados— sino sobre
+**todas las URLs del `git diff`**, incluidas las de relleno y las citadas de pases anteriores:
+
+```
+git diff -U0 | grep '^+' | grep -ohE 'github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' \
+  | sed 's#github\.com/##' | sort -u | while read r; do \
+      git ls-remote --exit-code -h "https://github.com/$r" >/dev/null 2>&1 || echo "DEAD: $r"; done
+```
+
+**35 URLs nuevas, 33 vivas, 2 muertas — y las 2 muertas eran las únicas no descubiertas en este
+pase.** Verificar sólo los hallazgos deja pasar precisamente las citas de memoria, que son las que
+fallan. **El diff es el alcance correcto de la verificación, no la lista de hallazgos.**

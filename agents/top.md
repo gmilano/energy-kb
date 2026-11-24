@@ -1,7 +1,7 @@
 ---
 industry: energy
 region: Global
-updated: 2026-11-21
+updated: 2026-11-24
 ---
 
 # 🎯 Agentes AI — energy
@@ -1076,3 +1076,64 @@ control**; y el 23% no es inmadurez a vencer, es **política de riesgo del clien
 > **T57 — cláusula de prohibición de entrenamiento de IA: clase nueva.** Prohíbe usar el código para
 > entrenar o afinar LLM. Afecta al **uso interno de un estudio de IA**, no sólo a la redistribución,
 > y **ningún campo SPDX la expresa**.
+
+## Pase 16 (2026-11-24): el primer servidor MCP **oficial de un operador de sistema**, y es Apache-2.0
+
+Todo lo verificado el **2026-11-24** con `gh api search/repositories` (campos `license.spdx_id`,
+`stargazers_count`, `pushed_at`), liveness con `git ls-remote`, y **licencias leídas byte a byte** en
+`raw.githubusercontent.com` (primera línea no vacía + tamaño) en todos los casos.
+
+| Nombre | Licencia | Descripción | Stars | Último push | Región origen |
+|--------|----------|-------------|-------|-------------|---------------|
+| [ONSBR/TIAGO-Dados-Abertos](https://github.com/ONSBR/TIAGO-Dados-Abertos) | **Apache-2.0** (11.357 B) | **Servidor MCP oficial de `dados.ons.org.br`**, el portal de datos abiertos del ONS brasileño. Capa semántica en YAML (**ODCS v3.1.0**) declara schema, unidades y agregaciones válidas; el servidor rutea/valida/ejecuta y **el modelo del cliente escribe el SQL**. Motor DuckDB. Publicado en PyPI (`mcp-tiago-dados-abertos`) | 29 | 2026-11-20 | **LATAM** |
+| [cyanheads/eia-energy-mcp-server](https://github.com/cyanheads/eia-energy-mcp-server) | **Apache-2.0** (10.846 B) | MCP sobre la **EIA API v2** de EE. UU. `NOASSERTION` por API, Apache por byte-read | 3 | 2026-11-15 | North America |
+| [HPML6998-S26-Team13/hpml-assetopsbench-smart-grid-mcp](https://github.com/HPML6998-S26-Team13/hpml-assetopsbench-smart-grid-mcp) | **MIT** (1.111 B) | **SmartGridBench**: benchmark de mantenimiento de transformadores con *tool-calling*. Categoría nueva en esta KB: banco de pruebas agéntico sectorial | 1 | 2026-07-01 | North America |
+| [lubosstrejcek/victron-tcp](https://github.com/lubosstrejcek/victron-tcp) | **MIT** (1.070 B) | MCP sobre dispositivos **Victron GX** en tiempo real: solar, batería, red | 7 | 2026-11-02 | EMEA |
+| [lubosstrejcek/victron-vrm-mcp](https://github.com/lubosstrejcek/victron-vrm-mcp) | **MIT** | MCP sobre la API cloud **Victron VRM**: acceso remoto a solar y batería | 5 | 2026-11-13 | EMEA |
+| [KoshiirRa/midgley](https://github.com/KoshiirRa/midgley) | **Apache-2.0** (10.172 B) | Multi-agente LLM de pronóstico de precio de combustible (RBOB mayorista y retail) | 2 | 2026-11-23 | North America |
+| [alanmossinger/ai-enablement-proof](https://github.com/alanmossinger/ai-enablement-proof) | **MIT** (1.071 B) | Agente autónomo **«gobernado»** para fiabilidad de red en EE. UU. Vale por el encuadre de gobernanza, no por el código (1 ★) | 1 | 2026-11-11 | North America |
+
+### Por qué `TIAGO-Dados-Abertos` es la fila más importante de este archivo
+
+No por las estrellas —29— sino porque **es la primera vez que esta KB registra un servidor MCP
+publicado por el operador de un sistema eléctrico nacional**, y porque su arquitectura resuelve, en
+producción, la restricción que atraviesa todas las recetas de esta KB:
+
+- **Ningún LLM corre en el servidor.** Entrega catálogo y contratos, valida y ejecuta SQL, y
+  *«tudo o que devolve é determinístico e rastreável ao contrato»*.
+- **Cuando no puede probar un dato, declara desconocido en vez de deducir.**
+- Cada respuesta trae **unidad y fuente probadas por el contrato** ODCS.
+
+Esto es la **receta 49** de esta KB (compuerta de validación sobre el esquema del propio sector),
+implementada con ODCS en vez de SHACL y DuckDB como motor, por un TSO. Es la **séptima confirmación
+independiente** de la restricción de arquitectura de esta KB y **la primera embarcada en un producto**
+y no en un análisis, una norma o un paper. Generalizada en la **receta 53**.
+
+⚠️ **Cómo proponerlo sin exagerarlo.** Es un servidor de **consulta de datos abiertos**, no de
+operación: su alcance es el portal público del ONS, no el SIN ni el despacho. Lo citable es
+**el patrón y la autoría institucional**, más el hecho de que el propio ONS publique su advertencia
+de que la herramienta generativa puede producir imprecisiones y que para posición institucional hay
+que usar los canales oficiales. Esa advertencia es un **activo** en una conversación con cliente:
+el operador ya escribió la frontera que el cliente va a querer oír.
+
+### Exclusiones de este pase
+
+- ⛔ [`lhg96/smartEMS-MultiAgent-Demo`](https://github.com/lhg96/smartEMS-MultiAgent-Demo) (6 ★,
+  origen Corea): `LICENSE` de 2.699 B titulado **`Custom License Agreement`** — no comercial, con
+  licencia comercial separada de pago. Prohíbe explícitamente integración en productos comerciales,
+  uso en producción y despliegue en actividades generadoras de ingresos. **Inutilizable.**
+- ⛔ [`d2rojas/LLMs-Agents-For-SmartGrids-Code`](https://github.com/d2rojas/LLMs-Agents-For-SmartGrids-Code)
+  (5 ★): **sin artefacto de licencia** (probados `main`/`master`/`develop` × 4 nombres). Citable como
+  paper, no incorporable.
+- ⛔ [`emporiaenergy/emporia-mcp`](https://github.com/emporiaenergy/emporia-mcp): MCP de fabricante
+  **sin licencia**. Se registra porque la categoría «MCP de dispositivo de fabricante» es nueva y
+  Victron sí es MIT.
+
+### Nota de saturación
+
+Los barridos agénticos de este pase (cuatro consultas con filtro de recencia, `pushed:>2026-06-01` a
+`>2026-09-01`) devolvieron como ancla **exclusivamente repos ya inventariados**: `Power-Agent/PowerMCP`
+(242 ★, +4 desde el pase 15), `Power-Agent/PowerFM`, `LBNL-ETA/EnergyPlus-MCP` (132 ★),
+`TimeCopilot/timecopilot` (643 ★), `idfkit/idfkit-mcp`. **El techo agéntico global de esta KB es
+real.** Lo que no era real era el cero regional de LATAM, y lo rompió una consulta de cuatro palabras
+en portugués (T63, ver `agents/trending.md`).
