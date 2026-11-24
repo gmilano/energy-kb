@@ -973,3 +973,98 @@ volvió a devolver **ERP/CRM genéricos** y ninguna suite de *utility*:
 > *engagement* eso significa que **la integración es el producto**: el estudio compone facturación +
 > gestión de energía + telemetría + datos de mercado, y ese ensamblaje es precisamente lo que no se
 > puede comprar hecho.
+
+## Pase 18 (2026-11-24) — el *nowcasting* nacional como vertical abierta, el marco beneficio-coste de LF Energy, y la séptima confirmación de que no hay ERP de utility abierto
+
+### 1. Vertical nueva: pronóstico renovable a escala de sistema, con un producto abierto detrás
+
+Esta KB tenía inventariado `openSTEF` (MPL-2.0, Alliander + RTE) como pieza de forecasting, y
+`open-source-quartz-solar-forecast` como pronóstico **a nivel de sitio**. Lo que faltaba es el
+vertical completo: **el pronóstico de generación renovable a escala de sistema, con interfaz de
+sala de control**, y existe entero bajo MIT.
+
+| Componente | Repo | Licencia (byte-read) | ★ | Push | Papel en la plataforma |
+|------------|------|----------------------|---|------|------------------------|
+| Modelo de pronóstico FV nacional | [openclimatefix/pvnet](https://github.com/openclimatefix/pvnet) | **MIT** (1.076 B) | 63 | 2026-10-30 | El modelo. 51 forks / 63 ★: colaboración, no escaparate |
+| Variante sólo con datos abiertos | [openclimatefix/open-data-pvnet](https://github.com/openclimatefix/open-data-pvnet) | **MIT** | 56 | 2026-02-16 | **La versión desplegable sin contratos de datos privados**: el arranque de un piloto |
+| Interfaz de operación | [openclimatefix/quartz-frontend](https://github.com/openclimatefix/quartz-frontend) | **MIT** | 112 | 2026-11-20 | *Front-end* del producto de *nowcasting* |
+| Pronóstico a nivel de sitio | [openclimatefix/open-source-quartz-solar-forecast](https://github.com/openclimatefix/open-source-quartz-solar-forecast) | **MIT** | 163 | 2026-09-06 | *(ya inventariado)* El caso de un activo individual |
+| *Nowcasting* de radar | [openclimatefix/skillful_nowcasting](https://github.com/openclimatefix/skillful_nowcasting) | **MIT** | 301 | 2026-11-23 | Horizonte 0–3 h, el que ningún modelo global cubre bien |
+| Post-procesado contra observación | [metno/gridpp](https://github.com/metno/gridpp) | ⚠️ **LGPL-3.0** (7.651 B) | 65 | 2026-09-30 | Corrección de sesgo: convierte pronóstico global en pronóstico local. **Dependencia, no base a forkear** |
+| Acceso a datos del modelo | [ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) · [blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) | **Apache-2.0** · **MIT** | 342 · 801 | 2026-11-20 · 2026-11-17 | EMEA / North America respectivamente |
+| Verdad-terreno observada | [earthobservations/wetterdienst](https://github.com/earthobservations/wetterdienst) | **MIT** (1.082 B) | 457 | 2026-11-23 | Observación de servicios nacionales: lo que valida el pronóstico |
+
+**Por qué cuenta como vertical y no como lista de repos.** La pila tiene las cuatro capas que esta
+KB exige a una «vertical de partida»: ingesta (`ecmwf-opendata`/`Herbie`), modelo (`pvnet`),
+corrección contra realidad (`gridpp` + `wetterdienst`) e **interfaz de operación**
+(`quartz-frontend`). Y tiene precedente de operación: Open Climate Fix construyó esta familia
+alrededor del *nowcasting* solar del sistema británico. **Todo MIT salvo `gridpp`**, que es
+LGPL-3.0 y entra como dependencia enlazada.
+
+⚠️ **Lo que falta en la pila y hay que presupuestar**: la capa de **almacenamiento versionado** del
+cubo de entrada. Para auditar «por qué el pronóstico dijo eso el martes» hace falta
+[earth-mover/icechunk](https://github.com/earth-mover/icechunk) (Apache-2.0, 708 ★) o equivalente.
+No viene incluido y es la diferencia entre un piloto y un sistema defendible ante un regulador.
+
+### 2. El artefacto comercial que esta KB llevaba siete pases necesitando
+
+La sección «Marco de justificación de open source ante una utility regulada» (pase 7) se construyó
+porque **no había cifra independiente** que sostuviera la conversación de compra. Ahora la hay:
+
+> ***The Open Source Value Proposition for the Energy Sector*** — **LF Energy + LF Research**,
+> publicado el **15 de septiembre de 2026 en Berlín**. Hallazgo titular: el software open source
+> puede entregar **2–5× más valor neto** a un operador de red que la compra convencional.
+
+**Qué hay dentro, y por qué es usable en una propuesta:**
+
+- Introduce el **LF Energy Open Source Benefit-Cost Framework**, que organiza el valor en **cuatro
+  componentes**: coste, riesgo, valor estratégico y valor social.
+- **Método declarado**: el marco se validó con **simulaciones sintéticas** y **tres casos reales**.
+- **La crítica que hace al proceso de compra es el gancho comercial**: las evaluaciones de compra
+  habituales se concentran demasiado en coste de adquisición y de operación, y **omiten
+  interoperabilidad, personalización, apalancamiento en la negociación y soberanía digital**.
+
+**Cómo se usa, concretamente.** No se presenta como «el open source es más barato» —el propio marco
+dice que el coste es **uno de cuatro** componentes. Se usa para **reencuadrar la hoja de
+evaluación** del cliente: si la comparativa del cliente sólo tiene columnas de licencia y soporte,
+el marco de LF Energy justifica añadir las cuatro, y en esas cuatro es donde un estudio de
+integración gana. Es el complemento exacto de las secciones de licencia de esta KB: aquéllas dicen
+**qué se puede usar**, ésta dice **cómo se defiende la decisión**.
+
+⚠️ **Procedencia, honesta.** `linuxfoundation.org` y `lfenergy.org` son **inalcanzables** desde esta
+sesión (el proxy no resuelve el host), así que el informe **no se ha leído byte a byte**. Los datos
+anteriores —nombre, fecha, lugar, multiplicador, los cuatro componentes y el método de validación—
+están corroborados por **cuatro fuentes independientes** vía `WebSearch`. **Pendiente para el
+próximo pase con red: descargar el informe y verificar los tres casos y el cálculo del
+multiplicador antes de citar el 2–5× en material de cliente.**
+
+### 3. Séptima confirmación: no existe ERP/CRM de utility abierto
+
+Consulta ejecutada: `open source platform utility energy ERP CRM MIT Apache 2026`. Candidatos
+devueltos y su estado:
+
+| Candidato | Qué es realmente |
+|-----------|------------------|
+| **Odoo** | ERP modular generalista. Dos ediciones: la comunitaria hay que verificarla pieza por pieza. **No es vertical de utility** |
+| **Dolibarr** | ERP+CRM para pyme. Generalista |
+| **SuiteCRM** | CRM que *se comercializa* para energía y utilities. El vertical está en el marketing, no en el modelo de datos |
+| **Jmix** | Marco para construirte la aplicación. Es *build-your-own*, no producto |
+| **opentaps** | Fue ERP+CRM abierto; su fabricante «pasó de ERP a Smart Energy» en 2019. **Parado** |
+| **Gentrack Evolve** | Plataforma de utility, **no open source** |
+
+**La respuesta del cuarto pase se confirma por séptima vez**: no hay «Odoo de la utility». La
+consecuencia de propuesta no cambia y conviene repetirla porque es contraintuitiva para un cliente:
+**el vertical no se compra, se compone** —`verticals/solutions.md` tiene ya seis verticales
+compuestas (EVerest+CitrineOS para recarga, OpenEMS para EMS, el portal de datos abiertos, la
+analítica de mercado, la lectura local de medidor, y ahora el pronóstico renovable).
+
+### 4. Nota de alcance sobre una vertical que **no** se abre: riesgo de incendio y vegetación
+
+Se buscó (`fire danger index license:mit`, `org:NCAR fire`) y el resultado está medido: techo de
+**17 ★**. [NCAR/fire-indices](https://github.com/NCAR/fire-indices) (MIT, *push* 2024-09-19),
+[NCAR/fire_behavior](https://github.com/NCAR/fire_behavior) (Apache-2.0, 11 ★, 2026-11-06),
+[NCAR/finn](https://github.com/NCAR/finn) (MIT, 12 ★). **Hay índices permisivos y no hay
+plataforma**: los motores reales viven acoplados dentro de WRF-Fire y código de investigación. Para
+un PSPS o un plan de vegetación esto es **desarrollo a medida con componentes sueltos**, no
+integración de una vertical existente, y hay que presupuestarlo como tal. Se declara como
+delgadez medida, no como gap desconocido.

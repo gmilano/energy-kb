@@ -1503,3 +1503,176 @@ que el de popularidad**, y un repo oficial de operador no es excepción.
   byte antes de proponerlos. CSIRO usa **al menos dos** licencias distintas, así que no se puede
   inferir del hermano.
 - Heredado y **sin cerrar**: `FlexPwr/bess-optimizer` sigue en `NOASSERTION` sin leer.
+
+## Pase 18 (2026-11-24): la capa meteorológica que hay **debajo** de todo pronóstico renovable
+
+Esta KB declaró el problema en su propia sección «Recurso meteorológico: la dependencia que todo
+forecasting arrastra»: el único proveedor inventariado era
+[open-meteo/open-meteo](https://github.com/open-meteo/open-meteo) (6.704 ★), **AGPL-3.0 y con API
+pública *non-commercial***. Dieciocho pases después, la KB tenía el pronóstico de potencia
+(`openSTEF`, `PVNet` parcial, `atlite`) y **no tenía el modelo de atmósfera que lo alimenta**.
+
+Control de virginidad ejecutado antes de buscar, sobre los 9 ficheros: `anemoi` 0 · `earthkit` 0 ·
+`graphcast` 0 · `aurora` 0 · `ecmwf` **0 repos de 555 inventariados** · `nwp` 0 · `era5` 2
+(menciones de paso) · `zarr` 0 · `xarray` 0 · `herbie` 0 · `weatherbench` 0 · `physicsnemo` 0 ·
+`nowcast` 0 · `copernicus` 0. **Capa virgen confirmada**, no «capa mal nombrada».
+
+### 1. El marco europeo de modelos de IA meteorológica: `anemoi` (ECMWF, Apache-2.0)
+
+| Repo | Licencia | ★ | Forks | Push | Madurez declarada | Papel |
+|------|----------|---|-------|------|-------------------|-------|
+| [ecmwf/anemoi-core](https://github.com/ecmwf/anemoi-core) | **Apache-2.0** (`LICENSE` 11.353 B, primera línea `Apache License`) | 177 | **133** | 2026-11-23 | `incubating` | **Monorepo** con `anemoi-training`, `anemoi-models` y `anemoi-graphs`. Es la base a forkear |
+| [ecmwf/anemoi-inference](https://github.com/ecmwf/anemoi-inference) | **Apache-2.0** | 44 | 50 | 2026-11-23 | `incubating` | Inferencia de modelos ML de pronóstico: el componente que se despliega |
+| [ecmwf/anemoi-datasets](https://github.com/ecmwf/anemoi-datasets) | **Apache-2.0** | 88 | 84 | 2026-11-23 | `incubating` | Construcción de datasets de entrenamiento desde GRIB/NetCDF/Zarr |
+| [ecmwf/anemoi-transform](https://github.com/ecmwf/anemoi-transform) | **Apache-2.0** | 9 | 27 | 2026-11-23 | `incubating` | Transformaciones de variables entre convenios |
+| [ecmwf/anemoi-utils](https://github.com/ecmwf/anemoi-utils) | **Apache-2.0** | 15 | 21 | 2026-11-23 | `incubating` | Utilidades compartidas |
+| [ecmwf/anemoi-registry](https://github.com/ecmwf/anemoi-registry) | **Apache-2.0** | 13 | 4 | 2026-11-20 | — | Registro de *checkpoints* y datasets |
+| [ecmwf/anemoi-configs](https://github.com/ecmwf/anemoi-configs) | **Apache-2.0** | 6 | 3 | 2026-11-20 | — | Configuraciones de referencia |
+| [ecmwf/anemoi-plugins](https://github.com/ecmwf/anemoi-plugins) | **Apache-2.0** | 2 | 2 | 2026-11-23 | — | Puntos de extensión |
+| [ecmwf/anemoi](https://github.com/ecmwf/anemoi) | **Apache-2.0** | 160 | 25 | 2026-11-20 | — | Repo paraguas / documentación |
+
+⚠️ **Trampa de archivado, octavo caso de esta KB, y es la más fácil de pisar.** Los tres paquetes
+que un ingeniero busca por nombre — `anemoi-models`, `anemoi-training`, `anemoi-graphs` — existen
+como repos **ARCHIVADOS** con *push* congelado el **2024-12-19** (50 ★ / 24 ★ / 19 ★). Fueron
+consolidados en `anemoi-core`, y el propio README de `anemoi-core` lo dice en su primera línea de
+cuerpo: *«A mono-repo containing core training and modelling functionality for Anemoi, providing
+the packages `anemoi-training`, `anemoi-models`, and `anemoi-graphs`»*. **El nombre del paquete de
+PyPI sobrevive al nombre del repo**: quien clone `ecmwf/anemoi-models` clona código de hace dos
+años sin que nada se lo advierta. Clonar siempre `anemoi-core`.
+
+**Señal de colaboración institucional, no de popularidad.** `anemoi-core` tiene **133 forks para
+177 ★** (ratio 0,75) y `anemoi-datasets` **84 forks para 88 ★** (0,95). En esta KB el ratio normal
+de un repo de laboratorio es de 0,1–0,3. Un ratio cercano a 1 no significa tracción de comunidad:
+significa que **los servicios meteorológicos nacionales están trabajando dentro del repo**. Para un
+*engagement* eso importa más que las estrellas: el marco no depende de un mantenedor.
+
+### 2. Acceso a datos: la respuesta directa al problema AGPL que esta KB llevaba cinco pases señalando
+
+| Repo | Licencia (byte-read) | ★ | Forks | Push | Madurez | Qué resuelve |
+|------|----------------------|---|-------|------|---------|--------------|
+| [ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) | **Apache-2.0** (11.356 B) | 342 | 55 | 2026-11-20 | sin *badge* | Cliente de los **datos abiertos del IFS/AIFS de ECMWF**. Es el sustituto permisivo de `open-meteo` para pronóstico determinista y de conjunto |
+| [blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) | **MIT** (1.078 B) | **801** | 148 | 2026-11-17 | — | Descarga **HRRR, RAP, GFS, GEFS, IFS** desde NOMADS y desde los *NODD partners* (AWS, Google, Azure). El equivalente norteamericano, y el repo con más tracción de esta capa |
+| [ecmwf/cfgrib](https://github.com/ecmwf/cfgrib) | **Apache-2.0** (11.356 B) | 465 | 89 | 2026-11-20 | sin *badge* | GRIB → modelo de datos NetCDF/CF, el puente a `xarray` |
+| [ecmwf/eccodes](https://github.com/ecmwf/eccodes) | **Apache-2.0** | 275 | 113 | 2026-11-23 | `graduated` | Biblioteca C de codificación/decodificación GRIB y BUFR. Es el suelo de todo lo anterior |
+| [ecmwf/eccodes-python](https://github.com/ecmwf/eccodes-python) | **Apache-2.0** | 138 | 37 | 2026-11-20 | — | Enlace Python de `eccodes` |
+| [earthobservations/wetterdienst](https://github.com/earthobservations/wetterdienst) | **MIT** (`LICENSE.md` 1.082 B; manifiesto `license-expression = "MIT"`) | 457 | 67 | 2026-11-23 | — | Cliente unificado de datos **observados** de servicios nacionales (DWD y otros). Observación, no pronóstico: es la verdad-terreno para validar |
+| [ecmwf/earthkit-data](https://github.com/ecmwf/earthkit-data) | **Apache-2.0** | 124 | 34 | 2026-11-23 | **`graduated`** | Interfaz agnóstica de formato (GRIB, NetCDF, Zarr, CSV, BUFR) |
+| [ecmwf/earthkit-meteo](https://github.com/ecmwf/earthkit-meteo) | **Apache-2.0** | 17 | 14 | 2026-11-20 | **`graduated`** | Cálculos meteorológicos estándar (estabilidad, humedad, viento) |
+| [ecmwf/earthkit-plots](https://github.com/ecmwf/earthkit-plots) | **Apache-2.0** | 27 | 17 | 2026-11-20 | **`graduated`** | Visualización con plantillas de ciencia de la tierra |
+| [ecmwf/earthkit-hydro](https://github.com/ecmwf/earthkit-hydro) | **Apache-2.0** | 36 | 4 | 2026-11-20 | **`graduated`** | Funciones hidrológicas: la pieza para **hidroeléctrica**, que esta KB tenía con 0 menciones |
+| [ecmwf/earthkit-regrid](https://github.com/ecmwf/earthkit-regrid) | ⚠️ **Apache-2.0 sólo en el manifiesto** (`pyproject.toml`: `license = { text = "Apache License Version 2.0" }`); **no hay fichero `LICENSE`** y la rama por defecto es `develop` | 11 | 4 | 2026-11-20 | `emerging` | Re-mallado entre rejillas. Coherente: es la pieza menos madura de la familia |
+| [ecmwf/earthkit-workflows](https://github.com/ecmwf/earthkit-workflows) | **Apache-2.0** | 13 | 0 | 2026-11-20 | `emerging` | Encadenado de pasos de procesamiento |
+| [ecmwf/climetlab](https://github.com/ecmwf/climetlab) | **Apache-2.0** | 392 | 55 | 2026-11-20 | sin *badge* | ⚠️ **Predecesor de `earthkit`**. 392 ★ heredadas; para proyecto nuevo usar `earthkit-data` |
+
+### 3. Los modelos: `ecmwf/codex` da una señal de aptitud para producción que las estrellas no dan
+
+| Repo | Licencia **del código** (byte-read) | ★ | Push | Origen | Nota |
+|------|-------------------------------------|---|------|--------|------|
+| [ecmwf-lab/ai-models](https://github.com/ecmwf-lab/ai-models) | **Apache-2.0** | 606 | 2026-08-06 | EMEA | *Runner* con plugins para correr modelos de IA con datos de ECMWF. Vía histórica; la vía viva es `anemoi-inference` |
+| [NVIDIA/physicsnemo](https://github.com/NVIDIA/physicsnemo) | **Apache-2.0** (manifiesto `license = "Apache-2.0"`, `LICENSE.txt` 11.438 B) | **3.475** | 2026-11-23 | North America | Marco de *deep learning* para física. El repo con más tracción de toda esta capa |
+| [NVIDIA/earth2studio](https://github.com/NVIDIA/earth2studio) | **Apache-2.0** (manifiesto + `LICENSE` 11.319 B) | 1.255 | 2026-11-23 | North America | Marco de *workflows* de IA de clima/tiempo: inferencia, perturbación de conjunto, diagnósticos |
+| [NVIDIA/earth2mip](https://github.com/NVIDIA/earth2mip) | **Apache-2.0** | 257 | 2026-01-28 | North America | Intercomparación de modelos. *Push* de enero de 2026: en desaceleración frente a `earth2studio` |
+| [google-research/weatherbench2](https://github.com/google-research/weatherbench2) | **Apache-2.0** (`LICENSE` 11.357 B) | 650 | 2026-11-17 | North America | **El banco de pruebas de referencia** del sector |
+| [google-research/weatherbenchX](https://github.com/google-research/weatherbenchX) | **Apache-2.0** | 277 | 2026-11-23 | North America | Marco modular de evaluación: el sucesor, más activo que el original |
+| [HFAiLab/OpenCastKit](https://github.com/HFAiLab/OpenCastKit) | **MIT** (1.063 B, rama `master`) | 385 | 2023-04-18 | APAC | Implementación abierta de FourCastNet y GraphCast. ⚠️ *Push* de abril de 2023: **inventariado por procedencia y licencia, no como base de producto** |
+| [shiyu-coder/WindFM](https://github.com/shiyu-coder/WindFM) | **MIT** (1.081 B, rama `master`) | 126 | 2025-09-17 | APAC | *Foundation model* de **pronóstico de potencia eólica *zero-shot***. Único FM específico de potencia eólica inventariado. ⚠️ *push* de septiembre de 2025 |
+
+### 4. El sustrato de datos: lo que hace que un cubo de 10 TB sea operable
+
+Esta capa no es «infra genérica de PyData»: es **la superficie de integración real**, porque ERA5,
+AIFS y los *reanalysis* se distribuyen hoy como **Zarr**, y el coste de un producto de forecasting
+está en mover y versionar ese cubo, no en el modelo.
+
+| Repo | Licencia (byte-read) | ★ | Forks | Push | Qué aporta a un producto energético |
+|------|----------------------|---|-------|------|--------------------------------------|
+| [pydata/xarray](https://github.com/pydata/xarray) | **Apache-2.0** | 4.240 | 1.536 | 2026-11-22 | Arrays N-dimensionales etiquetados: el tipo de dato de toda esta capa |
+| [zarr-developers/zarr-python](https://github.com/zarr-developers/zarr-python) | **MIT** (manifiesto `license = "MIT"`, `LICENSE.txt` 1.123 B) | 2.092 | 485 | 2026-11-19 | Formato de array troceado y comprimido, nativo de objeto |
+| [earth-mover/icechunk](https://github.com/earth-mover/icechunk) | **Apache-2.0** (`LICENSE` 11.343 B) | 708 | 95 | 2026-11-23 | **Motor de almacenamiento transaccional** de tensores: *commits* y *snapshots* sobre Zarr. Es lo que hace **reproducible** un pronóstico ante un regulador |
+| [zarr-developers/VirtualiZarr](https://github.com/zarr-developers/VirtualiZarr) | **Apache-2.0** | 312 | 76 | 2026-11-18 | Convierte archivos GRIB/NetCDF existentes en Zarr **virtual**, sin copiarlos |
+| [fsspec/kerchunk](https://github.com/fsspec/kerchunk) | **MIT** (1.062 B) | 370 | 99 | 2026-09-15 | Acceso «cloud-friendly» a archivo histórico. Antecesor de VirtualiZarr |
+| [pangeo-forge/pangeo-forge-recipes](https://github.com/pangeo-forge/pangeo-forge-recipes) | **Apache-2.0** | 134 | 51 | 2026-11-02 | ETL declarativo de datasets científicos sobre Apache Beam |
+| [zarr-developers/zarr-specs](https://github.com/zarr-developers/zarr-specs) | **CC-BY-4.0** | 116 | 40 | 2026-11-17 | La **especificación**. CC-BY en un repo de especificación es la convención correcta, no un riesgo (regla de la casa, como en `eclipse-tractusx`) |
+| [earth-mover/aifs-demo](https://github.com/earth-mover/aifs-demo) | **Apache-2.0** | 44 | 7 | 2026-10-21 | Demo de **AIFS corriendo en nube**: la referencia más corta de extremo a extremo que existe |
+
+### 5. Del pronóstico meteorológico a la potencia: la capa que esta KB tenía a un tercio
+
+| Repo | Licencia (byte-read) | ★ | Forks | Push | Origen | Papel |
+|------|----------------------|---|-------|------|--------|-------|
+| [openclimatefix/graph_weather](https://github.com/openclimatefix/graph_weather) | **MIT** | 305 | 95 | 2026-11-23 | EMEA | Modelos de pronóstico basados en grafos (implementación del trabajo de Keisler) |
+| [openclimatefix/metnet](https://github.com/openclimatefix/metnet) | **MIT** | 305 | 64 | 2026-11-23 | EMEA | MetNet y MetNet-2 en PyTorch: *nowcasting* de precipitación |
+| [openclimatefix/skillful_nowcasting](https://github.com/openclimatefix/skillful_nowcasting) | **MIT** | 301 | 70 | 2026-11-23 | EMEA | DGMR de DeepMind reimplementado: *nowcasting* generativo de radar |
+| [openclimatefix/pvnet](https://github.com/openclimatefix/pvnet) | **MIT** (1.076 B) | 63 | 51 | 2026-10-30 | EMEA | **Pronóstico fotovoltaico a escala nacional**. 51 forks sobre 63 ★: ratio 0,8, el patrón institucional otra vez |
+| [openclimatefix/open-data-pvnet](https://github.com/openclimatefix/open-data-pvnet) | **MIT** | 56 | 49 | 2026-02-16 | EMEA | PVNet entrenado **sólo con datos abiertos**: la variante reproducible sin contratos de datos |
+| [openclimatefix/quartz-frontend](https://github.com/openclimatefix/quartz-frontend) | **MIT** | 112 | 42 | 2026-11-20 | EMEA | *Front-end* del producto de *nowcasting* |
+| [openclimatefix/open-source-quartz-solar-forecast](https://github.com/openclimatefix/open-source-quartz-solar-forecast) | **MIT** | 163 | 117 | 2026-09-06 | EMEA | *(ya inventariado)* Pronóstico solar a nivel de sitio |
+| [metno/gridpp](https://github.com/metno/gridpp) | ⚠️ **LGPL-3.0** (`LICENSE` 7.651 B, primera línea `GNU LESSER GENERAL PUBLIC LICENSE`; además un `COPYING` de 709 B con el *copyright* del Instituto Meteorológico Noruego) | 65 | 19 | 2026-09-30 | EMEA | **Post-procesado** de pronóstico en rejilla: corrección de sesgo contra observación. La pieza que convierte un modelo global en un pronóstico local utilizable. **Dependencia, nunca base a forkear** |
+| [DVPombo/SOLETE](https://github.com/DVPombo/SOLETE) | **MIT** (1.063 B) | 29 | 11 | 2026-11-14 | EMEA | *Toolkit* del dataset **SOLETE** (DTU): exploración, control de calidad y forecasting con datos reales de planta híbrida solar+eólica |
+| [SolarArbiter/solarforecastarbiter-core](https://github.com/SolarArbiter/solarforecastarbiter-core) | **MIT** | 47 | 22 | **2023-05-22** | North America | ⚠️ **Dormido.** Era el marco de evaluación de pronóstico solar financiado por el DOE. Ver §7 |
+
+### 6. `ecmwf/codex`: 12 ★ que gobiernan una organización de ~40 repos
+
+El hallazgo de método de este pase no es un repo grande, es un repo diminuto:
+[ecmwf/codex](https://github.com/ecmwf/codex) (**Apache-2.0**, 12 ★, 6 forks, *push* 2026-11-20),
+«Guidelines for development of software and services at ECMWF». Contiene una **taxonomía formal de
+madurez de cinco niveles** que **todo repo de la organización debe mostrar como *badge* al principio
+de su README**:
+
+| Nivel | Qué declara el productor, literal |
+|-------|-----------------------------------|
+| `graduated` | *«ready for operations, and typically used by ECMWF and/or its Member and Co-operating States in operations»* |
+| `incubating` | *«mostly feature-complete… If this software is to be used in operational systems you are **strongly advised to use a released tag in your system configuration**»* |
+| `emerging` | *«early stages of development… not yet feature-complete and not stable»* |
+| `sandbox` | *«experimental, proof-of-concept»* |
+| `archived` | *«should not be used for any active development or operational purposes»* |
+
+**Esto es una señal de aptitud para producción, declarada por quien escribe el código, legible por
+máquina** (`grep -oE 'Project%20Maturity/[a-z]+_badge\.svg' README.md`) y **ortogonal a las
+estrellas**. Esta KB lleva dos pases peleando con que la tracción engaña (T19: las estrellas se
+compran en este sector; T47: la tracción está decorrelacionada de la usabilidad). Un *badge* de
+madurez es el antídoto: no mide cuánta gente mira el repo, mide **si el autor lo pondría en
+operación**.
+
+**Matriz medida sobre los 17 repos de ECMWF que este pase propone** (`graduated` 5 · `incubating` 5
+· `emerging` 2 · sin *badge* 5):
+
+- **`graduated`** → `earthkit-data`, `earthkit-meteo`, `earthkit-plots`, `earthkit-hydro`, `eccodes`
+- **`incubating`** → **toda** la familia `anemoi` (`-core`, `-inference`, `-datasets`, `-transform`, `-utils`)
+- **`emerging`** → `earthkit-regrid`, `earthkit-workflows`
+- **sin *badge*** (anteriores al convenio) → `ecmwf-opendata`, `cfgrib`, `climetlab`, `multio`, `skinnywms`
+
+**La conclusión de arquitectura sale de la matriz, no de una opinión: en 2026 el plano de datos de
+ECMWF se puede poner en producción y el plano de modelo hay que fijarlo a un *tag*.** Es, además,
+exactamente lo que la propia ECMWF pide por escrito para `incubating`.
+
+### 7. Ceros y delgadeces **medidas** en este pase (no silencios)
+
+| Qué se buscó | Instrumento | Resultado medido | Lectura |
+|--------------|-------------|------------------|---------|
+| Riesgo de incendio / vegetación para utilities | `fire danger index license:mit` (8) · `org:NCAR fire` (9) | Techo de **17 ★**: [NCAR/fire-indices](https://github.com/NCAR/fire-indices) (MIT, *push* 2024-09-19), [NCAR/fire_behavior](https://github.com/NCAR/fire_behavior) (Apache-2.0, 11 ★, 2026-11-06), [NCAR/finn](https://github.com/NCAR/finn) (MIT, 12 ★) | **Capa delgada, no ausente.** Los motores reales están acoplados dentro de WRF-Fire / código de investigación. Para un PSPS o un plan de vegetación hay índices permisivos pero **no hay plataforma**: es desarrollo, no integración |
+| Evaluación de pronóstico solar con respaldo institucional (NA) | `solarforecastarbiter` (5 repos) | `-core` 47 ★ MIT **2023-05-22**, `-dashboard` 2023-05-01, `-api` 2024-05-21 | **Norteamérica tiene los modelos y los datos y dejó caducar su marco de evaluación.** El hueco lo ocupa `weatherbench2`/`weatherbenchX` (Apache-2.0, activos), que evalúan **atmósfera**, no **potencia**. Hueco real y nombrable |
+| Repos institucionales LATAM en esta capa | 4 consultas CORTAS (T27): `pronostico solar` (14) · `energia solar brasil` (27) · `ONS carga` (34) · `irradiancia` (82) | Techo **5 ★**; mejor hallazgo [MateusFPavan/ons-carga-eda](https://github.com/MateusFPavan/ons-carga-eda) (MIT, **1 ★**, 2026-08-25, pronóstico day-ahead SE/CO de Brasil con *foundation model*) | **Cero institucional, medido con el instrumento que esta KB ya validó.** Contrasta con el hallazgo propio del pase 16 (la organización `onsbr`, 13 repos): **LATAM tiene la capa de datos de red y no tiene la capa de modelo meteorológico**. Ver `intel/market.md` |
+
+### 8. Notas de verificación de este pase
+
+- **75/75 direcciones vivas** por `git ls-remote --exit-code -h` (instrumento independiente de la
+  API de búsqueda). Dos *slugs* de control inventados (`ecmwf/anemoi-nonexistent-control-xyz`,
+  `openclimatefix/pvnet-control-404`) devolvieron **muertos**: el detector funciona.
+- **6 de 75 repos no tienen `main` como rama por defecto**: `cfgrib` y `eccodes` (`master`),
+  `earthkit-regrid` (`develop`), `WindFM`, `OpenCastKit` y `gridpp` (`master`). Un *probe* que sólo
+  consulta `main` reporta «sin licencia» en los seis. La regla de leer `--symref HEAD` **antes** de
+  pedir ficheros no es opcional.
+- **`ecmwf/cfgrib` no tiene `README.md`: tiene `README.rst` en `master`.** La lección del pase 11
+  («el README `.adoc` que escondía una arquitectura») **generaliza a `.rst`**, y le pasa al repo con
+  465 ★ de esta capa.
+- ⚠️ **`NVIDIA/physicsnemo` dispara un falso positivo de T56 y conviene saberlo.** Su `LICENSE.txt`
+  (11.438 B) **no empieza** con `Apache License`: empieza con `Copyright (c) 2023 - 2026 NVIDIA
+  CORPORATION & AFFILIATES. All rights reserved.`. Por la regla de la primera línea no blanca
+  (T56), un detector lo marcaría como sospechoso. Lo resuelven **el manifiesto** (`pyproject.toml`:
+  `license = "Apache-2.0"`, `license-files = ["LICENSE.txt", "THIRD_PARTY_NOTICES.md"]`) y **el
+  tamaño** (11.438 B está dentro del rango canónico Apache 10.141–11.559 B). **T56 detecta
+  impostores pero produce falsas alarmas sobre preámbulos corporativos; T46 manifiesto-primero es
+  el desempate.** Ver T79.
+- **`openclimatefix/pvnet` apunta en su manifiesto a un fichero que no existe**:
+  `license={file="LICENCE"}` (ortografía británica) mientras el repo sirve `LICENSE` (americana,
+  1.076 B, MIT). `LICENCE` devuelve **404**. Un escáner que siga la ruta del manifiesto no encuentra
+  licencia en un repo que sí la tiene.

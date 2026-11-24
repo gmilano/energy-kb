@@ -9,6 +9,67 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 18 (el cero agéntico de la capa meteorológica, medido con cuatro consultas; y el envoltorio MCP permisivo que no sanea una fuente restringida)
+
+**Tercer pase del día.** El pase abrió la capa de modelo meteorológico completa
+(`repos/foundations.md` §1–§5, **63 direcciones nuevas**) y la pregunta agéntica tiene una respuesta
+clara y nueva: **en esta capa el componente físico está terminado y la orquestación no existe.**
+
+### Novedades agénticas de la semana en esta capa
+
+| Pieza | Licencia | ★ | Push | Novedad |
+|-------|----------|---|------|---------|
+| [weather-mcp/weather-mcp](https://github.com/weather-mcp/weather-mcp) | **MIT** | 58 | **2026-11-24** | *Push* del propio día del pase. 17 *tools*; el servidor MCP meteorológico más traccionado de 276 medidos |
+| [cyanheads/open-meteo-mcp-server](https://github.com/cyanheads/open-meteo-mcp-server) | **Apache-2.0** | 14 | 2026-11-18 | Geocodificación, pronóstico global, clima histórico, marino y calidad de aire sobre `open-meteo` |
+| [PredictionMarketTrader/openthomas](https://github.com/PredictionMarketTrader/openthomas) | **MIT** | 25 | 2026-09-12 | Agente de pronóstico **auto-mejorable** con P&L real en mercados de predicción |
+
+### El cero, con forma
+
+| Consulta | Total | Techo | Distribución tras el primero |
+|----------|-------|-------|------------------------------|
+| `agent weather forecasting llm` | 69 | **25 ★** | 5 · 4 · 4 · 2 · 2 · 0 · 0 |
+| `agentic climate data analysis` | 21 | **2 ★** | 0 · 0 · 0 (uno ya archivado, AGPL-3.0) |
+| `mcp server weather forecast` | 276 | **58 ★** | 39 · 34 · 14 · 10 · 7 · 7 · 6 |
+| `mcp server energy grid` | 12 | **7 ★** | 3 · 1 · 1 · 0 |
+
+Cuatro consultas, cuatro techos de dos cifras bajas. **No hay un solo agente de procedencia
+institucional sobre pronóstico numérico del tiempo**, mientras los modelos que habría que orquestar
+suman miles de estrellas y están mantenidos por ECMWF, NVIDIA, Google Research y DeepMind. Es la
+asimetría inversa a la que esta KB mide en operación de red (donde sobran agentes y falta el
+componente físico auditable).
+
+### El hallazgo de licencia del pase, en su versión agéntica
+
+**Un envoltorio MCP permisivo no sanea una fuente restringida.**
+`cyanheads/open-meteo-mcp-server` es **Apache-2.0** de verdad: su código es libre. Llama a
+`api.open-meteo.com`, cuyo servicio público es *free for non-commercial use* y cuyo servidor es
+**AGPL-3.0**. El inventario de dependencias de un piloto mostrará `Apache-2.0` y **no mostrará la
+restricción que de hecho aplica al producto**. Esta KB ya tenía el aviso sobre `open-meteo` desde el
+pase 5; lo nuevo es que **la capa MCP lo vuelve invisible**, porque desplaza la licencia que se
+inspecciona de la fuente al envoltorio.
+
+Sustitutos permisivos, ya inventariados en este pase y con región asignada:
+[ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) (Apache-2.0, 342 ★, EMEA) y
+[blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) (MIT, 801 ★, North America).
+**Y el hueco construible queda nombrado: no existe ningún servidor MCP sobre los datos abiertos de
+ECMWF.**
+
+### Dos exclusiones duras que afectan a cualquier arquitectura agéntica de esta capa
+
+1. **`198808xc/Pangu-Weather`** (1.402 ★, el modelo de IA meteorológica más traccionado de origen
+   APAC): **sin fichero de licencia** en `main` ni `master`; el README declara los pesos **CC
+   BY-NC-SA 4.0** y escribe en negrita *«The commercial use of these models is forbidden.»*
+   🚫 **No es un *tool* invocable en un producto de cliente.**
+2. **`microsoft/aurora`** (1.049 ★, código **MIT** verificado byte a byte): el fabricante declara en
+   el README que el código *«has not been developed nor tested for non-academic purposes»* y nombra
+   *«critical infrastructure operations»* entre los riesgos de uso consecuente. ⚠️ **Permitido por
+   licencia, desaconsejado por el autor para el uso exacto que propondríamos.** Se inventaría como
+   *benchmark*, no como componente.
+
+**La regla general que sale de aquí, y vale para toda la KB: cuando el artefacto que se despliega es
+un modelo entrenado, hay que leer la licencia de los PESOS, y está en el README** (T78). Para los
+*tools* que un agente invoca, el campo SPDX del repo es el dato equivocado.
+
 ## 2026-11-24 — pase 17 (el puente ML→optimización que *es* la compuerta de esta KB, escrito en código; y el agente energético de una agencia científica nacional)
 
 **Titular del pase: la restricción de arquitectura de esta KB —«no se vende control autónomo, se

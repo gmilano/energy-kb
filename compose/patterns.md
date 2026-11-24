@@ -2495,3 +2495,151 @@ señala porque **ningún campo SPDX expresa una indemnidad**.
 primera línea) · obligaciones no-SPDX · clasificación. Es el anexo que evita que una obligación
 contractual entre en un contrato de cliente sin que nadie la haya visto, y se construye **una vez
 por stack**, no una vez por propuesta.
+
+## Recetas del pase 18 (2026-11-24)
+
+Las tres recetas de este pase comparten una premisa que el pase midió: **en la capa meteorológica el
+componente físico está terminado, abierto y validado por su productor, y la orquestación no existe**
+(techo de 25 ★ en 69 repos agénticos). Es la asimetría inversa a la del resto de esta KB, y cambia
+qué parte del trabajo es billable: aquí **no se entrena un modelo, se integra uno y se defiende el
+resultado**.
+
+### Receta 60 — Pronóstico renovable de extremo a extremo con provenance auditable (EMEA primero, replicable en las cuatro regiones)
+
+**Para qué sirve.** Un generador o un operador necesita pronóstico de generación (y de carga) con
+dos propiedades que ningún proveedor comercial entrega juntas: **licencia que permite el uso
+comercial** y **capacidad de reconstruir por qué el pronóstico dijo lo que dijo un día concreto**.
+
+**Piezas, con su licencia leída byte a byte y su madurez declarada:**
+
+| Capa | Pieza | Licencia | Madurez (ECMWF) | Papel |
+|------|-------|----------|-----------------|-------|
+| Ingesta de modelo | [ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) (EMEA) **o** [blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) (NA: HRRR/RAP/GFS) | Apache-2.0 · MIT | sin *badge* · — | Datos del modelo global/regional |
+| Decodificación | [ecmwf/cfgrib](https://github.com/ecmwf/cfgrib) + [ecmwf/eccodes](https://github.com/ecmwf/eccodes) | Apache-2.0 | — · **`graduated`** | GRIB → CF/NetCDF |
+| Acceso uniforme | [ecmwf/earthkit-data](https://github.com/ecmwf/earthkit-data) + [earthkit-meteo](https://github.com/ecmwf/earthkit-meteo) | Apache-2.0 | **`graduated`** | Interfaz agnóstica de formato + cálculos meteorológicos |
+| **Provenance** | [earth-mover/icechunk](https://github.com/earth-mover/icechunk) sobre [zarr-python](https://github.com/zarr-developers/zarr-python) | Apache-2.0 · MIT | — | **El *commit* del cubo de entrada.** Es la pieza que hace la receta defendible |
+| Virtualización del archivo | [zarr-developers/VirtualiZarr](https://github.com/zarr-developers/VirtualiZarr) | Apache-2.0 | — | Convierte el histórico GRIB existente en Zarr virtual sin copiarlo |
+| Corrección local | [metno/gridpp](https://github.com/metno/gridpp) | ⚠️ **LGPL-3.0** | — | Post-proceso contra observación. **Dependencia enlazada** |
+| Verdad-terreno | [earthobservations/wetterdienst](https://github.com/earthobservations/wetterdienst) | MIT | — | Observación de servicios nacionales |
+| Modelo de potencia | [openclimatefix/pvnet](https://github.com/openclimatefix/pvnet) / [open-data-pvnet](https://github.com/openclimatefix/open-data-pvnet) (FV) · [shiyu-coder/WindFM](https://github.com/shiyu-coder/WindFM) (eólica) | MIT | — | Meteorología → MW |
+| Interfaz | [openclimatefix/quartz-frontend](https://github.com/openclimatefix/quartz-frontend) | MIT | — | Vista de sala de control |
+
+**Cableado, en el orden que funciona:**
+
+1. `ecmwf-opendata` (o `Herbie`) descarga el ciclo → **escribir inmediatamente a un repositorio
+   Icechunk y hacer *commit***. El *hash* del *commit* es el identificador del pronóstico.
+2. `cfgrib`/`earthkit-data` abre ese *snapshot* como `xarray.Dataset`. **No se vuelve a tocar el
+   fichero original**: todo lo posterior lee del *commit*.
+3. `earthkit-meteo` deriva las variables que el modelo de potencia necesita (viento a altura de
+   buje, componentes de irradiancia).
+4. `gridpp` corrige contra observación de `wetterdienst` para el emplazamiento.
+5. `pvnet` / `WindFM` produce MW. La salida se escribe **en el mismo repositorio Icechunk**, en un
+   *commit* hijo.
+6. `quartz-frontend` muestra pronóstico y conjunto.
+
+**Lo que hace billable esta receta y no otra.** El paso 1 y el paso 5. Reconstruir un pronóstico
+pasado es, con Icechunk, `checkout <hash>` y volver a correr —y eso es exactamente lo que un
+regulador o una contraparte de PPA pide cuando hay una disputa de liquidación. Sin esa capa, «el
+cubo de entrada de hace tres meses» no existe.
+
+⚠️ **Dos condiciones de licencia que no son decorativas.**
+(a) `gridpp` es **LGPL-3.0**: se enlaza, no se forkea dentro del producto. Si hay que modificarlo,
+las modificaciones son LGPL.
+(b) **No sustituir `ecmwf-opendata` por un envoltorio de `open-meteo`.** Un MCP Apache-2.0 sobre
+`api.open-meteo.com` deja el inventario de dependencias limpio y mantiene intactos los términos
+*non-commercial* del servicio y la AGPL-3.0 del servidor. El envoltorio no sanea la fuente.
+
+### Receta 61 — El agente de pronóstico que decide **si** hay recomendación, no cuál
+
+**Para qué sirve.** Es la receta que ocupa el hueco medido de este pase (0 agentes institucionales
+sobre NWP) y lo hace **sin violar la restricción que esta KB ha confirmado dieciséis veces**: el
+sector no compra control autónomo, compra *decision support*.
+
+**La idea, en una frase: el agente no pronostica y no despacha. El agente decide si el conjunto está
+lo bastante concentrado para que haya algo que recomendar, y cuando no lo está, lo dice.**
+
+**Piezas:**
+
+| Función | Pieza | Licencia |
+|---------|-------|----------|
+| Inferencia del modelo de IA | [ecmwf/anemoi-inference](https://github.com/ecmwf/anemoi-inference) (**fijado a un *tag***, es `incubating`) **o** [NVIDIA/earth2studio](https://github.com/NVIDIA/earth2studio) | Apache-2.0 |
+| Modelo alternativo para contraste | [google-deepmind/graphcast](https://github.com/google-deepmind/graphcast) — código Apache-2.0, **pesos CC BY 4.0: exige atribución** | Apache-2.0 / CC BY 4.0 |
+| Perturbación / conjunto | `earth2studio` (métodos de perturbación integrados) | Apache-2.0 |
+| Métrica de acuerdo | [google-research/weatherbenchX](https://github.com/google-research/weatherbenchX) | Apache-2.0 |
+| *Nowcasting* 0–3 h | [openclimatefix/skillful_nowcasting](https://github.com/openclimatefix/skillful_nowcasting) | MIT |
+| Compuerta de factibilidad | [lanl-ansi/MathOptAI.jl](https://github.com/lanl-ansi/MathOptAI.jl) + JuMP *(receta 57)* | BSD-3 + reserva del Gobierno de EE. UU. |
+| Registro de decisiones | Icechunk (*commit* por decisión) | Apache-2.0 |
+
+**Las cuatro *tools* del agente, y ninguna más:**
+
+1. `run_model(model, init_time, horizon)` — invoca `anemoi-inference` o `earth2studio`. **El modelo
+   es un *tool*, nunca el que decide.**
+2. `ensemble_spread(...)` — dispersión del conjunto por variable y horizonte.
+3. `score_against_obs(...)` — `weatherbenchX` contra `wetterdienst`, histórico reciente.
+4. `emit_or_abstain(...)` — **la única decisión del agente**: si la dispersión supera el umbral
+   acordado con el cliente, **se abstiene y publica por qué**.
+
+**Regla de arquitectura, igual que en la receta 57**: lo que llegue al despacho pasa por
+`MathOptAI.jl` como **restricción** dentro del problema de optimización. El modelo aprendido no
+propone un punto: el *solver* lo satisface o declara infactible.
+
+🚫 **Exclusiones duras de esta receta, verificadas:**
+- **`198808xc/Pangu-Weather` no puede ser un *tool*.** Pesos CC BY-NC-SA 4.0 y README en negrita:
+  *«The commercial use of these models is forbidden.»* Sin fichero de licencia en el repo.
+- **`microsoft/aurora` no se usa como componente de producto** aunque su código sea MIT: su README
+  nombra *«critical infrastructure operations»* entre los riesgos de uso consecuente y declara que
+  el código no se desarrolló ni se probó para fines no académicos (T80). Vale como *benchmark*.
+- **`neuralgcm/neuralgcm` sólo si no se entregan pesos afinados.** Código Apache-2.0, **pesos CC
+  BY-SA 4.0**: afinarlos para un cliente y entregárselos arrastra *ShareAlike* sobre los pesos
+  derivados. Si el caso exige *fine-tuning* entregable, usar `anemoi` (Apache-2.0 de punta a punta).
+
+**Entregable.** El agente, la tabla de umbrales de abstención firmada con el cliente, y el registro
+Icechunk. La abstención documentada es el entregable más vendible de los tres, porque es lo que
+distingue un sistema que un operador puede defender de un modelo que da un número siempre.
+
+### Receta 62 — El servidor MCP que no existe: datos abiertos de ECMWF/NOAA como *tools*
+
+**El hueco, medido.** 276 servidores MCP meteorológicos, techo **58 ★**, y **ninguno sobre los datos
+abiertos de ECMWF**. Casi todos envuelven AccuWeather, OpenWeatherMap u `open-meteo`, es decir
+**heredan una restricción comercial que el inventario de dependencias no muestra**.
+
+**Qué construir, y es pequeño:** un servidor MCP (patrón ya inventariado en esta KB desde el pase 16,
+con el precedente del servidor oficial Apache-2.0 de un operador nacional) sobre:
+
+- [ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) (Apache-2.0) para IFS/AIFS,
+- [blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) (MIT) para HRRR/RAP/GFS,
+- [ecmwf/earthkit-data](https://github.com/ecmwf/earthkit-data) (Apache-2.0, **`graduated`**) como
+  capa de lectura uniforme,
+- [earthobservations/wetterdienst](https://github.com/earthobservations/wetterdienst) (MIT) para
+  observación.
+
+**Cuatro *tools*, con anotaciones MCP explícitas** —y esto importa porque, por especificación, un
+*tool* sin anotar es **destructivo, no idempotente y de mundo abierto** por defecto:
+
+| *Tool* | Anotación correcta | Qué devuelve |
+|--------|--------------------|--------------|
+| `get_forecast(lat, lon, var, horizon)` | `readOnlyHint: true`, `idempotentHint: true` | Serie temporal del ciclo vigente |
+| `get_ensemble(lat, lon, var, horizon)` | `readOnlyHint: true` | Miembros del conjunto + dispersión |
+| `get_observation(station, var, range)` | `readOnlyHint: true`, `idempotentHint: true` | Observación medida |
+| `list_cycles(model)` | `readOnlyHint: true` | Ciclos disponibles y su hora de emisión |
+
+**Por qué merece la pena construirlo en vez de instalar uno.** Las cuatro *tools* son de **sólo
+lectura sobre fuentes permisivas**, así que el servidor completo puede publicarse Apache-2.0 **sin
+arrastrar términos de nadie** —lo que ninguno de los 276 existentes puede decir. Es además el
+componente que las recetas 60 y 61 necesitan para que un agente consulte meteorología sin que el
+*engagement* herede una licencia *non-commercial*.
+
+## Actualización del pase 18 a «qué **no** proponer»
+
+| No proponer | Motivo medido | Qué proponer en su lugar |
+|-------------|---------------|--------------------------|
+| `198808xc/Pangu-Weather` como modelo en producto | Pesos **CC BY-NC-SA 4.0**; README: *«The commercial use of these models is forbidden.»*; **sin fichero de licencia** en `main` ni `master` | `anemoi-inference` (Apache-2.0) o `graphcast` (código Apache-2.0 / pesos CC BY 4.0, con atribución) |
+| `microsoft/aurora` como componente de operación de red | El fabricante nombra *«critical infrastructure operations»* como riesgo y declara el código no probado para fines no académicos (T80) | `anemoi` / `earth2studio`. `aurora` sólo como *benchmark* |
+| Pesos afinados de `neuralgcm` entregados a un cliente | Pesos **CC BY-SA 4.0**: *ShareAlike* sobre derivados | `anemoi-core` (Apache-2.0 en código y entrenamiento propio) |
+| Un envoltorio MCP sobre `api.open-meteo.com` | El envoltorio es Apache-2.0 y la fuente sigue siendo **AGPL-3.0 + servicio *non-commercial***. El inventario de dependencias no lo muestra | Receta 62, o `ecmwf-opendata` / `Herbie` directamente |
+| `ecmwf/anemoi-models`, `-training`, `-graphs` | **Archivados**, *push* congelado el 2024-12-19. El nombre del paquete de PyPI sobrevive al del repo | `ecmwf/anemoi-core` (monorepo que sirve los tres paquetes) |
+| `ecmwf/climetlab` en proyecto nuevo | **Predecesor** de `earthkit`; conserva 392 ★ heredadas | `ecmwf/earthkit-data` (**`graduated`**) |
+| Cualquier pieza `anemoi` sin fijar versión | Declarada **`incubating`** por ECMWF, que pide por escrito *«use a released tag in your system configuration»* | La misma pieza, **pinneada a un *tag* liberado**, con la matriz de madurez como anexo de riesgo |
+| `ecmwf/earthkit-regrid` en ruta crítica | **`emerging`**, sin fichero `LICENSE` (Apache-2.0 sólo en el manifiesto), rama por defecto `develop` | Re-mallado con `earthkit-data` + `xarray`, o aceptar el riesgo por escrito |
+| Una vertical de riesgo de incendio / vegetación «existente» | Techo medido de **17 ★**; los motores viven acoplados dentro de WRF-Fire y código de investigación | Presupuestarlo como **desarrollo a medida** sobre `NCAR/fire-indices` (MIT) y `NCAR/fire_behavior` (Apache-2.0) |
+| `SolarArbiter/solarforecastarbiter-core` como marco de evaluación vivo | MIT, pero *push* **2023-05-22**; `-dashboard` 2023-05-01 | `weatherbenchX` (Apache-2.0) para atmósfera + arnés propio para potencia (es el hueco de NA) |

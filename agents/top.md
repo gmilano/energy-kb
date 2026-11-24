@@ -1167,3 +1167,62 @@ paquete que se elige sino en **el árbol de dependencias**.
 último *push* es de abril de 2025: se inventaría por **patrón y procedencia institucional** (LLM
 local en infraestructura nacional, Apache-2.0), **no** como componente maduro. No proponerlo como
 base de producto.
+
+## Pase 18 (2026-11-24): la capa de modelo meteorológico es de clase mundial y **no tiene agentes**, y el cero está medido
+
+Este pase abrió la capa que alimenta todo pronóstico renovable (ver `repos/foundations.md` §1–§5):
+`anemoi` de ECMWF, `graphcast`, `neuralgcm`, `physicsnemo`, `earth2studio`, `weatherbench2`. Miles
+de estrellas, licencias permisivas, servicios meteorológicos nacionales trabajando dentro de los
+repos. **Encima de todo eso no hay nada agéntico de grado institucional**, y ésa es la conclusión
+útil del pase.
+
+### Lo que sí existe, con su medida
+
+| Pieza | Repo | Licencia (byte-read) | ★ | Push | Origen | Papel real |
+|-------|------|----------------------|---|------|--------|------------|
+| **Agente de pronóstico + *trading*** | [PredictionMarketTrader/openthomas](https://github.com/PredictionMarketTrader/openthomas) | **MIT** | 25 | 2026-09-12 | North America | Agente de pronóstico meteorológico **que se auto-mejora** y opera en mercados de predicción. El único agente de esta capa con una **función objetivo medible** (P&L), no una demo |
+| **Servidor MCP meteorológico más traccionado** | [weather-mcp/weather-mcp](https://github.com/weather-mcp/weather-mcp) | **MIT** | 58 | **2026-11-24** | Global | 17 *tools* meteorológicas: resumen de una llamada + pronósticos. *Push* del día. ⚠️ Envuelve APIs de terceros |
+| **MCP sobre `open-meteo`** | [cyanheads/open-meteo-mcp-server](https://github.com/cyanheads/open-meteo-mcp-server) | **Apache-2.0** | 14 | 2026-11-18 | Global | Geocodificación + pronóstico + clima histórico + marino + calidad de aire. ⚠️ **Ver advertencia de licencia abajo: es el caso más instructivo del pase** |
+| **MCP de estaciones meteorológicas** | [WeatherXM/weatherxm-pro-mcp](https://github.com/WeatherXM/weatherxm-pro-mcp) | **MIT** | 7 | 2025-04-30 | EMEA | Expone las APIs WeatherXM PRO como *tools*: datos de **estación física**, no de modelo |
+
+### El cero, con su forma medida (no un silencio)
+
+| Consulta | Resultados | Techo de estrellas | Qué hay realmente |
+|----------|-----------|--------------------|-------------------|
+| `agent weather forecasting llm` | 69 | **25 ★** (`openthomas`) | Tras el primero: 5 ★, 4 ★, 2 ★, 0 ★… Demos de *tool calling* sobre OpenWeather |
+| `agentic climate data analysis` | 21 | **2 ★** | Notebooks de análisis CMIP6; uno (`JGrassi97/climagent`, AGPL-3.0) ya **archivado** |
+| `mcp server weather forecast` | 276 | **58 ★** | Cola larga de envoltorios de API comercial |
+| `mcp server energy grid` | 12 | **7 ★** | Ya cubierto en el pase 12; sin novedad institucional |
+
+**La lectura, y es una oportunidad, no una queja.** En esta capa **el modelo físico ya está
+construido, abierto y validado por el productor** (ECMWF publica incluso el nivel de madurez por
+repo, ver T82). Lo que no existe es **la orquestación**: nadie ha publicado un agente que decida
+qué modelo correr, con qué condiciones iniciales, cuándo el conjunto está demasiado disperso para
+emitir una recomendación, y cómo entregar eso a un EMS. En todas las demás capas de esta KB el
+problema era el contrario — agentes de sobra, componente físico ausente. **Aquí el componente duro
+está hecho y la integración está vacía: es exactamente la forma de trabajo que un estudio vende.**
+La receta concreta está en `compose/patterns.md`, Receta 60.
+
+⚠️ **El caso `open-meteo-mcp-server` y el patrón de «lavado de licencia» por envoltura.** El
+servidor MCP es **Apache-2.0** y su código se puede usar sin reservas. Lo que llama es
+`api.open-meteo.com`, cuyo servicio público es *free for non-commercial use* y cuyo servidor es
+**AGPL-3.0** — el riesgo que esta KB viene señalando desde el pase 5. **Envolver una fuente
+restringida en un componente permisivo cambia la licencia del envoltorio y no cambia los términos
+de la fuente.** Un piloto que instala este MCP ve `Apache-2.0` en su inventario de dependencias y
+no ve la restricción que realmente aplica. El sustituto correcto está inventariado y es permisivo:
+[ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata) (Apache-2.0, 342 ★) o
+[blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) (MIT, 801 ★) según la región.
+
+### Lo que este pase **no** propone, y por qué
+
+- **Ninguno de los cuatro grandes modelos de IA meteorológica es un agente**, y proponerlos como tal
+  sería un error de categoría. Son componentes de inferencia. Su papel en una arquitectura agéntica
+  es ser **el *tool* que el agente llama**, nunca el que decide.
+- **`microsoft/aurora` no se propone como componente de producto** pese a ser MIT y tener 1.049 ★.
+  Su propio README nombra *«critical infrastructure operations»* entre los riesgos de uso
+  consecuente y declara que el código *«has not been developed nor tested for non-academic
+  purposes»*. Cuando el fabricante escribe que no es apto para el uso que propondríamos, la licencia
+  permisiva no es el dato relevante (T80).
+- **`198808xc/Pangu-Weather` queda excluido** (1.402 ★, el más traccionado de origen APAC): sus pesos
+  son CC BY-NC-SA 4.0 y su README dice, en negrita, *«The commercial use of these models is
+  forbidden.»* No hay fichero de licencia en el repo.

@@ -9,6 +9,167 @@ updated: 2026-11-24
 > **Archivo APPEND-ONLY.** Cada pase añade una sección fechada arriba y conserva el historial
 > debajo. No reescribir: el valor de este archivo es la serie temporal.
 
+## 2026-11-24 — pase 18 (la capa meteorológica entera estaba ausente: 0 repos de ECMWF en un inventario de 555; y la licencia que obliga no está en el fichero de licencia, está en el README y cubre los PESOS)
+
+**Tercer pase del día sobre `energy`** (los pases 16 y 17 ya empujaron contenido hoy a las 03:56Z y
+04:59Z). El control remoto-contra-rotación se ejecutó primero, por séptima vez con rédito:
+`rotation.json` leía `next: 10` mientras `energy-kb` ya tenía dos *commits* del 2026-11-24, así que
+**dos pases publicaron contenido hoy y los dos dejaron la rotación sin avanzar**. Mitigación
+aplicada otra vez: la rotación avanza **en el mismo turno** que el *push* de contenido.
+
+### El hueco: no era de vocabulario, era de capa
+
+Esta KB tiene 555 direcciones inventariadas, `openSTEF` y `atlite` entre ellas, y una sección propia
+titulada «Recurso meteorológico: la dependencia que todo forecasting arrastra» cuyo único proveedor
+era `open-meteo` — **AGPL-3.0 con API pública *non-commercial***, señalado como riesgo desde el pase
+5. Control de virginidad antes de buscar:
+
+| Término | Ficheros con una mención |
+|---------|--------------------------|
+| `ecmwf` | **0 repos de 555** |
+| `anemoi` · `earthkit` · `graphcast` · `aurora` · `nwp` | **0 · 0 · 0 · 0 · 0** |
+| `physicsnemo` · `earth2` · `weatherbench` | **0 · 0 · 0** |
+| `zarr` · `xarray` · `copernicus` · `herbie` · `nowcast` | **0 · 0 · 0 · 0 · 0** |
+| `era5` | 2 (menciones de paso, sin repo) |
+
+Dieciocho pases construyendo pronóstico de potencia **sin inventariar el modelo de atmósfera que lo
+alimenta**. **63 direcciones nuevas** en esta capa, **75/75 verificadas vivas**, 0 muertas.
+
+### El hallazgo que cambia el procedimiento de esta KB: la licencia de los PESOS
+
+Esta KB tiene un método de licencias afinado durante diecisiete pases: manifiesto primero (T46),
+primera línea no blanca (T56), tamaño contra la longitud canónica (T55/T77), `NOASSERTION` se
+resuelve en los dos sentidos (T24). **Los cuatro modelos de IA meteorológica más conocidos pasan ese
+método y el método da la respuesta equivocada**, porque en esta capa el artefacto que se despliega
+no es el código: son **los pesos entrenados**, y están licenciados **en el README**.
+
+| Modelo | ★ | Licencia del **código** (byte-read) | Licencia de los **pesos** | Dónde está escrita | Veredicto para un *engagement* |
+|--------|---|-------------------------------------|---------------------------|--------------------|-------------------------------|
+| [198808xc/Pangu-Weather](https://github.com/198808xc/Pangu-Weather) | **1.402** | **no hay fichero de licencia** en `main` ni en `master` (`LICENSE`, `LICENSE.md`, `LICENSE.txt`, `LICENCE`, `COPYING` → todos 404) | **CC BY-NC-SA 4.0** | `README.md`, línea 143, y la línea 145 en negrita: ***«The commercial use of these models is forbidden.»*** | 🚫 **EXCLUIDO.** Prohibición explícita de uso comercial |
+| [neuralgcm/neuralgcm](https://github.com/neuralgcm/neuralgcm) | 1.041 | **Apache-2.0** (`LICENSE` 11.357 B; manifiesto `license = "Apache-2.0"`) | ⚠️ **CC BY-SA 4.0** | `README.md`, línea 12, lista explícita «Code / Trained model weights» | ⚠️ **Dependencia con revisión legal.** *ShareAlike*: afinar los pesos para un cliente y entregarlos arrastra obligación de compartir-igual **sobre los pesos derivados** |
+| [google-deepmind/graphcast](https://github.com/google-deepmind/graphcast) | *no medible* (ver nota de instrumento) | **Apache-2.0** (`LICENSE` 11.357 B) | **CC BY 4.0** | `README.md`, líneas 168–180: *«The Colab notebooks and the associated code are licensed under Apache 2.0 … All other materials are licensed under CC BY 4.0»* | ✅ **Usable con atribución.** ⚠️ CC BY no es una licencia de software: **no concede patentes** ni incluye la cláusula de marcas de Apache |
+| [microsoft/aurora](https://github.com/microsoft/aurora) | 1.049 | **MIT** (`LICENSE.txt` 1.110 B, primera línea `MIT License`; manifiesto `license = {file = "LICENSE.txt"}`) | **no declarada en el repo** | — | ⚠️ **Sin resolver, y hay que decirlo así.** Ver abajo |
+
+**Por qué esto es un modo de fallo nuevo y no una variante de los anteriores.** Los casos previos de
+esta KB eran el fichero que *miente* (`sovity/edc-ce`: nombra Apache y concede Elastic), el que
+*empieza como MIT* y es propietario (T56) y el que *enumera licencias ajenas* (EUPL, T59). Aquí el
+fichero **no miente: es correcto y es irrelevante**. GitHub reporta `Apache-2.0` para `graphcast` y
+es verdad — para el código. Lo que un estudio despliega son los pesos, y sobre los pesos
+`graphcast` dice CC BY, `neuralgcm` dice CC BY-SA y `Pangu` dice *prohibido*. **Ningún campo SPDX,
+ningún escáner SCA y ninguna insignia de GitHub ve ninguna de las tres**, porque las tres viven en
+prosa de README. **Regla nueva T78.**
+
+⚠️ **El caso `aurora` merece precisión porque es el más incómodo: la licencia permite y la
+documentación del propio fabricante desaconseja.** El código es MIT, sin ambigüedad. Pero su README
+dice, literal: *«This code has not been developed nor tested for non-academic purposes and hence
+should only be used as such completely at your own risk»*; *«Aurora is a research forecasting model
+and should not be treated as an operational weather service»*; y su sección de IA Responsable nombra
+como riesgo primario *«downstream use in consequential decision-making without domain validation
+(e.g., emergency response, **critical infrastructure operations**, safety-of-life planning)»* —
+**operación de infraestructura crítica es, textualmente, la red eléctrica**. No es un término de
+licencia y no se puede tratar como tal; es **una declaración de no-aptitud del fabricante para el
+uso exacto que esta KB propondría**. Clasificación honesta: *research/benchmark*, no componente de
+producto. **T80.**
+
+### Nota de instrumento, y es una regla nueva
+
+`google-deepmind/graphcast` **no aparece en el índice de búsqueda de GitHub de esta sesión**:
+`graphcast` (205 resultados) no lo devuelve, `graphcast in:name stars:>100` devuelve 0, y
+`graphcast org:google-deepmind` devuelve **0** — mientras `org:google-deepmind` sin término devuelve
+**422 repos**, así que la organización sí es buscable. El repo está **vivo**: `git ls-remote --symref`
+resuelve `refs/heads/main` y `raw.githubusercontent.com` sirve su `LICENSE` (11.357 B) y su
+`README.md`. **`TOTAL=0` para un repo concreto y conocido no es evidencia de ausencia: es evidencia
+sobre el índice.** Los dos instrumentos no se sustituyen. Consecuencia práctica: de `graphcast` se
+publican licencia y liveness (medidas) y **no** estrellas (no medibles aquí). **T81.**
+
+### Frontera de instrumento de este pase, declarada
+
+- **`WebFetch` resolvió 0 de 4 hosts**: `huggingface.co`, `www.ecmwf.int`, `arxiv.org`,
+  `gmd.copernicus.org` y `www.linuxfoundation.org` devuelven `ENOTFOUND` / 403 del proxy.
+- Consecuencia dura: **los pesos de AIFS viven en Hugging Face y Hugging Face es inalcanzable**, así
+  que este pase **no hace ninguna afirmación sobre la licencia de los pesos de AIFS**. Hay un
+  conflicto reportado por fuentes secundarias (la *model card* declararía CC BY 4.0 y enlazaría a la
+  vez un texto Apache-2.0) y **queda explícitamente sin resolver**, anotado para el próximo pase.
+  Un pase futuro que copie una licencia de AIFS de una fuente secundaria estaría violando T46.
+- El canal byte-a-byte de esta sesión es **sólo** `github.com` vía git y `raw.githubusercontent.com`.
+  Todo lo demás es `WebSearch`, que es resumen de terceros y se etiqueta como tal.
+
+### Trampa de archivado, octavo caso: los tres paquetes que todo el mundo busca por nombre
+
+| Repo archivado | ★ | *Push* congelado | Dónde está vivo |
+|----------------|---|------------------|-----------------|
+| [ecmwf/anemoi-models](https://github.com/ecmwf/anemoi-models) | 50 | **2024-12-19** | `ecmwf/anemoi-core` |
+| [ecmwf/anemoi-training](https://github.com/ecmwf/anemoi-training) | 24 | **2024-12-19** | `ecmwf/anemoi-core` |
+| [ecmwf/anemoi-graphs](https://github.com/ecmwf/anemoi-graphs) | 19 | **2024-12-19** | `ecmwf/anemoi-core` |
+
+El patrón de los ocho casos se repite: **el nombre del paquete publicado sobrevive al nombre del
+repo**. `anemoi-training`, `anemoi-models` y `anemoi-graphs` siguen siendo los nombres de PyPI, y
+`anemoi-core` los sirve desde un monorepo. Quien busque el paquete por nombre encuentra el repo
+muerto primero.
+
+### El repo de 12 ★ que es el hallazgo de gobernanza del pase
+
+[ecmwf/codex](https://github.com/ecmwf/codex) (Apache-2.0, 12 ★, 6 forks, 2026-11-20) define una
+taxonomía de madurez de 5 niveles (`graduated` / `incubating` / `emerging` / `sandbox` / `archived`)
+que **todo repo de ECMWF debe exhibir como *badge* en su README**. Medida sobre los 17 repos de
+ECMWF que este pase propone:
+
+- `graduated` (**listo para operación**): `earthkit-data`, `earthkit-meteo`, `earthkit-plots`, `earthkit-hydro`, `eccodes` → **5**
+- `incubating` (*«strongly advised to use a released tag»*): **toda** la familia `anemoi` → **5**
+- `emerging` (no completo, inestable): `earthkit-regrid`, `earthkit-workflows` → **2**
+- sin *badge* (anteriores al convenio): `ecmwf-opendata`, `cfgrib`, `climetlab`, `multio`, `skinnywms` → **5**
+
+**El plano de datos está `graduated` y el plano de modelo está `incubating`, dicho por el autor.**
+Eso es una decisión de arquitectura regalada, y es lo contrario de lo que sugieren las estrellas:
+`cfgrib` (465 ★, sin *badge*) tiene **4 veces** las estrellas de `earthkit-data` (124 ★,
+`graduated`). **T82.**
+
+### Ratios fork/★ anómalos: la señal que sí distingue infraestructura de moda
+
+| Repo | ★ | Forks | Ratio | Lectura |
+|------|---|-------|-------|---------|
+| `ecmwf/anemoi-datasets` | 88 | 84 | **0,95** | Servicios meteorológicos nacionales trabajando dentro del repo |
+| `ecmwf/anemoi-core` | 177 | 133 | **0,75** | Idem |
+| `openclimatefix/pvnet` | 63 | 51 | **0,81** | Idem, en el lado de potencia |
+| `ecmwf/anemoi-transform` | 9 | 27 | **3,0** | Más forks que estrellas: puro trabajo, cero escaparate |
+| (referencia de esta KB) repo de laboratorio típico | — | — | 0,1–0,3 | — |
+
+En una KB que ya estableció que **las estrellas de este sector se compran** (T19), el ratio fork/★
+es el indicador barato y difícil de falsificar: nadie compra forks porque un fork sin *commits* no
+sirve de nada.
+
+### Lo demás que se midió
+
+- **63 direcciones nuevas**, 555 → **618** inventariadas (contadas con
+  `grep -ohE 'github\.com/[^ )]+' | sort -u`, no estimadas). Todas con licencia leída, estrellas,
+  forks y fecha de *push* del 2026-11-24.
+- **Capa agéntica sobre pronóstico meteorológico: cero institucional, medido.**
+  `agent weather forecasting llm` (69) y `agentic climate data analysis` (21) tienen techo de
+  **25 ★**: [PredictionMarketTrader/openthomas](https://github.com/PredictionMarketTrader/openthomas)
+  (MIT, agente de pronóstico **y de *trading***). Todo lo demás, 0–5 ★. Detalle en `agents/`.
+- **MCP meteorológico: existe y lava un problema de licencia.** 276 resultados,
+  techo 58 ★ ([weather-mcp/weather-mcp](https://github.com/weather-mcp/weather-mcp), MIT, *push*
+  **hoy**). Casi todos envuelven **APIs comerciales** (AccuWeather, OpenWeatherMap) o `open-meteo`
+  —p. ej. [cyanheads/open-meteo-mcp-server](https://github.com/cyanheads/open-meteo-mcp-server)
+  (Apache-2.0): **el envoltorio es Apache-2.0 y los términos *non-commercial* del servicio que llama
+  siguen aplicando.** Un wrapper permisivo no sanea la fuente. **No existe ningún servidor MCP sobre
+  los datos abiertos de ECMWF**: hueco construible.
+- **Séptima confirmación externa de que no hay ERP/CRM de utility abierto** (`open source platform
+  utility energy ERP CRM MIT Apache 2026`): los candidatos siguen siendo Odoo, Dolibarr, SuiteCRM y
+  `opentaps` —este último «pasó de ERP a Smart Energy» en 2019 y está parado. Ninguno es vertical de
+  utility.
+- **Artefacto comercial nuevo y de primer orden** encontrado por el camino: *The Open Source Value
+  Proposition for the Energy Sector* (**LF Energy + LF Research, 15 de septiembre de 2026, Berlín**)
+  mide **2–5× más valor neto** para operadores de red frente a compra convencional, con un *Open
+  Source Benefit-Cost Framework* de cuatro componentes (coste, riesgo, valor estratégico, valor
+  social), validado con simulaciones sintéticas y **tres casos reales**. Ausente de esta KB en los
+  nueve ficheros (`2-5x`, `net value`, `valor neto`, `LF Energy Research` → 0 menciones). Ver
+  `verticals/solutions.md` y `intel/market.md`. ⚠️ Fuente **secundaria**: `linuxfoundation.org` es
+  inalcanzable desde esta sesión; corroborada por cuatro medios independientes.
+- **La consulta web «github trending energy AI 2026» es inutilizable** y queda registrada como tal:
+  devuelve listas generales de IA sin categoría energética. El instrumento de tendencia de esta KB
+  es la **API de búsqueda de GitHub con consultas cortas**, no la web.
+
 ## 2026-11-24 — pase 17 (el núcleo de optimización en Julia que esta KB no tenía: 0 de 93 repos de Los Alamos; y la indemnidad escondida en la dependencia común)
 
 **Titular del pase: esta KB barrió el sector por protocolo, por ontología, por institución

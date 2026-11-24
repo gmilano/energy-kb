@@ -749,6 +749,48 @@ contradicen al resto de las fuentes sobre la ausencia de guía de la FERC.
 **16-R1** (NIST) siguen abiertos.
 
 
+### Actualización del pase 18 (2026-11-24) — North America
+
+**Lo que esta región tiene y nadie había inventariado: el acceso a datos de modelo meteorológico más
+traccionado del mundo abierto, y es MIT.**
+
+- [blaylockbk/Herbie](https://github.com/blaylockbk/Herbie) — **MIT** (1.078 B), **801 ★**, 148
+  forks, *push* 2026-11-17. Descarga **HRRR, RAP, GFS, GEFS e IFS** desde NOMADS de la NOAA y desde
+  los *NODD partners* (AWS, Google, Azure). Es el repo con más tracción de toda la capa meteorológica
+  y **no estaba en una KB con 555 direcciones**. Para un *engagement* norteamericano de forecasting
+  renovable, es el primer `pip install` de la arquitectura.
+- **El bloque corporativo de modelos es todo Apache-2.0 y todo de esta región**:
+  [NVIDIA/physicsnemo](https://github.com/NVIDIA/physicsnemo) (**3.475 ★**),
+  [NVIDIA/earth2studio](https://github.com/NVIDIA/earth2studio) (1.255 ★),
+  [NVIDIA/earth2mip](https://github.com/NVIDIA/earth2mip) (257 ★),
+  [google-research/weatherbench2](https://github.com/google-research/weatherbench2) (650 ★) y su
+  sucesor [weatherbenchX](https://github.com/google-research/weatherbenchX) (277 ★),
+  [neuralgcm/neuralgcm](https://github.com/neuralgcm/neuralgcm) (1.041 ★) y
+  [google-deepmind/graphcast](https://github.com/google-deepmind/graphcast).
+
+**La oportunidad, y es de integración, no de modelo.** Norteamérica concentra el cómputo, los modelos
+y los datos abiertos de esta capa. Lo que **le falta** está medido:
+
+| Hueco medido | Evidencia | Qué vende un estudio |
+|--------------|-----------|----------------------|
+| **Evaluación de pronóstico de *potencia*** (no de atmósfera) | [SolarArbiter/solarforecastarbiter-core](https://github.com/SolarArbiter/solarforecastarbiter-core), el marco financiado por el DOE, **MIT y dormido desde 2023-05-22**; `-dashboard` 2023-05-01; `-api` 2024-05-21. `weatherbench2`/`weatherbenchX` están vivos pero evalúan **atmósfera**, no MW | **La región tiene los modelos y los datos y dejó caducar su marco de evaluación.** Un arnés de evaluación de pronóstico de potencia, con las métricas que el ISO acepta, es un entregable con hueco verificado |
+| **Orquestación agéntica sobre NWP** | Techo de **25 ★** en 69 repos (`agent weather forecasting llm`) | Los modelos están hechos; decidir **qué modelo correr, con qué condiciones iniciales y cuándo el conjunto está demasiado disperso para recomendar** no está publicado por nadie |
+| **Riesgo de incendio / vegetación para utility** | Techo de **17 ★**; los motores viven dentro de WRF-Fire y de código de investigación de NCAR | Desarrollo a medida con componentes sueltos (`NCAR/fire-indices` MIT, `NCAR/fire_behavior` Apache-2.0), **no** integración de una vertical existente. Presupuestar como desarrollo |
+
+**Encaje con la tesis regulatoria que esta KB ya sostiene.** Las órdenes de *show cause* de la FERC
+del 18 de junio de 2026 a los seis operadores (PJM, MISO, SPP, CAISO, ISO-NE, NYISO) sobre
+interconexión de **grandes cargas** —ya inventariadas en esta KB— desplazan el trabajo billable del
+pronóstico de **generación** al pronóstico de **carga**. La capa que este pase abre sirve a los dos:
+las mismas condiciones meteorológicas que mueven la generación renovable mueven la demanda de
+climatización, y es el mismo cubo de datos.
+
+⚠️ **Advertencia de propuesta específica de esta región.** El modelo más citado en material comercial
+norteamericano es `microsoft/aurora` (1.049 ★, código **MIT**). Su propio README nombra *«critical
+infrastructure operations»* entre los riesgos de uso consecuente y declara que el código *«has not
+been developed nor tested for non-academic purposes»*. **No ponerlo en una propuesta de operación de
+red** (T80). El sustituto permisivo y sin esa advertencia es `graphcast` (código Apache-2.0, pesos
+**CC BY 4.0**) o la familia `anemoi` de ECMWF.
+
 ### EMEA
 
 **Contexto regulatorio (verificado con matices)**: la Comisión publicó en **junio de 2026** la
@@ -1507,6 +1549,53 @@ con el documento **localizado e ilegible desde aquí**.
 ⚠️ **No citar** la afirmación de que las empresas energéticas polacas van «12-18 meses por detrás»
 de sus pares de Europa Occidental: fuente única de guía comercial, no verificada.
 
+
+### Actualización del pase 18 (2026-11-24) — EMEA
+
+**Esta región no sólo adopta la capa meteorológica de IA: la fabrica, la licencia en Apache-2.0 y
+publica su propio nivel de madurez.** Es, de las cuatro regiones, la que sale mejor posicionada de
+este pase.
+
+- **`anemoi` (ECMWF, Reading/Bonn) es infraestructura europea abierta**, 9 repos vivos, **todos
+  Apache-2.0**: [anemoi-core](https://github.com/ecmwf/anemoi-core) (177 ★ / **133 forks**),
+  [anemoi-inference](https://github.com/ecmwf/anemoi-inference), [anemoi-datasets](https://github.com/ecmwf/anemoi-datasets)
+  (88 ★ / **84 forks**), `-transform`, `-utils`, `-registry`, `-configs`, `-plugins`. Los ratios
+  fork/★ cercanos a 1 son la huella de **servicios meteorológicos nacionales trabajando dentro del
+  repo**, no de popularidad.
+- **La familia `earthkit`, también de ECMWF y Apache-2.0, está declarada `graduated` = lista para
+  operación** en 4 de sus piezas (`earthkit-data`, `-meteo`, `-plots`, `-hydro`), más `eccodes`.
+  `earthkit-hydro` (36 ★) es, además, la primera pieza **hidrológica** de esta KB, que tenía
+  `hydropower` con **0 menciones**.
+- **El resto de la pila europea**: [ecmwf/ecmwf-opendata](https://github.com/ecmwf/ecmwf-opendata)
+  (Apache-2.0, 342 ★), [ecmwf/cfgrib](https://github.com/ecmwf/cfgrib) (Apache-2.0, 465 ★),
+  [metno/gridpp](https://github.com/metno/gridpp) (⚠️ **LGPL-3.0**, Instituto Meteorológico Noruego),
+  [earthobservations/wetterdienst](https://github.com/earthobservations/wetterdienst) (MIT, 457 ★,
+  datos observados de servicios nacionales) y la familia **Open Climate Fix** del Reino Unido
+  (`pvnet`, `graph_weather`, `metnet`, `skillful_nowcasting`, `quartz-frontend`, **todo MIT**).
+
+**AIFS: dato operativo y límite de verificación, declarados por separado.** Según resumen de
+`WebSearch` sobre páginas de `ecmwf.int` y el artículo correspondiente en *GMD*, el AIFS determinista
+es **operativo desde el 25 de febrero de 2025** y pasó a **AIFS Single v2 el 12 de mayo de 2026**;
+el conjunto **AIFS ENS** es operativo desde el **1 de julio de 2025** y también pasó a v2 el 12 de
+mayo de 2026. ⚠️ **`www.ecmwf.int`, `arxiv.org`, `gmd.copernicus.org` y `huggingface.co` son
+inalcanzables desde esta sesión**, así que (a) estas fechas son **secundarias**, no byte-verificadas,
+y (b) **este pase no hace ninguna afirmación sobre la licencia de los pesos de AIFS**, que viven en
+Hugging Face. Hay un conflicto reportado por terceros (CC BY 4.0 en la *model card* frente a un
+enlace a Apache-2.0) y queda **explícitamente sin resolver**.
+
+**Por qué esto encaja con el movimiento regulatorio europeo que esta KB ya tiene inventariado.** La
+*Strategic Roadmap for Digitalisation and AI in the Energy Sector* de la Comisión y su iniciativa
+insignia **AI.grids** —un modelo fundacional europeo para la operación de red— tienen un precedente
+exacto y ya construido: **el modelo fundacional europeo para la atmósfera ya existe, es Apache-2.0 y
+lo mantiene una organización intergubernamental con sus Estados miembros dentro del repo.** El
+argumento de *engagement* en EMEA no es «podríamos construir esto»: es **«la plantilla de gobernanza
+que la Comisión quiere para la red ya funciona en meteorología, y éstos son los 17 repos»**.
+
+**Oportunidad concreta y su condición.** La pila está `graduated` en datos e `incubating` en modelo
+(T82), y ECMWF pide por escrito **fijar un *tag* liberado** para uso operacional. Eso convierte el
+primer entregable en algo muy vendible y muy acotado: **una distribución pinneada y validada de la
+pila `anemoi` + `earthkit` para un TSO o DSO europeo**, con la matriz de madurez como anexo de
+riesgo. `gridpp` entra como **dependencia LGPL enlazada**, nunca como base a forkear.
 
 ### APAC
 
@@ -2304,6 +2393,44 @@ ministros de energía de APEC), **KEPCO** construyendo su propia IA de optimizac
 sector energético** en Japón o Corea: lo que hay es **derecho de IA transversal**. El expediente de
 un cliente de APAC se construye contra la **ley de IA del país**, no contra el regulador eléctrico.
 
+
+### Actualización del pase 18 (2026-11-24) — APAC
+
+**El hallazgo regional de este pase es una asimetría legal dura y medida: el modelo de IA
+meteorológica más traccionado de origen APAC es el único de los cuatro grandes que está
+comercialmente prohibido.**
+
+| Repo de origen APAC | ★ | Licencia real | Veredicto |
+|---------------------|---|---------------|-----------|
+| [198808xc/Pangu-Weather](https://github.com/198808xc/Pangu-Weather) (Huawei Cloud) | **1.402** | **Sin fichero de licencia** en `main` ni `master`; README línea 143: pesos **CC BY-NC-SA 4.0**; línea 145 en negrita: ***«The commercial use of these models is forbidden.»*** | 🚫 **Excluido** |
+| [HFAiLab/OpenCastKit](https://github.com/HFAiLab/OpenCastKit) | 385 | **MIT** (1.063 B, rama `master`) — implementación abierta de FourCastNet y GraphCast | ⚠️ Usable, pero *push* de **2023-04-18**: inventariado por procedencia y licencia, **no** como base de producto |
+| [shiyu-coder/WindFM](https://github.com/shiyu-coder/WindFM) | 126 | **MIT** (1.081 B, rama `master`) — *foundation model* de pronóstico de **potencia eólica *zero-shot*** | ⚠️ Usable; *push* de 2025-09-17. **Único FM específico de potencia eólica de toda esta KB** |
+
+**Consecuencia de propuesta, y no es menor.** En un *engagement* en APAC, el modelo que el cliente
+probablemente ya conoce y nombra —Pangu— **no se puede usar**, y los sustitutos limpios (`anemoi`,
+`graphcast`, la pila `earthkit`) son todos de **otras regiones**. Eso convierte una conversación
+técnica en una conversación de licencias en la primera reunión, y es mejor llevarla preparada:
+la ruta recomendada es `anemoi-inference` (Apache-2.0) o `earth2studio` (Apache-2.0) con
+`ecmwf-opendata`/`Herbie` como fuente, y `WindFM` **sólo** si el caso es específicamente eólico y se
+acepta un repo sin actividad reciente.
+
+**Confirmación de la regla que esta KB ya tenía: en esta capa el filtro de licencia corre ANTES del
+filtro de popularidad** (T47, formulado originalmente para la capa de medición). Aquí se repite con
+precisión: 1.402 ★ excluidas, 385 ★ y 126 ★ usables. **La tracción y la usabilidad apuntan en
+direcciones opuestas, otra vez, y otra vez en APAC.**
+
+**Encaje con la demanda regional ya inventariada.** La tesis de la región sigue siendo la del
+*datacenter* como restricción de red: pipeline récord de **26,5 GW** en el primer semestre de 2026
+con ~4,8 GW en construcción; Japón superando a India como segundo mercado operativo tras China
+continental; Australia, India, Japón y Malasia proyectados a superar 2 GW operativos cada uno para
+2028; colas de conexión en Tokio acercándose a la década y desplazamiento a Hokkaido, Fukuoka y
+Toyama; Malasia congelando aprobaciones de red no-IA; y una expectativa regulatoria en Australia de
+**emparejar generación renovable nueva con capacidad añadida**. ⚠️ Todo esto es **informe de
+mercado** (Cushman & Wakefield, JLL, CBRE, datacenterHawk vía `WebSearch`), no fuente primaria, y
+las cifras difieren entre informes. **Lo que la capa de este pase aporta a ese problema**: el
+emparejamiento renovable-carga que Australia quiere exigir **es un problema de pronóstico de
+generación y de carga sobre el mismo cubo meteorológico**, y la pila para resolverlo es permisiva
+—pero no es de origen APAC, con la única excepción utilizable de `WindFM`.
 
 ### LATAM
 
@@ -3277,6 +3404,50 @@ adopción. Las cifras de esta sección provienen de otras fuentes. La mayor part
 sigue devolviendo **blogs de proveedor**: trátense los números como indicativos.
 
 
+### Actualización del pase 18 (2026-11-24) — LATAM
+
+**La medición de este pase matiza, con número, el hallazgo propio del pase 6 («LATAM deja de ser un
+gap de oferta»): LATAM tiene la capa de DATOS de red y no tiene la capa de MODELO meteorológico.**
+
+Instrumento: 4 consultas **cortas** en español y portugués (T27, la receta que esta KB validó para
+romper ceros regionales falsos):
+
+| Consulta | Resultados | Techo de estrellas | Qué son los mejores hallazgos |
+|----------|-----------|--------------------|-------------------------------|
+| `pronostico solar` | 14 | **1 ★** | `orozcoig/pronostico-solar` (MIT, 0 ★, «banco de pruebas y motor de pronóstico operativo solar»); `AHidalgoG/pronostico_solar_tarapaca` (1 ★, Chile) |
+| `energia solar brasil` | 27 | **5 ★** | `alves05/Analise_Energia_Solar_Brasil` (GPL-3.0, 5 ★, análisis, no modelo) |
+| `ONS carga` | 34 | **1 ★** | [MateusFPavan/ons-carga-eda](https://github.com/MateusFPavan/ons-carga-eda) (**MIT**, 1 ★, 2026-08-25): pronóstico horario *day-ahead* de la carga SE/CO de Brasil, y su descripción dice que **un *foundation model* bate la línea base** |
+| `irradiancia` | 82 | **0 ★** | Todo trabajo de curso |
+
+**Cero institucional, medido y no silencioso.** No hay en esta capa ningún repo de un operador, un
+regulador, una universidad o un laboratorio de la región —y esto **contrasta directamente** con lo
+que esta misma KB midió en el pase 16: la organización `onsbr` del operador nacional brasileño, con
+13 repos inventariados, y la familia de modelos nacionales LATAM del pase 6. **La región publica sus
+datos de red y no publica modelos de atmósfera.**
+
+**Por qué esto es una oportunidad bien definida y no un lamento.** La capa de modelo es
+**geográficamente agnóstica**: `anemoi`, `graphcast` y `earth2studio` son Apache-2.0 y se entrenan o
+se afinan con los datos que se les den. Lo específico de la región es **el dato de validación y el
+caso de negocio**, y los dos existen y son públicos:
+
+| Oportunidad | Base ya verificada | Por qué muerde aquí |
+|-------------|--------------------|---------------------|
+| **Afinar y evaluar un modelo global abierto con datos LATAM** | `anemoi-core` + `anemoi-datasets` (Apache-2.0, `incubating` → fijar *tag*) + datos del ONS (`onsbr`, ya inventariado) + observación nacional | **Nadie lo ha publicado.** Es el primer entregable con *novelty* real y con dueño natural: un operador o un gran generador |
+| **Reducir vertimiento con pronóstico** | `pvnet` / `open-data-pvnet` (MIT) + `gridpp` (LGPL, dependencia) + `ecmwf-opendata` (Apache-2.0) | En 2025 se descartó el **20,6 %** de toda la energía solar y eólica conectada al Sistema Interconectado Nacional de **República Dominicana**; redes rezagadas frenan la transición también en Brasil y Chile |
+| **Operar almacenamiento contra pronóstico** | La pila de este pase + el marco regulatorio nuevo | **ANEEL aprobó el 3 de junio de 2026** el marco regulatorio de almacenamiento en Brasil; en **Colombia** la CREG avanza con el **Proyecto de Resolución 701-103 de 2025** para integrar SAEB a la red; en **México** un decreto reconoce el almacenamiento como instalación sujeta a coordinación y da **24 meses** al operador para integrarlo a la programación operativa. Un activo de almacenamiento sin pronóstico es un activo mal despachado |
+| **Inercia y *grid-forming* como servicio complementario** | — (gap declarado) | Según OLACDE, los inversores *grid-forming* y los servicios asociados a la **inercia** son ya debate regulatorio regional. **Esta KB no tiene base abierta para esto**: se declara como hueco, no se rellena |
+
+**Señal institucional nueva de la región, a nivel político:** los ministros de energía de la región
+acordaron un **diagnóstico sobre los efectos de la IA en el sector eléctrico** —incluida la demanda
+de centros de datos— y la creación de un **grupo técnico sobre uso de IA en redes inteligentes y
+renovables**. Es el primer movimiento multilateral LATAM específico sobre IA en la red que esta KB
+registra. ⚠️ Fuente secundaria (`WebSearch`, prensa regional); conviene verificar el acta cuando haya
+red.
+
+⚠️ **Lo que NO se afirma.** `MateusFPavan/ons-carga-eda` tiene **1 estrella**: se inventaría como
+**señal de que el problema se está atacando en la región**, no como componente. Proponerlo como base
+de producto sería exactamente el error que esta KB documenta desde el pase 10.
+
 ## Posicionamiento Globant
 
 1. **No competir con GridOS ni EcoStruxure.** Posicionarse como el integrador que pone una capa
@@ -3404,6 +3575,41 @@ magnitud **física**, medida por la **IEA**, y los números convergen en vez de 
 implicando ~**15 % de crecimiento anual hasta 2030**, y la IEA señalada como la fuente que llama a
 la IA el mayor impulsor del crecimiento eléctrico de los datacenters. **Es la cifra sobre la que se
 puede construir un argumento sin exponerse**: no es una estimación de mercado, es energía medida.
+
+### Actualización del pase 18 (2026-11-24): por primera vez hay una cifra de **valor** independiente, y no es una cifra de tamaño de mercado
+
+Esta sección existe porque esta KB estableció que **el dato de tamaño de mercado de este sector no es
+confiable** (T8: dispersiones de 4,6× a 5,8× para el mismo año y el mismo concepto). El pase 18
+encontró un artefacto de naturaleza distinta, y por eso se añade aquí en vez de a la tabla de
+tamaños:
+
+> ***The Open Source Value Proposition for the Energy Sector*** — **LF Energy + LF Research**,
+> publicado el **15 de septiembre de 2026 en Berlín**. Mide **2–5× más valor neto** para un operador
+> de red usando open source frente a compra convencional.
+
+**Por qué es distinto de todas las cifras de esta sección:**
+
+- **No mide el tamaño de un mercado, mide la eficiencia relativa de una decisión de compra.** No es
+  comparable con «$X B en 2030» y no sufre la dispersión de T8.
+- **Publica su método**: el *LF Energy Open Source Benefit-Cost Framework* organiza el valor en
+  **cuatro componentes** —coste, riesgo, valor estratégico y valor social— y se validó con
+  **simulaciones sintéticas** más **tres casos reales**.
+- **Su crítica es accionable en una propuesta**: las evaluaciones de compra habituales se concentran
+  en coste de adquisición y operación y **omiten interoperabilidad, personalización, apalancamiento
+  en la negociación y soberanía digital**.
+- **Procede de la fundación que aloja buena parte del inventario de esta KB** (LF Energy: `openSTEF`,
+  `OpenEMS`, `powsybl`, EVerest, CitrineOS…), lo que es a la vez su fuerza —conoce el código— y su
+  sesgo declarado.
+
+⚠️ **Procedencia y límite.** `linuxfoundation.org` y `lfenergy.org` **no son alcanzables desde esta
+sesión** (el proxy no resuelve el host), así que el informe **no está leído byte a byte**. Nombre,
+fecha, lugar, multiplicador, los cuatro componentes y el método están corroborados por **cuatro
+medios independientes** vía `WebSearch`. **Antes de usar el 2–5× en material de cliente hay que
+descargar el informe y verificar los tres casos y el cálculo del multiplicador** — la disciplina que
+esta KB aplica a las licencias se aplica igual a las cifras de venta.
+
+**Dónde se usa**: en `verticals/solutions.md` §2 del pase 18, como reencuadre de la hoja de
+evaluación del cliente. No como argumento de precio.
 
 ## Nota de método sobre las fuentes de este documento
 

@@ -2079,3 +2079,123 @@ no verificables contra fuente regulatoria primaria) y `nivelics.com` (marcadores
 rellenar donde deberían ir sus estadísticas de adopción en LATAM). **Siguen sin citarse.** Que
 reaparezcan en primera página confirma que la lista negra hay que mantenerla, no que el barrido
 falle.
+
+## T78 — Cuando el artefacto que se despliega es un modelo entrenado, la licencia que obliga está en el README y cubre los **pesos**, no el código
+
+Hallazgo del pase 18 (2026-11-24), y **invalida parcialmente el método de licencias de esta KB para
+toda una clase de artefacto**. Los cuatro modelos de IA meteorológica más conocidos pasan el
+procedimiento afinado en diecisiete pases (T46 manifiesto-primero, T56 primera línea, T55/T77
+tamaño canónico, T24 `NOASSERTION` en los dos sentidos) y **el procedimiento da la respuesta
+equivocada**, porque responde sobre el código y lo que se despliega son los pesos.
+
+| Modelo | Licencia del código (byte-read) | Licencia de los **pesos** | Dónde está escrita |
+|--------|----------------------------------|---------------------------|--------------------|
+| `google-deepmind/graphcast` | **Apache-2.0** (11.357 B) | **CC BY 4.0** | `README.md` 168–180 |
+| `neuralgcm/neuralgcm` | **Apache-2.0** (11.357 B) | ⚠️ **CC BY-SA 4.0** | `README.md` línea 12 |
+| `198808xc/Pangu-Weather` | **no hay fichero de licencia** | 🚫 **CC BY-NC-SA 4.0** | `README.md` 143–145 |
+| `microsoft/aurora` | **MIT** (1.110 B) | **no declarada en el repo** | — |
+
+**Por qué es una clase nueva y no una variante.** Los modos de fallo previos de esta KB eran el
+fichero que *miente* (`sovity/edc-ce`: nombra Apache-2.0 y concede Elastic License), el que *empieza
+con la frase de MIT* y es propietario (T56) y el que *enumera licencias ajenas* (EUPL, T59). Aquí el
+fichero **no miente: es correcto y es irrelevante**. GitHub reporta `Apache-2.0` para `graphcast` y
+es verdad —para el código. **Ningún campo SPDX existe para la licencia de un conjunto de pesos**, así
+que ningún escáner SCA ve el *ShareAlike* de NeuralGCM ni la prohibición comercial de Pangu.
+
+**Procedimiento añadido, obligatorio para todo repo que publique pesos:** leer la sección `## License`
+del README **completa**, y clasificar por separado *código* y *pesos*. Las cuatro respuestas posibles
+observadas: permisiva (CC BY), **copyleft sobre derivados de pesos** (CC BY-SA → afinar para un
+cliente arrastra obligación), **no comercial** (exclusión dura) y **no declarada** (no se puede
+afirmar nada). ⚠️ Aviso adicional: **CC BY y CC BY-SA no son licencias de software**: no conceden
+patentes ni traen la cláusula de marcas de Apache-2.0.
+
+## T79 — T56 detecta impostores y produce falsas alarmas sobre preámbulos corporativos; T46 es el desempate
+
+`NVIDIA/physicsnemo` (3.475 ★) tiene un `LICENSE.txt` de **11.438 B** —dentro del rango canónico
+Apache-2.0 (10.141–11.559 B)— cuya **primera línea no blanca** es `Copyright (c) 2023 - 2026 NVIDIA
+CORPORATION & AFFILIATES. All rights reserved.`, no `Apache License`. Por T56 un detector lo marca
+como sospechoso; es Apache-2.0 legítimo con preámbulo corporativo encima, confirmado por el
+manifiesto (`license = "Apache-2.0"`, `license-files = ["LICENSE.txt", "THIRD_PARTY_NOTICES.md"]`).
+
+**El orden correcto de los tres discriminadores queda fijado así:**
+
+1. **Manifiesto** (T46): una expresión SPDX en `pyproject.toml` / `Cargo.toml` / `package.json` /
+   `Project.toml` gana a todo lo demás.
+2. **Tamaño** contra la longitud canónica de la licencia nombrada (T77): es el discriminador que
+   resiste preámbulos, porque un preámbulo de 300 B no saca al fichero del rango.
+3. **Primera línea** (T56): último, y **sólo como alarma a investigar**, nunca como veredicto.
+
+Mirror case ya conocido en automotive (`aasx-package-explorer`, 75.733 B Apache-2.0 por agregación de
+avisos de terceros). Corolario: **fichero corto que nombra Apache/GPL/LGPL/AGPL/MPL/EPL = puntero,
+hay que leerlo como prosa; fichero largo = leer la cabecera y confiar en el tamaño.**
+
+## T80 — Una licencia permisiva y una declaración de no-aptitud del fabricante son dos datos distintos, y el segundo decide
+
+`microsoft/aurora` es **MIT**, verificado byte a byte. Y su propio README dice: *«This code has not
+been developed nor tested for non-academic purposes and hence should only be used as such completely
+at your own risk»*, *«Aurora is a research forecasting model and should not be treated as an
+operational weather service»*, y nombra como riesgo primario *«downstream use in consequential
+decision-making without domain validation (e.g., emergency response, **critical infrastructure
+operations**, safety-of-life planning)»*.
+
+**Operación de infraestructura crítica es, textualmente, la red eléctrica.** Esto **no es un término
+de licencia** y no se puede tratar como tal: MIT concede el derecho. Es una **declaración del autor
+de que el artefacto no es apto para el uso exacto que esta KB propondría**, y en una conversación
+con una utility regulada el documento del fabricante pesa más que el fichero de licencia. La
+clasificación honesta es *benchmark / investigación*, no componente de producto.
+
+Esto cierra el círculo con las dieciséis confirmaciones externas que esta KB ya tenía de que el
+sector **no compra control autónomo** (NERC, IEA, NIST, ONS, PSR): ahora hay un caso en el que **el
+propio fabricante del modelo lo escribe primero**.
+
+## T81 — `TOTAL=0` en la búsqueda de GitHub no es evidencia de ausencia para un repo concreto y conocido
+
+Medido en el pase 18. `google-deepmind/graphcast`:
+
+- `graphcast` → 205 resultados, **no está**.
+- `graphcast in:name stars:>100` → **0**.
+- `graphcast org:google-deepmind` → **0**.
+- `org:google-deepmind` sin término → **422 repos**. La organización **sí** es buscable.
+- `git ls-remote --symref` → `refs/heads/main`. `raw.githubusercontent.com` sirve su `LICENSE`
+  (11.357 B) y su `README.md`. **El repo está vivo.**
+
+**Los dos instrumentos no se sustituyen: la API de búsqueda mide el índice, `git ls-remote` mide el
+repo.** Regla operativa: un cero de búsqueda sobre un **nombre específico ya conocido** se
+contrasta siempre con `ls-remote` antes de escribirlo como gap. Un cero de búsqueda sobre una
+**categoría** sigue siendo evidencia válida (con la corrección de consultas cortas, T27).
+
+Consecuencia de publicación: de `graphcast` esta KB publica **licencia y liveness** (medidas) y
+**no publica estrellas** (no medibles en esta sesión). Un dato que no se puede medir se declara no
+medido, no se estima.
+
+## T82 — Existe una señal de aptitud para producción **declarada por el productor** y legible por máquina, y es ortogonal a las estrellas
+
+[ecmwf/codex](https://github.com/ecmwf/codex) (Apache-2.0, **12 ★**) define una taxonomía de madurez
+de cinco niveles que **todo repo de ECMWF debe exhibir como *badge* al principio de su README**:
+`graduated` (*«ready for operations»*) · `incubating` (*«strongly advised to use a released tag in
+your system configuration»*) · `emerging` (*«not yet feature-complete and not stable»*) · `sandbox`
+(*«experimental, proof-of-concept»*) · `archived` (*«should not be used for any active development or
+operational purposes»*).
+
+Es extraíble con un `grep`:
+`grep -oE 'Project%20Maturity/[a-z]+_badge\.svg' README.md`.
+
+**Matriz medida sobre los 17 repos de ECMWF del pase 18:** `graduated` 5 (`earthkit-data`,
+`earthkit-meteo`, `earthkit-plots`, `earthkit-hydro`, `eccodes`) · `incubating` 5 (**toda** la
+familia `anemoi`) · `emerging` 2 (`earthkit-regrid`, `earthkit-workflows`) · sin *badge* 5
+(anteriores al convenio).
+
+**Dos conclusiones, y la segunda es la que vale dinero:**
+
+1. **El plano de datos de ECMWF está listo para operación y el plano de modelo hay que fijarlo a un
+   *tag*** —dicho por quien lo escribe, no inferido. Es una decisión de arquitectura regalada.
+2. **Es el antídoto a T19 y T47.** Esta KB estableció que las estrellas de este sector **se compran**
+   (T19) y que la tracción está **decorrelacionada de la usabilidad** (T47); un *badge* de madurez no
+   mide cuánta gente mira el repo, mide **si el autor lo pondría en operación**. La prueba está en
+   la propia matriz: `cfgrib` tiene 465 ★ y ningún *badge*; `earthkit-data` tiene 124 ★ y es
+   `graduated`. **La señal correcta y la señal popular apuntan en direcciones opuestas.**
+
+Acción para los próximos pases: **buscar la taxonomía equivalente en los demás productores
+institucionales ya inventariados** (LF Energy, NREL/`natlabrockies`, EPRI, Eclipse, `onsbr`). Un
+nivel de madurez publicado es una columna nueva en todas las tablas de esta KB, y hoy sólo ECMWF la
+tiene rellena.
